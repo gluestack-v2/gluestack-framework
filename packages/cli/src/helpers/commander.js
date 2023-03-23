@@ -1,5 +1,5 @@
 const { Command } = require('commander');
-const { version } = require('../../../package.json');
+const { version } = require('../../package.json');
 const commands = require('../commands');
 
 const program = new Command();
@@ -12,8 +12,8 @@ commander.init = async () => {
 	}
 	program
 		.name('glue')
-		.version('gluestack Version ' + version)
-		.description('gluestack framework');
+		.version('Gluestack Version ' + version)
+		.description('Gluestack V2 Framework CLI');
 };
 
 // adds all the commands from the directory
