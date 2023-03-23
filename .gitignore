@@ -1,4 +1,5 @@
 node_modules
-package-lock.json
-.glue/__generated
 .next
+.glue/__generated__
+package-lock.json
+yarn.lock
