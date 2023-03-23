@@ -7,7 +7,6 @@ function getPlugin(app, path, pluginName = null, throwErrorAndExit = false) {
         return new GlueStackPlugin(app, injectPluginStore(app, pluginName));
     }
     catch (e) {
-        console.log(e);
         if (throwErrorAndExit) {
             error('Plugin not initialized');
             process.exit(0);
