@@ -1,0 +1,36 @@
+{
+  "name": "framework-cli",
+  "version": "0.0.1",
+  "description": "Gluestack V2 Framework CLI Project",
+  "main": "index",
+  "scripts": {
+    "install-all": "npm install --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev": "./glue",
+    "cli": "node ./packages/cli/build/src/glue",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gluestack-v2/glue-cli"
+  },
+  "keywords": [
+    "gluestack",
+    "v2",
+    "fullstack",
+    "framework",
+    "cli",
+    "mobile",
+    "web",
+    "storybook",
+    "shared-components"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.15.5"
+  },
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "dependencies": {}
+}
