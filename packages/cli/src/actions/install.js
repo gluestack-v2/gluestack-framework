@@ -19,7 +19,7 @@ async function validateAndGet(pluginName, instanceName) {
 	let packageName = pluginName;
 	try {
 		await checkForPackage(pluginName);
-		packageName = `@gluestack/${prefix}${pluginName}`;
+		packageName = `@gluestack-v2/${prefix}${pluginName}`;
 	} catch (e) {
 		//
 	}
@@ -66,7 +66,7 @@ function checkForPackage(pluginName) {
 	return new Promise((resolve, reject) => {
 		https
 			.get(
-				`https://registry.npmjs.org/@gluestack/${prefix}${pluginName}`,
+				`https://registry.npmjs.org/@gluestack-v2/${prefix}${pluginName}`,
 				(res) => {
 					if (res.statusCode === 200) {
 						let body = '';
@@ -98,7 +98,6 @@ module.exports = async (app, pluginName, instanceName) => {
 	// download plugin project
 	await download(pluginName, packageName);
 
-	const nodeModulesPackageName = `node_modules/${packageName}`;
 	const plugin = await getPlugin(app, packageName, packageName, true);
 
 	const folderPath = await plugin.getInstallationPath(folderName);
@@ -132,7 +131,6 @@ module.exports = async (app, pluginName, instanceName) => {
 	);
 	await writePlugin(
 		pluginFilePath,
-		nodeModulesPackageName,
 		packageName,
 		plugin
 	);

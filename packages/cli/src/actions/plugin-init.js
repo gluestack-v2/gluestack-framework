@@ -20,13 +20,13 @@ const pluginStubFiles = {
 		{
 			dir: 'src',
 			source:
-				'node_modules/@gluestack/framework/types/plugin/stubs/GlueStackPlugin.ts.txt',
+				'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/GlueStackPlugin.ts.txt',
 			target: 'src/index.ts',
 		},
 		{
 			dir: 'src',
 			source:
-				'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstance.ts.txt',
+				'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstance.ts.txt',
 			target: 'src/PluginInstance.ts',
 		},
 	],
@@ -34,19 +34,19 @@ const pluginStubFiles = {
 		{
 			dir: 'src',
 			source:
-				'node_modules/@gluestack/framework/types/plugin/stubs/GlueStackPlugin.ts.txt',
+				'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/GlueStackPlugin.ts.txt',
 			target: 'src/index.ts',
 		},
 		{
 			dir: 'src',
 			source:
-				'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstanceWithContainerController.ts.txt',
+				'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstanceWithContainerController.ts.txt',
 			target: 'src/PluginInstance.ts',
 		},
 		{
 			dir: 'src',
 			source:
-				'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstanceContainerController.ts.txt',
+				'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstanceContainerController.ts.txt',
 			target: 'src/PluginInstanceContainerController.ts',
 		},
 	],
@@ -138,7 +138,7 @@ module.exports = async (app, type) => {
 					}
 					info(stdout);
 					exec(
-						'npm install --save-peer @gluestack/framework',
+						'npm install --save-peer @gluestack-v2/framework-cli',
 						async (error, stdout, stderr) => {
 							if (error) {
 								reject(error);
@@ -153,28 +153,7 @@ module.exports = async (app, type) => {
 		});
 	});
 
-	const replaceGlueStr = `
-	#!/usr/bin/env node
-
-	const {
-	   GlueStackPlugin,
-	} = require("./");
-
-	require("@gluestack/framework")([GlueStackPlugin]);
-
-	`;
-
 	success(
 		`Successfully initialized ${packageJson.name} as a plugin \n`
 	);
-
-	success(
-		`Please replace your glue file with this content for local development ${replaceGlueStr}`
-	);
-
-	success(
-		`A npm script named plugin-dev is added to your package.json, Please run "npm run plugin-dev" for development \n`
-	);
-
-	info('Run `node glue publish` in terminal to publish this plugin');
 };

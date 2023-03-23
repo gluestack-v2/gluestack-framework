@@ -6,7 +6,6 @@ const { error } = require('../print');
 
 const writePlugin = async (
 	pluginFilePath,
-	packageName,
 	pluginName,
 	plugin
 ) => {
@@ -18,7 +17,7 @@ const writePlugin = async (
 
 	if (!data[pluginName]) {
 		data[pluginName] = {
-			package: packageName,
+			package: pluginName,
 		};
 		// write plugins in file
 		await writeFile(pluginFilePath, JSON.stringify(data, null, 2));

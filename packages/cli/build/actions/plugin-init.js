@@ -19,29 +19,29 @@ const pluginStubFiles = {
     instance: [
         {
             dir: 'src',
-            source: 'node_modules/@gluestack/framework/types/plugin/stubs/GlueStackPlugin.ts.txt',
+            source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/GlueStackPlugin.ts.txt',
             target: 'src/index.ts',
         },
         {
             dir: 'src',
-            source: 'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstance.ts.txt',
+            source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstance.ts.txt',
             target: 'src/PluginInstance.ts',
         },
     ],
     container: [
         {
             dir: 'src',
-            source: 'node_modules/@gluestack/framework/types/plugin/stubs/GlueStackPlugin.ts.txt',
+            source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/GlueStackPlugin.ts.txt',
             target: 'src/index.ts',
         },
         {
             dir: 'src',
-            source: 'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstanceWithContainerController.ts.txt',
+            source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstanceWithContainerController.ts.txt',
             target: 'src/PluginInstance.ts',
         },
         {
             dir: 'src',
-            source: 'node_modules/@gluestack/framework/types/plugin/stubs/PluginInstanceContainerController.ts.txt',
+            source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/PluginInstanceContainerController.ts.txt',
             target: 'src/PluginInstanceContainerController.ts',
         },
     ],
@@ -119,7 +119,7 @@ module.exports = (app, type) => __awaiter(void 0, void 0, void 0, function* () {
                     return;
                 }
                 info(stdout);
-                exec('npm install --save-peer @gluestack/framework', (error, stdout, stderr) => __awaiter(void 0, void 0, void 0, function* () {
+                exec('npm install --save-peer @gluestack-v2/framework-cli', (error, stdout, stderr) => __awaiter(void 0, void 0, void 0, function* () {
                     if (error) {
                         reject(error);
                         return;
@@ -130,18 +130,5 @@ module.exports = (app, type) => __awaiter(void 0, void 0, void 0, function* () {
             }));
         }));
     });
-    const replaceGlueStr = `
-	#!/usr/bin/env node
-
-	const {
-	   GlueStackPlugin,
-	} = require("./");
-
-	require("@gluestack/framework")([GlueStackPlugin]);
-
-	`;
     success(`Successfully initialized ${packageJson.name} as a plugin \n`);
-    success(`Please replace your glue file with this content for local development ${replaceGlueStr}`);
-    success(`A npm script named plugin-dev is added to your package.json, Please run "npm run plugin-dev" for development \n`);
-    info('Run `node glue publish` in terminal to publish this plugin');
 });

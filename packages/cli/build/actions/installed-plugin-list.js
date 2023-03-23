@@ -12,7 +12,7 @@ const { info, newline, warning } = require('../helpers/print');
 const { getTopToBottomPluginTree, } = require('../helpers/meta/plugins');
 const { getTopToBottomPluginInstanceTree, } = require('../helpers/meta/plugin-instances');
 function printPlugins(plugins) {
-    arr = {};
+    const arr = {};
     plugins.map((plugin) => {
         if (!arr[plugin.key]) {
             arr[plugin.key] = {
@@ -37,8 +37,8 @@ function printInstalledPlugins(app) {
 function printPluginInstances(plugins) {
     arr = [];
     plugins.map(({ key, plugin }) => {
-        plugin.getInstances
-            ? plugin.getInstances().map((pluginInstance) => {
+        if (plugin.getInstances) {
+            plugin.getInstances().forEach((pluginInstance) => {
                 arr.push({
                     plugin: key,
                     instance: pluginInstance.getName(),
@@ -47,8 +47,8 @@ function printPluginInstances(plugins) {
                         : '',
                     version: plugin.getVersion(),
                 });
-            })
-            : [];
+            });
+        }
     });
     if (Object.keys(arr).length) {
         info('Installed Instances');

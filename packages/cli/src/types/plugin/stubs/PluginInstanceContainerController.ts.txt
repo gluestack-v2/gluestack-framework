@@ -1,6 +1,6 @@
-import IApp from "@gluestack/framework/types/app/interface/IApp";
-import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
-import IContainerController from "@gluestack/framework/types/plugin/interface/IContainerController";
+import IApp from "@gluestack-v2/framework-cli/build/types/app/interface/IApp";
+import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import IContainerController from "@gluestack-v2/framework-cli/build/types/plugin/interface/IContainerController";
 
 export class PluginInstanceContainerController implements IContainerController
 {

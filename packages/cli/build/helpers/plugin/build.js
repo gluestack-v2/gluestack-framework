@@ -13,7 +13,7 @@ const { fileExists, copyFile, createFolder } = require('../file');
 const { error, info } = require('../print');
 const tsStubFiles = [
     {
-        source: 'node_modules/@gluestack/framework/types/plugin/stubs/tsconfig.json.txt',
+        source: 'node_modules/@gluestack-v2/framework-cli/build/types/plugin/stubs/tsconfig.json.txt',
         target: 'tsconfig.json',
     },
 ];

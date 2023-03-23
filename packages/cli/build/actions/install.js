@@ -26,7 +26,7 @@ function validateAndGet(pluginName, instanceName) {
         let packageName = pluginName;
         try {
             yield checkForPackage(pluginName);
-            packageName = `@gluestack/${prefix}${pluginName}`;
+            packageName = `@gluestack-v2/${prefix}${pluginName}`;
         }
         catch (e) {
             //
@@ -61,7 +61,7 @@ function validateAndGet(pluginName, instanceName) {
 function checkForPackage(pluginName) {
     return new Promise((resolve, reject) => {
         https
-            .get(`https://registry.npmjs.org/@gluestack/${prefix}${pluginName}`, (res) => {
+            .get(`https://registry.npmjs.org/@gluestack-v2/${prefix}${pluginName}`, (res) => {
             if (res.statusCode === 200) {
                 let body = '';
                 res.on('data', (data) => (body += data));
@@ -83,7 +83,6 @@ module.exports = (app, pluginName, instanceName) => __awaiter(void 0, void 0, vo
     const { pluginInstancesFilePath, pluginFilePath, folderName, packageName, } = yield validateAndGet(pluginName, instanceName);
     // download plugin project
     yield download(pluginName, packageName);
-    const nodeModulesPackageName = `node_modules/${packageName}`;
     const plugin = yield getPlugin(app, packageName, packageName, true);
     const folderPath = yield plugin.getInstallationPath(folderName);
     if (folderPath !== process.cwd() && !(yield checkFolderIsEmpty(folderPath))) {
@@ -101,7 +100,7 @@ module.exports = (app, pluginName, instanceName) => __awaiter(void 0, void 0, vo
     }
     // updates meta/plugin-instances.json file
     yield metaPluginInstance(pluginInstancesFilePath, packageName, folderName, folderPath);
-    yield writePlugin(pluginFilePath, nodeModulesPackageName, packageName, plugin);
+    yield writePlugin(pluginFilePath, packageName, plugin);
     success(`Sucessfully installed '${pluginName}' as instance ${folderName} in directory '${folderPath}'`);
     newline();
 });

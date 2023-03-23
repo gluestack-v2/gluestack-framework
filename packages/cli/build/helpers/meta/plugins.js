@@ -13,7 +13,7 @@ const { readFile, writeFile } = require('../file');
 const getPlugin = require('../getPlugin');
 const isGluePackage = require('../isGluePackage');
 const { error } = require('../print');
-const writePlugin = (pluginFilePath, packageName, pluginName, plugin) => __awaiter(void 0, void 0, void 0, function* () {
+const writePlugin = (pluginFilePath, pluginName, plugin) => __awaiter(void 0, void 0, void 0, function* () {
     let data = yield readFile(pluginFilePath);
     if (!data) {
         error('.glue/internals plugins file is corrupted.');
@@ -21,7 +21,7 @@ const writePlugin = (pluginFilePath, packageName, pluginName, plugin) => __await
     }
     if (!data[pluginName]) {
         data[pluginName] = {
-            package: packageName,
+            package: pluginName,
         };
         // write plugins in file
         yield writeFile(pluginFilePath, JSON.stringify(data, null, 2));
