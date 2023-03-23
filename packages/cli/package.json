@@ -1,6 +1,6 @@
 {
 	"name": "@gluestack-v2/framework-cli",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Gluestack V2 Framework CLI",
 	"main": "build/glue.js",
 	"bin": {

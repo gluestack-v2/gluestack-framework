@@ -35,7 +35,7 @@ function printInstalledPlugins(app) {
     });
 }
 function printPluginInstances(plugins) {
-    arr = [];
+    const arr = [];
     plugins.map(({ key, plugin }) => {
         if (plugin.getInstances) {
             plugin.getInstances().forEach((pluginInstance) => {
