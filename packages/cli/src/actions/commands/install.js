@@ -3,7 +3,7 @@
  */
 
 const { Argument } = require('commander');
-const install = require('../actions/install');
+const install = require('../install');
 
 module.exports = async (program, app) => {
 	// install group command

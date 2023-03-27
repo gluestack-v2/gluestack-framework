@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const { Command } = require('commander');
 const { version } = require('../../package.json');
-const commands = require('../commands');
+const commands = require('../actions/commands');
 const program = new Command();
 const commander = {};
 // initialize the glue command

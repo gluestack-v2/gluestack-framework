@@ -2,7 +2,7 @@
  * Installs the project or plugin
  */
 
-const pluginInit = require('../actions/plugin-init');
+const pluginInit = require('../plugin-init');
 
 module.exports = async (program, app) => {
 	const command = program

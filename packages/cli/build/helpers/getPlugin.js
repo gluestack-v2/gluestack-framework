@@ -4,6 +4,7 @@ const { error } = require('./print');
 function getPlugin(app, path, pluginName = null, throwErrorAndExit = false) {
     try {
         const { GlueStackPlugin } = require(path);
+        console.log({ GlueStackPlugin });
         return new GlueStackPlugin(app, injectPluginStore(app, pluginName));
     }
     catch (e) {

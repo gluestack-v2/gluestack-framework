@@ -2,7 +2,7 @@
  * Installs the project or plugin
  */
 
-const pluginList = require('../actions/plugin-list');
+const pluginList = require('../plugin-list');
 
 module.exports = async (program, app) => {
 	const command = program

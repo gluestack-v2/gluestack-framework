@@ -6,6 +6,7 @@ const commands = () => {
 		require('./plugin-list'),
 		require('./plugin-init'),
 		require('./plugin-version'),
+		require('./watch'),
 	];
 };
 

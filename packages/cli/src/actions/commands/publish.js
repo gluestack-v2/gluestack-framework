@@ -2,7 +2,7 @@
  * Installs the project or plugin
  */
 
-const publish = require('../actions/publish');
+const publish = require('../publish');
 
 module.exports = async (program, app) => {
 	program
