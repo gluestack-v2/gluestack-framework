@@ -8,4 +8,5 @@ export default interface IApp {
     createPluginInstance(plugin: IPlugin, instanceName: string, src: string, target: string): any;
     getPluginByName(pluginName: string): any;
     getContainerTypePluginInstances(bottomToTop?: boolean, returnWithTree?: boolean): (IPlugin & IHasContainerController)[];
+    watch(pattern: string, callback: Function): void;
 }
