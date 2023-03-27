@@ -16,6 +16,7 @@ declare class App {
     createPluginInstance(plugin: any, instance: any, src: any, target: any): Promise<any>;
     getPluginByName(pluginName: any): any;
     getContainerTypePluginInstances(bottomToTop?: boolean): any[];
+    watch(pattern: any, callback: any): void;
 }
 import events = require("events");
 import GluePluginStoreFactory = require("../lib/factory/plugin/GluePluginStoreFactory");

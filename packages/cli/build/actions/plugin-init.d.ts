@@ -1,2 +1,2 @@
-declare function _exports(app: any, type: any): Promise<void>;
+declare function _exports(app: any, pluginName: any, type: any): Promise<void>;
 export = _exports;

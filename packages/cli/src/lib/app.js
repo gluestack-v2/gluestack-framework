@@ -14,7 +14,8 @@ class App {
 		this.eventEmitter = new events.EventEmitter();
 		this.gluePluginStoreFactory = new GluePluginStoreFactory();
 	}
-	//push cli command
+
+	// push cli command
 	addCommand = async (runner) => {
 		return this.commands.push(runner);
 	};
@@ -76,17 +77,17 @@ class App {
 		}
 	}
 
-	//checks
+	// checks
 	async doctor() {
 		await runDoctor();
 	}
 
-	//event
+	// event
 	dispatchEvent(eventName) {
 		this.eventEmitter.emit(eventName);
 	}
 
-	//listener
+	// listener
 	addEventListener(eventName, callback = () => {}) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -123,6 +124,10 @@ class App {
 			return instances.reverse();
 		}
 		return instances;
+	}
+
+	watch (pattern, callback) {
+		console.log({pattern, callback});
 	}
 }
 

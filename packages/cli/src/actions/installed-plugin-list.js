@@ -53,6 +53,7 @@ function printPluginInstances(plugins) {
 		console.table(arr);
 		return;
 	}
+
 	warning('No instances are installed in your app.');
 }
 

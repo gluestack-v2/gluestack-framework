@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const App = require('./lib/app');
 const commander = require('./helpers/commander');
-const runDoctor = require('./actions/doctor');
+// const runDoctor = require('./actions/doctor');
 const commanderInit = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // initialise the commander
     yield commander.init();
@@ -28,11 +28,6 @@ const destroy = (app) => __awaiter(void 0, void 0, void 0, function* () {
     app.gluePluginStoreFactory.saveAllStores();
 });
 const glue = (localPlugins = []) => __awaiter(void 0, void 0, void 0, function* () {
-    if (process.argv[2] && process.argv[2] === '--doctor') {
-        yield runDoctor();
-        // remove the --doctor argument
-        process.argv.splice(2, 1);
-    }
     const app = init();
     yield app.initPlugins(localPlugins);
     yield commanderInit(app);

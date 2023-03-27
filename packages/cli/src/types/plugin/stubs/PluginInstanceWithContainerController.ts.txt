@@ -52,6 +52,11 @@ export class PluginInstance implements IInstance, IHasContainerController, ILife
     return this.installationPath;
   }
 
+  watch(): string[] {
+    const installationPath: string = this.getInstallationPath();
+    return [installationPath];
+  }
+
   getContainerController(): IContainerController {
     return this.containerController;
   }

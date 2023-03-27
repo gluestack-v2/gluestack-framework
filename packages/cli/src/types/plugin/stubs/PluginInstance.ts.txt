@@ -41,4 +41,13 @@ export class PluginInstance implements IInstance, ILifeCycle {
   getCallerPlugin(): IPlugin {
     return this.callerPlugin;
   }
+
+  getInstallationPath(): string {
+    return this.installationPath;
+  }
+
+  watch(): string[] {
+    const installationPath: string = this.getInstallationPath();
+    return [installationPath];
+  }
 }

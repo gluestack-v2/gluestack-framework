@@ -9,15 +9,17 @@ module.exports = async (program, app) => {
 		.command('plugin:init')
 		.description('Initializes the gluestack app as a plugin');
 
-	command
+		command
 		.command('instance')
+		.argument('<plugin-name>', 'Plugin name')
 		.description('Initializes the gluestack app as a plugin instance')
-		.action(() => pluginInit(app, 'instance'));
+		.action((pluginName) => pluginInit(app, pluginName, 'instance'));
 
-	command
+		command
 		.command('container')
+		.argument('<plugin-name>', 'Plugin name')
 		.description(
 			'Initializes the gluestack app as a container plugin'
 		)
-		.action(() => pluginInit(app, 'container'));
+		.action((pluginName) => pluginInit(app, pluginName, 'container'));
 };

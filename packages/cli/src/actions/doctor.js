@@ -1,4 +1,3 @@
-const colors = require('colors');
 const {
 	yarn,
 	docker,

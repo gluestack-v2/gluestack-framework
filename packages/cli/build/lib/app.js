@@ -16,7 +16,7 @@ const { getTopToBottomPluginInstanceTree, attachPluginInstance, } = require('../
 const GluePluginStoreFactory = require('../lib/factory/plugin/GluePluginStoreFactory');
 class App {
     constructor() {
-        //push cli command
+        // push cli command
         this.addCommand = (runner) => __awaiter(this, void 0, void 0, function* () {
             return this.commands.push(runner);
         });
@@ -78,17 +78,17 @@ class App {
             }
         });
     }
-    //checks
+    // checks
     doctor() {
         return __awaiter(this, void 0, void 0, function* () {
             yield runDoctor();
         });
     }
-    //event
+    // event
     dispatchEvent(eventName) {
         this.eventEmitter.emit(eventName);
     }
-    //listener
+    // listener
     addEventListener(eventName, callback = () => { }) {
         this.eventEmitter.on(eventName, callback);
     }
@@ -124,6 +124,9 @@ class App {
             return instances.reverse();
         }
         return instances;
+    }
+    watch(pattern, callback) {
+        console.log({ pattern, callback });
     }
 }
 module.exports = App;

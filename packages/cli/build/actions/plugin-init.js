@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const os = require('os');
+const path = require('path');
 const { exec } = require('child_process');
 const { fileExists, readFile, writeFile, copyFile, createFolder, } = require('../helpers/file');
 const build = require('../helpers/plugin/build');
@@ -97,9 +98,12 @@ function createTemplateFolder(currentDir, packageJson) {
         yield writeFile(`${currentDir}/template/README.md`, packageJson.name);
     });
 }
-module.exports = (app, type) => __awaiter(void 0, void 0, void 0, function* () {
+module.exports = (app, pluginName, type) => __awaiter(void 0, void 0, void 0, function* () {
     yield runDoctorPlugin();
-    const currentDir = process.cwd();
+    const currentDir = path.join(process.cwd(), 'packages', pluginName);
+    // creating plugin directory
+    yield createFolder(currentDir);
+    yield writeFile(path.join(currentDir, 'package.json', '{}'));
     const filepath = currentDir + '/package.json';
     const packageJson = yield getAndValidatePackageJson(filepath);
     yield writeToPackageJson(filepath, packageJson);

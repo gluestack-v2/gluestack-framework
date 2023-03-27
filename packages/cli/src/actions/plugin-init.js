@@ -1,4 +1,5 @@
 const os = require('os');
+const path = require('path');
 const { exec } = require('child_process');
 
 const {
@@ -77,6 +78,7 @@ async function writeToPackageJson(filepath, packageJson) {
 		);
 		process.exit(0);
 	}
+
 	const json = await readFile(filepath);
 	json.main = mainEntryPoint;
 	json.scripts = {
@@ -84,6 +86,7 @@ async function writeToPackageJson(filepath, packageJson) {
 		'plugin-dev': 'tsc --watch',
 		'plugin-build': 'tsc --declaration',
 	};
+
 	await writeFile(filepath, JSON.stringify(json, null, 2) + os.EOL);
 	return json.name;
 }
@@ -112,9 +115,14 @@ async function createTemplateFolder(currentDir, packageJson) {
 	);
 }
 
-module.exports = async (app, type) => {
+module.exports = async (app, pluginName, type) => {
 	await runDoctorPlugin();
-	const currentDir = process.cwd();
+	const currentDir = path.join(process.cwd(), 'packages', pluginName);
+
+	// creating plugin directory
+	await createFolder(currentDir);
+	await writeFile(path.join(currentDir, 'package.json', '{}'));
+
 	const filepath = currentDir + '/package.json';
 
 	const packageJson = await getAndValidatePackageJson(filepath);

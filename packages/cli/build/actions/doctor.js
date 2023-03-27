@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const colors = require('colors');
 const { yarn, docker, dockerCompose, hasura, node, dockerStatus, npm, } = require('../helpers/dependencies');
 const { info, error } = require('../helpers/print');
 const runDoctor = () => __awaiter(void 0, void 0, void 0, function* () {
