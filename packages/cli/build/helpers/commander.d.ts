@@ -1,3 +1,3 @@
-export function init(): Promise<void>;
-export function addCommands(app: any): Promise<void>;
-export function destroy(): Promise<void>;
+export function init(): void;
+export function addCommand(app: any, cmd: any): void;
+export function destroy(): void;

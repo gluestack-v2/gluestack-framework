@@ -1,0 +1,8 @@
+container_name: website
+platforms:
+  local:
+    envfile: ./src/website/.env
+    build: cd ./src/website && npm run start:website
+  docker:
+    envfile: ./src/website/.env
+    build: ./Dockerfile

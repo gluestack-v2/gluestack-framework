@@ -1,6 +1,12 @@
 const fs = require('fs');
 
-const fileExists = (filePath) =>
-	fs.existsSync(filePath) ? true : false;
+const fileExists = (filePath) => {
+	try {
+		fs.accessSync(filePath);
+		return true;
+	} catch (err) {
+		return false;
+	}
+};
 
 module.exports = { fileExists };

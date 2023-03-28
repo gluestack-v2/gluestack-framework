@@ -8,19 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const { join } = require('path');
 const events = require('events');
+const watcher = require('../helpers/watcher');
 const runDoctor = require('../actions/doctor');
 const { copyFolder } = require('../helpers/file');
 const { injectPluginStore } = require('../helpers/getStorePath');
 const { getTopToBottomPluginInstanceTree, attachPluginInstance, } = require('../helpers/meta/plugin-instances');
 const GluePluginStoreFactory = require('../lib/factory/plugin/GluePluginStoreFactory');
+const commander = require('../helpers/commander');
+const commands = require('../commands');
 class App {
     constructor() {
-        // push cli command
+        // @API: addCommand
         this.addCommand = (runner) => __awaiter(this, void 0, void 0, function* () {
-            return this.commands.push(runner);
+            this.commander.addCommand(this, runner);
         });
-        this.commands = [];
+        this.commander = commander;
         this.eventEmitter = new events.EventEmitter();
         this.gluePluginStoreFactory = new GluePluginStoreFactory();
     }
@@ -42,7 +46,6 @@ class App {
             this.plugins = mergedPlugins;
         });
     }
-    //plugins
     initPlugins(localPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.populatePlugins(localPlugins);
@@ -81,18 +84,18 @@ class App {
     // checks
     doctor() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield runDoctor();
+            //
         });
     }
-    // event
-    dispatchEvent(eventName) {
-        this.eventEmitter.emit(eventName);
+    // @API: dispatchEvent
+    dispatchEvent(eventName, ...args) {
+        this.eventEmitter.emit(eventName, ...args);
     }
-    // listener
+    // @API: addEventListener
     addEventListener(eventName, callback = () => { }) {
         this.eventEmitter.on(eventName, callback);
     }
-    //plugin instance
+    // @API: createPluginInstance
     createPluginInstance(plugin, instance, src, target) {
         return __awaiter(this, void 0, void 0, function* () {
             if (src && target) {
@@ -101,7 +104,7 @@ class App {
             return attachPluginInstance(this, plugin, instance, target);
         });
     }
-    //plugin instance
+    // @API: getPluginByName
     getPluginByName(pluginName) {
         for (const plugin of this.plugins) {
             if (plugin.getName() === pluginName) {
@@ -110,7 +113,11 @@ class App {
         }
         return null;
     }
-    //plugin instance
+    // @API: getPlugins
+    getPlugins() {
+        return this.plugins;
+    }
+    // @API: getContainerTypePluginInstances
     getContainerTypePluginInstances(bottomToTop = false) {
         const instances = [];
         for (const plugin of this.plugins) {
@@ -125,8 +132,38 @@ class App {
         }
         return instances;
     }
-    watch(pattern, callback) {
-        console.log({ pattern, callback });
+    // @API: watch
+    watch(instancePath, pattern, callback) {
+        watcher.watch(join(process.cwd(), instancePath), pattern, callback);
+    }
+    // @API: destroy
+    destroy() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // destroy all plugins
+            yield this.destroyPlugins();
+            // close commander
+            yield this.commander.destroy();
+            // save changes made into all stores
+            this.gluePluginStoreFactory.saveAllStores();
+        });
+    }
+    // @API: init
+    init(localPlugins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // initialise the commander
+            yield this.commander.init();
+            // initialise the local commands
+            yield this.initLocalCommands();
+            // initialise all plugins
+            yield this.initPlugins(localPlugins);
+        });
+    }
+    initLocalCommands() {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const command of commands()) {
+                this.addCommand(command);
+            }
+        });
     }
 }
 module.exports = App;

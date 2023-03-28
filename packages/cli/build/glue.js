@@ -9,29 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const App = require('./lib/app');
-const commander = require('./helpers/commander');
-// const runDoctor = require('./actions/doctor');
-const commanderInit = (app) => __awaiter(void 0, void 0, void 0, function* () {
-    // initialise the commander
-    yield commander.init();
-    // register commands to the commander
-    yield commander.addCommands(app);
-});
-const init = () => {
-    return new App();
-};
-const destroy = (app) => __awaiter(void 0, void 0, void 0, function* () {
-    yield app.destroyPlugins();
-    // close commander
-    yield commander.destroy();
-    app.gluePluginStoreFactory.saveAllStores();
-});
+const App = require('./helpers/lib/app');
 const glue = (localPlugins = []) => __awaiter(void 0, void 0, void 0, function* () {
-    const app = init();
-    yield app.initPlugins(localPlugins);
-    yield commanderInit(app);
-    yield destroy(app);
+    const app = new App();
+    yield app.init(localPlugins);
+    yield app.destroy();
     return app;
 });
 module.exports = glue;

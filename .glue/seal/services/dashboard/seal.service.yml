@@ -1,0 +1,8 @@
+container_name: dashboard
+platforms:
+  local:
+    envfile: ./src/dashboard/.env
+    build: cd ./src/dashboard && npm run start:website
+  docker:
+    envfile: ./src/dashboard/.env
+    build: ./Dockerfile

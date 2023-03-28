@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const { promises } = require('fs');
 const createFolder = (_folder) => __awaiter(void 0, void 0, void 0, function* () {
-    // await promises.rm(_folder, { recursive: true, force: true });
     yield promises.mkdir(_folder, { recursive: true, force: true });
     return Promise.resolve(true);
 });

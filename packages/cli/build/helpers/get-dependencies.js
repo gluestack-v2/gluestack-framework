@@ -13,12 +13,11 @@ const getPlugin = require('./getPlugin');
 const { attachPluginInstances } = require('./meta/plugin-instances');
 const getDependencies = (app, pluginName) => __awaiter(void 0, void 0, void 0, function* () {
     const dependencies = [];
-    const packageJSON = path.join(process.cwd(), 'node_modules', pluginName, 'package.json');
+    const packageJSON = path.join(pluginName, 'package.json');
     const peerDependencies = require(packageJSON).peerDependencies;
     for (const dependency of Object.keys(peerDependencies)) {
-        const dependencyPath = path.join(process.cwd(), 'node_modules', dependency);
         try {
-            const plugin = yield getPlugin(app, dependencyPath, dependency, false);
+            const plugin = yield getPlugin(app, dependency, dependency, false);
             if (plugin) {
                 yield attachPluginInstances(app, process.cwd(), [
                     { plugin: plugin },

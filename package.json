@@ -30,7 +30,8 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/**/*"
+    "packages/**/*",
+    "websit"
   ],
   "dependencies": {}
 }

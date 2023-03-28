@@ -1,12 +1,11 @@
-const { Command } = require('commander');
+const { Command, CommanderError } = require('commander');
 const { version } = require('../../package.json');
-const commands = require('../actions/commands');
 
 const program = new Command();
 const commander = {};
 
 // initialize the glue command
-commander.init = async () => {
+commander.init = () => {
 	if (process.argv.length === 2) {
 		process.argv.push('-h');
 	}
@@ -16,15 +15,25 @@ commander.init = async () => {
 		.description('Gluestack V2 Framework CLI');
 };
 
-// adds all the commands from the directory
-commander.addCommands = async (app) => {
-	const cmds = commands().concat(app.commands);
-	cmds.forEach((cmd) => cmd(program, app));
+// inject the command into the commander
+commander.addCommand = (app, cmd) => {
+	cmd(program, app);
 };
 
 // parses and closes the command
-commander.destroy = async () => {
-	await program.parseAsync();
+commander.destroy = () => {
+	program.exitOverride();
+	try {
+		program.parse();
+	} catch (err) {
+		if (err instanceof CommanderError) {
+			if (err.exitCode !== 0) {
+				throw new Error(err);
+			}
+		} else {
+			throw new Error(err);
+		}
+	}
 };
 
 module.exports = commander;
