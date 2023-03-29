@@ -1,10 +1,17 @@
 import IProgram from './IProgram';
 import IPlugin from '../../plugin/interface/IPlugin';
 import IHasContainerController from '../../plugin/interface/IHasContainerController';
+import IManagesInstances from '../../plugin/interface/IManagesInstances';
 
 type WatchCallback = (event: string, path: string) => void;
 
-export default interface IApp {
+export default interface IAppCLI {
+
+	plugins:Array<IPlugin>;
+
+	instances:Array<IManagesInstances>;
+
+
 	addCommand(command: (program: any) => void): any;
 
 	doctor(): any;
