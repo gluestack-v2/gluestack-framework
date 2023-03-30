@@ -1,17 +1,27 @@
 import IProgram from './IProgram';
+import IEventEmitter from 'events';
 import IPlugin from '../../plugin/interface/IPlugin';
-import IHasContainerController from '../../plugin/interface/IHasContainerController';
+import ICmd from '../../helpers/interface/ICommandCallback';
+import Icommander from '../../helpers/interface/ICommander';
+import IGluePluginStoreFactory from '../../store/interface/IGluePluginStoreFactory';
+import IManagesInstances from '../../plugin/interface/IManagesInstances';
+import IInstance from '../../plugin/interface/IInstance';
 
-type WatchCallback = (event: string, path: string) => void;
+export type WatchCallback = (event: string, path: string) => void;
 
-export default interface IApp {
-	addCommand(command: (program: any) => void): any;
+export default interface IAppCLI {
+	plugins: Array<IPlugin&IManagesInstances>;
+	commander : Icommander;
+	eventEmitter: IEventEmitter;
+	gluePluginStoreFactory: IGluePluginStoreFactory;
+	
+	addCommand(runner: ICmd): void;
 
 	doctor(): any;
 
-	dispatchEvent(eventName: string, args: any): any;
+	dispatchEvent(eventName: string, args: any): void;
 
-	addEventListener(eventName: string, callback: any): any;
+	addEventListener(eventName: string, callback: () => {}): void;
 
 	createPluginInstance(
 		plugin: IPlugin,
@@ -22,10 +32,18 @@ export default interface IApp {
 
 	getPluginByName(pluginName: string): any;
 
-	getContainerTypePluginInstances(
-		bottomToTop?: boolean,
-		returnWithTree?: boolean
-	): (IPlugin & IHasContainerController)[];
+	getPlugins(): IPlugin[];
 
-	watch(pattern: string | string[], callback: WatchCallback): void;
+	getContainerTypePluginInstances(
+		bottomToTop?: boolean
+	): IInstance[];
+
+	watch(instancePath: string,
+		pattern: string | string[],
+		callback: WatchCallback
+	): void;
+
+	destroy(): void;
+
+	init(localPlugins: any): Promise<void>;
 }
