@@ -1,13 +1,18 @@
-const { info, newline, warning } = require('../helpers/print');
-const {
+import { info, newline, warning } from '../helpers/print';
+import {
 	getTopToBottomPluginTree,
-} = require('../helpers/meta/plugins');
-const {
+} from '../helpers/meta/plugins';
+import {
 	getTopToBottomPluginInstanceTree,
-} = require('../helpers/meta/plugin-instances');
+} from '../helpers/meta/plugin-instances';
+import IArrTree from '../types/meta/interface/IArr';
+import IArrVersion from '../types/actions/interface/IArrVersion';
+import IAppCLI from '../types/app/interface/IAppCLI';
+import IGSPlugin from '../types/plugin/interface/IGSPlugin';
+import IPluginArray from '../types/actions/interface/IArrPluginDetails';
 
-function printPlugins(plugins) {
-	const arr = {};
+function printPlugins(plugins: IArrTree) {
+	const arr: IArrVersion = {};
 	plugins.map((plugin) => {
 		if (!arr[plugin.key]) {
 			arr[plugin.key] = {
@@ -25,14 +30,14 @@ function printPlugins(plugins) {
 	warning('No plugins are installed in your app.');
 }
 
-async function printInstalledPlugins(app) {
+async function printInstalledPlugins(app: IAppCLI) {
 	const plugins = await getTopToBottomPluginTree(app, process.cwd());
 	printPlugins(plugins);
 	newline();
 }
 
-function printPluginInstances(plugins) {
-	const arr = [];
+function printPluginInstances(plugins: IArrTree) {
+	const arr: IPluginArray = [];
 	plugins.map(({ key, plugin }) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance) => {
@@ -57,7 +62,7 @@ function printPluginInstances(plugins) {
 	warning('No instances are installed in your app.');
 }
 
-async function printInstalledPluginInstances(app) {
+async function printInstalledPluginInstances(app: IAppCLI) {
 	const plugins = await getTopToBottomPluginInstanceTree(
 		app,
 		process.cwd()
@@ -66,7 +71,7 @@ async function printInstalledPluginInstances(app) {
 	newline();
 }
 
-module.exports = async (app) => {
+module.exports = async (app: IAppCLI) => {
 	await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };

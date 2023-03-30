@@ -1,18 +1,17 @@
-const os = require('os');
-const path = require('path');
-const { exec } = require('child_process');
+import os from 'os';
+import { exec } from 'child_process';
 
-const {
+import {
 	fileExists,
 	readFile,
 	writeFile,
 	copyFile,
 	createFolder,
-} = require('../helpers/file');
+} from '../helpers/file';
 
-const build = require('../helpers/plugin/build');
-const runDoctorPlugin = require('./doctorPlugin');
-const { error, warning, success, info } = require('../helpers/print');
+import build from '../helpers/plugin/build';
+import { error, warning, success, info } from '../helpers/print';
+import IAppCLI from '../types/app/interface/IAppCLI';
 
 const mainEntryPoint = 'dist/src/index.js';
 
@@ -53,7 +52,7 @@ const pluginStubFiles = {
 	],
 };
 
-async function getAndValidatePackageJson(filepath) {
+async function getAndValidatePackageJson(filepath: string) {
 	if (!fileExists(filepath)) {
 		error('Plugin init command failed: package.json does not exists');
 		process.exit(0);
@@ -66,7 +65,10 @@ async function getAndValidatePackageJson(filepath) {
 	return packageJson;
 }
 
-async function writeToPackageJson(filepath, packageJson) {
+async function writeToPackageJson(
+	filepath: string,
+	packageJson: any
+) {
 	if (packageJson.main) {
 		if (packageJson.main === mainEntryPoint) {
 			warning('Plugin init command failed: already a plugin');
@@ -78,7 +80,6 @@ async function writeToPackageJson(filepath, packageJson) {
 		);
 		process.exit(0);
 	}
-
 	const json = await readFile(filepath);
 	json.main = mainEntryPoint;
 	json.scripts = {
@@ -86,12 +87,14 @@ async function writeToPackageJson(filepath, packageJson) {
 		'plugin-dev': 'tsc --watch',
 		'plugin-build': 'tsc --declaration',
 	};
-
 	await writeFile(filepath, JSON.stringify(json, null, 2) + os.EOL);
 	return json.name;
 }
 
-async function copyPluginFiles(currentDir, type) {
+async function copyPluginFiles(
+	currentDir: string,
+	type: 'instance' | 'container'
+) {
 	if (pluginStubFiles[type]) {
 		for (const stubFile of pluginStubFiles[type]) {
 			if (stubFile.dir) {
@@ -107,7 +110,10 @@ async function copyPluginFiles(currentDir, type) {
 	}
 }
 
-async function createTemplateFolder(currentDir, packageJson) {
+async function createTemplateFolder(
+	currentDir: string,
+	packageJson: any
+) {
 	await createFolder(`${currentDir}/template`);
 	await writeFile(
 		`${currentDir}/template/README.md`,
@@ -115,14 +121,8 @@ async function createTemplateFolder(currentDir, packageJson) {
 	);
 }
 
-module.exports = async (app, pluginName, type) => {
-	await runDoctorPlugin();
-	const currentDir = path.join(process.cwd(), 'packages', pluginName);
-
-	// creating plugin directory
-	await createFolder(currentDir);
-	await writeFile(path.join(currentDir, 'package.json', '{}'));
-
+export default async (app: IAppCLI, type: 'instance' | 'container') => {
+	const currentDir = process.cwd();
 	const filepath = currentDir + '/package.json';
 
 	const packageJson = await getAndValidatePackageJson(filepath);

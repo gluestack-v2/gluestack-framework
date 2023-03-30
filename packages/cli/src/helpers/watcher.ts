@@ -1,11 +1,12 @@
 import chokidar from 'chokidar';
+import { WatchCallback } from '../types/app/interface/IAppCLI';
 
 interface Watcher {
-  watch: (cwd: string, pattern: string | string[], callback: () => void) => void;
+  watch: (cwd: string, pattern: string | string[], callback: any) => void;
 }
 
 const watcher: Watcher = {
-  watch: (cwd: string, pattern: string | string[], callback: () => void): void => {
+  watch: (cwd: string, pattern: string | string[], callback: any): void => {
     const globs = typeof pattern === 'string' ? [pattern] : pattern;
 
     console.log(`Watching ${cwd} for changes...`);

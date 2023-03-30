@@ -1,4 +1,5 @@
-const {
+import colors from 'colors';
+import {
 	yarn,
 	docker,
 	dockerCompose,
@@ -6,10 +7,10 @@ const {
 	node,
 	dockerStatus,
 	npm,
-} = require('../helpers/dependencies');
-const { info, error } = require('../helpers/print');
+} from '../helpers/dependencies';
+import { info, error } from '../helpers/print';
 
-const runDoctor = async () => {
+const runDoctor = async (): Promise<void> => {
 	const results = await Promise.allSettled([
 		node(),
 		npm(),
@@ -22,9 +23,9 @@ const runDoctor = async () => {
 
 	let failed = false;
 
-	results.forEach((result) => {
+	results.forEach((result: any) => {
 		if (result.status === 'rejected' && result.reason) {
-			info(result.reason, 'NO'.brightRed);
+			info(result.reason, 'NO'.red);
 			failed = true;
 		}
 
@@ -38,4 +39,4 @@ const runDoctor = async () => {
 	}
 };
 
-module.exports = runDoctor;
+export default runDoctor;

@@ -7,13 +7,13 @@ import { error } from '../print';
 import IPluginJSON from '../../types/jsonFiles/interface/IPlugins';
 import IArrTree from '../../types/meta/interface/IArr';
 import ITree from '../../types/meta/interface/ITree';
-import IPlugin from '../../types/plugin/interface/IPlugin';
 import IAppCLI from '../../types/app/interface/IAppCLI';
+import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
 
 const writePlugin = async (
 	pluginFilePath: string,
 	pluginName: string,
-	plugin: IPlugin
+	plugin: IGSPlugin
 ) => {
 	let data: IPluginJSON = await readFile(pluginFilePath);
 	if (!data) {

@@ -1,9 +1,8 @@
-import IManagesInstances from '../../plugin/interface/IManagesInstances';
-import IPlugin from '../../plugin/interface/IPlugin';
+import IGSPlugin from '../../plugin/interface/IGSPlugin';
 
 export default interface Tree {
 	[key: string]: {
-		plugin: IPlugin & IManagesInstances;
+		plugin: IGSPlugin;
 		dependencies: Tree | null;
 	};
 }

@@ -1,5 +1,4 @@
 import IEventEmitter from 'events';
-import IPlugin from '../../plugin/interface/IPlugin';
 import ICmd from '../../helpers/interface/ICommandCallback';
 import Icommander from '../../helpers/interface/ICommander';
 import IGluePluginStoreFactory from '../../store/interface/IGluePluginStoreFactory';
@@ -23,7 +22,7 @@ export default interface IAppCLI {
 	addEventListener(eventName: string, callback: () => {}): void;
 
 	createPluginInstance(
-		plugin: IPlugin,
+		plugin: IGSPlugin,
 		instanceName: string,
 		src: string,
 		target: string
@@ -31,7 +30,7 @@ export default interface IAppCLI {
 
 	getPluginByName(pluginName: string): any;
 
-	getPlugins(): IPlugin[];
+	getPlugins(): IGSPlugin[];
 
 	getContainerTypePluginInstances(
 		bottomToTop?: boolean

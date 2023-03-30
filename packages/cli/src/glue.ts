@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+import IGSPlugin from "./types/plugin/interface/IGSPlugin";
+
 const App = require('./helpers/lib/app');
 
-const glue = async (localPlugins = []) => {
+const glue = async (localPlugins: Array<IGSPlugin> = []) => {
 	const app = new App();
 
 	await app.init(localPlugins);
@@ -11,4 +13,4 @@ const glue = async (localPlugins = []) => {
 	return app;
 };
 
-module.exports = glue;
+export default glue;

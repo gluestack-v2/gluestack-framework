@@ -1,21 +1,24 @@
-const https = require('https');
-const { setVar } = require('../helpers/variables');
-const { fileExists, checkFolderIsEmpty } = require('../helpers/file');
-const download = require('../helpers/download');
-const {
-	pluginInstance: metaPluginInstance,
-} = require('../helpers/meta/plugin-instances');
-const metaExists = require('../helpers/meta/exists');
-const { success, error, newline } = require('../helpers/print');
-const { writePlugin } = require('../helpers/meta/plugins');
-const getPlugin = require('../helpers/getPlugin');
-const isGluePackage = require('../helpers/isGluePackage');
-const getDependencies = require('../helpers/get-dependencies');
-const removeSpecialChars = require('../helpers/remove-special-chars');
+import https from 'https';
+import variables from '../helpers/variables';
+import { fileExists, checkFolderIsEmpty } from '../helpers/file';
+import download from '../helpers/download';
+import { pluginInstance } from '../helpers/meta/plugin-instances';
+import metaExists from '../helpers/meta/exists';
+import { success, error, newline } from '../helpers/print';
+import { writePlugin } from '../helpers/meta/plugins';
+import getPlugin from '../helpers/getPlugin';
+import isGluePackage from '../helpers/isGluePackage';
+import getDependencies from '../helpers/get-dependencies';
+import removeSpecialChars from '../helpers/remove-special-chars';
+
+import IAppCLI from '../types/app/interface/IAppCLI';
+
+const { setVar } = variables;
 
 const prefix = 'glue-plugin-';
+const metaPluginInstance = pluginInstance;
 
-async function validateAndGet(pluginName, instanceName) {
+async function validateAndGet(pluginName: string, instanceName: string) {
 	let packageName = pluginName;
 	try {
 		await checkForPackage(pluginName);
@@ -49,20 +52,18 @@ async function validateAndGet(pluginName, instanceName) {
 		process.exit(0);
 	}
 
-	const folderName = instanceName;
-
 	// check if plugin exists
-	await metaExists(pluginInstancesFilePath, packageName, folderName);
+	await metaExists(pluginInstancesFilePath, instanceName);
 
 	return {
 		pluginInstancesFilePath,
 		pluginFilePath,
-		folderName,
+		folderName: instanceName,
 		packageName,
 	};
 }
 
-function checkForPackage(pluginName) {
+function checkForPackage(pluginName: string) {
 	return new Promise((resolve, reject) => {
 		https
 			.get(
@@ -85,7 +86,7 @@ function checkForPackage(pluginName) {
 	});
 }
 
-module.exports = async (app, pluginName, instanceName) => {
+module.exports = async (app: IAppCLI, pluginName: string, instanceName: string) => {
 	setVar('pluginName', pluginName);
 
 	const {
@@ -112,7 +113,7 @@ module.exports = async (app, pluginName, instanceName) => {
 
 	try {
 		await plugin.runPostInstall(folderName, folderPath);
-	} catch (e) {
+	} catch (e: any) {
 		error(
 			`${pluginName} installed failed: ${
 				e.message || 'Something went wrong'
@@ -141,7 +142,7 @@ module.exports = async (app, pluginName, instanceName) => {
 	newline();
 };
 
-async function checkForDependencies(app, packageName) {
+async function checkForDependencies(app: IAppCLI, packageName: string) {
 	let missing = [];
 	const dependencies = await getDependencies(app, packageName);
 	for (const plugin of dependencies) {
