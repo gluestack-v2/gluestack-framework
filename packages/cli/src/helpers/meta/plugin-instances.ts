@@ -9,6 +9,7 @@ import IManagesInstances from '../../types/plugin/interface/IManagesInstances';
 import IArrTree from '../../types/meta/interface/IArr';
 import IPluginInstances from '../../types/jsonFiles/interface/IPluginInstances';
 import IAppCLI from '../../types/app/interface/IAppCLI';
+import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
 
 const pluginInstance = async (
 	pluginInstancesFilePath: string,
@@ -82,7 +83,7 @@ async function getBottomToTopPluginInstanceTree(
 
 function attachPluginInstance(
 	app: IAppCLI,
-	plugin: IPlugin & IManagesInstances,
+	plugin: IGSPlugin,
 	instance: string,
 	directory: string
 ) {

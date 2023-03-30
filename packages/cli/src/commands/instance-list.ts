@@ -2,7 +2,7 @@
  * Installs the project or plugin
  */
 
-import installedPluginList = require("../actions/installed-plugin-list");
+import installedPluginList from "../actions/installed-plugin-list";
 import IAppCLI from "../types/app/interface/IAppCLI";
 import IProgram from "../types/app/interface/IProgram";
 

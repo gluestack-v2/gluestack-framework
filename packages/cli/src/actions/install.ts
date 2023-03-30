@@ -86,7 +86,7 @@ function checkForPackage(pluginName: string) {
 	});
 }
 
-module.exports = async (app: IAppCLI, pluginName: string, instanceName: string) => {
+export default async (app: IAppCLI, pluginName: string, instanceName: string) => {
 	setVar('pluginName', pluginName);
 
 	const {

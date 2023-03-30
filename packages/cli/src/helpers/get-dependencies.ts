@@ -1,8 +1,8 @@
 import IAppCLI from '../types/app/interface/IAppCLI';
 
-const path = require('path');
-const getPlugin = require('./getPlugin');
-const { attachPluginInstances } = require('./meta/plugin-instances');
+import path from 'path';
+import getPlugin from './getPlugin';
+import { attachPluginInstances } from './meta/plugin-instances';
 
 const getDependencies = async (app: IAppCLI, pluginName: string) => {
 	const dependencies = [];
@@ -24,6 +24,7 @@ const getDependencies = async (app: IAppCLI, pluginName: string) => {
 			);
 
 			if (plugin) {
+
 				await attachPluginInstances(app, process.cwd(), [
 					{ plugin: plugin },
 				]);

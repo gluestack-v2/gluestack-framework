@@ -1,9 +1,8 @@
-import IManagesInstances from '../../plugin/interface/IManagesInstances';
-import IPlugin from '../../plugin/interface/IPlugin';
+import IGSPlugin from '../../plugin/interface/IGSPlugin';
 
 export interface ArrObj {
-	key: string;
-	plugin: IPlugin & IManagesInstances;
+	key?: string;
+	plugin: IGSPlugin;
 }
 
 type IArrTree = ArrObj[];

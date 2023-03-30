@@ -5,17 +5,17 @@ import {
 import {
 	getTopToBottomPluginInstanceTree,
 } from '../helpers/meta/plugin-instances';
+
 import IArrTree from '../types/meta/interface/IArr';
 import IArrVersion from '../types/actions/interface/IArrVersion';
 import IAppCLI from '../types/app/interface/IAppCLI';
-import IGSPlugin from '../types/plugin/interface/IGSPlugin';
 import IPluginArray from '../types/actions/interface/IArrPluginDetails';
 
 function printPlugins(plugins: IArrTree) {
 	const arr: IArrVersion = {};
 	plugins.map((plugin) => {
-		if (!arr[plugin.key]) {
-			arr[plugin.key] = {
+		if (!arr[plugin.key as string]) {
+			arr[plugin.key as string] = {
 				version: plugin.plugin.getVersion(),
 			};
 		}
@@ -42,7 +42,7 @@ function printPluginInstances(plugins: IArrTree) {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance) => {
 				arr.push({
-					plugin: key,
+					plugin: key as string,
 					instance: pluginInstance.getName(),
 					directory: pluginInstance.getInstallationPath
 						? pluginInstance.getInstallationPath()
@@ -71,7 +71,7 @@ async function printInstalledPluginInstances(app: IAppCLI) {
 	newline();
 }
 
-module.exports = async (app: IAppCLI) => {
+export default async (app: IAppCLI) => {
 	await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };
