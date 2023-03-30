@@ -1,7 +1,6 @@
 const { join } = require('path');
 const events = require('events');
 const watcher = require('../watcher');
-const runDoctor = require('../../actions/doctor');
 const { copyFolder } = require('../file');
 const { injectPluginStore } = require('../getStorePath');
 const {
@@ -56,7 +55,7 @@ class App {
 			await plugin.init();
 		}
 		await this.initPluginInstances();
-	}
+	} 
 
 	async destroyPlugins() {
 		await this.destroyPluginInstances();
