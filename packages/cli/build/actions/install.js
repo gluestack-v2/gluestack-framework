@@ -8,6 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 const https = require('https');
 const { setVar } = require('../helpers/variables');
 const { fileExists, checkFolderIsEmpty } = require('../helpers/file');
@@ -20,6 +27,7 @@ const getPlugin = require('../helpers/getPlugin');
 const isGluePackage = require('../helpers/isGluePackage');
 const getDependencies = require('../helpers/get-dependencies');
 const removeSpecialChars = require('../helpers/remove-special-chars');
+const undoDownload = require('../helpers/undo-download');
 const prefix = 'glue-plugin-';
 function validateAndGet(pluginName, instanceName) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -105,6 +113,7 @@ module.exports = (app, pluginName, instanceName) => __awaiter(void 0, void 0, vo
     newline();
 });
 function checkForDependencies(app, packageName) {
+    var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         let missing = [];
         const dependencies = yield getDependencies(app, packageName);
@@ -116,12 +125,29 @@ function checkForDependencies(app, packageName) {
         if (missing.length) {
             error(`${packageName} installed failed: Missing dependencies`);
             console.log('\x1b[36m');
-            for (const plugin of missing) {
-                let arr = plugin.getName().split('-');
-                console.log(`Install dependency: \`node glue add ${plugin.getName()} ${arr[arr.length - 1]}\``);
+            try {
+                for (var _d = true, missing_1 = __asyncValues(missing), missing_1_1; missing_1_1 = yield missing_1.next(), _a = missing_1_1.done, !_a;) {
+                    _c = missing_1_1.value;
+                    _d = false;
+                    try {
+                        const plugin = _c;
+                        let arr = plugin.getName().split('-');
+                        console.log(`Install dependency: \`node glue add ${plugin.getName()} ${arr[arr.length - 1]}\``);
+                        yield undoDownload(packageName);
+                    }
+                    finally {
+                        _d = true;
+                    }
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (!_d && !_a && (_b = missing_1.return)) yield _b.call(missing_1);
+                }
+                finally { if (e_1) throw e_1.error; }
             }
             console.log('\x1b[37m');
-            newline();
             process.exit(0);
         }
     });

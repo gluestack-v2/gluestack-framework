@@ -12,6 +12,7 @@ const getPlugin = require('../helpers/getPlugin');
 const isGluePackage = require('../helpers/isGluePackage');
 const getDependencies = require('../helpers/get-dependencies');
 const removeSpecialChars = require('../helpers/remove-special-chars');
+const undoDownload = require('../helpers/undo-download');
 
 const prefix = 'glue-plugin-';
 
@@ -153,16 +154,17 @@ async function checkForDependencies(app, packageName) {
 	if (missing.length) {
 		error(`${packageName} installed failed: Missing dependencies`);
 		console.log('\x1b[36m');
-		for (const plugin of missing) {
+		for await (const plugin of missing) {
 			let arr = plugin.getName().split('-');
 			console.log(
 				`Install dependency: \`node glue add ${plugin.getName()} ${
 					arr[arr.length - 1]
 				}\``
 			);
+
+			await undoDownload(packageName);
 		}
 		console.log('\x1b[37m');
-		newline();
 		process.exit(0);
 	}
 }
