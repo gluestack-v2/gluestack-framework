@@ -1,5 +1,5 @@
 import IPlugin from './IPlugin';
-import IApp from '../../app/interface/IApp';
+import IApp from '../../app/interface/IAppCLI';
 import IGlueStorePlugin from '../../store/interface/IGluePluginStore';
 
 export default interface IInstance {

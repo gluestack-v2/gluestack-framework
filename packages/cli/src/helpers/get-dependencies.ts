@@ -1,4 +1,4 @@
-import IAppCLI from '../types/app/interface/IApp';
+import IAppCLI from '../types/app/interface/IAppCLI';
 
 const path = require('path');
 const getPlugin = require('./getPlugin');

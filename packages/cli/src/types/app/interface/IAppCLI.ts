@@ -1,16 +1,15 @@
-import IProgram from './IProgram';
 import IEventEmitter from 'events';
 import IPlugin from '../../plugin/interface/IPlugin';
 import ICmd from '../../helpers/interface/ICommandCallback';
 import Icommander from '../../helpers/interface/ICommander';
 import IGluePluginStoreFactory from '../../store/interface/IGluePluginStoreFactory';
-import IManagesInstances from '../../plugin/interface/IManagesInstances';
 import IInstance from '../../plugin/interface/IInstance';
+import IGSPlugin from '../../plugin/interface/IGSPlugin';
 
 export type WatchCallback = (event: string, path: string) => void;
 
 export default interface IAppCLI {
-	plugins: Array<IPlugin&IManagesInstances>;
+	plugins: Array<IGSPlugin>;
 	commander : Icommander;
 	eventEmitter: IEventEmitter;
 	gluePluginStoreFactory: IGluePluginStoreFactory;

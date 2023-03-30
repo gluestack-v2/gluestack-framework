@@ -1,4 +1,4 @@
-import IAppCLI from '../types/app/interface/IApp';
+import IAppCLI from '../types/app/interface/IAppCLI';
 import { injectPluginStore } from './getStorePath';
 import { error } from './print';
 

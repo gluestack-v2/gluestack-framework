@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import IAppCLI from "../../app/interface/IApp";
+import IAppCLI from "../../app/interface/IAppCLI";
 
 type ICmd = (program: Command, app: IAppCLI) => void;
 

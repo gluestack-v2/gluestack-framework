@@ -1,4 +1,4 @@
-import IAppCLI from "../../app/interface/IApp";
+import IAppCLI from "../../app/interface/IAppCLI";
 import IGluePluginStore from "../../store/interface/IGluePluginStore";
 import IManagesInstances from "./IManagesInstances";
 import IPlugin from "./IPlugin";

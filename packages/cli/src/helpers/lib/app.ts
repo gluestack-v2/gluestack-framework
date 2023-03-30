@@ -16,7 +16,7 @@ import IEventEmitter from 'events';
 import Icommander from '../../types/helpers/interface/ICommander';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
 import ICmd from '../../types/helpers/interface/ICommandCallback';
-import IAppCLI, { WatchCallback } from '../../types/app/interface/IApp';
+import IAppCLI, { WatchCallback } from '../../types/app/interface/IAppCLI';
 import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
 
 class App implements IAppCLI {

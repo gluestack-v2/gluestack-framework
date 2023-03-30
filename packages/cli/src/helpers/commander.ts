@@ -2,7 +2,7 @@ import { Command, CommanderError } from 'commander';
 //@ts-ignore
 import { version } from '../../package.json';
 
-import IAppCLI from '../types/app/interface/IApp';
+import IAppCLI from '../types/app/interface/IAppCLI';
 import ICmd from '../types/helpers/interface/ICommandCallback';
 import ICommander from '../types/helpers/interface/ICommander';
 

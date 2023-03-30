@@ -1,4 +1,4 @@
-import IAppCLI from '../../app/interface/IApp';
+import IAppCLI from '../../app/interface/IAppCLI';
 import ICmd from './ICommandCallback';
 
 type Icommander = {

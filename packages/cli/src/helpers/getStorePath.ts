@@ -1,4 +1,4 @@
-import IAppCLI from '../types/app/interface/IApp';
+import IAppCLI from '../types/app/interface/IAppCLI';
 
 function getPluginStorePath(pluginName: string) {
 	return `${process.cwd()}/.glue/internals/store/${pluginName}/index.json`;
