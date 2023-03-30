@@ -1,1 +1,2 @@
-export function yarn(): Promise<any>;
+declare const yarn: () => Promise<string>;
+export { yarn };

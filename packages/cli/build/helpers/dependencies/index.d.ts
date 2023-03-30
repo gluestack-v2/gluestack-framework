@@ -1,18 +1,18 @@
-import { docker } from "./docker";
-import { dockerCompose } from "./docker-compose";
-import { dockerStatus } from "./docker-status";
-import { hasura } from "./hasura";
-import { node } from "./node";
-import { yarn } from "./yarn";
-import { tsc } from "./tsc";
-import { npm } from "./npm";
-export namespace dependencies {
-    const docker: string;
-    const dockerCompose: string;
-    const dockerStatus: string;
-    const hasura: string;
-    const node: string;
-    const yarn: string;
-    const npm: string;
-}
-export { docker, dockerCompose, dockerStatus, hasura, node, yarn, tsc, npm };
+import { docker } from './docker';
+import { dockerCompose } from './docker-compose';
+import { dockerStatus } from './docker-status';
+import { hasura } from './hasura';
+import { node } from './node';
+import { yarn } from './yarn';
+import { npm } from './npm';
+import { tsc } from './tsc';
+declare const dependencies: {
+    docker: string;
+    dockerCompose: string;
+    dockerStatus: string;
+    hasura: string;
+    node: string;
+    yarn: string;
+    npm: string;
+};
+export { docker, dockerCompose, dockerStatus, hasura, node, yarn, tsc, npm, dependencies, };

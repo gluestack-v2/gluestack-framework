@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,20 +7,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { join } = require('path');
-const { createFolder, fileExists, copyFolder } = require('./file');
-const writer = {};
-// Moves folders/files into the .glue/seal/services directory and
-// creates the .glue/seal/services directory if it doesn't exist
-writer.write = (path, instanceName) => __awaiter(void 0, void 0, void 0, function* () {
-    const sealPath = join(process.cwd(), '.glue/seal/services');
-    if (!fileExists(sealPath)) {
-        yield createFolder(sealPath);
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    const instancePath = join(sealPath, instanceName, 'src', instanceName);
-    if (!fileExists(instancePath)) {
-        yield createFolder(instancePath);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "path", "./file"], factory);
     }
-    yield copyFolder(path, instancePath);
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const path_1 = require("path");
+    const file_1 = require("./file");
+    const writer = {
+        write: (path, instanceName) => __awaiter(void 0, void 0, void 0, function* () {
+            const sealPath = (0, path_1.join)(process.cwd(), '.glue/seal/services');
+            if (!(0, file_1.fileExists)(sealPath)) {
+                yield (0, file_1.createFolder)(sealPath);
+            }
+            const instancePath = (0, path_1.join)(sealPath, instanceName, 'src', instanceName);
+            if (!(0, file_1.fileExists)(instancePath)) {
+                yield (0, file_1.createFolder)(instancePath);
+            }
+            yield (0, file_1.copyFolder)(path, instancePath);
+        }),
+    };
+    exports.default = writer;
 });
-module.exports = writer;

@@ -1,1 +1,2 @@
-export function docker(): Promise<any>;
+declare const docker: () => Promise<string>;
+export { docker };

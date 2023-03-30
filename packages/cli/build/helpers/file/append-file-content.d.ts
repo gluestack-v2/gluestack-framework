@@ -1,1 +1,2 @@
-export function appendFileContent(filepath: any, content: any): Promise<void>;
+declare const appendFileContent: (filepath: string, content: string) => Promise<void>;
+export default appendFileContent;

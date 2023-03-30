@@ -1,4 +1,4 @@
-import IApp from '../../app/interface/IApp';
+import IApp from '../../app/interface/IAppCLI';
 import IInstance from './IInstance';
 export interface IRoutes {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';

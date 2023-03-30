@@ -1,1 +1,2 @@
-export function checkFolderIsEmpty(directoryPath: any): Promise<any>;
+declare const checkFolderIsEmpty: (directoryPath: string) => Promise<boolean>;
+export default checkFolderIsEmpty;

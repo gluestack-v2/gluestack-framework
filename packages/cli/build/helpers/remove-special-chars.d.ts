@@ -1,2 +1,2 @@
-export = removeSpecialChars;
-declare function removeSpecialChars(str: any): any;
+declare const removeSpecialChars: (str: string) => string;
+export default removeSpecialChars;

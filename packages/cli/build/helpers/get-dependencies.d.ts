@@ -1,2 +1,3 @@
-export = getDependencies;
-declare function getDependencies(app: any, pluginName: any): Promise<any[]>;
+import IAppCLI from '../types/app/interface/IAppCLI';
+declare const getDependencies: (app: IAppCLI, pluginName: string) => Promise<any[]>;
+export default getDependencies;

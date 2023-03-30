@@ -1,2 +1,3 @@
-declare function _exports(app: any): Promise<void>;
-export = _exports;
+import IAppCLI from '../types/app/interface/IAppCLI';
+declare const _default: (app: IAppCLI) => Promise<void>;
+export default _default;

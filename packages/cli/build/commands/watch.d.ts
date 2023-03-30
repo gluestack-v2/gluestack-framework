@@ -1,2 +1,7 @@
-declare function _exports(program: any, app: any): Promise<void>;
-export = _exports;
+/**
+ * Watches the instances for changes and restarts them
+ */
+import IAppCLI from "../types/app/interface/IAppCLI";
+import IProgram from "../types/app/interface/IProgram";
+declare const _default: (program: IProgram, app: IAppCLI) => Promise<void>;
+export default _default;

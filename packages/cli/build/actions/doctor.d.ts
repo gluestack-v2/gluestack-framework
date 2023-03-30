@@ -1,2 +1,2 @@
-export = runDoctor;
-declare function runDoctor(): Promise<void>;
+declare const runDoctor: () => Promise<void>;
+export default runDoctor;

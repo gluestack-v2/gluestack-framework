@@ -1,1 +1,2 @@
-export function node(): Promise<any>;
+declare const node: () => Promise<string>;
+export { node };

@@ -1,1 +1,2 @@
-export function npm(): Promise<any>;
+declare const npm: () => Promise<string>;
+export { npm };

@@ -1,2 +1,2 @@
-declare function _exports(pluginPath: any, pluginName: any, instanceName: any): Promise<void>;
-export = _exports;
+declare const _default: (pluginPath: string, instanceName: string) => Promise<void>;
+export default _default;

@@ -1,1 +1,2 @@
-export function copyFolder(source: any, target: any, depth?: number): Promise<void>;
+declare const copyFolder: (source: string, target: string, depth?: number) => Promise<void>;
+export default copyFolder;
