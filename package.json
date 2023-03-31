@@ -6,8 +6,10 @@
   "scripts": {
     "install-all": "npm install --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "dev": "./glue",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
+    "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
+    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop"
   },
   "repository": {
     "type": "git",
