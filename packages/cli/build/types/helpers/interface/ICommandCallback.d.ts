@@ -1,4 +1,4 @@
 import { Command } from "commander";
-import IAppCLI from "../../app/interface/IAppCLI";
-type ICmd = (program: Command, app: IAppCLI) => void;
+import App from "../../../helpers/lib/app";
+type ICmd = (program: Command, app: App) => void;
 export default ICmd;

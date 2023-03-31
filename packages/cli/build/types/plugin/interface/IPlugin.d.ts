@@ -1,13 +1,18 @@
-import IGlueStorePlugin from '../../store/interface/IGluePluginStore';
+import App from '../../../helpers/lib/app';
+import IGluePluginStore from '../../store/interface/IGluePluginStore';
+import IInstance from './IInstance';
 export default interface IPlugin {
-    gluePluginStore: IGlueStorePlugin;
-    type: 'stateless' | 'stateful' | 'devonly';
-    init(): any;
-    destroy(): any;
+    app: App;
+    gluePluginStore: IGluePluginStore;
+    instances: IInstance[];
+    init(): void;
     getName(): string;
     getVersion(): string;
-    getInstallationPath(target: string): string;
-    getType(): 'stateless' | 'stateful' | 'devonly';
-    runPostInstall(instanceName: string, target: string): any;
-    getTemplateFolderPath(): string;
+    createInstance(key: string, gluePluginStore: IGluePluginStore, installationPath: string): IInstance;
+    getInstances(): IInstance[];
+    destroy(): void;
+}
+export interface ITSPlugin extends IPlugin {
+    new (appObj: App, gluePluginStore: IGluePluginStore): IPlugin;
+    new (appObj: App): IPlugin;
 }

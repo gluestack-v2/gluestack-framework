@@ -1,8 +1,8 @@
-import IAppCLI from '../../app/interface/IAppCLI';
+import App from '../../../helpers/lib/app';
 import ICmd from './ICommandCallback';
 type Icommander = {
     init: () => void;
-    addCommand: (app: IAppCLI, cmd: ICmd) => void;
+    addCommand: (app: App, cmd: ICmd) => void;
     destroy: () => void;
 };
 export default Icommander;

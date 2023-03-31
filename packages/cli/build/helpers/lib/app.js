@@ -47,9 +47,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 let bootedPlugins = plugins.map(({ plugin }) => {
                     return plugin;
                 });
+                function Object(plug, pa) {
+                    const p = new plug(pa);
+                    const pObj = new plug(pa, (0, getStorePath_1.injectPluginStore)(pa, p.getName()));
+                    return pObj;
+                }
                 let bootedLocalPlugins = localPlugins.map((PluginClass) => {
-                    const p = new PluginClass(this);
-                    const pObj = new PluginClass(this, (0, getStorePath_1.injectPluginStore)(this, p.getName()));
+                    const typedClass = PluginClass;
+                    const pObj = Object(typedClass, this);
                     return pObj;
                 });
                 let mergedPlugins = bootedPlugins.concat(bootedLocalPlugins);
