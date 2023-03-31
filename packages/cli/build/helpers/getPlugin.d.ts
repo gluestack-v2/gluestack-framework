@@ -1,3 +1,3 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
-declare function getPlugin(app: IAppCLI, path: string, pluginName?: string, throwErrorAndExit?: Boolean): any;
+import AppCLI from '../helpers/lib/app';
+declare function getPlugin(app: AppCLI, path: string, pluginName?: string, throwErrorAndExit?: Boolean): any;
 export default getPlugin;

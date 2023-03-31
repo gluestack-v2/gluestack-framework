@@ -1,16 +1,17 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
+import AppCLI from '../helpers/lib/app';
 
-function getPluginStorePath(pluginName: string) {
+export function getPluginStorePath(pluginName: string) {
 	return `${process.cwd()}/.glue/internals/store/${pluginName}/index.json`;
 }
-function getPluginInstanceStorePath(
+
+export function getPluginInstanceStorePath(
 	instanceName: string,
 	pluginName: string
 	) {
 	return `${process.cwd()}/.glue/internals/store/${pluginName}/${instanceName}.json`;
 }
 
-function injectPluginStore(app: IAppCLI, pluginName: string) {
+export function injectPluginStore(app: AppCLI, pluginName: string) {
 	const store = app.gluePluginStoreFactory.createPluginStoreInstance(
 		getPluginStorePath(pluginName)
 	);
@@ -18,17 +19,10 @@ function injectPluginStore(app: IAppCLI, pluginName: string) {
 	return store;
 }
 
-function injectPluginInstanceStore(app: IAppCLI, pluginName: string, instanceName: string) {
+export function injectPluginInstanceStore(app: AppCLI, pluginName: string, instanceName: string) {
 	const store = app.gluePluginStoreFactory.createPluginStoreInstance(
 		getPluginInstanceStorePath(instanceName, pluginName)
 	);
 	store.restore();
 	return store;
 }
-
-export {
-	getPluginStorePath,
-	getPluginInstanceStorePath,
-	injectPluginStore,
-	injectPluginInstanceStore,
-};

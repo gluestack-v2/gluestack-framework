@@ -1,4 +1,4 @@
-import IApp from '../../app/interface/IAppCLI';
+import AppCLI from '../../../helpers/lib/app';
 import IInstance from './IInstance';
 
 export interface IRoutes {
@@ -16,7 +16,7 @@ export interface IRoutes {
 }
 
 export default interface IContainerController {
-	app: IApp;
+	app: AppCLI;
 	status: 'up' | 'down';
 	portNumber: number;
 	containerId: string;

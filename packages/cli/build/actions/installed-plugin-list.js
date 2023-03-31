@@ -21,9 +21,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     const print_1 = require("../helpers/print");
     const plugins_1 = require("../helpers/meta/plugins");
     const plugin_instances_1 = require("../helpers/meta/plugin-instances");
-    function printPlugins(plugins) {
+    const printPlugins = (plugins) => {
         const arr = {};
-        plugins.map((plugin) => {
+        plugins.forEach((plugin) => {
             if (!arr[plugin.key]) {
                 arr[plugin.key] = {
                     version: plugin.plugin.getVersion(),
@@ -36,17 +36,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             return;
         }
         (0, print_1.warning)('No plugins are installed in your app.');
-    }
-    function printInstalledPlugins(app) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const plugins = yield (0, plugins_1.getTopToBottomPluginTree)(app, process.cwd());
-            printPlugins(plugins);
-            (0, print_1.newline)();
-        });
-    }
-    function printPluginInstances(plugins) {
+    };
+    const printInstalledPlugins = (app) => __awaiter(void 0, void 0, void 0, function* () {
+        const plugins = yield (0, plugins_1.getTopToBottomPluginTree)(app, process.cwd());
+        printPlugins(plugins);
+        (0, print_1.newline)();
+    });
+    const printPluginInstances = (plugins) => {
         const arr = [];
-        plugins.map(({ key, plugin }) => {
+        plugins.forEach(({ key, plugin }) => {
             if (plugin.getInstances) {
                 plugin.getInstances().forEach((pluginInstance) => {
                     arr.push({
@@ -66,16 +64,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             return;
         }
         (0, print_1.warning)('No instances are installed in your app.');
-    }
-    function printInstalledPluginInstances(app) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const plugins = yield (0, plugin_instances_1.getTopToBottomPluginInstanceTree)(app, process.cwd());
-            printPluginInstances(plugins);
-            (0, print_1.newline)();
-        });
-    }
+    };
+    const printInstalledPluginInstances = (app) => __awaiter(void 0, void 0, void 0, function* () {
+        const plugins = yield (0, plugin_instances_1.getTopToBottomPluginInstanceTree)(app, process.cwd());
+        printPluginInstances(plugins);
+        (0, print_1.newline)();
+    });
     exports.default = (app) => __awaiter(void 0, void 0, void 0, function* () {
-        yield printInstalledPlugins(app);
+        // await printInstalledPlugins(app);
         yield printInstalledPluginInstances(app);
     });
 });

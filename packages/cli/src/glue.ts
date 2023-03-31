@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-import IGSPlugin from "./types/plugin/interface/IGSPlugin";
-
 import App from './helpers/lib/app';
+import IPlugin from "./types/plugin/interface/IPlugin";
 
-const glue = async (localPlugins: Array<IGSPlugin> = []) => {
+const glue = async (localPlugins: Array<IPlugin> = []) => {
 	const app = new App();
 
 	await app.init(localPlugins);

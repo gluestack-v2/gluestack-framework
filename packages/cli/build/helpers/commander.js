@@ -10,7 +10,7 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const commander_1 = require("commander");
-    //@ts-ignore
+    // @ts-ignore
     const package_json_1 = require("../../package.json");
     const program = new commander_1.Command();
     const commander = {};

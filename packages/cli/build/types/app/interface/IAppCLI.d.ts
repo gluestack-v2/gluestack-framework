@@ -14,7 +14,7 @@ export default interface IAppCLI {
     addCommand(runner: ICmd): void;
     doctor(): any;
     dispatchEvent(eventName: string, args: any): void;
-    addEventListener(eventName: string, callback: () => {}): void;
+    addEventListener(eventName: string, callback: (...args: any[]) => void): void;
     createPluginInstance(plugin: IGSPlugin, instanceName: string, src: string, target: string): any;
     getPluginByName(pluginName: string): any;
     getPlugins(): IGSPlugin[];

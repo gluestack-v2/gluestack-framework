@@ -9,9 +9,9 @@ import {
 	createFolder,
 } from '../helpers/file';
 
+import AppCLI from '../helpers/lib/app';
 import build from '../helpers/plugin/build';
 import { error, warning, success, info } from '../helpers/print';
-import IAppCLI from '../types/app/interface/IAppCLI';
 
 const mainEntryPoint = 'dist/src/index.js';
 
@@ -52,7 +52,7 @@ const pluginStubFiles = {
 	],
 };
 
-async function getAndValidatePackageJson(filepath: string) {
+const getAndValidatePackageJson = async (filepath: string) => {
 	if (!fileExists(filepath)) {
 		error('Plugin init command failed: package.json does not exists');
 		process.exit(0);
@@ -63,12 +63,12 @@ async function getAndValidatePackageJson(filepath: string) {
 		process.exit(0);
 	}
 	return packageJson;
-}
+};
 
-async function writeToPackageJson(
+const writeToPackageJson = async (
 	filepath: string,
 	packageJson: any
-) {
+) => {
 	if (packageJson.main) {
 		if (packageJson.main === mainEntryPoint) {
 			warning('Plugin init command failed: already a plugin');
@@ -89,7 +89,7 @@ async function writeToPackageJson(
 	};
 	await writeFile(filepath, JSON.stringify(json, null, 2) + os.EOL);
 	return json.name;
-}
+};
 
 async function copyPluginFiles(
 	currentDir: string,
@@ -121,7 +121,7 @@ async function createTemplateFolder(
 	);
 }
 
-export default async (app: IAppCLI, type: 'instance' | 'container') => {
+export default async (app: AppCLI, type: 'instance' | 'container') => {
 	const currentDir = process.cwd();
 	const filepath = currentDir + '/package.json';
 

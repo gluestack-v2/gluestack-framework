@@ -6,14 +6,16 @@ import {
 	getTopToBottomPluginInstanceTree,
 } from '../helpers/meta/plugin-instances';
 
+import AppCLI from '../helpers/lib/app';
 import IArrTree from '../types/meta/interface/IArr';
 import IArrVersion from '../types/actions/interface/IArrVersion';
-import IAppCLI from '../types/app/interface/IAppCLI';
 import IPluginArray from '../types/actions/interface/IArrPluginDetails';
+import IInstance from '../types/plugin/interface/IInstance';
 
-function printPlugins(plugins: IArrTree) {
+const printPlugins = (plugins: IArrTree) => {
 	const arr: IArrVersion = {};
-	plugins.map((plugin) => {
+
+	plugins.forEach((plugin) => {
 		if (!arr[plugin.key as string]) {
 			arr[plugin.key as string] = {
 				version: plugin.plugin.getVersion(),
@@ -28,19 +30,20 @@ function printPlugins(plugins: IArrTree) {
 	}
 
 	warning('No plugins are installed in your app.');
-}
+};
 
-async function printInstalledPlugins(app: IAppCLI) {
+const printInstalledPlugins = async (app: AppCLI) => {
 	const plugins = await getTopToBottomPluginTree(app, process.cwd());
 	printPlugins(plugins);
 	newline();
-}
+};
 
-function printPluginInstances(plugins: IArrTree) {
+const printPluginInstances = (plugins: IArrTree) => {
 	const arr: IPluginArray = [];
-	plugins.map(({ key, plugin }) => {
+
+	plugins.forEach(({ key, plugin }) => {
 		if (plugin.getInstances) {
-			plugin.getInstances().forEach((pluginInstance) => {
+			plugin.getInstances().forEach((pluginInstance: IInstance) => {
 				arr.push({
 					plugin: key as string,
 					instance: pluginInstance.getName(),
@@ -60,18 +63,18 @@ function printPluginInstances(plugins: IArrTree) {
 	}
 
 	warning('No instances are installed in your app.');
-}
+};
 
-async function printInstalledPluginInstances(app: IAppCLI) {
+const printInstalledPluginInstances = async (app: AppCLI) => {
 	const plugins = await getTopToBottomPluginInstanceTree(
 		app,
 		process.cwd()
 	);
 	printPluginInstances(plugins);
 	newline();
-}
+};
 
-export default async (app: IAppCLI) => {
-	await printInstalledPlugins(app);
+export default async (app: AppCLI) => {
+	// await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };

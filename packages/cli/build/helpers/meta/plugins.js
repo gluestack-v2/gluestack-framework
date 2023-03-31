@@ -16,17 +16,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "lodash", "../file", "../getPlugin", "../isGluePackage", "../print"], factory);
+        define(["require", "exports", "lodash", "../print", "../getPlugin", "../isGluePackage", "../file"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getBottomToTopPluginTree = exports.getTopToBottomPluginTree = exports.getPluginTree = exports.writePlugin = void 0;
     const lodash_1 = require("lodash");
-    const file_1 = require("../file");
+    const print_1 = require("../print");
     const getPlugin_1 = __importDefault(require("../getPlugin"));
     const isGluePackage_1 = __importDefault(require("../isGluePackage"));
-    const print_1 = require("../print");
+    const file_1 = require("../file");
     const writePlugin = (pluginFilePath, pluginName, plugin) => __awaiter(void 0, void 0, void 0, function* () {
         let data = yield (0, file_1.readFile)(pluginFilePath);
         if (!data) {
@@ -59,42 +59,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         for (const plugin of plugins) {
             tree[plugin] = {
                 plugin: yield (0, getPlugin_1.default)(app, plugin, plugin),
-                dependencies: yield getPluginTree(app, plugin, ++depth),
+                dependencies: yield (0, exports.getPluginTree)(app, plugin, ++depth),
             };
         }
         return tree;
     });
     exports.getPluginTree = getPluginTree;
-    function getTopToBottomPluginTree(app, path) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const tree = yield getPluginTree(app, path);
-            function recursivelyJoinArray(tree, arr) {
-                if (tree && !(0, lodash_1.isEmpty)(tree)) {
-                    Object.keys(tree).forEach((key) => {
-                        if (tree[key].plugin) {
+    const getTopToBottomPluginTree = (app, path) => __awaiter(void 0, void 0, void 0, function* () {
+        const tree = yield (0, exports.getPluginTree)(app, path);
+        function recursivelyJoinArray(tree, arr) {
+            if (tree && !(0, lodash_1.isEmpty)(tree)) {
+                Object.keys(tree).forEach((key) => {
+                    if (tree[key].dependencies) {
+                        recursivelyJoinArray(tree[key].dependencies, arr);
+                    }
+                });
+                Object.keys(tree).forEach((key) => {
+                    if (tree[key].plugin) {
+                        const exists = arr.some((obj) => obj.key === key);
+                        if (!exists) {
                             arr.push({
                                 key: key,
                                 plugin: tree[key].plugin,
                             });
                         }
-                    });
-                    Object.keys(tree).forEach((key) => {
-                        if (tree[key].dependencies) {
-                            recursivelyJoinArray(tree[key].dependencies, arr);
-                        }
-                    });
-                }
-                return arr;
+                    }
+                });
             }
-            return recursivelyJoinArray(tree, []);
-        });
-    }
+            return arr;
+        }
+        const arr = [];
+        return recursivelyJoinArray(tree, arr);
+    });
     exports.getTopToBottomPluginTree = getTopToBottomPluginTree;
-    function getBottomToTopPluginTree(app, path) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const array = yield getTopToBottomPluginTree(app, path);
-            return array.reverse();
-        });
-    }
+    const getBottomToTopPluginTree = (app, path) => __awaiter(void 0, void 0, void 0, function* () {
+        const array = yield (0, exports.getTopToBottomPluginTree)(app, path);
+        return array.reverse();
+    });
     exports.getBottomToTopPluginTree = getBottomToTopPluginTree;
 });

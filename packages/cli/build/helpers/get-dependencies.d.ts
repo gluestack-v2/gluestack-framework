@@ -1,3 +1,3 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
-declare const getDependencies: (app: IAppCLI, pluginName: string) => Promise<any[]>;
+import AppCLI from '../helpers/lib/app';
+declare const getDependencies: (app: AppCLI, pluginName: string) => Promise<any[]>;
 export default getDependencies;

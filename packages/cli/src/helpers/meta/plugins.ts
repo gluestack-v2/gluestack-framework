@@ -1,19 +1,19 @@
 import { isEmpty } from 'lodash';
-import { readFile, writeFile } from '../file';
+import { error } from '../print';
 import getPlugin from '../getPlugin';
 import isGluePackage from '../isGluePackage';
-import { error } from '../print';
+import { readFile, writeFile } from '../file';
+import AppCLI from '../../helpers/lib/app';
 
-import IPluginJSON from '../../types/jsonFiles/interface/IPlugins';
 import IArrTree from '../../types/meta/interface/IArr';
 import ITree from '../../types/meta/interface/ITree';
-import IAppCLI from '../../types/app/interface/IAppCLI';
-import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
+import IPlugin from '../../types/plugin/interface/IPlugin';
+import IPluginJSON from '../../types/jsonFiles/interface/IPlugins';
 
-const writePlugin = async (
+export const writePlugin = async (
 	pluginFilePath: string,
 	pluginName: string,
-	plugin: IGSPlugin
+	plugin: IPlugin
 ) => {
 	let data: IPluginJSON = await readFile(pluginFilePath);
 	if (!data) {
@@ -30,8 +30,8 @@ const writePlugin = async (
 	}
 };
 
-const getPluginTree = async (
-	app: IAppCLI,
+export const getPluginTree = async (
+	app: AppCLI,
 	path: string,
 	depth: number = 0,
 	tree: ITree = {}
@@ -62,39 +62,38 @@ const getPluginTree = async (
 	return tree;
 };
 
-async function getTopToBottomPluginTree(app: IAppCLI, path: string) {
+export const getTopToBottomPluginTree = async (app: AppCLI, path: string) => {
 	const tree = await getPluginTree(app, path);
 
 	function recursivelyJoinArray(tree: ITree | null, arr: IArrTree) {
 		if (tree && !isEmpty(tree)) {
 			Object.keys(tree).forEach((key) => {
-				if (tree[key].plugin) {
-					arr.push({
-						key: key,
-						plugin: tree[key].plugin,
-					});
-				}
-			});
-			Object.keys(tree).forEach((key) => {
 				if (tree[key].dependencies) {
 					recursivelyJoinArray(tree[key].dependencies, arr);
 				}
 			});
+
+			Object.keys(tree).forEach((key: string) => {
+				if (tree[key].plugin) {
+					const exists = arr.some((obj) => obj.key === key);
+					if (!exists) {
+						arr.push({
+							key: key,
+							plugin: tree[key].plugin,
+						});
+					}
+				}
+			});
 		}
+
 		return arr;
 	}
 
-	return recursivelyJoinArray(tree, []);
-}
+	const arr: IArrTree = [];
+	return recursivelyJoinArray(tree, arr);
+};
 
-async function getBottomToTopPluginTree(app: IAppCLI, path: string) {
+export const getBottomToTopPluginTree = async (app: AppCLI, path: string) => {
 	const array = await getTopToBottomPluginTree(app, path);
 	return array.reverse();
-}
-
-export {
-	writePlugin,
-	getPluginTree,
-	getTopToBottomPluginTree,
-	getBottomToTopPluginTree,
 };

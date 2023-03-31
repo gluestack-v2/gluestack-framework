@@ -1,11 +1,11 @@
+import AppCLI from "../helpers/lib/app";
 
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IInstance from "./plugin/interface/IInstance";
+import IGlueStorePlugin from "./store/interface/IGluePluginStore";
+import ILifeCycle from "./plugin/interface/ILifeCycle";
+import IPlugin from "./plugin/interface/IPlugin";
 
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance';
-
-export class PluginInstance extends BaseGluestackPluginInstance {
+export default abstract class BaseGluestackPluginInstance implements IInstance, ILifeCycle {
   app: AppCLI;
   name: string;
   callerPlugin: IPlugin;
@@ -20,8 +20,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     gluePluginStore: IGlueStorePlugin,
     installationPath: string
   ) {
-    super(app, callerPlugin, name, gluePluginStore, installationPath);
-
     this.app = app;
     this.name = name;
     this.callerPlugin = callerPlugin;
@@ -29,13 +27,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     this.installationPath = installationPath;
   }
 
-  init() {
-    //
-  }
-
-  destroy() {
-    //
-  }
+  abstract init(): void;
+  abstract destroy(): void;
+  abstract watch(): string[];
 
   getName(): string {
     return this.name;
@@ -47,14 +41,5 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   getInstallationPath(): string {
     return this.installationPath;
-  }
-
-  watch(): string[] {
-    return [
-      'pages',
-      'public',
-      'styles',
-      'components'
-    ];
   }
 }

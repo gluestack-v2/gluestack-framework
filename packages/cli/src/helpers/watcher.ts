@@ -1,5 +1,4 @@
 import chokidar from 'chokidar';
-import { WatchCallback } from '../types/app/interface/IAppCLI';
 
 interface Watcher {
   watch: (cwd: string, pattern: string | string[], callback: any) => void;

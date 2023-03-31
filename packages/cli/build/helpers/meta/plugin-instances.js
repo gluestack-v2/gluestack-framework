@@ -24,24 +24,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     const file_1 = require("../file");
     const plugins_1 = require("./plugins");
     const getStorePath_1 = require("../getStorePath");
-    const pluginInstance = (pluginInstancesFilePath, packageName, instanceName, directoryName) => __awaiter(void 0, void 0, void 0, function* () {
-        let data = (yield (0, file_1.readFile)(pluginInstancesFilePath));
-        if (!data) {
-            (0, print_1.error)('~/.glue/internals plugin instances file is corrupted.');
-            process.exit(0);
-        }
-        if (!data[packageName]) {
-            data[packageName] = [];
-        }
-        data[packageName].push({
-            instance: instanceName,
-            directory: directoryName,
-            container_store: {},
+    function pluginInstance(pluginInstancesFilePath, packageName, instanceName, directoryName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let data = (yield (0, file_1.readFile)(pluginInstancesFilePath));
+            if (!data) {
+                (0, print_1.error)('~/.glue/internals plugin instances file is corrupted.');
+                process.exit(0);
+            }
+            if (!data[packageName]) {
+                data[packageName] = [];
+            }
+            data[packageName].push({
+                instance: instanceName,
+                directory: directoryName,
+                container_store: {},
+            });
+            // write pluginInstances in file
+            yield (0, file_1.writeFile)(pluginInstancesFilePath, JSON.stringify(data, null, 2));
         });
-        // write pluginInstances in file
-        yield (0, file_1.writeFile)(pluginInstancesFilePath, JSON.stringify(data, null, 2));
-    });
+    }
     exports.pluginInstance = pluginInstance;
+    ;
     function attachPluginInstances(app, path, plugins) {
         return __awaiter(this, void 0, void 0, function* () {
             const pluginInstancesFilePath = `${path}/.glue/internals/plugin-instances.json`;

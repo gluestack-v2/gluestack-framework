@@ -30,8 +30,10 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/**/*",
-    "websit"
+    "packages/*"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
+    "@gluestack-v2/glue-plugin-web": "^0.0.2"
+  }
 }

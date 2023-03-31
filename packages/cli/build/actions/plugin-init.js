@@ -58,37 +58,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             },
         ],
     };
-    function getAndValidatePackageJson(filepath) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(0, file_1.fileExists)(filepath)) {
-                (0, print_1.error)('Plugin init command failed: package.json does not exists');
+    const getAndValidatePackageJson = (filepath) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!(0, file_1.fileExists)(filepath)) {
+            (0, print_1.error)('Plugin init command failed: package.json does not exists');
+            process.exit(0);
+        }
+        const packageJson = require(filepath);
+        if (!packageJson) {
+            (0, print_1.error)('Plugin init command failed: package.json does not exists');
+            process.exit(0);
+        }
+        return packageJson;
+    });
+    const writeToPackageJson = (filepath, packageJson) => __awaiter(void 0, void 0, void 0, function* () {
+        if (packageJson.main) {
+            if (packageJson.main === mainEntryPoint) {
+                (0, print_1.warning)('Plugin init command failed: already a plugin');
                 process.exit(0);
             }
-            const packageJson = require(filepath);
-            if (!packageJson) {
-                (0, print_1.error)('Plugin init command failed: package.json does not exists');
-                process.exit(0);
-            }
-            return packageJson;
-        });
-    }
-    function writeToPackageJson(filepath, packageJson) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (packageJson.main) {
-                if (packageJson.main === mainEntryPoint) {
-                    (0, print_1.warning)('Plugin init command failed: already a plugin');
-                    process.exit(0);
-                }
-                (0, print_1.error)('Writing to package.json failed: plugin entry point already exists');
-                process.exit(0);
-            }
-            const json = yield (0, file_1.readFile)(filepath);
-            json.main = mainEntryPoint;
-            json.scripts = Object.assign(Object.assign({}, json.scripts), { 'plugin-dev': 'tsc --watch', 'plugin-build': 'tsc --declaration' });
-            yield (0, file_1.writeFile)(filepath, JSON.stringify(json, null, 2) + os_1.default.EOL);
-            return json.name;
-        });
-    }
+            (0, print_1.error)('Writing to package.json failed: plugin entry point already exists');
+            process.exit(0);
+        }
+        const json = yield (0, file_1.readFile)(filepath);
+        json.main = mainEntryPoint;
+        json.scripts = Object.assign(Object.assign({}, json.scripts), { 'plugin-dev': 'tsc --watch', 'plugin-build': 'tsc --declaration' });
+        yield (0, file_1.writeFile)(filepath, JSON.stringify(json, null, 2) + os_1.default.EOL);
+        return json.name;
+    });
     function copyPluginFiles(currentDir, type) {
         return __awaiter(this, void 0, void 0, function* () {
             if (pluginStubFiles[type]) {

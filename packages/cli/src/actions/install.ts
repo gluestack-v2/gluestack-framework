@@ -1,24 +1,25 @@
 import https from 'https';
-import variables from '../helpers/variables';
-import { fileExists, checkFolderIsEmpty } from '../helpers/file';
-import download from '../helpers/download';
-import { pluginInstance } from '../helpers/meta/plugin-instances';
-import metaExists from '../helpers/meta/exists';
-import { success, error, newline } from '../helpers/print';
-import { writePlugin } from '../helpers/meta/plugins';
-import getPlugin from '../helpers/getPlugin';
-import isGluePackage from '../helpers/isGluePackage';
-import getDependencies from '../helpers/get-dependencies';
-import removeSpecialChars from '../helpers/remove-special-chars';
 
-import IAppCLI from '../types/app/interface/IAppCLI';
+import download from '../helpers/download';
+import getPlugin from '../helpers/getPlugin';
+import variables from '../helpers/variables';
+import metaExists from '../helpers/meta/exists';
+import isGluePackage from '../helpers/isGluePackage';
+import { writePlugin } from '../helpers/meta/plugins';
+import getDependencies from '../helpers/get-dependencies';
+import { success, error, newline } from '../helpers/print';
+import removeSpecialChars from '../helpers/remove-special-chars';
+import { fileExists, checkFolderIsEmpty } from '../helpers/file';
+import { pluginInstance } from '../helpers/meta/plugin-instances';
+
+import AppCLI from '../helpers/lib/app';
 
 const { setVar } = variables;
 
 const prefix = 'glue-plugin-';
 const metaPluginInstance = pluginInstance;
 
-async function validateAndGet(pluginName: string, instanceName: string) {
+const validateAndGet = async (pluginName: string, instanceName: string) => {
 	let packageName = pluginName;
 	try {
 		await checkForPackage(pluginName);
@@ -63,7 +64,7 @@ async function validateAndGet(pluginName: string, instanceName: string) {
 	};
 }
 
-function checkForPackage(pluginName: string) {
+const checkForPackage = (pluginName: string) => {
 	return new Promise((resolve, reject) => {
 		https
 			.get(
@@ -84,9 +85,35 @@ function checkForPackage(pluginName: string) {
 				reject(e);
 			});
 	});
-}
+};
 
-export default async (app: IAppCLI, pluginName: string, instanceName: string) => {
+const checkForDependencies = async (app: AppCLI, packageName: string) => {
+	let missing = [];
+	const dependencies = await getDependencies(app, packageName);
+	for (const plugin of dependencies) {
+		if (plugin.getInstances().length === 0) {
+			missing.push(plugin);
+		}
+	}
+
+	if (missing.length) {
+		error(`${packageName} installed failed: Missing dependencies`);
+		console.log('\x1b[36m');
+		for (const plugin of missing) {
+			let arr = plugin.getName().split('-');
+			console.log(
+				`Install dependency: \`node glue add ${plugin.getName()} ${
+					arr[arr.length - 1]
+				}\``
+			);
+		}
+		console.log('\x1b[37m');
+		newline();
+		process.exit(0);
+	}
+};
+
+export default async (app: AppCLI, pluginName: string, instanceName: string) => {
 	setVar('pluginName', pluginName);
 
 	const {
@@ -140,30 +167,4 @@ export default async (app: IAppCLI, pluginName: string, instanceName: string) =>
 		`Sucessfully installed '${pluginName}' as instance ${folderName} in directory '${folderPath}'`
 	);
 	newline();
-};
-
-async function checkForDependencies(app: IAppCLI, packageName: string) {
-	let missing = [];
-	const dependencies = await getDependencies(app, packageName);
-	for (const plugin of dependencies) {
-		if (plugin.getInstances().length === 0) {
-			missing.push(plugin);
-		}
-	}
-
-	if (missing.length) {
-		error(`${packageName} installed failed: Missing dependencies`);
-		console.log('\x1b[36m');
-		for (const plugin of missing) {
-			let arr = plugin.getName().split('-');
-			console.log(
-				`Install dependency: \`node glue add ${plugin.getName()} ${
-					arr[arr.length - 1]
-				}\``
-			);
-		}
-		console.log('\x1b[37m');
-		newline();
-		process.exit(0);
-	}
 }

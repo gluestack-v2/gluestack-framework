@@ -16,21 +16,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "path", "events", "../watcher", "../file", "../getStorePath", "../meta/plugin-instances", "./factory/plugin/GluePluginStoreFactory", "../commander", "../../commands"], factory);
+        define(["require", "exports", "events", "../file", "../getStorePath", "../meta/plugin-instances", "./factory/plugin/GluePluginStoreFactory", "../commander", "../../commands"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const path_1 = require("path");
+    // import { join } from 'path';
     const events_1 = __importDefault(require("events"));
-    const watcher_1 = __importDefault(require("../watcher"));
+    // import watcher from '../watcher';
     const file_1 = require("../file");
     const getStorePath_1 = require("../getStorePath");
     const plugin_instances_1 = require("../meta/plugin-instances");
     const GluePluginStoreFactory_1 = __importDefault(require("./factory/plugin/GluePluginStoreFactory"));
     const commander_1 = __importDefault(require("../commander"));
     const commands_1 = __importDefault(require("../../commands"));
-    class App {
+    class AppCLI {
         constructor() {
             // @API: addCommand
             this.addCommand = (runner) => {
@@ -44,23 +44,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         populatePlugins(localPlugins) {
             return __awaiter(this, void 0, void 0, function* () {
                 const plugins = yield (0, plugin_instances_1.getTopToBottomPluginInstanceTree)(this, process.cwd());
-                let bootedPlugins = plugins.map(({ plugin }) => {
-                    return plugin;
-                });
+                // boot plugins in npm
+                let bootedPlugins = plugins.map(({ plugin }) => plugin);
+                // boot plugins in local
                 let bootedLocalPlugins = localPlugins.map((PluginClass) => {
-                    const p = new PluginClass(this);
-                    const pObj = new PluginClass(this, (0, getStorePath_1.injectPluginStore)(this, p.getName()));
-                    return pObj;
+                    const that = this;
+                    const loadPlugins = (PluginClass) => {
+                        const p = new PluginClass(that);
+                        return new PluginClass(that, (0, getStorePath_1.injectPluginStore)(this, p.getName()));
+                    };
+                    // @ts-ignore
+                    return loadPlugins(PluginClass);
                 });
                 let mergedPlugins = bootedPlugins.concat(bootedLocalPlugins);
-                //unique installed and local plugins
+                // unique installed and local plugins
                 mergedPlugins = [
                     ...new Map(mergedPlugins.map((item) => [item.getName(), item])).values(),
                 ];
                 this.plugins = mergedPlugins;
             });
         }
-        //sdfjklh
         initPlugins(localPlugins) {
             return __awaiter(this, void 0, void 0, function* () {
                 yield this.populatePlugins(localPlugins);
@@ -107,7 +110,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.eventEmitter.emit(eventName, ...args);
         }
         // @API: addEventListener
-        addEventListener(eventName, callback = () => { }) {
+        addEventListener(eventName, callback = (...args) => { }) {
             this.eventEmitter.on(eventName, callback);
         }
         // @API: createPluginInstance
@@ -148,9 +151,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             return instances;
         }
         // @API: watch
-        watch(instancePath, pattern, callback) {
-            watcher_1.default.watch((0, path_1.join)(process.cwd(), instancePath), pattern, callback);
-        }
+        // watch (instancePath: string, pattern: string|string[], callback: WatchCallback) {
+        // 	watcher.watch(
+        // 		join(process.cwd(), instancePath),
+        // 		pattern,
+        // 		callback
+        // 	);
+        // }
         // @API: destroy
         destroy() {
             return __awaiter(this, void 0, void 0, function* () {
@@ -181,5 +188,5 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             });
         }
     }
-    exports.default = App;
+    exports.default = AppCLI;
 });

@@ -1,9 +1,8 @@
+import AppCLI from '../../helpers/lib/app';
 import IArrTree from '../../types/meta/interface/IArr';
-import IAppCLI from '../../types/app/interface/IAppCLI';
-import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
-declare const pluginInstance: (pluginInstancesFilePath: string, packageName: string, instanceName: string, directoryName: string) => Promise<void>;
-declare function attachPluginInstances(app: IAppCLI, path: string, plugins: IArrTree): Promise<void>;
-declare function getTopToBottomPluginInstanceTree(app: IAppCLI, path: string): Promise<IArrTree>;
-declare function getBottomToTopPluginInstanceTree(app: IAppCLI, path: string): Promise<import("../../types/meta/interface/IArr").ArrObj[]>;
-declare function attachPluginInstance(app: IAppCLI, plugin: IGSPlugin, instance: string, directory: string): import("../../types/plugin/interface/IInstance").default;
-export { pluginInstance, attachPluginInstances, getTopToBottomPluginInstanceTree, getBottomToTopPluginInstanceTree, attachPluginInstance, };
+import IPlugin from '../../types/plugin/interface/IPlugin';
+export declare function pluginInstance(pluginInstancesFilePath: string, packageName: string, instanceName: string, directoryName: string): Promise<void>;
+export declare function attachPluginInstances(app: AppCLI, path: string, plugins: IArrTree): Promise<void>;
+export declare function getTopToBottomPluginInstanceTree(app: AppCLI, path: string): Promise<IArrTree>;
+export declare function getBottomToTopPluginInstanceTree(app: AppCLI, path: string): Promise<import("../../types/meta/interface/IArr").ArrObj[]>;
+export declare function attachPluginInstance(app: AppCLI, plugin: IPlugin, instance: string, directory: string): import("../../types/plugin/interface/IInstance").default;

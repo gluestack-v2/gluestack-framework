@@ -1,6 +1,5 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
-declare function getPluginStorePath(pluginName: string): string;
-declare function getPluginInstanceStorePath(instanceName: string, pluginName: string): string;
-declare function injectPluginStore(app: IAppCLI, pluginName: string): import("../types/store/interface/IGluePluginStore").default;
-declare function injectPluginInstanceStore(app: IAppCLI, pluginName: string, instanceName: string): import("../types/store/interface/IGluePluginStore").default;
-export { getPluginStorePath, getPluginInstanceStorePath, injectPluginStore, injectPluginInstanceStore, };
+import AppCLI from '../helpers/lib/app';
+export declare function getPluginStorePath(pluginName: string): string;
+export declare function getPluginInstanceStorePath(instanceName: string, pluginName: string): string;
+export declare function injectPluginStore(app: AppCLI, pluginName: string): import("../types/store/interface/IGluePluginStore").default;
+export declare function injectPluginInstanceStore(app: AppCLI, pluginName: string, instanceName: string): import("../types/store/interface/IGluePluginStore").default;

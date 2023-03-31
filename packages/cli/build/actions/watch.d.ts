@@ -1,3 +1,3 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
-declare const _default: (app: IAppCLI) => Promise<void>;
+import AppCLI from '../helpers/lib/app';
+declare const _default: (app: AppCLI) => Promise<void>;
 export default _default;
