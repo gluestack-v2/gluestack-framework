@@ -39,7 +39,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.plugins = [];
             this.commander = commander_1.default;
             this.eventEmitter = new events_1.default.EventEmitter();
-            this.gluePluginStoreFactory = new GluePluginStoreFactory_1.default();
+            this.gluePluginStoreFactory =
+                new GluePluginStoreFactory_1.default();
         }
         populatePlugins(localPlugins) {
             return __awaiter(this, void 0, void 0, function* () {

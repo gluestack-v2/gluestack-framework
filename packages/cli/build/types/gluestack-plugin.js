@@ -11,10 +11,10 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     class BaseGluestackPlugin {
         constructor(app, gluePluginStore) {
-            this.type = "stateless";
+            this.type = 'stateless';
             this.app = app;
             this.instances = [];
-            this.type = "stateless";
+            this.type = 'stateless';
             this.gluePluginStore = gluePluginStore;
         }
         getType() {

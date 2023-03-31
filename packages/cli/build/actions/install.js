@@ -16,7 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "https", "../helpers/download", "../helpers/getPlugin", "../helpers/variables", "../helpers/meta/exists", "../helpers/isGluePackage", "../helpers/meta/plugins", "../helpers/get-dependencies", "../helpers/print", "../helpers/remove-special-chars", "../helpers/file", "../helpers/meta/plugin-instances"], factory);
+        define(["require", "exports", "https", "../helpers/download", "../helpers/getPlugin", "../helpers/variables", "../helpers/meta/exists", "../helpers/isGluePackage", "../helpers/meta/plugins", "../helpers/get-dependencies", "../helpers/print", "../helpers/remove-special-chars", "../helpers/file", "../helpers/meta/plugin-instances", "../helpers/undo-download"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -33,6 +33,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const remove_special_chars_1 = __importDefault(require("../helpers/remove-special-chars"));
     const file_1 = require("../helpers/file");
     const plugin_instances_1 = require("../helpers/meta/plugin-instances");
+    const undo_download_1 = __importDefault(require("../helpers/undo-download"));
     const { setVar } = variables_1.default;
     const prefix = 'glue-plugin-';
     const metaPluginInstance = plugin_instances_1.pluginInstance;
@@ -105,8 +106,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 let arr = plugin.getName().split('-');
                 console.log(`Install dependency: \`node glue add ${plugin.getName()} ${arr[arr.length - 1]}\``);
             }
+            yield (0, undo_download_1.default)(packageName);
             console.log('\x1b[37m');
-            (0, print_1.newline)();
             process.exit(0);
         }
     });
@@ -117,7 +118,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         yield (0, download_1.default)(pluginName, packageName);
         const plugin = yield (0, getPlugin_1.default)(app, packageName, packageName, true);
         const folderPath = yield plugin.getInstallationPath(folderName);
-        if (folderPath !== process.cwd() && !(yield (0, file_1.checkFolderIsEmpty)(folderPath))) {
+        if (folderPath !== process.cwd() &&
+            !(yield (0, file_1.checkFolderIsEmpty)(folderPath))) {
             (0, print_1.error)(`${pluginName} installed failed: ${folderPath} is not empty`);
             process.exit(0);
         }

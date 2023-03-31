@@ -28,7 +28,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             console.log(`Watching ${cwd} for changes...`);
             console.log(globs);
             try {
-                chokidar_1.default.watch(globs, {
+                chokidar_1.default
+                    .watch(globs, {
                     persistent: true,
                     cwd: cwd,
                     ignored: [
@@ -36,15 +37,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                         '**/dist/**',
                         '**/build/**',
                         '**/.next/**',
-                    ]
-                }).on('all', (event, path) => __awaiter(void 0, void 0, void 0, function* () { return console.log('>> here'); }));
+                    ],
+                })
+                    .on('all', (event, path) => __awaiter(void 0, void 0, void 0, function* () { return console.log('>> here'); }));
                 if (callback)
                     callback();
             }
             catch (err) {
                 console.log('> error', err);
             }
-        }
+        },
     };
     exports.default = watcher;
 });

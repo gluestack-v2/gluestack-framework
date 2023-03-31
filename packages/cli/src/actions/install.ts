@@ -13,6 +13,7 @@ import { fileExists, checkFolderIsEmpty } from '../helpers/file';
 import { pluginInstance } from '../helpers/meta/plugin-instances';
 
 import AppCLI from '../helpers/lib/app';
+import undoDownload from '../helpers/undo-download';
 
 const { setVar } = variables;
 
@@ -114,8 +115,9 @@ const checkForDependencies = async (
 				}\``
 			);
 		}
+
+		await undoDownload(packageName);
 		console.log('\x1b[37m');
-		newline();
 		process.exit(0);
 	}
 };

@@ -41,11 +41,11 @@ declare class GluePluginStoreFactory {
     } | {
         (...items: ConcatArray<IGluePluginStore>[]): IGluePluginStore[];
         (...items: (IGluePluginStore | ConcatArray<IGluePluginStore>)[]): IGluePluginStore[];
-    } | ((searchElement: IGluePluginStore, fromIndex?: number | undefined) => number) | ((searchElement: IGluePluginStore, fromIndex?: number | undefined) => boolean) | ((index: number) => IGluePluginStore | undefined) | ((...items: IGluePluginStore[]) => number) | ((separator?: string | undefined) => string) | ((compareFn?: ((a: IGluePluginStore, b: IGluePluginStore) => number) | undefined) => IGluePluginStore[]) | ((callbackfn: (value: IGluePluginStore, index: number, array: IGluePluginStore[]) => void, thisArg?: any) => void) | {
+    } | ((searchElement: IGluePluginStore, fromIndex?: number | undefined) => number) | ((searchElement: IGluePluginStore, fromIndex?: number | undefined) => boolean) | ((index: number) => IGluePluginStore | undefined) | ((separator?: string | undefined) => string) | ((callbackfn: (value: IGluePluginStore, index: number, array: IGluePluginStore[]) => void, thisArg?: any) => void) | {
         (callbackfn: (previousValue: IGluePluginStore, currentValue: IGluePluginStore, currentIndex: number, array: IGluePluginStore[]) => IGluePluginStore): IGluePluginStore;
         (callbackfn: (previousValue: IGluePluginStore, currentValue: IGluePluginStore, currentIndex: number, array: IGluePluginStore[]) => IGluePluginStore, initialValue: IGluePluginStore): IGluePluginStore;
         <U>(callbackfn: (previousValue: U, currentValue: IGluePluginStore, currentIndex: number, array: IGluePluginStore[]) => U, initialValue: U): U;
-    } | ((value: IGluePluginStore, start?: number | undefined, end?: number | undefined) => IGluePluginStore[]) | ((target: number, start: number, end?: number | undefined) => IGluePluginStore[]) | (<A, D extends number = 1>(this: A, depth?: D | undefined) => FlatArray<A, D>[]);
+    } | (<A, D extends number = 1>(this: A, depth?: D | undefined) => FlatArray<A, D>[]) | ((...items: IGluePluginStore[]) => number) | ((compareFn?: ((a: IGluePluginStore, b: IGluePluginStore) => number) | undefined) => IGluePluginStore[]) | ((value: IGluePluginStore, start?: number | undefined, end?: number | undefined) => IGluePluginStore[]) | ((target: number, start: number, end?: number | undefined) => IGluePluginStore[]);
     saveAllStores(): void;
 }
 export default GluePluginStoreFactory;
