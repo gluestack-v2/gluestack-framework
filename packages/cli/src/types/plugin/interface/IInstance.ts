@@ -1,9 +1,9 @@
 import IPlugin from './IPlugin';
 import IGlueStorePlugin from '../../store/interface/IGluePluginStore';
-import IAppCLI from '../../app/interface/IAppCLI';
+import App from '../../../helpers/lib/app';
 
 export default interface IInstance {
-	app: IAppCLI;
+	app: App;
 	name: string;
 	callerPlugin: IPlugin;
 	gluePluginStore: IGlueStorePlugin;

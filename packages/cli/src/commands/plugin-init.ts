@@ -3,10 +3,11 @@
  */
 
 import pluginInit from '../actions/plugin-init';
-import IAppCLI from '../types/app/interface/IAppCLI';
+
+import App from '../helpers/lib/app';
 import IProgram from '../types/app/interface/IProgram';
 
-export default async (program: IProgram, app: IAppCLI) => {
+export default async (program: IProgram, app: App) => {
 	const command = program
 		.command('plugin:init')
 		.description('Initializes the gluestack app as a plugin');

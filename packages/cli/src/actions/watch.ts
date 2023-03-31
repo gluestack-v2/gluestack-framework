@@ -2,9 +2,10 @@ import { join } from 'path';
 import writer from '../helpers/writer';
 import watcher from '../helpers/watcher';
 import { info, success, warning } from '../helpers/print';
-import IAppCLI from '../types/app/interface/IAppCLI';
 
-export default async (app: IAppCLI): Promise<void> => {
+import App from '../helpers/lib/app';
+
+export default async (app: App): Promise<void> => {
   // for await (const plugin of app.plugins) {
   //   for await (const instance of plugin.instances) {
   //     success(`Found instance`, instance.getName());

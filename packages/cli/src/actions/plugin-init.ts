@@ -11,7 +11,7 @@ import {
 
 import build from '../helpers/plugin/build';
 import { error, warning, success, info } from '../helpers/print';
-import IAppCLI from '../types/app/interface/IAppCLI';
+import App from '../helpers/lib/app';
 
 const mainEntryPoint = 'dist/src/index.js';
 
@@ -121,7 +121,7 @@ async function createTemplateFolder(
 	);
 }
 
-export default async (app: IAppCLI, type: 'instance' | 'container') => {
+export default async (app: App, type: 'instance' | 'container') => {
 	const currentDir = process.cwd();
 	const filepath = currentDir + '/package.json';
 

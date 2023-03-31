@@ -11,7 +11,7 @@ import isGluePackage from '../helpers/isGluePackage';
 import getDependencies from '../helpers/get-dependencies';
 import removeSpecialChars from '../helpers/remove-special-chars';
 
-import IAppCLI from '../types/app/interface/IAppCLI';
+import App from '../helpers/lib/app';
 
 const { setVar } = variables;
 
@@ -86,7 +86,7 @@ function checkForPackage(pluginName: string) {
 	});
 }
 
-export default async (app: IAppCLI, pluginName: string, instanceName: string) => {
+export default async (app: App, pluginName: string, instanceName: string) => {
 	setVar('pluginName', pluginName);
 
 	const {
@@ -142,7 +142,7 @@ export default async (app: IAppCLI, pluginName: string, instanceName: string) =>
 	newline();
 };
 
-async function checkForDependencies(app: IAppCLI, packageName: string) {
+async function checkForDependencies(app: App, packageName: string) {
 	let missing = [];
 	const dependencies = await getDependencies(app, packageName);
 	for (const plugin of dependencies) {

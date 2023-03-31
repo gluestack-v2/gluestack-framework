@@ -2,9 +2,10 @@ import { Command, CommanderError } from 'commander';
 //@ts-ignore
 import { version } from '../../package.json';
 
-import IAppCLI from '../types/app/interface/IAppCLI';
+
 import ICmd from '../types/helpers/interface/ICommandCallback';
 import ICommander from '../types/helpers/interface/ICommander';
+import App from './lib/app';
 
 const program: Command = new Command();
 const commander = {} as ICommander;
@@ -21,7 +22,7 @@ commander.init = () => {
 };
 
 // inject the command into the commander
-commander.addCommand = (app: IAppCLI, cmd: ICmd) => {
+commander.addCommand = (app: App, cmd: ICmd) => {
 	cmd(program, app);
 };
 

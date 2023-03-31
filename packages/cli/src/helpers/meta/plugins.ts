@@ -7,13 +7,13 @@ import { error } from '../print';
 import IPluginJSON from '../../types/jsonFiles/interface/IPlugins';
 import IArrTree from '../../types/meta/interface/IArr';
 import ITree from '../../types/meta/interface/ITree';
-import IAppCLI from '../../types/app/interface/IAppCLI';
-import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
+import App from '../lib/app';
+import IPlugin from '../../types/plugin/interface/IPlugin';
 
 const writePlugin = async (
 	pluginFilePath: string,
 	pluginName: string,
-	plugin: IGSPlugin
+	plugin: IPlugin
 ) => {
 	let data: IPluginJSON = await readFile(pluginFilePath);
 	if (!data) {
@@ -31,7 +31,7 @@ const writePlugin = async (
 };
 
 const getPluginTree = async (
-	app: IAppCLI,
+	app: App,
 	path: string,
 	depth: number = 0,
 	tree: ITree = {}
@@ -62,7 +62,7 @@ const getPluginTree = async (
 	return tree;
 };
 
-async function getTopToBottomPluginTree(app: IAppCLI, path: string) {
+async function getTopToBottomPluginTree(app: App, path: string) {
 	const tree = await getPluginTree(app, path);
 
 	function recursivelyJoinArray(tree: ITree | null, arr: IArrTree) {
@@ -87,7 +87,7 @@ async function getTopToBottomPluginTree(app: IAppCLI, path: string) {
 	return recursivelyJoinArray(tree, []);
 }
 
-async function getBottomToTopPluginTree(app: IAppCLI, path: string) {
+async function getBottomToTopPluginTree(app: App, path: string) {
 	const array = await getTopToBottomPluginTree(app, path);
 	return array.reverse();
 }

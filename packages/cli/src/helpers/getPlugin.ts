@@ -1,9 +1,10 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
+import App from './lib/app';
+
 import { injectPluginStore } from './getStorePath';
 import { error } from './print';
 
 function getPlugin(
-	app: IAppCLI,
+	app: App,
 	path: string,
 	pluginName: string = '',
 	throwErrorAndExit: Boolean = false

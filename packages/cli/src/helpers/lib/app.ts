@@ -16,11 +16,11 @@ import IEventEmitter from 'events';
 import Icommander from '../../types/helpers/interface/ICommander';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
 import ICmd from '../../types/helpers/interface/ICommandCallback';
-import IAppCLI, { WatchCallback } from '../../types/app/interface/IAppCLI';
-import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
+import { WatchCallback } from '../../types/app/interface/IWatchCallback';
+import IPlugin, { ITSPlugin } from '../../types/plugin/interface/IPlugin';
 
-class App implements IAppCLI {
-	plugins: Array<IGSPlugin>;
+class App {
+	plugins: Array<IPlugin>;
 	commander : Icommander;
 	eventEmitter: IEventEmitter;
 	gluePluginStoreFactory: IGluePluginStoreFactory;
@@ -36,7 +36,8 @@ class App implements IAppCLI {
 	addCommand = (runner: ICmd) => {
 		this.commander.addCommand(this, runner);
 	};
-	async populatePlugins(localPlugins: Array<IGSPlugin>) {
+	
+	async populatePlugins(localPlugins: Array<IPlugin>) {
 		const plugins = await getTopToBottomPluginInstanceTree(
 			this,
 			process.cwd()
@@ -45,12 +46,18 @@ class App implements IAppCLI {
 			return plugin;
 		});
 
-		let bootedLocalPlugins = localPlugins.map((PluginClass: (IGSPlugin)) => {
-			const p = new PluginClass(this);
-			const pObj = new PluginClass(
-				this,
-				injectPluginStore(this, p.getName())
-			); 
+		function Object(plug:ITSPlugin, pa: App){
+			const p = new plug(pa);
+			const pObj = new plug(
+				pa,
+				injectPluginStore(pa, p.getName())
+			) as IPlugin;
+			return pObj;
+		}
+
+		let bootedLocalPlugins = localPlugins.map((PluginClass) => {
+			const typedClass = PluginClass as ITSPlugin;
+			const pObj = Object(typedClass, this);
 			return pObj;
 		});
 
@@ -65,7 +72,7 @@ class App implements IAppCLI {
 	}
 
 //sdfjklh
-	async initPlugins(localPlugins:Array<IGSPlugin>) {
+	async initPlugins(localPlugins:Array<IPlugin>) {
 		await this.populatePlugins(localPlugins);
 		for (const plugin of this.plugins) {
 			await plugin.init();
@@ -112,7 +119,7 @@ class App implements IAppCLI {
 	}
 
 	// @API: createPluginInstance
-	async createPluginInstance(plugin: IGSPlugin, instance: string, src: string, target: string) {
+	async createPluginInstance(plugin: IPlugin, instance: string, src: string, target: string) {
 		if (src && target) {
 			await copyFolder(src, target);
 		}
@@ -170,7 +177,7 @@ class App implements IAppCLI {
 	}
 
 	// @API: init
-	async init (localPlugins: Array<IGSPlugin>) {//gs plugin
+	async init (localPlugins: Array<IPlugin>) {//gs plugin
 		// initialise the commander
 		this.commander.init();
 		// initialise the local commands

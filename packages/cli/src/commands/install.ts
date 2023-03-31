@@ -4,11 +4,12 @@
 
 import  {Argument} from "commander";
 import install from "../actions/install";
-import IAppCLI from "../types/app/interface/IAppCLI";
+
+import App from "../helpers/lib/app";
 import IProgram from "../types/app/interface/IProgram";
 
 
-export default  async (program:IProgram, app:IAppCLI) => {
+export default  async (program:IProgram, app:App) => {
 	// install group command
 	const command = program
 		.command('add')

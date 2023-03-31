@@ -4,12 +4,10 @@ import { readFile, writeFile } from '../file';
 import { getTopToBottomPluginTree } from './plugins';
 import { injectPluginInstanceStore } from '../getStorePath';
 
-import IPlugin from '../../types/plugin/interface/IPlugin';
-import IManagesInstances from '../../types/plugin/interface/IManagesInstances';
 import IArrTree from '../../types/meta/interface/IArr';
 import IPluginInstances from '../../types/jsonFiles/interface/IPluginInstances';
-import IAppCLI from '../../types/app/interface/IAppCLI';
-import IGSPlugin from '../../types/plugin/interface/IGSPlugin';
+import IPlugin from '../../types/plugin/interface/IPlugin';
+import App from '../lib/app';
 
 const pluginInstance = async (
 	pluginInstancesFilePath: string,
@@ -41,7 +39,7 @@ const pluginInstance = async (
 };
 
 async function attachPluginInstances(
-	app: IAppCLI,
+	app: App,
 	path: string,
 	plugins: IArrTree
 ) {
@@ -64,7 +62,7 @@ async function attachPluginInstances(
 }
 
 async function getTopToBottomPluginInstanceTree(
-	app: IAppCLI,
+	app: App,
 	path: string
 ) {
 
@@ -74,7 +72,7 @@ async function getTopToBottomPluginInstanceTree(
 }
 
 async function getBottomToTopPluginInstanceTree(
-	app: IAppCLI,
+	app: App,
 	path: string
 ) {
 	const array = await getTopToBottomPluginInstanceTree(app, path);
@@ -82,8 +80,8 @@ async function getBottomToTopPluginInstanceTree(
 }
 
 function attachPluginInstance(
-	app: IAppCLI,
-	plugin: IGSPlugin,
+	app: App,
+	plugin: IPlugin,
 	instance: string,
 	directory: string
 ) {

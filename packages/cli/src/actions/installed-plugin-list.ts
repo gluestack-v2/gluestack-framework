@@ -8,8 +8,8 @@ import {
 
 import IArrTree from '../types/meta/interface/IArr';
 import IArrVersion from '../types/actions/interface/IArrVersion';
-import IAppCLI from '../types/app/interface/IAppCLI';
 import IPluginArray from '../types/actions/interface/IArrPluginDetails';
+import App from '../helpers/lib/app';
 
 function printPlugins(plugins: IArrTree) {
 	const arr: IArrVersion = {};
@@ -30,7 +30,7 @@ function printPlugins(plugins: IArrTree) {
 	warning('No plugins are installed in your app.');
 }
 
-async function printInstalledPlugins(app: IAppCLI) {
+async function printInstalledPlugins(app: App) {
 	const plugins = await getTopToBottomPluginTree(app, process.cwd());
 	printPlugins(plugins);
 	newline();
@@ -62,7 +62,7 @@ function printPluginInstances(plugins: IArrTree) {
 	warning('No instances are installed in your app.');
 }
 
-async function printInstalledPluginInstances(app: IAppCLI) {
+async function printInstalledPluginInstances(app: App) {
 	const plugins = await getTopToBottomPluginInstanceTree(
 		app,
 		process.cwd()
@@ -71,7 +71,7 @@ async function printInstalledPluginInstances(app: IAppCLI) {
 	newline();
 }
 
-export default async (app: IAppCLI) => {
+export default async (app: App) => {
 	await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };

@@ -3,10 +3,11 @@
  */
 
 import pluginList from '../actions/plugin-list';
-import IAppCLI from '../types/app/interface/IAppCLI';
+
+import App from '../helpers/lib/app';
 import IProgram from '../types/app/interface/IProgram';
 
-export default async (program: IProgram, app: IAppCLI) => {
+export default async (program: IProgram, app: App) => {
 	const command = program
 		.command('plugin:list')
 		.description('Prints the list of available plugins')

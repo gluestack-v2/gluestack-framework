@@ -1,10 +1,10 @@
-import IAppCLI from '../types/app/interface/IAppCLI';
+import App from './lib/app';
 
 import path from 'path';
 import getPlugin from './getPlugin';
 import { attachPluginInstances } from './meta/plugin-instances';
 
-const getDependencies = async (app: IAppCLI, pluginName: string) => {
+const getDependencies = async (app: App, pluginName: string) => {
 	const dependencies = [];
 
 	const packageJSON = path.join(
