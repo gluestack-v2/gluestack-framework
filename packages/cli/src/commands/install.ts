@@ -2,12 +2,12 @@
  * Installs the project or plugin
  */
 
-import { Argument } from "commander";
-import install from "../actions/install";
-import AppCLI from "../helpers/lib/app";
-import IProgram from "../types/app/interface/IProgram";
+import { Argument } from 'commander';
+import install from '../actions/install';
+import AppCLI from '../helpers/lib/app';
+import IProgram from '../types/app/interface/IProgram';
 
-export default  async (program: IProgram, app: AppCLI) => {
+export default async (program: IProgram, app: AppCLI) => {
 	// install group command
 	const command = program
 		.command('add')
@@ -27,7 +27,7 @@ export default  async (program: IProgram, app: AppCLI) => {
 				'name of the instance to install the plugin'
 			)
 		)
-		.action(async (pluginName:string, instanceName:string) => {
+		.action(async (pluginName: string, instanceName: string) => {
 			await install(app, pluginName, instanceName);
 		});
 };

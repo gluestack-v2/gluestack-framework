@@ -71,7 +71,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         (0, print_1.newline)();
     });
     exports.default = (app) => __awaiter(void 0, void 0, void 0, function* () {
-        // await printInstalledPlugins(app);
+        yield printInstalledPlugins(app);
         yield printInstalledPluginInstances(app);
     });
 });

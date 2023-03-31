@@ -7,7 +7,6 @@
     "install-all": "npm install --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "dev": "./glue",
-    "cli": "node ./packages/cli/build/src/glue",
     "lint": "npm run lint --workspaces --if-present"
   },
   "repository": {
@@ -30,7 +29,8 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "web"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",

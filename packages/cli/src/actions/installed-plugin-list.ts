@@ -1,10 +1,6 @@
 import { info, newline, warning } from '../helpers/print';
-import {
-	getTopToBottomPluginTree,
-} from '../helpers/meta/plugins';
-import {
-	getTopToBottomPluginInstanceTree,
-} from '../helpers/meta/plugin-instances';
+import { getTopToBottomPluginTree } from '../helpers/meta/plugins';
+import { getTopToBottomPluginInstanceTree } from '../helpers/meta/plugin-instances';
 
 import AppCLI from '../helpers/lib/app';
 import IArrTree from '../types/meta/interface/IArr';
@@ -52,7 +48,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 						: '',
 					version: plugin.getVersion(),
 				});
-			})
+			});
 		}
 	});
 
@@ -75,6 +71,6 @@ const printInstalledPluginInstances = async (app: AppCLI) => {
 };
 
 export default async (app: AppCLI) => {
-	// await printInstalledPlugins(app);
+	await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };

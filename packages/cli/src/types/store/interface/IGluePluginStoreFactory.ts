@@ -1,10 +1,9 @@
-import IGluePluginStore from "./IGluePluginStore";
-
+import IGluePluginStore from './IGluePluginStore';
 
 export default interface IGluePluginStoreFactory {
-  stores: IGluePluginStore[];
+	stores: IGluePluginStore[];
 
-  createPluginStoreInstance(path: string): IGluePluginStore;
+	createPluginStoreInstance(path: string): IGluePluginStore;
 
-  saveAllStores(): void;
+	saveAllStores(): void;
 }

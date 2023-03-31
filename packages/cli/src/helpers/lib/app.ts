@@ -18,11 +18,14 @@ import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
 import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 
-type PluginConstructor = new (app: AppCLI, gluePluginStore?: IGluePluginStore) => IPlugin;
+type PluginConstructor = new (
+	app: AppCLI,
+	gluePluginStore?: IGluePluginStore
+) => IPlugin;
 
 export default class AppCLI {
 	plugins: Array<IPlugin>;
-	commander : ICommander;
+	commander: ICommander;
 	eventEmitter: events;
 	gluePluginStoreFactory: IGluePluginStoreFactory;
 
@@ -30,7 +33,8 @@ export default class AppCLI {
 		this.plugins = [];
 		this.commander = commander;
 		this.eventEmitter = new events.EventEmitter();
-		this.gluePluginStoreFactory = new GluePluginStoreFactory() as IGluePluginStoreFactory;
+		this.gluePluginStoreFactory =
+			new GluePluginStoreFactory() as IGluePluginStoreFactory;
 	}
 
 	// @API: addCommand
@@ -58,7 +62,7 @@ export default class AppCLI {
 					that,
 					injectPluginStore(this, p.getName())
 				);
-			}
+			};
 
 			// @ts-ignore
 			return loadPlugins(PluginClass);
@@ -120,12 +124,20 @@ export default class AppCLI {
 	}
 
 	// @API: addEventListener
-	addEventListener(eventName: string, callback = (...args: any) => {}) {
+	addEventListener(
+		eventName: string,
+		callback = (...args: any) => {}
+	) {
 		this.eventEmitter.on(eventName, callback);
 	}
 
 	// @API: createPluginInstance
-	async createPluginInstance(plugin: IPlugin, instance: string, src: string, target: string) {
+	async createPluginInstance(
+		plugin: IPlugin,
+		instance: string,
+		src: string,
+		target: string
+	) {
 		if (src && target) {
 			await copyFolder(src, target);
 		}
@@ -183,7 +195,7 @@ export default class AppCLI {
 	}
 
 	// @API: init
-	async init (localPlugins: Array<IPlugin>) {
+	async init(localPlugins: Array<IPlugin>) {
 		// initialise the commander
 		this.commander.init();
 		// initialise the local commands

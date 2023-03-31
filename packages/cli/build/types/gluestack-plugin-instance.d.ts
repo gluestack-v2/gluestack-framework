@@ -1,9 +1,8 @@
 import AppCLI from "../helpers/lib/app";
+import IPlugin from "./plugin/interface/IPlugin";
 import IInstance from "./plugin/interface/IInstance";
 import IGlueStorePlugin from "./store/interface/IGluePluginStore";
-import ILifeCycle from "./plugin/interface/ILifeCycle";
-import IPlugin from "./plugin/interface/IPlugin";
-export default abstract class BaseGluestackPluginInstance implements IInstance, ILifeCycle {
+export default abstract class BaseGluestackPluginInstance implements IInstance {
     app: AppCLI;
     name: string;
     callerPlugin: IPlugin;

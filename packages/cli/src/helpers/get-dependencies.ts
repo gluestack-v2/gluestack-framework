@@ -7,10 +7,7 @@ import { attachPluginInstances } from './meta/plugin-instances';
 const getDependencies = async (app: AppCLI, pluginName: string) => {
 	const dependencies = [];
 
-	const packageJSON = path.join(
-		pluginName,
-		'package.json'
-	);
+	const packageJSON = path.join(pluginName, 'package.json');
 
 	const peerDependencies = require(packageJSON).peerDependencies;
 
@@ -24,7 +21,6 @@ const getDependencies = async (app: AppCLI, pluginName: string) => {
 			);
 
 			if (plugin) {
-
 				await attachPluginInstances(app, process.cwd(), [
 					{ plugin: plugin },
 				]);

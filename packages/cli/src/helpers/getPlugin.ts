@@ -6,7 +6,7 @@ function getPlugin(
 	app: AppCLI,
 	path: string,
 	pluginName: string = '',
-	throwErrorAndExit: Boolean = false
+	throwErrorAndExit: boolean = false
 ) {
 	try {
 		const { GlueStackPlugin } = require(path);

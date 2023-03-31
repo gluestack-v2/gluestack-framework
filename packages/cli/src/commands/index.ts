@@ -6,6 +6,6 @@ import pluginInit from './plugin-init';
 import watch from './watch';
 
 const commands = () => {
-	return [install, instanceList, pluginList, pluginInit,watch];
+	return [install, instanceList, pluginList, pluginInit, watch];
 };
 export default commands;

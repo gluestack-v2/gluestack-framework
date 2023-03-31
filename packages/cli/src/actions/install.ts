@@ -19,7 +19,10 @@ const { setVar } = variables;
 const prefix = 'glue-plugin-';
 const metaPluginInstance = pluginInstance;
 
-const validateAndGet = async (pluginName: string, instanceName: string) => {
+const validateAndGet = async (
+	pluginName: string,
+	instanceName: string
+) => {
 	let packageName = pluginName;
 	try {
 		await checkForPackage(pluginName);
@@ -44,7 +47,8 @@ const validateAndGet = async (pluginName: string, instanceName: string) => {
 	// adding the installed plugins
 	const pluginInstancesFilePath =
 		process.cwd() + '/.glue/internals/plugin-instances.json';
-	const pluginFilePath = process.cwd() + '/.glue/internals/plugins.json';
+	const pluginFilePath =
+		process.cwd() + '/.glue/internals/plugins.json';
 
 	if (!fileExists(pluginFilePath)) {
 		error(
@@ -62,7 +66,7 @@ const validateAndGet = async (pluginName: string, instanceName: string) => {
 		folderName: instanceName,
 		packageName,
 	};
-}
+};
 
 const checkForPackage = (pluginName: string) => {
 	return new Promise((resolve, reject) => {
@@ -87,7 +91,10 @@ const checkForPackage = (pluginName: string) => {
 	});
 };
 
-const checkForDependencies = async (app: AppCLI, packageName: string) => {
+const checkForDependencies = async (
+	app: AppCLI,
+	packageName: string
+) => {
 	let missing = [];
 	const dependencies = await getDependencies(app, packageName);
 	for (const plugin of dependencies) {
@@ -113,7 +120,11 @@ const checkForDependencies = async (app: AppCLI, packageName: string) => {
 	}
 };
 
-export default async (app: AppCLI, pluginName: string, instanceName: string) => {
+export default async (
+	app: AppCLI,
+	pluginName: string,
+	instanceName: string
+) => {
 	setVar('pluginName', pluginName);
 
 	const {
@@ -129,7 +140,10 @@ export default async (app: AppCLI, pluginName: string, instanceName: string) => 
 	const plugin = await getPlugin(app, packageName, packageName, true);
 
 	const folderPath = await plugin.getInstallationPath(folderName);
-	if (folderPath !== process.cwd() && !(await checkFolderIsEmpty(folderPath))) {
+	if (
+		folderPath !== process.cwd() &&
+		!(await checkFolderIsEmpty(folderPath))
+	) {
 		error(
 			`${pluginName} installed failed: ${folderPath} is not empty`
 		);
@@ -157,14 +171,10 @@ export default async (app: AppCLI, pluginName: string, instanceName: string) => 
 		folderName,
 		folderPath
 	);
-	await writePlugin(
-		pluginFilePath,
-		packageName,
-		plugin
-	);
+	await writePlugin(pluginFilePath, packageName, plugin);
 
 	success(
 		`Sucessfully installed '${pluginName}' as instance ${folderName} in directory '${folderPath}'`
 	);
 	newline();
-}
+};

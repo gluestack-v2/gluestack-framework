@@ -2,7 +2,7 @@ import { find } from 'lodash';
 import IGluePluginStore from '../../../../types/store/interface/IGluePluginStore';
 import GluePluginStore from '../../store/GluePluginStore';
 
-class GluePluginStoreFactory{
+class GluePluginStoreFactory {
 	stores: IGluePluginStore[] = [];
 
 	createPluginStoreInstance(path: string) {

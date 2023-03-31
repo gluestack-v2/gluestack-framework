@@ -121,7 +121,10 @@ async function createTemplateFolder(
 	);
 }
 
-export default async (app: AppCLI, type: 'instance' | 'container') => {
+export default async (
+	app: AppCLI,
+	type: 'instance' | 'container'
+) => {
 	const currentDir = process.cwd();
 	const filepath = currentDir + '/package.json';
 

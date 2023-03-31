@@ -62,7 +62,10 @@ export const getPluginTree = async (
 	return tree;
 };
 
-export const getTopToBottomPluginTree = async (app: AppCLI, path: string) => {
+export const getTopToBottomPluginTree = async (
+	app: AppCLI,
+	path: string
+) => {
 	const tree = await getPluginTree(app, path);
 
 	function recursivelyJoinArray(tree: ITree | null, arr: IArrTree) {
@@ -93,7 +96,10 @@ export const getTopToBottomPluginTree = async (app: AppCLI, path: string) => {
 	return recursivelyJoinArray(tree, arr);
 };
 
-export const getBottomToTopPluginTree = async (app: AppCLI, path: string) => {
+export const getBottomToTopPluginTree = async (
+	app: AppCLI,
+	path: string
+) => {
 	const array = await getTopToBottomPluginTree(app, path);
 	return array.reverse();
 };

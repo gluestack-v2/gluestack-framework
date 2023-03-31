@@ -9,12 +9,12 @@ import IArrTree from '../../types/meta/interface/IArr';
 import IPlugin from '../../types/plugin/interface/IPlugin';
 import IPluginInstances from '../../types/jsonFiles/interface/IPluginInstances';
 
-export async function pluginInstance (
+export const pluginInstance = async (
 	pluginInstancesFilePath: string,
 	packageName: string,
 	instanceName: string,
 	directoryName: string
-) {
+): Promise<void> => {
 	let data = (await readFile(
 		pluginInstancesFilePath
 	)) as IPluginInstances;
@@ -41,11 +41,11 @@ export async function pluginInstance (
 	);
 };
 
-export async function attachPluginInstances(
+export const attachPluginInstances = async (
 	app: AppCLI,
 	path: string,
 	plugins: IArrTree
-) {
+): Promise<void> => {
 	const pluginInstancesFilePath = `${path}/.glue/internals/plugin-instances.json`;
 
 	const pluginInstances = (await readFile(
@@ -64,35 +64,35 @@ export async function attachPluginInstances(
 			}
 		}
 	}
-}
+};
 
-export async function getTopToBottomPluginInstanceTree(
+export const getTopToBottomPluginInstanceTree = async (
 	app: AppCLI,
 	path: string
-) {
+) => {
 	const plugins = await getTopToBottomPluginTree(app, path);
 	await attachPluginInstances(app, path, plugins);
 
 	return plugins;
-}
+};
 
-export async function getBottomToTopPluginInstanceTree(
+export const getBottomToTopPluginInstanceTree = async (
 	app: AppCLI,
 	path: string
-) {
+) => {
 	const array = await getTopToBottomPluginInstanceTree(app, path);
 	return array.reverse();
-}
+};
 
-export function attachPluginInstance(
+export const attachPluginInstance = (
 	app: AppCLI,
 	plugin: IPlugin,
 	instance: string,
 	directory: string
-) {
+) => {
 	return plugin.createInstance(
 		instance,
 		injectPluginInstanceStore(app, plugin.getName(), instance),
 		directory
 	);
-}
+};

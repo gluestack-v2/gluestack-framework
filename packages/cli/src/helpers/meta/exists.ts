@@ -1,8 +1,7 @@
 import { map } from 'lodash';
 import { error } from '../print';
 import { readFile } from '../file';
-import IPluginInstances from "../../types/jsonFiles/interface/IPluginInstances";
-
+import IPluginInstances from '../../types/jsonFiles/interface/IPluginInstances';
 
 export default async (pluginPath: string, instanceName: string) => {
 	const data = (await readFile(pluginPath)) as IPluginInstances;

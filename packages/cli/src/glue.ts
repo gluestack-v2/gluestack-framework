@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import App from './helpers/lib/app';
-import IPlugin from "./types/plugin/interface/IPlugin";
+import IPlugin from './types/plugin/interface/IPlugin';
 
 const glue = async (localPlugins: Array<IPlugin> = []) => {
 	const app = new App();

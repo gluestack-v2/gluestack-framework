@@ -1,26 +1,28 @@
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./PluginInstanceContainerController"], factory);
+        define(["require", "exports", "@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PluginInstance = void 0;
-    const PluginInstanceContainerController_1 = require("./PluginInstanceContainerController");
-    class PluginInstance {
+    const gluestack_plugin_instance_1 = __importDefault(require("@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance"));
+    class PluginInstance extends gluestack_plugin_instance_1.default {
         constructor(app, callerPlugin, name, gluePluginStore, installationPath) {
+            super(app, callerPlugin, name, gluePluginStore, installationPath);
             this.isOfTypeInstance = false;
             this.app = app;
             this.name = name;
             this.callerPlugin = callerPlugin;
             this.gluePluginStore = gluePluginStore;
             this.installationPath = installationPath;
-            // @ts-ignore
-            this.containerController = new PluginInstanceContainerController_1.PluginInstanceContainerController(app, this);
         }
         init() {
             //
@@ -44,9 +46,6 @@
                 'styles',
                 'components'
             ];
-        }
-        getContainerController() {
-            return this.containerController;
         }
     }
     exports.PluginInstance = PluginInstance;
