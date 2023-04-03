@@ -32,5 +32,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@gluestack-v2/glue-plugin-database": "^0.0.2"
+  }
 }
