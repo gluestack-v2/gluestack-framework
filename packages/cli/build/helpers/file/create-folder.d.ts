@@ -1,1 +1,2 @@
-export function createFolder(_folder: any): Promise<boolean>;
+declare const createFolder: (_folder: string) => Promise<boolean>;
+export default createFolder;

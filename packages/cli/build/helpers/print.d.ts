@@ -1,6 +1,6 @@
-export function newline(): void;
-export function info(msg1: any, msg2: any): void;
-export function success(msg1: any, msg2: any): void;
-export function error(msg1: any, msg2: any): void;
-export function json(msg1: any): void;
-export function warning(msg1: any, msg2: any): void;
+export declare const newline: () => void;
+export declare const info: (msg1: string, msg2?: string) => void;
+export declare const success: (msg1: string, msg2?: string) => void;
+export declare const error: (msg1: string, msg2?: string) => void;
+export declare const json: (msg1: string) => void;
+export declare const warning: (msg1: string, msg2?: string) => void;

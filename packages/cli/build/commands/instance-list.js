@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Installs the project or plugin
  */
@@ -11,12 +10,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const installedPluginList = require('../actions/installed-plugin-list');
-module.exports = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
-    const command = program
-        .command('instance:list')
-        .description('Prints the list of installed plugin instances')
-        .action(() => {
-        installedPluginList(app);
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../actions/installed-plugin-list"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const installed_plugin_list_1 = __importDefault(require("../actions/installed-plugin-list"));
+    exports.default = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
+        const command = program
+            .command('instance:list')
+            .description('Prints the list of installed plugin instances')
+            .action(() => {
+            (0, installed_plugin_list_1.default)(app);
+        });
     });
 });

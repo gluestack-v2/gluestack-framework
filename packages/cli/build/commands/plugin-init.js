@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Installs the project or plugin
  */
@@ -11,19 +10,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const pluginInit = require('../actions/plugin-init');
-module.exports = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
-    const command = program
-        .command('plugin:init')
-        .description('Initializes the gluestack app as a plugin');
-    command
-        .command('instance')
-        .argument('<plugin-name>', 'Plugin name')
-        .description('Initializes the gluestack app as a plugin instance')
-        .action((pluginName) => pluginInit(app, pluginName, 'instance'));
-    command
-        .command('container')
-        .argument('<plugin-name>', 'Plugin name')
-        .description('Initializes the gluestack app as a container plugin')
-        .action((pluginName) => pluginInit(app, pluginName, 'container'));
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../actions/plugin-init"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const plugin_init_1 = __importDefault(require("../actions/plugin-init"));
+    exports.default = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
+        const command = program
+            .command('plugin:init')
+            .description('Initializes the gluestack app as a plugin');
+        command
+            .command('instance')
+            .description('Initializes the gluestack app as a plugin instance')
+            .action(() => (0, plugin_init_1.default)(app, 'instance'));
+        command
+            .command('container')
+            .description('Initializes the gluestack app as a container plugin')
+            .action(() => (0, plugin_init_1.default)(app, 'container'));
+    });
 });

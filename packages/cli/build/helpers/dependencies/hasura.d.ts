@@ -1,1 +1,2 @@
-export function hasura(): Promise<any>;
+declare const hasura: () => Promise<unknown>;
+export { hasura };

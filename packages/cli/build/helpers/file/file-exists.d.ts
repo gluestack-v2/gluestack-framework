@@ -1,1 +1,2 @@
-export function fileExists(filePath: any): boolean;
+declare const fileExists: (filePath: string) => boolean;
+export default fileExists;

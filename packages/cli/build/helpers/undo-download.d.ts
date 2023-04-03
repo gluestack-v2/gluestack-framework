@@ -1,2 +1,2 @@
-declare function _exports(packageName: any): Promise<void>;
-export = _exports;
+declare const _default: (packageName: string) => Promise<void>;
+export default _default;

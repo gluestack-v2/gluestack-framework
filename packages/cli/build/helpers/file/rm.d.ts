@@ -1,1 +1,2 @@
-export function rm(filePath: any): void;
+declare const rm: (filePath: string) => boolean;
+export default rm;

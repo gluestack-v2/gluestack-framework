@@ -1,3 +1,3 @@
-export function init(): void;
-export function addCommand(app: any, cmd: any): void;
-export function destroy(): void;
+import ICommander from '../types/helpers/interface/ICommander';
+declare const commander: ICommander;
+export default commander;

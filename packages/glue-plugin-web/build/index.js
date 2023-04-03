@@ -16,7 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../package.json", "./PluginInstance", "./helpers/rewrite-file", "@gluestack/helpers"], factory);
+        define(["require", "exports", "../package.json", "./PluginInstance", "@gluestack-v2/framework-cli/build/types/gluestack-plugin", "./helpers/rewrite-file", "@gluestack/helpers"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -25,11 +25,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     // @ts-ignore
     const package_json_1 = __importDefault(require("../package.json"));
     const PluginInstance_1 = require("./PluginInstance");
+    const gluestack_plugin_1 = __importDefault(require("@gluestack-v2/framework-cli/build/types/gluestack-plugin"));
     const rewrite_file_1 = require("./helpers/rewrite-file");
     const helpers_1 = require("@gluestack/helpers");
     // Do not edit the name of this class
-    class GlueStackPlugin {
+    class GlueStackPlugin extends gluestack_plugin_1.default {
         constructor(app, gluePluginStore) {
+            super(app, gluePluginStore);
             this.type = 'stateless';
             this.app = app;
             this.instances = [];

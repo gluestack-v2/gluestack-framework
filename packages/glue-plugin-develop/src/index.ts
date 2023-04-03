@@ -2,29 +2,31 @@
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
-import IApp from '@gluestack-v2/framework-cli/build/types/app/interface/IApp';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluestack-plugin';
+
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import ILifeCycle from '@gluestack-v2/framework-cli/build/types/plugin/interface/ILifeCycle';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import IManagesInstances from '@gluestack-v2/framework-cli/build/types/plugin/interface/IManagesInstances';
 
 // Do not edit the name of this class
-export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
-  app: IApp;
+export class GlueStackPlugin extends BaseGluestackPlugin {
+  app: AppCLI;
   instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
-  constructor(app: IApp, gluePluginStore: IGlueStorePlugin) {
+  constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
+    super(app, gluePluginStore);
+
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
   }
 
   init() {
-    this.app.addEventListener('booting.web', (...data: any) => {
-      console.log({message: 'booting web event listener', data});
+    this.app.addEventListener('booting.web', (...args: any[]): void => {
+      console.log({message: 'booting web event listener', args});
 
       console.log(this.gluePluginStore.get('message'));
       this.gluePluginStore.set('message', 'Hello from develop plugin');
@@ -58,9 +60,10 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    const plugin: GlueStackPlugin = this.app.getPluginByName(
+    const plugin: IPlugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-develop",
-    );
+    ) as IPlugin;
+
     // Validation
     if (plugin?.getInstances()?.[0]) {
       throw new Error(

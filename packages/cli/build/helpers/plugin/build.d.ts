@@ -1,2 +1,2 @@
-declare function _exports(currentDir: any): Promise<void>;
-export = _exports;
+declare const _default: (currentDir: string) => Promise<void>;
+export default _default;

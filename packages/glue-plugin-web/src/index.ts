@@ -2,25 +2,25 @@
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
-import IApp from '@gluestack-v2/framework-cli/build/types/app/interface/IApp';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluestack-plugin';
+
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import ILifeCycle from '@gluestack-v2/framework-cli/build/types/plugin/interface/ILifeCycle';
-import IManagesInstances from '@gluestack-v2/framework-cli/build/types/plugin/interface/IManagesInstances';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
 import { reWriteFile } from './helpers/rewrite-file';
-
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 
 // Do not edit the name of this class
-export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
-  app: IApp;
+export class GlueStackPlugin extends BaseGluestackPlugin {
+  app: AppCLI;
   instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
 
-  constructor(app: IApp, gluePluginStore: IGlueStorePlugin) {
+  constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
+    super(app, gluePluginStore);
+
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
@@ -56,7 +56,7 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    const instance: PluginInstance =
+    const instance: IInstance =
       await this.app.createPluginInstance(
         this,
         instanceName,

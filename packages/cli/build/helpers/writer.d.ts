@@ -1,1 +1,5 @@
-export function write(path: any, instanceName: any): Promise<void>;
+interface Writer {
+    write(path: string, instanceName: string): Promise<void>;
+}
+declare const writer: Writer;
+export default writer;

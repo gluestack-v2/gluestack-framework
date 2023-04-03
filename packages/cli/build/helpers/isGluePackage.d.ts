@@ -1,2 +1,2 @@
-declare function _exports(pluginName: any): boolean;
-export = _exports;
+declare const _default: (pluginName: string) => boolean;
+export default _default;

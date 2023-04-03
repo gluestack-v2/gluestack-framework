@@ -1,2 +1,2 @@
-declare function _exports(): Promise<void>;
-export = _exports;
+declare const _default: () => Promise<void>;
+export default _default;

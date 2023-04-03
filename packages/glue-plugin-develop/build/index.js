@@ -16,7 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../package.json", "./PluginInstance"], factory);
+        define(["require", "exports", "../package.json", "./PluginInstance", "@gluestack-v2/framework-cli/build/types/gluestack-plugin"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -25,17 +25,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     // @ts-ignore
     const package_json_1 = __importDefault(require("../package.json"));
     const PluginInstance_1 = require("./PluginInstance");
+    const gluestack_plugin_1 = __importDefault(require("@gluestack-v2/framework-cli/build/types/gluestack-plugin"));
     // Do not edit the name of this class
-    class GlueStackPlugin {
+    class GlueStackPlugin extends gluestack_plugin_1.default {
         constructor(app, gluePluginStore) {
+            super(app, gluePluginStore);
             this.type = 'devonly';
             this.app = app;
             this.instances = [];
             this.gluePluginStore = gluePluginStore;
         }
         init() {
-            this.app.addEventListener('booting.web', (...data) => {
-                console.log({ message: 'booting web event listener', data });
+            this.app.addEventListener('booting.web', (...args) => {
+                console.log({ message: 'booting web event listener', args });
                 console.log(this.gluePluginStore.get('message'));
                 this.gluePluginStore.set('message', 'Hello from develop plugin');
                 console.log(this.gluePluginStore.get('message'));

@@ -1,2 +1,3 @@
-export = getDependencies;
-declare function getDependencies(app: any, pluginName: any): Promise<any[]>;
+import AppCLI from '../helpers/lib/app';
+declare const getDependencies: (app: AppCLI, pluginName: string) => Promise<any[]>;
+export default getDependencies;

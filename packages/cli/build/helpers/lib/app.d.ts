@@ -1,27 +1,29 @@
-export = App;
-declare class App {
-    commander: typeof commander;
+/// <reference types="node" />
+import events from 'events';
+import IPlugin from '../../types/plugin/interface/IPlugin';
+import ICommander from '../../types/helpers/interface/ICommander';
+import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
+import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
+export default class AppCLI {
+    plugins: Array<IPlugin>;
+    commander: ICommander;
     eventEmitter: events;
-    gluePluginStoreFactory: GluePluginStoreFactory;
-    addCommand: (runner: any) => void;
-    populatePlugins(localPlugins: any): Promise<void>;
-    plugins: any[] | undefined;
-    initPlugins(localPlugins: any): Promise<void>;
+    gluePluginStoreFactory: IGluePluginStoreFactory;
+    constructor();
+    addCommand: (runner: IProgramCallback) => void;
+    populatePlugins(localPlugins: IPlugin[]): Promise<void>;
+    initPlugins(localPlugins: Array<IPlugin>): Promise<void>;
     destroyPlugins(): Promise<void>;
     initPluginInstances(): Promise<void>;
     destroyPluginInstances(): Promise<void>;
     doctor(): Promise<void>;
-    dispatchEvent(eventName: any, ...args: any[]): void;
-    addEventListener(eventName: any, callback?: () => void): void;
-    createPluginInstance(plugin: any, instance: any, src: any, target: any): Promise<any>;
-    getPluginByName(pluginName: any): any;
-    getPlugins(): any[] | undefined;
-    getContainerTypePluginInstances(bottomToTop?: boolean): any[];
-    watch(instancePath: any, pattern: any, callback: any): void;
+    dispatchEvent(eventName: string, ...args: any): void;
+    addEventListener(eventName: string, callback?: (...args: any) => void): void;
+    createPluginInstance(plugin: IPlugin, instance: string, src: string, target: string): Promise<import("../../types/plugin/interface/IInstance").default>;
+    getPluginByName(pluginName: string): IPlugin | null;
+    getPlugins(): IPlugin[];
+    getContainerTypePluginInstances(bottomToTop?: boolean): import("../../types/plugin/interface/IInstance").default[];
     destroy(): Promise<void>;
-    init(localPlugins: any): Promise<void>;
+    init(localPlugins: Array<IPlugin>): Promise<void>;
     initLocalCommands(): Promise<void>;
 }
-import commander = require("../commander");
-import events = require("events");
-import GluePluginStoreFactory = require("./factory/plugin/GluePluginStoreFactory");

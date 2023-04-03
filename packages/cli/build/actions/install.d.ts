@@ -1,2 +1,3 @@
-declare function _exports(app: any, pluginName: any, instanceName: any): Promise<void>;
-export = _exports;
+import AppCLI from '../helpers/lib/app';
+declare const _default: (app: AppCLI, pluginName: string, instanceName: string) => Promise<void>;
+export default _default;

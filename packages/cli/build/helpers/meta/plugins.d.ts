@@ -1,4 +1,8 @@
-export function writePlugin(pluginFilePath: any, pluginName: any, plugin: any): Promise<void>;
-export function getPluginTree(app: any, path: any, depth?: number, tree?: {}): Promise<{} | null>;
-export function getTopToBottomPluginTree(app: any, path: any): Promise<any[]>;
-export function getBottomToTopPluginTree(app: any, path: any): Promise<any[]>;
+import AppCLI from '../../helpers/lib/app';
+import IArrTree from '../../types/meta/interface/IArr';
+import ITree from '../../types/meta/interface/ITree';
+import IPlugin from '../../types/plugin/interface/IPlugin';
+export declare const writePlugin: (pluginFilePath: string, pluginName: string, plugin: IPlugin) => Promise<void>;
+export declare const getPluginTree: (app: AppCLI, path: string, depth?: number, tree?: ITree) => Promise<ITree | null>;
+export declare const getTopToBottomPluginTree: (app: AppCLI, path: string) => Promise<IArrTree>;
+export declare const getBottomToTopPluginTree: (app: AppCLI, path: string) => Promise<import("../../types/meta/interface/IArr").ArrObj[]>;

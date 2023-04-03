@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,27 +7,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const path = require('path');
-const getPlugin = require('./getPlugin');
-const { attachPluginInstances } = require('./meta/plugin-instances');
-const getDependencies = (app, pluginName) => __awaiter(void 0, void 0, void 0, function* () {
-    const dependencies = [];
-    const packageJSON = path.join(pluginName, 'package.json');
-    const peerDependencies = require(packageJSON).peerDependencies;
-    for (const dependency of Object.keys(peerDependencies)) {
-        try {
-            const plugin = yield getPlugin(app, dependency, dependency, false);
-            if (plugin) {
-                yield attachPluginInstances(app, process.cwd(), [
-                    { plugin: plugin },
-                ]);
-                dependencies.push(plugin);
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "path", "./getPlugin", "./meta/plugin-instances"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const path_1 = __importDefault(require("path"));
+    const getPlugin_1 = __importDefault(require("./getPlugin"));
+    const plugin_instances_1 = require("./meta/plugin-instances");
+    const getDependencies = (app, pluginName) => __awaiter(void 0, void 0, void 0, function* () {
+        const dependencies = [];
+        const packageJSON = path_1.default.join(pluginName, 'package.json');
+        const peerDependencies = require(packageJSON).peerDependencies;
+        for (const dependency of Object.keys(peerDependencies)) {
+            try {
+                const plugin = yield (0, getPlugin_1.default)(app, dependency, dependency, false);
+                if (plugin) {
+                    yield (0, plugin_instances_1.attachPluginInstances)(app, process.cwd(), [
+                        { plugin: plugin },
+                    ]);
+                    dependencies.push(plugin);
+                }
+            }
+            catch (err) {
+                //
             }
         }
-        catch (err) {
-            //
-        }
-    }
-    return dependencies;
+        return dependencies;
+    });
+    exports.default = getDependencies;
 });
-module.exports = getDependencies;

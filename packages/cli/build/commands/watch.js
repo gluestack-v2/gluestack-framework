@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Watches the instances for changes and restarts them
  */
@@ -11,10 +10,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const action = require('../actions/watch');
-module.exports = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
-    const command = program
-        .command('watch')
-        .description('Watches the instances for changes and restarts them')
-        .action(() => action(app));
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../actions/watch"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const watch_1 = __importDefault(require("../actions/watch"));
+    exports.default = (program, app) => __awaiter(void 0, void 0, void 0, function* () {
+        const command = program
+            .command('watch')
+            .description('Watches the instances for changes and restarts them')
+            .action(() => (0, watch_1.default)(app));
+    });
 });

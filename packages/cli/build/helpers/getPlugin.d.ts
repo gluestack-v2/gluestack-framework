@@ -1,2 +1,3 @@
-export = getPlugin;
-declare function getPlugin(app: any, path: any, pluginName?: null, throwErrorAndExit?: boolean): any;
+import AppCLI from '../helpers/lib/app';
+declare function getPlugin(app: AppCLI, path: string, pluginName?: string, throwErrorAndExit?: boolean): any;
+export default getPlugin;

@@ -1,1 +1,2 @@
-export function dockerCompose(): Promise<any>;
+declare const dockerCompose: () => Promise<string>;
+export { dockerCompose };

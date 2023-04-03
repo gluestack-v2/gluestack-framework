@@ -1,1 +1,2 @@
-export function dockerStatus(): Promise<any>;
+declare const dockerStatus: () => Promise<string>;
+export { dockerStatus };

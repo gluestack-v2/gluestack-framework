@@ -1,1 +1,2 @@
-export function readFile(filePath: any): Promise<any>;
+declare const readFile: (filePath: string) => Promise<any>;
+export default readFile;
