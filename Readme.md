@@ -1,6 +1,8 @@
 # Gluestack V2 Plugin Development
 
-> Note: Please checkout to the develop branch to access latest (beta) version. Thank You!
+> Important Notes: 
+> 1. Please checkout to the **develop** branch to access latest (beta) version. Thank You!
+> 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**.
 
 ## Install npm dependencies
 
