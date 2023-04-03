@@ -9,9 +9,10 @@
 $ npm run install-all;
 ```
 
-## Create plugin builds
+## Create plugin builds (in production mode)
 
 ```bash
+# Run this command from your project's root directory
 $ npm run build;
 ```
 
