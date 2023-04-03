@@ -27,7 +27,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    this.app.dispatchEvent('booting.web', this.getName());
+    // this.app.dispatchEvent('booting.web', this.getName());
   }
 
   destroy() {

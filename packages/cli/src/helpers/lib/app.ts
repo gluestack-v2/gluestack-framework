@@ -1,6 +1,6 @@
-// import { join } from 'path';
 import events from 'events';
-// import watcher from '../watcher';
+import writer from '../writer';
+import watcher from '../watcher';
 import { copyFolder } from '../file';
 import { injectPluginStore } from '../getStorePath';
 import {
@@ -14,9 +14,10 @@ import commands from '../../commands';
 
 import IPlugin from '../../types/plugin/interface/IPlugin';
 import ICommander from '../../types/helpers/interface/ICommander';
+import { IWatchCallback } from '../../types/app/interface/IWatcher';
+import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
-import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 
 type PluginConstructor = new (
 	app: AppCLI,
@@ -176,13 +177,21 @@ export default class AppCLI {
 	}
 
 	// @API: watch
-	// watch (instancePath: string, pattern: string|string[], callback: WatchCallback) {
-	// 	watcher.watch(
-	// 		join(process.cwd(), instancePath),
-	// 		pattern,
-	// 		callback
-	// 	);
-	// }
+	watch (cwd: string, pattern: string|string[], callback: IWatchCallback): void {
+		watcher.watch(
+			cwd,
+			pattern,
+			callback
+		);
+	}
+
+	// @API: writer
+	async write (cwd: string, instanceName: string): Promise<void> {
+		await writer.write(
+			cwd,
+			instanceName
+		);
+	}
 
 	// @API: destroy
 	async destroy() {

@@ -22,11 +22,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const chokidar_1 = __importDefault(require("chokidar"));
-    const watcher = {
-        watch: (cwd, pattern, callback) => {
+    class Watcher {
+        watch(cwd, pattern, callback) {
             const globs = typeof pattern === 'string' ? [pattern] : pattern;
-            console.log(`Watching ${cwd} for changes...`);
-            console.log(globs);
             try {
                 chokidar_1.default
                     .watch(globs, {
@@ -39,14 +37,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                         '**/.next/**',
                     ],
                 })
-                    .on('all', (event, path) => __awaiter(void 0, void 0, void 0, function* () { return console.log('>> here'); }));
-                if (callback)
-                    callback();
+                    .on('all', (event, path) => __awaiter(this, void 0, void 0, function* () {
+                    if (callback)
+                        callback(event, path);
+                }));
             }
             catch (err) {
-                console.log('> error', err);
+                console.log('> watcher error:', err);
             }
-        },
-    };
-    exports.default = watcher;
+        }
+    }
+    exports.default = new Watcher();
 });

@@ -15,5 +15,5 @@ export default interface IInstance {
 	getName(): string;
 	getCallerPlugin(): IPlugin;
 	getInstallationPath(): string;
-	watch(): void;
+	watch(): string[];
 }

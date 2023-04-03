@@ -40,12 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             return this.installationPath;
         }
         watch() {
-            return [
-                'pages',
-                'public',
-                'styles',
-                'components'
-            ];
+            return [];
         }
     }
     exports.PluginInstance = PluginInstance;

@@ -1,15 +1,12 @@
 import { join } from 'path';
+import { IWriter } from '../types/app/interface/IWriter';
 import { createFolder, fileExists, copyFolder } from './file';
 
-interface Writer {
-	write(path: string, instanceName: string): Promise<void>;
-}
-
-const writer: Writer = {
-	write: async (
+class Writer implements IWriter {
+	async write (
 		path: string,
 		instanceName: string
-	): Promise<void> => {
+	): Promise<void> {
 		const sealPath = join(process.cwd(), '.glue/seal/services');
 		if (!fileExists(sealPath)) {
 			await createFolder(sealPath);
@@ -26,7 +23,7 @@ const writer: Writer = {
 		}
 
 		await copyFolder(path, instancePath);
-	},
+	}
 };
 
-export default writer;
+export default new Writer();

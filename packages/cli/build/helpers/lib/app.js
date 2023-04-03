@@ -16,14 +16,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "events", "../file", "../getStorePath", "../meta/plugin-instances", "./factory/plugin/GluePluginStoreFactory", "../commander", "../../commands"], factory);
+        define(["require", "exports", "events", "../writer", "../watcher", "../file", "../getStorePath", "../meta/plugin-instances", "./factory/plugin/GluePluginStoreFactory", "../commander", "../../commands"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // import { join } from 'path';
     const events_1 = __importDefault(require("events"));
-    // import watcher from '../watcher';
+    const writer_1 = __importDefault(require("../writer"));
+    const watcher_1 = __importDefault(require("../watcher"));
     const file_1 = require("../file");
     const getStorePath_1 = require("../getStorePath");
     const plugin_instances_1 = require("../meta/plugin-instances");
@@ -152,13 +152,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             return instances;
         }
         // @API: watch
-        // watch (instancePath: string, pattern: string|string[], callback: WatchCallback) {
-        // 	watcher.watch(
-        // 		join(process.cwd(), instancePath),
-        // 		pattern,
-        // 		callback
-        // 	);
-        // }
+        watch(cwd, pattern, callback) {
+            watcher_1.default.watch(cwd, pattern, callback);
+        }
+        // @API: writer
+        write(cwd, instanceName) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield writer_1.default.write(cwd, instanceName);
+            });
+        }
         // @API: destroy
         destroy() {
             return __awaiter(this, void 0, void 0, function* () {

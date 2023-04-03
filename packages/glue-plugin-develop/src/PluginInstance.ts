@@ -50,11 +50,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   watch(): string[] {
-    return [
-      'pages',
-      'public',
-      'styles',
-      'components'
-    ];
+    return [];
   }
 }

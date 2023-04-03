@@ -2,6 +2,7 @@
 import events from 'events';
 import IPlugin from '../../types/plugin/interface/IPlugin';
 import ICommander from '../../types/helpers/interface/ICommander';
+import { IWatchCallback } from '../../types/app/interface/IWatcher';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
 export default class AppCLI {
@@ -23,6 +24,8 @@ export default class AppCLI {
     getPluginByName(pluginName: string): IPlugin | null;
     getPlugins(): IPlugin[];
     getContainerTypePluginInstances(bottomToTop?: boolean): import("../../types/plugin/interface/IInstance").default[];
+    watch(cwd: string, pattern: string | string[], callback: IWatchCallback): void;
+    write(cwd: string, instanceName: string): Promise<void>;
     destroy(): Promise<void>;
     init(localPlugins: Array<IPlugin>): Promise<void>;
     initLocalCommands(): Promise<void>;
