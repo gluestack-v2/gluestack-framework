@@ -1,27 +1,49 @@
+import Table from 'cli-table3';
+import Color from 'colors';
+
 import { error, info, newline, warning } from '../helpers/print';
 import { getTopToBottomPluginTree } from '../helpers/meta/plugins';
 import { getTopToBottomPluginInstanceTree } from '../helpers/meta/plugin-instances';
 
 import AppCLI from '../helpers/lib/app';
 import IArrTree from '../types/meta/interface/IArr';
-import IArrVersion from '../types/actions/interface/IArrVersion';
-import IPluginArray from '../types/actions/interface/IArrPluginDetails';
 import IInstance from '../types/plugin/interface/IInstance';
 
-const printPlugins = (plugins: IArrTree) => {
-	const arr: IArrVersion = {};
+type pluginArrayTable = Array<Array<string>>;
 
+const printConsoleTable = async (head: string[], rows: pluginArrayTable) => {
+	const chars = {
+		'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗',
+		'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝',
+		'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼',
+		'right': '║', 'right-mid': '╢', 'middle': '│'
+	}
+
+	let table: any = new Table({
+		head: head.map(value => value.green),
+		chars
+	});
+
+	table.push(...rows);
+	
+	console.log(table.toString());
+}
+
+const printPlugins = (plugins: IArrTree) => {
+	const arr = [] as pluginArrayTable;
+	
 	plugins.forEach((plugin) => {
-		if (!arr[plugin.key as string]) {
-			arr[plugin.key as string] = {
-				version: plugin.plugin.getVersion(),
-			};
+		const pluginName = [plugin.key, plugin.plugin.getVersion()] as string[];
+		
+		if (!arr.includes(pluginName)) {
+			arr.push(pluginName);
 		}
 	});
 
-	if (Object.keys(arr).length) {
+	if (arr.length > 0) {
 		info('Installed Plugins');
-		console.table(arr);
+		const head = ['Plugin', 'version'];
+		printConsoleTable(head, arr);
 		return;
 	}
 
@@ -35,26 +57,23 @@ const printInstalledPlugins = async (app: AppCLI) => {
 };
 
 const printPluginInstances = (plugins: IArrTree) => {
-	const arr: IPluginArray = [];
+	const arr = [] as pluginArrayTable;
 
-	plugins.forEach(({ key, plugin }) => {
+	plugins.forEach(({ key, plugin }, index) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance: IInstance) => {
-				arr.push({
-					plugin: key as string,
-					instance: pluginInstance.getName(),
-					directory: pluginInstance.getInstallationPath
-						? pluginInstance.getInstallationPath()
-						: '',
-					version: plugin.getVersion(),
-				});
+				const installationPath = pluginInstance.getInstallationPath ? pluginInstance.getInstallationPath() : '';
+				const pluginInstanceArr = [index, key, pluginInstance.getName(), installationPath, plugin.getVersion()] as string[];
+				arr.push(pluginInstanceArr);
 			});
 		}
 	});
 
-	if (Object.keys(arr).length) {
+	if (arr.length > 0) {
 		info('Installed Instances');
-		console.table(arr);
+
+		const head = ['(index)', 'plugin', 'instance', 'directory', 'version'];
+		printConsoleTable(head, arr);
 		return;
 	}
 
