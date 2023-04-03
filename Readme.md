@@ -30,8 +30,10 @@ $ npm run watch:web;
 
 ```bash
 # Run this command from your project's root directory
-# And its output will be printed below
 $ node glue
+#
+# And its output will be something like this:
+#
 Usage: glue [options] [command]
 
 Gluestack V2 Framework CLI
