@@ -1,6 +1,6 @@
 # Gluestack V2 Plugin Development
 
-> Important Notes: 
+> Important Notes:
 > 1. Please checkout to the **develop** branch to access latest (beta) version. Thank You!
 > 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**.
 
@@ -15,7 +15,7 @@ $ npm run install-all;
 
 ```bash
 # Run this command from your project's root directory
-$ npm run build;
+$ npm run build:plugins;
 ```
 
 ## Create plugin builds (in development mode)

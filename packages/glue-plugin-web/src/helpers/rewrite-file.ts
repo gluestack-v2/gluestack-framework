@@ -13,6 +13,7 @@ export const reWriteFile = async (filePath: string, db_Name: string, defaultVar 
 			data = data.replaceAll(defaultVar, db_Name);
 
 			await writeFile(filePath, data);
+
 			resolve('done');
 		} catch (err) {
 			reject(err)

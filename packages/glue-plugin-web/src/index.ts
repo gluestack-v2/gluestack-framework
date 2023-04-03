@@ -10,6 +10,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 
 import { reWriteFile } from './helpers/rewrite-file';
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -27,7 +28,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    // this.app.dispatchEvent('booting.web', this.getName());
+    //
   }
 
   destroy() {
@@ -68,10 +69,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-    // rewrite router.js with the installed instance name
-    const routerFile = `${instance.getInstallationPath()}/router.js`;
-    await reWriteFile(routerFile, removeSpecialChars(instanceName), 'INSTANCENAME');
-
     // update package.json'S name index with the new instance name
     const pluginPackage = `${instance.getInstallationPath()}/package.json`;
     await reWriteFile(pluginPackage, instanceName, 'INSTANCENAME');
@@ -99,5 +96,22 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getInstances(): IInstance[] {
     return this.instances;
+  }
+
+  async build(): Promise<void> {
+    const plugin: IPlugin | null = this.app.getPluginByName('@gluestack-v2/glue-plugin-web');
+    if (!plugin || plugin.getInstances().length <= 0) {
+      console.log('> No web plugin found, skipping build');
+      return;
+    }
+
+    const instances: Array<IInstance> = plugin.getInstances();
+    for await (const instance of instances) {
+
+      const target: string = instance.getInstallationPath();
+      const name: string = removeSpecialChars(instance.getName());
+
+      await this.app.write(target, name);
+    }
   }
 }
