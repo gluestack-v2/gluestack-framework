@@ -1,6 +1,12 @@
-import fs from 'fs';
+import { access, constants } from 'node:fs/promises';
 
-const fileExists = (filePath: string): boolean =>
-	fs.existsSync(filePath) ? true : false;
+const fileExists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path, constants.R_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
 
 export default fileExists;

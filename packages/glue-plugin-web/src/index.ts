@@ -27,7 +27,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    // this.app.dispatchEvent('booting.web', this.getName());
+    //
   }
 
   destroy() {
@@ -67,10 +67,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!instance) {
       return;
     }
-
-    // rewrite router.js with the installed instance name
-    const routerFile = `${instance.getInstallationPath()}/router.js`;
-    await reWriteFile(routerFile, removeSpecialChars(instanceName), 'INSTANCENAME');
 
     // update package.json'S name index with the new instance name
     const pluginPackage = `${instance.getInstallationPath()}/package.json`;

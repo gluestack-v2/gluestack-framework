@@ -1,11 +1,10 @@
-import promises from 'fs';
-import { error } from '../print';
+const { promises } = require('fs');
 
-const writeFile = async (path: string, content: string = '') => {
+export const writeFile = async (path: string, content: string = '') => {
 	try {
-		await promises.writeFile(path, content, () => {});
+		await promises.writeFile(path, content);
 	} catch (err: any) {
-		error('Writing file failed: ' + err.message);
+		console.log('Writing file failed: ' + err.message);
 	}
 
 	return Promise.resolve(true);
