@@ -7,32 +7,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../helpers/print", "../helpers/meta/plugins", "../helpers/meta/plugin-instances"], factory);
+        define(["require", "exports", "cli-table3", "../helpers/print", "../helpers/meta/plugins", "../helpers/meta/plugin-instances"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const cli_table3_1 = __importDefault(require("cli-table3"));
     const print_1 = require("../helpers/print");
     const plugins_1 = require("../helpers/meta/plugins");
     const plugin_instances_1 = require("../helpers/meta/plugin-instances");
+    const printConsoleTable = (head, rows) => __awaiter(void 0, void 0, void 0, function* () {
+        const chars = {
+            'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗',
+            'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝',
+            'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼',
+            'right': '║', 'right-mid': '╢', 'middle': '│'
+        };
+        let table = new cli_table3_1.default({
+            head: head.map(value => value.green),
+            chars
+        });
+        table.push(...rows);
+        console.log(table.toString());
+    });
     const printPlugins = (plugins) => {
-        const arr = {};
+        const arr = [];
         plugins.forEach((plugin) => {
-            if (!arr[plugin.key]) {
-                arr[plugin.key] = {
-                    version: plugin.plugin.getVersion(),
-                };
+            const pluginName = [plugin.key, plugin.plugin.getVersion()];
+            if (!arr.includes(pluginName)) {
+                arr.push(pluginName);
             }
         });
-        if (Object.keys(arr).length) {
+        if (arr.length > 0) {
             (0, print_1.info)('Installed Plugins');
-            console.table(arr);
+            const head = ['Plugin', 'version'];
+            printConsoleTable(head, arr);
             return;
         }
         (0, print_1.warning)('No plugins are installed in your app.');
@@ -44,23 +62,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
     const printPluginInstances = (plugins) => {
         const arr = [];
-        plugins.forEach(({ key, plugin }) => {
+        plugins.forEach(({ key, plugin }, index) => {
             if (plugin.getInstances) {
                 plugin.getInstances().forEach((pluginInstance) => {
-                    arr.push({
-                        plugin: key,
-                        instance: pluginInstance.getName(),
-                        directory: pluginInstance.getInstallationPath
-                            ? pluginInstance.getInstallationPath()
-                            : '',
-                        version: plugin.getVersion(),
-                    });
+                    const installationPath = pluginInstance.getInstallationPath ? pluginInstance.getInstallationPath() : '';
+                    const pluginInstanceArr = [index, key, pluginInstance.getName(), installationPath, plugin.getVersion()];
+                    arr.push(pluginInstanceArr);
                 });
             }
         });
-        if (Object.keys(arr).length) {
+        if (arr.length > 0) {
             (0, print_1.info)('Installed Instances');
-            console.table(arr);
+            const head = ['(index)', 'plugin', 'instance', 'directory', 'version'];
+            printConsoleTable(head, arr);
             return;
         }
         (0, print_1.warning)('No instances are installed in your app.');
