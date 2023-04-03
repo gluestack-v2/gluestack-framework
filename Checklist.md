@@ -16,3 +16,5 @@
 - [x] watcher api from app-cli
 - [x] writer api from app-cli
 - [x] build api from app-cli
+- [ ] add APIs to getDockerFile & getSealServiceFile methods from all plugin for its instances
+
