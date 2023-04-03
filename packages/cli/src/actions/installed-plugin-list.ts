@@ -1,5 +1,5 @@
 import Table from 'cli-table3';
-import Color from 'colors';
+import 'colors';
 
 import { error, info, newline, warning } from '../helpers/print';
 import { getTopToBottomPluginTree } from '../helpers/meta/plugins';
