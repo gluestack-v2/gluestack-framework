@@ -25,16 +25,16 @@ const printConsoleTable = async (head: string[], rows: pluginArrayTable) => {
 	});
 
 	table.push(...rows);
-	
+
 	console.log(table.toString());
 }
 
 const printPlugins = (plugins: IArrTree) => {
 	const arr = [] as pluginArrayTable;
-	
+
 	plugins.forEach((plugin) => {
 		const pluginName = [plugin.key, plugin.plugin.getVersion()] as string[];
-		
+
 		if (!arr.includes(pluginName)) {
 			arr.push(pluginName);
 		}
@@ -42,7 +42,7 @@ const printPlugins = (plugins: IArrTree) => {
 
 	if (arr.length > 0) {
 		info('Installed Plugins');
-		const head = ['Plugin', 'version'];
+		const head = ['Plugin', 'Version'];
 		printConsoleTable(head, arr);
 		return;
 	}
@@ -63,7 +63,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance: IInstance) => {
 				const installationPath = pluginInstance.getInstallationPath ? pluginInstance.getInstallationPath() : '';
-				const pluginInstanceArr = [index, key, pluginInstance.getName(), installationPath, plugin.getVersion()] as string[];
+				const pluginInstanceArr = [key, pluginInstance.getName(), installationPath, plugin.getVersion()] as string[];
 				arr.push(pluginInstanceArr);
 			});
 		}
@@ -72,7 +72,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 	if (arr.length > 0) {
 		info('Installed Instances');
 
-		const head = ['(index)', 'plugin', 'instance', 'directory', 'version'];
+		const head = ['Plugin', 'Instance', 'Path', 'Version'];
 		printConsoleTable(head, arr);
 		return;
 	}
