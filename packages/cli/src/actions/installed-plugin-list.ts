@@ -1,4 +1,4 @@
-import { info, newline, warning } from '../helpers/print';
+import { error, info, newline, warning } from '../helpers/print';
 import { getTopToBottomPluginTree } from '../helpers/meta/plugins';
 import { getTopToBottomPluginInstanceTree } from '../helpers/meta/plugin-instances';
 
@@ -71,6 +71,11 @@ const printInstalledPluginInstances = async (app: AppCLI) => {
 };
 
 export default async (app: AppCLI) => {
+	if (!app.plugins.length) {
+		error('Nothing installed in your app.', 'Please install one plugin and try again.');
+		process.exit(-1);
+	}
+
 	await printInstalledPlugins(app);
 	await printInstalledPluginInstances(app);
 };

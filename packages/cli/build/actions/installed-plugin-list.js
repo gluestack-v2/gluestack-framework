@@ -71,6 +71,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         (0, print_1.newline)();
     });
     exports.default = (app) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!app.plugins.length) {
+            (0, print_1.error)('Nothing installed in your app.', 'Please install one plugin and try again.');
+            process.exit(-1);
+        }
         yield printInstalledPlugins(app);
         yield printInstalledPluginInstances(app);
     });

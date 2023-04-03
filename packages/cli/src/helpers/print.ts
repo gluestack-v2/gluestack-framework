@@ -1,37 +1,35 @@
-import colors from 'colors';
+import colors from 'colors/safe';
 
-const newline = () => console.log();
+export const newline = () => console.log();
 
-const info = (msg1: string, msg2: string = '') => {
+export const info = (msg1: string, msg2: string = '') => {
 	if (!msg2 || msg2 === '') {
 		return warning(msg1);
 	}
-	return console.log('>', msg1.brightBlue, '→', msg2);
+	return console.log('>', colors.blue(msg1), '→', msg2);
 };
 
-const success = (msg1: string, msg2: string = '') => {
+export const success = (msg1: string, msg2: string = '') => {
 	if (!msg2 || msg2 === '') {
-		return console.log('>', msg1.brightGreen);
+		return console.log('>', colors.green(msg1));
 	} else {
-		return console.log('>', msg1.brightGreen, '→', msg2);
+		return console.log('>', colors.green(msg1), '→', msg2);
 	}
 };
 
-const error = (msg1: string, msg2: string = '') => {
+export const error = (msg1: string, msg2: string = '') => {
 	if (!msg2 || msg2 === '') {
-		console.log('>', msg1.brightRed);
+		console.log('>', colors.red(msg1));
 	} else {
-		console.log('>', msg1.brightRed, '→', msg2);
+		console.log('>', colors.red(msg1), '→', msg2);
 	}
 };
 
-const json = (msg1: string) => console.log(msg1.brightGreen);
+export const json = (msg1: string) => console.log(colors.green(msg1));
 
-const warning = (msg1: string, msg2: string = '') => {
+export const warning = (msg1: string, msg2: string = '') => {
 	if (!msg2 || msg2 === '') {
-		return console.log('>', msg1.brightYellow);
+		return console.log('>', colors.yellow(msg1));
 	}
-	return console.log('>', msg1.brightYellow, '→', msg2);
+	return console.log('>', colors.yellow(msg1), '→', msg2);
 };
-
-export { newline, info, success, error, json, warning };

@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.gluePluginStore = gluePluginStore;
         }
         init() {
-            // this.app.dispatchEvent('booting.web', this.getName());
+            this.app.dispatchEvent('booting.web', this.getName());
         }
         destroy() {
             //
