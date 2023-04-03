@@ -32,7 +32,8 @@
 	"devDependencies": {
 		"@types/lodash": "^4.14.192",
 		"@types/node": "^18.15.5",
-		"prettier": "^2.8.6"
+		"prettier": "^2.8.6",
+    "cli-table3": "^0.6.3"
 	},
 	"repository": {
 		"type": "git",
