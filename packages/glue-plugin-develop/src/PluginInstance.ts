@@ -37,18 +37,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  getName(): string {
-    return this.name;
-  }
-
-  getCallerPlugin(): IPlugin {
-    return this.callerPlugin;
-  }
-
-  getInstallationPath(): string {
-    return this.installationPath;
-  }
-
   watch(): string[] {
     return [];
   }
