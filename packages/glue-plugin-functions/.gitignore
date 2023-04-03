@@ -1,0 +1,8 @@
+.DS_store
+node_modules
+.vscode
+*lock.json
+*.lock
+meta/
+yarn-error.log
+.next

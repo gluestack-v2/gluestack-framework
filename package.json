@@ -9,7 +9,9 @@
     "lint": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
-    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop"
+    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
+    "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
+    "start:functions": "npm run dev --workspace @project/functions"
   },
   "repository": {
     "type": "git",
@@ -32,11 +34,11 @@
   },
   "workspaces": [
     "packages/*",
-    "website",
-    "dashboard"
+    "functions"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
     "@gluestack-v2/glue-plugin-web": "^0.0.2"
   }
 }
