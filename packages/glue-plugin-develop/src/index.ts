@@ -25,13 +25,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    // this.app.addEventListener('booting.web', (...args: any[]): void => {
-    //   console.log({message: 'booting web event listener', args});
-
-    //   console.log(this.gluePluginStore.get('message'));
-    //   this.gluePluginStore.set('message', 'Hello from develop plugin');
-    //   console.log(this.gluePluginStore.get('message'));
-    // });
+    //
   }
 
   destroy() {
@@ -44,19 +38,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getVersion(): string {
     return packageJSON.version;
-  }
-
-  getType(): 'stateless' | 'stateful' | 'devonly' {
-    return this.type;
-  }
-
-  // @ts-ignore
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
-
-  getInstallationPath(target: string): string {
-    return `./${target}`;
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -86,9 +67,5 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     );
     this.instances.push(instance);
     return instance;
-  }
-
-  getInstances(): IInstance[] {
-    return this.instances;
   }
 }

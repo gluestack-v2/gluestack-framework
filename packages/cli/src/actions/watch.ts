@@ -1,5 +1,5 @@
 import { join } from 'path';
-import colors from 'colors/safe';
+import 'colors';
 import AppCLI from '../helpers/lib/app';
 import { info, success, warning } from '../helpers/print';
 
@@ -21,7 +21,7 @@ export default async (app: AppCLI): Promise<void> => {
 
 			// AppCLI watch API
 	    app.watch(cwd, instance.watch(), async (event: string, path: string) => {
-	      info(`${instance.getName()}`, `${colors.green(event)} :: ${colors.yellow(path)}`);
+	      info(`${instance.getName()}`, `${event.green} :: ${path.yellow}`);
 
 				// AppCLI write API
 	      await app.write(cwd, instance.getName());

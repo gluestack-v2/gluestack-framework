@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import { basename, join } from 'path';
 import copyFile from './copy-file';
 import createFolder from './create-folder';
 import fileExists from './file-exists';
@@ -13,11 +13,11 @@ const copyFolder = async (
 		let files = [];
 
 		// Check if folder needs to be created or integrated
-		const targetFolder = path.join(
+		const targetFolder = join(
 			target,
-			path.basename(depth ? source : '.')
+			basename(depth ? source : '.')
 		);
-		if (!(await fileExists(targetFolder))) {
+		if (!await fileExists(targetFolder)) {
 			await createFolder(targetFolder);
 		}
 
@@ -27,14 +27,15 @@ const copyFolder = async (
 			fs.lstatSync(source).isSymbolicLink()
 		) {
 			files = fs.readdirSync(source);
-			files.forEach(async (file) => {
-				let curSource = path.join(source, file);
+
+			for await (const file of files) {
+				let curSource = join(source, file);
 				if (fs.lstatSync(curSource).isDirectory()) {
-					await copyFolder(curSource, targetFolder, depth++);
+					await copyFolder(curSource, targetFolder, ++depth);
 				} else {
 					await copyFile(curSource, targetFolder);
 				}
-			});
+			}
 		}
 	}
 };

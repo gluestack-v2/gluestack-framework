@@ -5,8 +5,8 @@
   "main": "index",
   "scripts": {
     "install-all": "npm install --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
+    "build:plugins": "npm run build --workspaces --if-present",
+    "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
@@ -33,12 +33,6 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*",
-    "functions"
-  ],
-  "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-web": "^0.0.2"
-  }
+    "packages/*"
+  ]
 }
