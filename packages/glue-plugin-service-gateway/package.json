@@ -1,12 +1,12 @@
 {
-  "name": "@gluestack-v2/glue-plugin-molecular-gateway",
+  "name": "@gluestack-v2/glue-plugin-service-gateway",
   "version": "0.0.1",
-  "description": "Gluestack V2 Molecular Gateway Plugin",
+  "description": "Gluestack V2 service Gateway Plugin",
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gluestack-v2/glue-plugin-molecular-gateway",
-    "directory": "packages/glue-plugin-molecular-gateway"
+    "url": "https://github.com/gluestack-v2/glue-plugin-service-gateway",
+    "directory": "packages/glue-plugin-service-gateway"
   },
   "keywords": [
     "gluestack",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x"
+    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.x"
   }
 }
