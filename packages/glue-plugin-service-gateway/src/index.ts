@@ -10,7 +10,7 @@ import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { Workspaces } from "@gluestack/helpers";
-
+import path from "path";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -99,6 +99,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     );
     this.instances.push(instance);
     return instance;
+  }
+
+  async generateService() {
+    const paths = [];
+    paths.push(path.resolve(__dirname));
   }
 
   getInstances(): IInstance[] {

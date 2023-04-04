@@ -36,7 +36,5 @@
     "packages/*",
     "molecular"
   ],
-  "dependencies": {
-    "@gluestack-v2/glue-plugin-molecular-gateway": "^0.0.1"
-  }
+  "dependencies": {}
 }
