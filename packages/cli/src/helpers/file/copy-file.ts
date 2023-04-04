@@ -1,6 +1,7 @@
 import fs from 'fs';
-import path from 'path';
+import { basename, join } from 'path';
 import fileExists from './file-exists';
+import writeFile from './write-file';
 
 const copyFile = async (
 	source: string,
@@ -9,13 +10,13 @@ const copyFile = async (
 	let targetFile = target;
 
 	// If target is a directory, a new file with the same name will be created
-	if (fileExists(target)) {
+	if (await fileExists(target)) {
 		if (fs.lstatSync(target).isDirectory()) {
-			targetFile = path.join(target, path.basename(source));
+			targetFile = join(target, basename(source));
 		}
 	}
 
-	await fs.writeFileSync(targetFile, fs.readFileSync(source));
+	await writeFile(targetFile, fs.readFileSync(source, 'utf8'));
 };
 
 export default copyFile;

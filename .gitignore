@@ -8,7 +8,7 @@ node_modules
 .glue/__generated__
 package-lock.json
 yarn.lock
-build
+build/
 
 # Internal testing files
 test.js

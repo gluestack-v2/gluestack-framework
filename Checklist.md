@@ -5,11 +5,16 @@
 - [x] npm dependencies source code review
 - [x] uninstall the package from dependencies if peer dependency check is not met
 - [ ] gluestack v1 boilerplate
-  - [ ] web
+  - [x] web
   - [ ] mobile-expo
-  - [ ] shared-components
-  - [ ] storybook
-  - [ ] backend-engine
-  - [ ] gluestack-ui
-- [ ] js to ts conversion of framework (with rename to IApp to IAppCLI)
-- [ ] this.app.getPluginName should return the given plugin's typing
+  - [x] shared-components
+  - [x] storybook
+  - [x] backend-engine
+  - [x] gluestack-ui
+- [x] js to ts conversion of framework (with rename to IApp to IAppCLI)
+- [x] this.app.getPluginName should return the given plugin's typing
+- [x] watcher api from app-cli
+- [x] writer api from app-cli
+- [x] build api from app-cli
+- [ ] add APIs to getDockerFile & getSealServiceFile methods from all plugin for its instances
+
