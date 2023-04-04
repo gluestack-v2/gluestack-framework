@@ -49,6 +49,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   watch(): string[] {
-    return ["services", "public", "test"];
+    return ["funcs"];
   }
 }

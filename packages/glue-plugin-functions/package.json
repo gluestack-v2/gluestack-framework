@@ -1,11 +1,11 @@
 {
   "name": "@gluestack-v2/glue-plugin-functions",
   "version": "0.0.1",
-  "description": "Gluestack V2 Develop Plugin",
+  "description": "Gluestack V2 Functions Plugin",
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gluestack-v2/glue-plugin-develop",
+    "url": "https://github.com/gluestack-v2/framework-cli",
     "directory": "packages/glue-plugin-web"
   },
   "keywords": [
@@ -33,6 +33,7 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x"
+    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
   }
 }
