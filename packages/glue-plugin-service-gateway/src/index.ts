@@ -4,13 +4,17 @@ import { PluginInstance } from "./PluginInstance";
 
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
-
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import { readfile } from "./helpers/readfile";
+import copyFolder from "./helpers/copy-folder";
+import rm from "./helpers/rm";
+
 import path from "path";
+import fs from "fs";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -101,9 +105,18 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateService() {
-    const paths = [];
-    paths.push(path.resolve(__dirname));
+  async generateService(instancePath: any) {
+    const instances = this.getInstances();
+
+    const localInstancePath = path.resolve(process.cwd(), instancePath);
+    for (const instance of instances) {
+      const installationPath = instance.getInstallationPath();
+      rm(path.resolve(process.cwd(), installationPath, instancePath));
+      console.log(path);
+      copyFolder(localInstancePath, installationPath, 3);
+      // const data = await readfile(path);
+      // console.log(data);
+    }
   }
 
   getInstances(): IInstance[] {
@@ -117,8 +130,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       console.log("> No functions plugin found, skipping build");
       return;
     }
-
+    // this.generateService();
     const instances: Array<IInstance> = plugin.getInstances();
+
     for await (const instance of instances) {
       const target: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
