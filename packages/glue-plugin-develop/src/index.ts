@@ -7,7 +7,11 @@ import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluesta
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+
+import buildCommand from './commands/build';
+import watchCommand from './commands/watch';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -25,7 +29,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    //
+    this.app.addCommand((program: ICommand) => buildCommand(program, this.app));
+    this.app.addCommand((program: ICommand) => watchCommand(program, this.app));
   }
 
   destroy() {
@@ -40,7 +45,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  async runPostInstall(instanceName: string, target: string) {
+  async runPostInstall(_instanceName: string, _target: string) {
     const plugin: IPlugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-develop",
     ) as IPlugin;

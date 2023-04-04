@@ -1,0 +1,6 @@
+container_name: INSTANCENAME
+platforms:
+  local:
+    build: cd ./src/INSTANCENAME && npm run dev
+  docker:
+    build: ./Dockerfile
