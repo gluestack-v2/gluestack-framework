@@ -1,1 +1,16 @@
-{}
+{
+  "@gluestack-v2/glue-plugin-develop": [
+    {
+      "instance": "develop",
+      "directory": "./develop",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-functions": [
+    {
+      "instance": "functions",
+      "directory": "./functions",
+      "container_store": {}
+    }
+  ]
+}

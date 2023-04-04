@@ -1,1 +1,8 @@
-{}
+{
+  "@gluestack-v2/glue-plugin-develop": {
+    "package": "@gluestack-v2/glue-plugin-develop"
+  },
+  "@gluestack-v2/glue-plugin-functions": {
+    "package": "@gluestack-v2/glue-plugin-functions"
+  }
+}

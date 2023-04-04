@@ -85,6 +85,21 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     await Workspaces.append(rootPackage, instance.getInstallationPath());
   }
 
+  generateFunctionsInServiceGateway() {
+    const instances = this.getInstances();
+    for (const instance of instances) {
+      const installationPath = instance.getInstallationPath();
+      console.log(this.gluePluginStore.get("develop"));
+    }
+    //  Get instance by name and call its generate function in service gateway
+  }
+
+  generateFunctionsInServiceSdk() {
+    const instances = this.getInstances();
+
+    //  Get instance by name and call its generate function in service sdk
+  }
+
   createInstance(
     key: string,
     gluePluginStore: IGlueStorePlugin,
@@ -101,17 +116,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateService() {
-    const paths = [];
-    paths.push(path.resolve(__dirname));
-  }
-
   getInstances(): IInstance[] {
     return this.instances;
   }
   async build(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-gateway"
+      "@gluestack-v2/glue-plugin-functions"
     );
     if (!plugin || plugin.getInstances().length <= 0) {
       console.log("> No functions plugin found, skipping build");
@@ -119,6 +129,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const instances: Array<IInstance> = plugin.getInstances();
+    this.generateFunctionsInServiceGateway();
+    this.generateFunctionsInServiceSdk();
     for await (const instance of instances) {
       const target: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
