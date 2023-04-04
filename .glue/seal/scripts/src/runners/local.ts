@@ -7,7 +7,7 @@ export default class Local {
 
   constructor(servicePath: string, build: string) {
     this.build = build;
-    this.volume = join(servicePath, 'src');
+    this.volume = join(servicePath);
   }
 
   private async run() {
@@ -18,8 +18,7 @@ export default class Local {
 
     await execute('sh', args, {
       cwd: this.volume,
-      stdio: 'inherit',
-      shell: true
+      stdio: 'inherit'
     });
   }
 

@@ -1,11 +1,11 @@
 
 export const FOLDER_STRUCTURE = {
-  '.glue': {
+  ".glue": {
     "__generated__": {
       "packages": [
         "sdk"
-      ]
-    },
-    "seal": {}
+      ],
+      "seal": {}
+    }
   }
-};
+} as const;

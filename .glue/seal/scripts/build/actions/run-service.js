@@ -30,7 +30,7 @@ exports.default = (directoryName, options) => __awaiter(void 0, void 0, void 0, 
         yield (0, exit_with_msg_1.exitWithMsg)('> ports are not required in case platform is local');
     }
     // if service doesn't exists, exit
-    const servicePath = (0, path_1.join)(process.cwd(), '..', 'services', directoryName);
+    const servicePath = (0, path_1.join)(process.cwd(), '../../__generated__/seal/services', directoryName, 'src');
     if (!(yield (0, fs_exists_1.exists)(servicePath))) {
         yield (0, exit_with_msg_1.exitWithMsg)(`> service ${(0, path_1.relative)('.', servicePath)} doesn't exists`);
     }

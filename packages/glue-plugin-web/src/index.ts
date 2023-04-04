@@ -3,14 +3,15 @@ import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluestack-plugin';
-
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
+import { join } from 'path';
+import { copyFile, writeFile } from 'fs/promises';
 import { reWriteFile } from './helpers/rewrite-file';
-import { readFile, removeSpecialChars, Workspaces, writeContentToFilePath } from "@gluestack/helpers";
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -96,18 +97,51 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   async build(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName('@gluestack-v2/glue-plugin-web');
     if (!plugin || plugin.getInstances().length <= 0) {
-      console.log('> No web plugin found, skipping build');
+      console.log('> No web plugin found, skipping build...');
       return;
     }
 
     const instances: Array<IInstance> = plugin.getInstances();
     for await (const instance of instances) {
 
-      const target: string = instance.getInstallationPath();
+      const source: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      await this.app.write(target, name);
+      await this.app.write(source, name);
+
+      /**
+       * @TODO:
+       * 1. move below code to the glue-plugin-seal or something
+       * 2. seal.service.yaml, dockerfile & package.json movement
+       *    into .glue/seal/services/<instance-name>/src
+       */
+      const SEAL_SERVICES_PATH: string = '.glue/__generated__/seal/services';
+      const destination: string = join(process.cwd(), SEAL_SERVICES_PATH, name, 'src');
+
+      // move seal.service.yaml
+      await copyFile(
+        instance.getSealServicefile(),
+        join(destination, 'seal.service.yaml')
+      );
+
+
+      // move dockerfile, if exists
+      if (instance.getDockerfile) {
+        await copyFile(
+          instance?.getDockerfile(),
+          join(destination, 'Dockerfile')
+        );
+      }
+
+      // add package.json with workspaces
+      const packageFile: string = join(destination, 'package.json');
+      const packageContent: any = {
+        name: name,
+        private: true,
+        workspaces: [name]
+      }
+      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
     }
   }
 }

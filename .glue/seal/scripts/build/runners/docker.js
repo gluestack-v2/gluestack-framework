@@ -17,7 +17,7 @@ class Docker {
         this.ports = ports;
         this.container_name = container_name;
         this.build = (0, path_1.join)(servicePath, build);
-        this.volume = (0, path_1.join)(servicePath, 'src');
+        this.volume = (0, path_1.join)(servicePath);
         this.envfile = envfile !== '' ? (0, path_1.join)(servicePath, envfile) : '';
     }
     create() {
@@ -25,6 +25,7 @@ class Docker {
             console.log('> Creating Docker Build...');
             const args = [
                 'build',
+                '--no-cache',
                 '-t',
                 this.container_name,
                 '-f',

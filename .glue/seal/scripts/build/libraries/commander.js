@@ -65,29 +65,28 @@ class Commander {
     addCommands() {
         var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            var _d;
             const files = yield (0, promises_1.readdir)('./src/commands');
             try {
-                for (var _e = true, files_1 = __asyncValues(files), files_1_1; files_1_1 = yield files_1.next(), _a = files_1_1.done, !_a;) {
+                for (var _d = true, files_1 = __asyncValues(files), files_1_1; files_1_1 = yield files_1.next(), _a = files_1_1.done, !_a;) {
                     _c = files_1_1.value;
-                    _e = false;
+                    _d = false;
                     try {
                         const file = _c;
                         if (!file.endsWith('.ts')) {
                             continue;
                         }
-                        const commands = yield (_d = '../commands/' + file.replace('.ts', ''), Promise.resolve().then(() => __importStar(require(_d))));
+                        const commands = yield Promise.resolve(`${'../commands/' + file.replace('.ts', '')}`).then(s => __importStar(require(s)));
                         commands.default(this.program);
                     }
                     finally {
-                        _e = true;
+                        _d = true;
                     }
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (!_e && !_a && (_b = files_1.return)) yield _b.call(files_1);
+                    if (!_d && !_a && (_b = files_1.return)) yield _b.call(files_1);
                 }
                 finally { if (e_1) throw e_1.error; }
             }

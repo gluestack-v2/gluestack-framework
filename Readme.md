@@ -53,3 +53,25 @@ Commands:
   watch                                      Watches the instances for changes and restarts them
   help [command]                             display help for command
 ```
+
+## Create Gluestack Project Build
+
+```bash
+# Goto project's root directory and run the following command
+$ node glue build
+```
+
+## Run Gluestack Project Build
+
+```bash
+# Goto seal scripts
+$ cd .glue/seal/scripts
+# Install npm dependencies
+$ npm install
+# Create scripts build
+$ npm run build
+# Here's how you can run your web plugin instance in docker
+$ node build/index run:service website --platform docker --ports 3000:9000
+# Here's how you can run your web plugin instance in local
+$ node build/index run:service website --platform local
+```

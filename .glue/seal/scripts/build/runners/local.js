@@ -14,7 +14,7 @@ const execute_1 = require("../helpers/execute");
 class Local {
     constructor(servicePath, build) {
         this.build = build;
-        this.volume = (0, path_1.join)(servicePath, 'src');
+        this.volume = (0, path_1.join)(servicePath);
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -24,8 +24,7 @@ class Local {
             ];
             yield (0, execute_1.execute)('sh', args, {
                 cwd: this.volume,
-                stdio: 'inherit',
-                shell: true
+                stdio: 'inherit'
             });
         });
     }
