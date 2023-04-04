@@ -89,9 +89,21 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const instances = this.getInstances();
     for (const instance of instances) {
       const installationPath = instance.getInstallationPath();
-      console.log(this.gluePluginStore.get("develop"));
+      const plugin = this.app.getPluginByName(
+        "@gluestack-v2/glue-plugin-service-gateway"
+      ) as IPlugin;
+      //@ts-ignore
+      plugin.generateService(installationPath);
+
+      // Validation
+      if (!plugin?.getInstances()?.[0]) {
+        throw new Error(
+          `develop instance already installed as ${plugin
+            ?.getInstances()[0]
+            ?.getName()}`
+        );
+      }
     }
-    //  Get instance by name and call its generate function in service gateway
   }
 
   generateFunctionsInServiceSdk() {
