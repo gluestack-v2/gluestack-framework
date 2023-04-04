@@ -1,17 +1,15 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"lib": ["es6", "es2015", "dom"],
-		"declaration": true,
-		"outDir": "build",
-		"strict": true,
-		"types": ["node"],
-		"esModuleInterop": true,
-		"module": "UMD",
-		"moduleResolution": "node",
-		"allowJs": true
-	},
-	"include": [
-		"src/**/*.ts"
-	]
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es6", "es2015", "dom"],
+    "declaration": true,
+    "outDir": "build",
+    "strict": true,
+    "types": ["node"],
+    "esModuleInterop": true,
+    "module": "UMD",
+    "moduleResolution": "node",
+    "allowJs": true
+  },
+  "include": ["src/**/*.ts"]
 }
