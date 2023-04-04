@@ -33,6 +33,10 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*"
-  ]
+    "packages/*",
+    "molecular"
+  ],
+  "dependencies": {
+    "@gluestack-v2/glue-plugin-molecular-gateway": "^0.0.1"
+  }
 }

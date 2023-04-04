@@ -1,1 +1,9 @@
-{}
+{
+  "@gluestack-v2/glue-plugin-molecular-gateway": [
+    {
+      "instance": "molecular",
+      "directory": "./molecular",
+      "container_store": {}
+    }
+  ]
+}
