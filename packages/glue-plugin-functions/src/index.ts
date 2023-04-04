@@ -94,15 +94,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       ) as IPlugin;
       //@ts-ignore
       plugin.generateService(installationPath);
-
-      // Validation
-      if (!plugin?.getInstances()?.[0]) {
-        throw new Error(
-          `develop instance already installed as ${plugin
-            ?.getInstances()[0]
-            ?.getName()}`
-        );
-      }
     }
   }
 
@@ -140,14 +131,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-    const instances: Array<IInstance> = plugin.getInstances();
+    // const instances: Array<IInstance> = plugin.getInstances();
     this.generateFunctionsInServiceGateway();
-    this.generateFunctionsInServiceSdk();
-    for await (const instance of instances) {
-      const target: string = instance.getInstallationPath();
-      const name: string = removeSpecialChars(instance.getName());
+    // this.generateFunctionsInServiceSdk();
+    // for await (const instance of instances) {
+    //   const target: string = instance.getInstallationPath();
+    //   const name: string = removeSpecialChars(instance.getName());
 
-      await this.app.write(target, name);
-    }
+    //   await this.app.write(target, name);
+    // }
   }
 }
