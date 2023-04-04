@@ -1,7 +1,7 @@
 FROM node:lts
 
 # Install your app
-WORKDIR /gluestack/{INSTANCE_NAME}
+WORKDIR /gluestack/INSTANCENAME
 COPY package*.json ./
 RUN ["npm", "config", "set", "legacy-peer-deps", "true"]
 RUN ["npm", "install"]

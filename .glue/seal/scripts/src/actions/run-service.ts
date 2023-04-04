@@ -28,7 +28,12 @@ export default async (
   }
 
   // if service doesn't exists, exit
-  const servicePath: string = join(process.cwd(), '..', 'services', directoryName);
+  const servicePath: string = join(
+    process.cwd(),
+    '../../__generated__/seal/services',
+    directoryName,
+    'src'
+  );
   if (!await exists(servicePath)) {
     await exitWithMsg(`> service ${relative('.', servicePath)} doesn't exists`);
   }
@@ -54,7 +59,6 @@ export default async (
   }
 
   const { envfile, build } = content.platforms[platform];
-
   switch (platform) {
     case 'docker':
       await Docker.start(content.container_name, servicePath, build, ports, envfile);

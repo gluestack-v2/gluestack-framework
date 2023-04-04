@@ -9,8 +9,12 @@ function getPlugin(
 	throwErrorAndExit: boolean = false
 ) {
 	try {
-		const { GlueStackPlugin } = require(path);
-		return new GlueStackPlugin(
+		const plugin = require(path);
+		if (!plugin.GlueStackPlugin) {
+			return;
+		}
+
+		return new plugin.GlueStackPlugin(
 			app,
 			injectPluginStore(app, pluginName)
 		);

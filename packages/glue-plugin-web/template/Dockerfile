@@ -1,7 +1,7 @@
 FROM node:lts
 
 # Install your app
-WORKDIR /gluestack/{INSTANCE_NAME}
+WORKDIR /gluestack/INSTANCENAME
 COPY package*.json ./
 RUN ["npm", "config", "set", "legacy-peer-deps", "true"]
 RUN ["npm", "install"]
@@ -12,4 +12,5 @@ EXPOSE 9000
 RUN ["npm", "install"]
 
 # Run the app
-CMD ["sh", "-c", "npm run dev -- -p 9000"]
+CMD ["sh", "-c", "npm run dev --workspace @project/website -- -p 9000"]
+

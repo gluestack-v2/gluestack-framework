@@ -31,12 +31,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    // this.app.addEventListener("booting.web", (...args: any[]): void => {
-    //   console.log({ message: "booting web event listener", args });
-    //   console.log(this.gluePluginStore.get("message"));
-    //   this.gluePluginStore.set("message", "Hello from function plugin");
-    //   console.log(this.gluePluginStore.get("message"));
-    // });
+    this.app.addEventListener("booting.web", (...args: any[]): void => {
+      console.log({ message: "booting web event listener", args });
+      console.log(this.gluePluginStore.get("message"));
+      this.gluePluginStore.set("message", "Hello from function plugin");
+      console.log(this.gluePluginStore.get("message"));
+    });
   }
 
   destroy() {
