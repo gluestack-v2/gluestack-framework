@@ -5,19 +5,13 @@ import { PluginInstance } from "./PluginInstance";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
 
-<<<<<<< HEAD
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-=======
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
->>>>>>> ab8b9eb9355145ea098fda8bdefc979a43b50d18
 
-import buildCommand from './commands/build';
-import watchCommand from './commands/watch';
+import buildCommand from "./commands/build";
+import watchCommand from "./commands/watch";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
