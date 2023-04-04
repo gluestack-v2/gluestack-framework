@@ -16,4 +16,8 @@ export default interface IInstance {
 	getCallerPlugin(): IPlugin;
 	getInstallationPath(): string;
 	watch(): string[];
+
+	// seal
+	getDockerfile?: () => string;
+	getSealServicefile(): string;
 }

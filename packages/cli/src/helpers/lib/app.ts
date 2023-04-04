@@ -187,8 +187,6 @@ export default class AppCLI {
 
 	// @API: writer
 	async write (cwd: string, instanceName: string): Promise<void> {
-		console.log({ cwd, instanceName });
-
 		await writer.write(
 			cwd,
 			instanceName

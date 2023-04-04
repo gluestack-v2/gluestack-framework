@@ -43,4 +43,12 @@ export default abstract class BaseGluestackPluginInstance
 	getInstallationPath(): string {
 		return this.installationPath;
 	}
+
+	getDockerfile(): string {
+		return `${this.getInstallationPath()}/Dockerfile`;
+	}
+
+	getSealServicefile(): string {
+		return `${this.getInstallationPath()}/seal.service.yaml`;
+	}
 }

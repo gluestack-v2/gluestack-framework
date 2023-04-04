@@ -13,7 +13,7 @@ export default class Docker {
     this.ports = ports;
     this.container_name = container_name;
     this.build = join(servicePath, build);
-    this.volume = join(servicePath, 'src');
+    this.volume = join(servicePath);
     this.envfile = envfile !== '' ? join(servicePath, envfile) : '';
   }
 
@@ -22,6 +22,7 @@ export default class Docker {
 
     const args: string[] = [
       'build',
+      '--no-cache',
       '-t',
       this.container_name,
       '-f',

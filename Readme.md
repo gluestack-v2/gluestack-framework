@@ -1,8 +1,9 @@
 # Gluestack V2 Plugin Development
 
 > Important Notes:
-> 1. Please checkout to the **develop** branch to access latest (beta) version. Thank You!
-> 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**.
+> 1. You'll need node version >= 18 & < 19
+> 2. Please checkout to the **develop** branch to access latest (beta) version
+> 3. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**
 
 ## Install npm dependencies
 
@@ -52,4 +53,26 @@ Commands:
   plugin:init                                Initializes the gluestack app as a plugin
   watch                                      Watches the instances for changes and restarts them
   help [command]                             display help for command
+```
+
+## Create Gluestack Project Build
+
+```bash
+# Goto project's root directory and run the following command
+$ node glue build
+```
+
+## Run Gluestack Project Build
+
+```bash
+# Goto seal scripts
+$ cd .glue/seal/scripts
+# Install npm dependencies
+$ npm install
+# Create scripts build
+$ npm run build
+# Here's how you can run your web plugin instance in docker
+$ node build/index run:service website --platform docker --ports 3000:9000
+# Here's how you can run your web plugin instance in local
+$ node build/index run:service website --platform local
 ```
