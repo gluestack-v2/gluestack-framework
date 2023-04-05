@@ -1,0 +1,30 @@
+ingress:
+  - domain: app.local.gluestack.io
+    options:
+      - location: /
+        rewrite_key: /(.*)
+        rewrite_value: /$1
+        container_name: website
+      - location: /dashboard
+        rewrite_key: /(.*)
+        rewrite_value: /$1
+        container_name: dashboard
+  - domain: api.local.gluestack.io
+    options:
+      - location: /landlord
+        rewrite_key: /landlord/(.*)
+        rewrite_value: /$1
+        container_name: landlord
+        size_in_mb: 500
+      - location: /tenant
+        rewrite_key: /tenant/(.*)
+        rewrite_value: /$1
+        container_name: tenant
+        size_in_mb: 500
+  - domain: admin.local.gluestack.io
+    options:
+      - location: /
+        rewrite_key: /(.*)
+        rewrite_value: /$1
+        container_name: strapi
+        size_in_mb: 500

@@ -1,1 +1,16 @@
-{}
+{
+  "@gluestack-v2/glue-plugin-develop": [
+    {
+      "instance": "develop",
+      "directory": "./develop",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-router-nginx": [
+    {
+      "instance": "nginx",
+      "directory": "./.glue/internals/nginx",
+      "container_store": {}
+    }
+  ]
+}
