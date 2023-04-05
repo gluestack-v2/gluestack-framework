@@ -15,6 +15,7 @@ import rm from "./helpers/rm";
 
 import path from "path";
 import fs from "fs";
+import writeService from "./helpers/write-service";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -116,6 +117,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       copyFolder(localInstancePath, installationPath, 3);
       // const data = await readfile(path);
       // console.log(data);
+      writeService();
     }
   }
 
