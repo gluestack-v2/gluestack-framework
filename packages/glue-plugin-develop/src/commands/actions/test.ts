@@ -20,6 +20,7 @@ export default async (app: AppCLI): Promise<void> => {
   for await (const plugin of app.plugins) {
     // console.log(plugin.getName());
     if (plugin.getName() == "@gluestack-v2/glue-plugin-service-gateway") {
+      // @ts-ignore
       plugin.generateService("./functions");
     }
   }
