@@ -5,7 +5,7 @@
   "private": true,
   "license": "ISC",
   "scripts": {
-    "start": "node ./funcs/add.js"
+    "start": "node ./add.js"
   },
   "dependencies": {
     "eslint": "8.32.0",

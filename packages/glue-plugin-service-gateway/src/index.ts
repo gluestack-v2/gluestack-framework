@@ -17,6 +17,7 @@ import { copyFile, writeFile } from "fs/promises";
 
 import path from "path";
 import fs from "fs";
+import writeService from "./helpers/write-service";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -119,7 +120,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!fs.existsSync(functionsPath)) {
       console.log("> No functions plugin found, create instance first");
     } else {
-      copyFolder(functionsPath, installationPath, 3);
+      await copyFolder(functionsPath, installationPath, 3);
+      writeService(installationPath);
     }
   }
 
