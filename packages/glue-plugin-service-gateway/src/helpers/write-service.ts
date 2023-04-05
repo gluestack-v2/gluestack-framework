@@ -9,24 +9,16 @@ import writeSDKFunction from "./write-sdk-function";
 import replaceHandlerNames from "./replace-handler-names";
 import getFileNameWithoutExtension from "./get-file-name-without-ext";
 import moleculerFunctionsServiceTemplateFunc from "./functions-service-template";
-
-const writeService = () => {
+function filePathExtension(filePath: string) {
+  return filePath.split(".").pop() ?? "";
+}
+const writeService = (installationPath: string) => {
   const moleculerFunctionsServiceTemplate =
     moleculerFunctionsServiceTemplateFunc();
-  const functionsPath = path.join(__dirname, "..", "functions");
-  const moleculerFunctionsPath = path.join(
-    __dirname,
-    "..",
-    "packages",
-    "moleculer",
-    "functions"
-  );
+  const functionsPath = path.join(installationPath, "functions");
+  const moleculerFunctionsPath = path.join(installationPath, "functions");
   const moleculerFunctionsServicePath = path.join(
-    __dirname,
-    "..",
-    // "packages",
-    // "moleculer",
-    "template",
+    installationPath,
     "services",
     "functions.service.js"
   );
@@ -54,21 +46,22 @@ const writeService = () => {
 
   files.forEach((functionFile: string, _index: number) => {
     const filePath = path.join(functionsPath, functionFile);
-
+    if (!["ts", "tsx", "js", "jsx"].includes(filePathExtension(filePath))) {
+      return;
+    }
     const functionName = getFileNameWithoutExtension(filePath);
     const functionCodeString = fs.readFileSync(filePath, "utf8");
 
-    const filePathFromFunctions = getPathAfterString(filePath, "functions/");
-    const moleculerFunctionPath = path.join(
-      __dirname,
-      moleculerFunctionsPath,
-      filePathFromFunctions
-    );
+    // const filePathFromFunctions = getPathAfterString(filePath, "functions/");
+    // const moleculerFunctionPath = path.join(
+    //   __dirname,
+    //   moleculerFunctionsPath,
+    //   filePathFromFunctions
+    // );
 
-    writeFile(moleculerFunctionPath, functionCodeString);
+    // writeFile(moleculerFunctionPath, functionCodeString);
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
-    console.log(regex);
     if (matches && matches[1]) {
       let params = matches[1].split(/\s*,\s*/);
       let sdkFunction = writeSDKFunction(functionName, params);

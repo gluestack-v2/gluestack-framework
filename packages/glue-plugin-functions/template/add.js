@@ -1,4 +1,4 @@
-export function add(a, b) {
-  console.log(a + b);
+module.exports = async function handler(ctx) {
+  const { a, b } = ctx.params;
   return a + b;
-}
+};

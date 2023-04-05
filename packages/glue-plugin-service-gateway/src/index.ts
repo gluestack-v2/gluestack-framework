@@ -156,8 +156,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!fs.existsSync(functionsPath)) {
       console.log("> No functions plugin found, create instance first");
     } else {
-      copyFolder(functionsPath, installationPath, 3);
-      writeService();
+      await copyFolder(functionsPath, installationPath, 3);
+      writeService(installationPath);
     }
   }
 
