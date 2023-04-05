@@ -70,42 +70,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/internal`;
   }
 
-  // async runPostInstall(instanceName: string, target: string) {
-  //   const instance: IInstance = await this.app.createPluginInstance(
-  //     this,
-  //     instanceName,
-  //     this.getTemplateFolderPath(),
-  //     target
-  //   );
-  //   if (!instance) {
-  //     return;
-  //   }
-  //   // // rewrite router.js with the installed instance name
-  //   // const routerFile = `${instance.getInstallationPath()}/router.js`;
-  //   // await reWriteFile(routerFile, removeSpecialChars(instanceName), 'INSTANCENAME');
-  //   // update package.json'S name index with the new instance name
-  //   const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-  //   await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
-  //   // update root package.json's workspaces with the new instance name
-  //   const rootPackage = `${process.cwd()}/package.json`;
-  //   await Workspaces.append(rootPackage, instance.getInstallationPath());
-  //   // move seal.service.yaml into the new instance
-  //   await reWriteFile(
-  //     `${instance.getSealServicefile()}`,
-  //     instanceName,
-  //     "INSTANCENAME"
-  //   );
-
-  //   // move dockerfile into the new instance
-  //   if (instance.getDockerfile) {
-  //     await reWriteFile(
-  //       `${instance?.getDockerfile()}`,
-  //       instanceName,
-  //       "INSTANCENAME"
-  //     );
-  //   }
-  // }
-
   async runPostInstall(_instanceName: string, _target: string) {
     const plugin: IPlugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
@@ -177,50 +141,55 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       console.log("> No functions plugin found, skipping build");
       return;
     }
-    const GLUE_GENERATED_SERVICE_PATH: string =
-      ".glue/__generated__/seal/services" as const;
-    const installationPath = path.resolve(
-      GLUE_GENERATED_SERVICE_PATH,
-      "servicegateway/src/servicegateway"
-    );
-    // @ts-ignore
-    await this.app.write(plugin.getInternalFolderPath(), "servicegateway");
-    //   /**
-    //    * @TODO:
-    //    * 1. move below code to the glue-plugin-seal or something
-    //    * 2. seal.service.yaml, dockerfile & package.json movement
-    //    *    into .glue/seal/services/<instance-name>/src
-    // */
-    const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
-    const destination: string = join(
-      process.cwd(),
-      SEAL_SERVICES_PATH,
-      "/servicegateway",
-      "src"
-    );
-
-    // move seal.service.yaml
-    await copyFile(
+    const instances = plugin.getInstances();
+    for (const instance of instances) {
       // @ts-ignore
+      const source: string = plugin.getInternalFolderPath();
+      const name: string = removeSpecialChars(instance.getName());
 
-      plugin.getSealServicefile(),
-      join(destination, "seal.service.yaml")
-    );
-
-    // move dockerfile, if exists
-    // @ts-ignore
-    if (plugin.getDockerfile) {
+      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+      await this.app.write(source, name);
       // @ts-ignore
-      await copyFile(plugin?.getDockerfile(), join(destination, "Dockerfile"));
+      await this.app.write(plugin.getInternalFolderPath(), "servicegateway");
+      //   /**
+      //    * @TODO:
+      //    * 1. move below code to the glue-plugin-seal or something
+      //    * 2. seal.service.yaml, dockerfile & package.json movement
+      //    *    into .glue/seal/services/<instance-name>/src
+      // */
+      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
+      const destination: string = join(
+        process.cwd(),
+        SEAL_SERVICES_PATH,
+        instance.name,
+        "src"
+      );
+
+      // move seal.service.yaml
+      await copyFile(
+        // @ts-ignore
+        plugin.getSealServicefile(),
+        join(destination, "seal.service.yaml")
+      );
+
+      // move dockerfile, if exists
+      // @ts-ignore
+      if (plugin.getDockerfile) {
+        await copyFile(
+          // @ts-ignore
+          plugin?.getDockerfile(),
+          join(destination, "Dockerfile")
+        );
+      }
+
+      // add package.json with workspaces
+      const packageFile: string = join(destination, "package.json");
+      const packageContent: any = {
+        name: instance.name,
+        private: true,
+        workspaces: [instance.name],
+      };
+      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
     }
-
-    // add package.json with workspaces
-    const packageFile: string = join(destination, "package.json");
-    const packageContent: any = {
-      name: "servicegateway",
-      private: true,
-      workspaces: ["servicegateway"],
-    };
-    await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
   }
 }
