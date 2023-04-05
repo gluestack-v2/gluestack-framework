@@ -79,9 +79,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // Validation
     if (plugin?.getInstances()?.[0]) {
       throw new Error(
-        `servicegateway instance already installed as ${plugin
-          .getInstances()[0]
-          .getName()}`
+        ` instance already installed as ${plugin.getInstances()[0].getName()}`
       );
     }
   }
@@ -105,23 +103,29 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   async generateService(instancePath: any) {
     const GLUE_GENERATED_SERVICE_PATH: string =
       ".glue/__generated__/seal/services" as const;
+    const instances = this.getInstances();
+    for (const instance of instances) {
+      const functionsPath = path.resolve(process.cwd(), instancePath);
 
-    const functionsPath = path.resolve(process.cwd(), instancePath);
-
-    const installationPath = path.resolve(
-      GLUE_GENERATED_SERVICE_PATH,
-      "servicegateway/src/servicegateway"
-    );
-    if (
-      fs.existsSync(path.resolve(process.cwd(), installationPath, instancePath))
-    ) {
-      rm(path.resolve(process.cwd(), installationPath, instancePath));
-    }
-    if (!fs.existsSync(functionsPath)) {
-      console.log("> No functions plugin found, create instance first");
-    } else {
-      await copyFolder(functionsPath, installationPath, 3);
-      writeService(installationPath);
+      const installationPath = path.resolve(
+        GLUE_GENERATED_SERVICE_PATH,
+        instance.name,
+        "src",
+        instance.name
+      );
+      if (
+        fs.existsSync(
+          path.resolve(process.cwd(), installationPath, instancePath)
+        )
+      ) {
+        rm(path.resolve(process.cwd(), installationPath, instancePath));
+      }
+      if (!fs.existsSync(functionsPath)) {
+        console.log("> No functions plugin found, create instance first");
+      } else {
+        await copyFolder(functionsPath, installationPath, 3);
+        writeService(installationPath);
+      }
     }
   }
 
@@ -152,7 +156,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       await this.app.write(source, name);
       // @ts-ignore
-      await this.app.write(plugin.getInternalFolderPath(), "servicegateway");
+      await this.app.write(plugin.getInternalFolderPath(), instance.name);
       //   /**
       //    * @TODO:
       //    * 1. move below code to the glue-plugin-seal or something
