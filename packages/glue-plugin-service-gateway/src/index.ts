@@ -183,7 +183,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       GLUE_GENERATED_SERVICE_PATH,
       "servicegateway/src/servicegateway"
     );
-
+    // @ts-ignore
     await this.app.write(plugin.getInternalFolderPath(), "servicegateway");
     //   /**
     //    * @TODO:
@@ -201,12 +201,16 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     // move seal.service.yaml
     await copyFile(
+      // @ts-ignore
+
       plugin.getSealServicefile(),
       join(destination, "seal.service.yaml")
     );
 
     // move dockerfile, if exists
+    // @ts-ignore
     if (plugin.getDockerfile) {
+      // @ts-ignore
       await copyFile(plugin?.getDockerfile(), join(destination, "Dockerfile"));
     }
 
