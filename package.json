@@ -9,6 +9,7 @@
     "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
+    "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
     "watch:service-gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",

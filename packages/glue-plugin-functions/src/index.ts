@@ -99,6 +99,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   generateFunctionsInServiceSdk() {
     const instances = this.getInstances();
+    for (const instance of instances) {
+      const installationPath = instance.getInstallationPath();
+      const plugin = this.app.getPluginByName(
+        "@gluestack-v2/glue-plugin-service-sdk"
+      ) as IPlugin;
+      //@ts-ignore
+      plugin.generateSDK(installationPath);
+    }
 
     //  Get instance by name and call its generate function in service sdk
   }
@@ -133,7 +141,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     // const instances: Array<IInstance> = plugin.getInstances();
     this.generateFunctionsInServiceGateway();
-    // this.generateFunctionsInServiceSdk();
+    this.generateFunctionsInServiceSdk();
     // for await (const instance of instances) {
     //   const target: string = instance.getInstallationPath();
     //   const name: string = removeSpecialChars(instance.getName());

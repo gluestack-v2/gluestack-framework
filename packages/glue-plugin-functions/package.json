@@ -24,6 +24,7 @@
     "@gluestack-v2/framework-cli": "^0.0.x",
     "@gluestack-v2/glue-plugin-develop": "^0.0.x",
     "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "prompts": "^2.4.2",
@@ -37,6 +38,7 @@
   "peerDependencies": {
     "@gluestack-v2/framework-cli": "^0.0.x",
     "@gluestack-v2/glue-plugin-develop": "^0.0.x",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x"
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.x"
   }
 }
