@@ -40,6 +40,11 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
     process.exit(1);
   }
 
+  if (!config.ingress || config.ingress.length === 0) {
+    console.error('No ingress found in config');
+    process.exit(-1);
+  }
+
   const rows = [] as Array<Array<string>>;
   const head: Array<string> = [
     'Domain',
@@ -51,13 +56,23 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
   ];
 
   config.ingress.forEach((ingress: Ingress) => {
-    const domain = ingress.domain;
+    const domain = ingress.domain || undefined;
+    if (!domain) {
+      console.log('> No domain found in config');
+      return;
+    }
 
     ingress.options.forEach((option: Option) => {
       const location = option.location;
       const rewriteKey = option.rewrite_key;
       const rewriteValue = option.rewrite_value;
       const containerName = option.container_name;
+
+      if (!location || !rewriteKey || !rewriteValue || !containerName) {
+        console.log('> Missing required option in ingress config');
+        return;
+      }
+
       const sizeInMB = option.size_in_mb || 50;
 
       rows.push([
