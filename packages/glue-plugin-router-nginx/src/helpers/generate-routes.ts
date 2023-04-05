@@ -3,23 +3,7 @@ import { join } from 'path';
 import { readFile, writeFile } from '@gluestack/helpers';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-
-interface Option {
-  location: string;
-  rewrite_key: string;
-  rewrite_value: string;
-  container_name: string;
-  size_in_mb?: number;
-}
-
-interface Ingress {
-  domain: string;
-  options: Option[];
-}
-
-interface Config {
-  ingress: Ingress[];
-}
+import { Config, Ingress, Option } from '../types';
 
 export default async function generateRoutes(app: AppCLI): Promise<void> {
   const plugin: IPlugin = app.getPluginByName(
@@ -27,8 +11,6 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
   ) as IPlugin;
 
   const path: string = plugin.getInstances()[0].getInstallationPath();
-
-  let port: number = 7000;
 
   const configYaml = await readFile('seal.yaml', 'utf8');
   let config: Config;
@@ -47,45 +29,54 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
 
   const serverBlocks = config.ingress.map((ingress: Ingress) => {
     const domain = ingress.domain || undefined;
-    if (!domain) {
-      console.log('> No domain found in config');
+    const port = ingress.port || undefined;
+    if (!domain || !port) {
+      console.log('> No domain or port found in config');
       return;
     }
 
     const locationBlocks = ingress.options.map((option: Option) => {
-      const location = option.location;
-      const rewriteKey = option.rewrite_key;
-      const rewriteValue = option.rewrite_value;
-      const containerName = option.container_name;
+      const {
+        location, rewrite_key, rewrite_value, proxy_pass
+      } = option;
 
-      if (!location || !rewriteKey || !rewriteValue || !containerName) {
+      if (!location || !rewrite_key || !rewrite_value || !proxy_pass) {
         console.log('> Missing required option in ingress config');
         return;
       }
 
-      const sizeInMB = option.size_in_mb || 50;
+      const client_max_body_size = option.client_max_body_size || 50;
+      const proxy_http_version = option.proxy_http_version || 1.1;
+      const proxy_cache_bypass = option.proxy_cache_bypass || '$http_upgrade';
+      const proxy_set_header_upgrade = option.proxy_set_header_upgrade || '$http_upgrade';
+      const proxy_set_header_host = option.proxy_set_header_host || '$host';
+      const proxy_set_header_connection = option.proxy_set_header_connection || '"upgrade"';
+      const proxy_set_header_x_real_ip = option.proxy_set_header_x_real_ip || '$remote_addr';
+      const proxy_set_header_x_forwarded_for = option.proxy_set_header_x_forwarded_for || '$proxy_add_x_forwarded_for';
+      const proxy_set_header_x_forwarded_proto = option.proxy_set_header_x_forwarded_proto || '$scheme';
 
       return `
     location ${location} {
-      rewrite ${rewriteKey} ${rewriteValue};
+      rewrite ${rewrite_key} ${rewrite_value};
 
-      client_max_body_size ${sizeInMB}M;
+      client_max_body_size ${client_max_body_size}M;
 
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_cache_bypass $http_upgrade;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_http_version ${proxy_http_version};
+      proxy_set_header Upgrade ${proxy_set_header_upgrade};
+      proxy_set_header Host ${proxy_set_header_host};
+      proxy_set_header Connection ${proxy_set_header_connection};
+      proxy_cache_bypass ${proxy_cache_bypass};
+      proxy_set_header X-Real-IP ${proxy_set_header_x_real_ip};
+      proxy_set_header X-Forwarded-For ${proxy_set_header_x_forwarded_for};
+      proxy_set_header X-Forwarded-Proto ${proxy_set_header_x_forwarded_proto};
 
-      proxy_pass http://${containerName};
+      proxy_pass ${proxy_pass};
     }`;
     }).join('\n');
 
     return `
   server {
-    listen ${port++};
+    listen ${port};
     server_name ${domain};
     ${locationBlocks}
   }`;

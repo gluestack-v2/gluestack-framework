@@ -1,35 +1,9 @@
 import yaml from 'js-yaml';
-import { join } from 'path';
-import { ConsoleTable, readFile, writeFile } from '@gluestack/helpers';
+import { Config, Ingress, Option } from '../types';
+import { ConsoleTable, readFile } from '@gluestack/helpers';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 
-interface Option {
-  location: string;
-  rewrite_key: string;
-  rewrite_value: string;
-  container_name: string;
-  size_in_mb?: number;
-}
-
-interface Ingress {
-  domain: string;
-  options: Option[];
-}
-
-interface Config {
-  ingress: Ingress[];
-}
-
-export default async function generateRoutes(app: AppCLI): Promise<void> {
-  const plugin: IPlugin = app.getPluginByName(
-    "@gluestack-v2/glue-plugin-router-nginx",
-  ) as IPlugin;
-
-  const path: string = plugin.getInstances()[0].getInstallationPath();
-
-  let port: number = 7000;
-
+export default async function generateRoutes(_app: AppCLI): Promise<void> {
   const configYaml = await readFile('seal.yaml', 'utf8');
   let config: Config;
 
@@ -48,40 +22,42 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
   const rows = [] as Array<Array<string>>;
   const head: Array<string> = [
     'Domain',
+    'Port',
     'Location',
-    'Container Name',
+    'Proxy Pass',
     'Rewrite Key',
     'Rewrite Value',
-    'Size in MB'
+    'Client MaxBody (in MB)'
   ];
 
   config.ingress.forEach((ingress: Ingress) => {
     const domain = ingress.domain || undefined;
-    if (!domain) {
-      console.log('> No domain found in config');
+    const port = ingress.port || undefined;
+    if (!domain || !port) {
+      console.log('> No domain or port found in config');
       return;
     }
 
     ingress.options.forEach((option: Option) => {
-      const location = option.location;
-      const rewriteKey = option.rewrite_key;
-      const rewriteValue = option.rewrite_value;
-      const containerName = option.container_name;
+      const {
+        location, rewrite_key, rewrite_value, proxy_pass
+      } = option;
 
-      if (!location || !rewriteKey || !rewriteValue || !containerName) {
+      if (!location || !rewrite_key || !rewrite_value || !proxy_pass) {
         console.log('> Missing required option in ingress config');
         return;
       }
 
-      const sizeInMB = option.size_in_mb || 50;
+      const client_max_body_size = option.client_max_body_size || 50;
 
       rows.push([
         domain,
+        `${port}`,
         location,
-        containerName,
-        rewriteKey,
-        rewriteValue,
-        `${sizeInMB}`
+        proxy_pass,
+        rewrite_key,
+        rewrite_value,
+        `${client_max_body_size}`
       ]);
     });
   });
