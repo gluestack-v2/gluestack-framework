@@ -72,10 +72,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-    // // rewrite router.js with the installed instance name
-    // const routerFile = `${instance.getInstallationPath()}/router.js`;
-    // await reWriteFile(routerFile, removeSpecialChars(instanceName), 'INSTANCENAME');
-
     // update package.json'S name index with the new instance name
     const pluginPackage = `${instance.getInstallationPath()}/package.json`;
     await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
@@ -89,10 +85,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const instances = this.getInstances();
     for (const instance of instances) {
       const installationPath = instance.getInstallationPath();
+
       const plugin = this.app.getPluginByName(
         "@gluestack-v2/glue-plugin-service-gateway"
       ) as IPlugin;
-      //@ts-ignore
+
+      // @ts-ignore
       plugin.generateService(installationPath);
     }
   }

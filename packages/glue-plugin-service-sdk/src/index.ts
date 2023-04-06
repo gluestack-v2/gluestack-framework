@@ -154,6 +154,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
+
   getDockerfile(): string {
     return `${this.getInternalFolderPath()}/Dockerfile`;
   }
@@ -161,6 +162,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getSealServicefile(): string {
     return `${this.getInternalFolderPath()}/seal.service.yaml`;
   }
+
   async build(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-sdk"

@@ -7,17 +7,18 @@ import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluesta
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+
 import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import { readfile } from "./helpers/readfile";
-import copyFolder from "./helpers/copy-folder";
-import rm from "./helpers/rm";
+
 import { join } from "path";
-import { copyFile, writeFile } from "fs/promises";
+import { copyFile } from "fs/promises";
+import { fileExists, removeSpecialChars, Workspaces, writeFile } from "@gluestack/helpers";
 
 import path from "path";
 import fs from "fs";
 import writeService from "./helpers/write-service";
+import rm from "./helpers/rm";
+import copyFolder from "./helpers/copy-folder";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -58,17 +59,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.type;
   }
 
-  // @ts-ignore
   getTemplateFolderPath(): string {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
 
   getInstallationPath(target: string): string {
-    return `./.glue/__generated__/seal/services/${target}/src/${target}`;
-  }
-
-  getInternalFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/internal`;
+    return `./.glue/internals/${target}`;
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -82,7 +78,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!instance) {
       return;
     }
-    console.log(instance.getInstallationPath());
+
     // update package.json'S name index with the new instance name
     const pluginPackage = `${instance.getInstallationPath()}/package.json`;
     await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
@@ -124,27 +120,25 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
+  getInstances(): IInstance[] {
+    return this.instances;
+  }
+
   async generateService(instancePath: any) {
-    const GLUE_GENERATED_SERVICE_PATH: string =
-      ".glue/__generated__/seal/services" as const;
     const instances = this.getInstances();
     for (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
-      const installationPath = path.resolve(
-        GLUE_GENERATED_SERVICE_PATH,
-        instance.name,
-        "src",
-        instance.name
-      );
+      const installationPath = instance.getInstallationPath();
       if (
-        fs.existsSync(
-          path.resolve(process.cwd(), installationPath, instancePath)
+        await fileExists(
+          path.join(installationPath, instancePath)
         )
       ) {
-        rm(path.resolve(process.cwd(), installationPath, instancePath));
+        rm(path.join(installationPath, instancePath));
       }
-      if (!fs.existsSync(functionsPath)) {
+
+      if (!await fileExists(functionsPath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
@@ -153,16 +147,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  getInstances(): IInstance[] {
-    return this.instances;
-  }
-
   async build(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
     if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No web plugin found, skipping build...");
+      console.log("> No service-gateway plugin found, skipping build...");
       return;
     }
 
@@ -172,7 +162,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const name: string = removeSpecialChars(instance.getName());
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      // await this.app.write(source, name);
+      await this.app.write(source, name);
 
       /**
        * @TODO:
