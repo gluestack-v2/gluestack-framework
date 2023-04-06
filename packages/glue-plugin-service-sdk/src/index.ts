@@ -166,20 +166,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         ".glue/__generated__/packages/" + instance.name + "/src";
 
       const files = fs.readdirSync(source);
+
+      fs.mkdirSync(path.resolve(SEAL_SERVICES_PATH, instance.name), {
+        recursive: true,
+      });
+
       for (const file of files) {
-        // if (fs.statSync(path.resolve(source, file)).isFile()) {
-        //   console.log(file, "Is file");
-        //   copyFile(
-        //     path.resolve(source, file),
-        //     path.resolve(SEAL_SERVICES_PATH, instance.name)
-        //   );
-        // } else {
-        //   copyFolder(
-        //     path.resolve(source, file),
-        //     path.resolve(SEAL_SERVICES_PATH, instance.name),
-        //     7
-        //   );
-        // }
+        if (fs.statSync(path.resolve(source, file)).isFile()) {
+          // console.log(
+          //   file,
+          //   "Is file",
+          //   path.resolve(SEAL_SERVICES_PATH, instance.name, file),
+          //   path.resolve(source, file),
+          //   "\n"
+          // );
+          copyFile(
+            path.resolve(source, file),
+            path.resolve(SEAL_SERVICES_PATH, instance.name, file)
+          );
+        } else {
+          console.log(
+            file,
+            "Is Dir",
+            path.resolve(SEAL_SERVICES_PATH, instance.name),
+            path.resolve(source, file),
+            "\n"
+          );
+
+          copyFolder(
+            path.resolve(source, file),
+            path.resolve(SEAL_SERVICES_PATH, instance.name),
+            7
+          );
+        }
       }
       // await copyFolder(
       //   source,

@@ -79,7 +79,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // Validation
     if (plugin?.getInstances()?.[0]) {
       throw new Error(
-        ` instance already installed as ${plugin.getInstances()[0].getName()}`
+        `gateway instance already installed as ${plugin
+          .getInstances()[0]
+          .getName()}`
       );
     }
   }

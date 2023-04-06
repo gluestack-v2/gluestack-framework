@@ -33,7 +33,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.x"
+    "@gluestack-v2/framework-cli": "^0.0.x"
   }
 }
