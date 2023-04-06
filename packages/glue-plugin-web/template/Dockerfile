@@ -12,5 +12,5 @@ EXPOSE 9000
 RUN ["npm", "install"]
 
 # Run the app
-CMD ["sh", "-c", "npm run dev --workspace @project/website -- -p 9000"]
+CMD ["sh", "-c", "npm run dev --workspace @project/INSTANCENAME -- -p 9000"]
 
