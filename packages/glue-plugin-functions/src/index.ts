@@ -10,7 +10,11 @@ import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import copyFolder from "./helpers/copy-folder";
+import fileExists from "./helpers/file-exists";
+import rm from "./helpers/rm";
 import path from "path";
+import fs from "fs";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -140,6 +144,33 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // const instances: Array<IInstance> = plugin.getInstances();
     this.generateFunctionsInServiceGateway();
     this.generateFunctionsInServiceSdk();
+
+    // Adding packages in all the seal services
+    const generatedServicesPath = path.join(
+      process.cwd(),
+      ".glue",
+      "__generated__",
+      "seal",
+      "services"
+    );
+    const generatedServices = fs.readdirSync(generatedServicesPath);
+    console.log({ generatedServices });
+    for (const service of generatedServices) {
+      if (
+        await fileExists(
+          path.join(generatedServicesPath, service, "src", "packages")
+        )
+      ) {
+        rm(path.join(generatedServicesPath, service, "src", "packages"));
+      }
+
+      await copyFolder(
+        path.join(process.cwd(), ".glue", "__generated__", "packages"),
+        path.join(generatedServicesPath, service, "src"),
+        7
+      );
+    }
+
     // for await (const instance of instances) {
     //   const target: string = instance.getInstallationPath();
     //   const name: string = removeSpecialChars(instance.getName());

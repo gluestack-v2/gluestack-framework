@@ -1,6 +1,7 @@
 # Gluestack V2 Plugin Development
 
 > Important Notes:
+>
 > 1. You'll need node version >= 18 & < 19
 > 2. Please checkout to the **develop** branch to access latest (beta) version
 > 3. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**
@@ -76,3 +77,11 @@ $ node build/index run:service website --platform docker --ports 3000:9000
 # Here's how you can run your web plugin instance in local
 $ node build/index run:service website --platform local
 ```
+
+npm run install-all
+npm run build:plugins
+node glue add @gluestack-v2/glue-plugin-develop develop
+node glue add @gluestack-v2/glue-plugin-web web
+node glue add @gluestack-v2/glue-plugin-service-sdk sdk
+node glue add @gluestack-v2/glue-plugin-service-gateway gateway
+node glue add @gluestack-v2/glue-plugin-functions functions

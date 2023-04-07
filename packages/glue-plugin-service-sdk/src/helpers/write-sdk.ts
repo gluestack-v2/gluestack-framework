@@ -11,7 +11,7 @@ const writeSDK = (installationPath: string) => {
   const sdkIndexTemplate = sdkIndexTemplateFunc();
   const functionsPath = path.join(installationPath, "functions");
   const sdkPath = path.join(installationPath, ".");
-  const sdkSrcIndex = path.join(sdkPath, "index.ts");
+  const sdkSrcIndex = path.join(sdkPath, "index.js");
   const files = fs.readdirSync(functionsPath);
 
   let sdkFunctions = ``;

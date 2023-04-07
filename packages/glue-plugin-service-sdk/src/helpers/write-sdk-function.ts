@@ -3,7 +3,7 @@ export default function writeSDKFunction(
   paramsArray: Array<string>
 ) {
   let functionString = `
-  async ${functionName}(${paramsArray.join(":any, ")}:any): Promise<any> {
+  async ${functionName}(${paramsArray.join(", ")}) {
     try {
       const response = await axios({
         method: "post",
@@ -11,7 +11,7 @@ export default function writeSDKFunction(
         data: {${paramsArray.join(",")}},
       });
       return response.data;
-    } catch (err: any) {
+    } catch (err) {
       return err.message;
     }
   }
