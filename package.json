@@ -8,10 +8,11 @@
     "build:plugins": "npm run build --workspaces --if-present",
     "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
+    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
+    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
     "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
     "watch:service-gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
-    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions"
   },
   "repository": {

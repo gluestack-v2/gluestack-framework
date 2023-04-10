@@ -1,5 +1,5 @@
-import Table from 'cli-table3';
 import 'colors';
+import { ConsoleTable } from '@gluestack/helpers';
 
 import { error, info, newline, warning } from '../helpers/print';
 import { getTopToBottomPluginTree } from '../helpers/meta/plugins';
@@ -9,28 +9,8 @@ import AppCLI from '../helpers/lib/app';
 import IArrTree from '../types/meta/interface/IArr';
 import IInstance from '../types/plugin/interface/IInstance';
 
-type pluginArrayTable = Array<Array<string>>;
-
-const printConsoleTable = async (head: string[], rows: pluginArrayTable) => {
-	const chars = {
-		'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗',
-		'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝',
-		'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼',
-		'right': '║', 'right-mid': '╢', 'middle': '│'
-	}
-
-	let table: any = new Table({
-		head: head.map(value => value.green),
-		chars
-	});
-
-	table.push(...rows);
-
-	console.log(table.toString());
-}
-
 const printPlugins = (plugins: IArrTree) => {
-	const arr = [] as pluginArrayTable;
+	const arr = [] as Array<Array<string>>;
 
 	plugins.forEach((plugin) => {
 		const pluginName = [plugin.key, plugin.plugin.getVersion()] as string[];
@@ -43,7 +23,7 @@ const printPlugins = (plugins: IArrTree) => {
 	if (arr.length > 0) {
 		info('Installed Plugins');
 		const head = ['Plugin', 'Version'];
-		printConsoleTable(head, arr);
+		ConsoleTable.print(head, arr);
 		return;
 	}
 
@@ -57,7 +37,7 @@ const printInstalledPlugins = async (app: AppCLI) => {
 };
 
 const printPluginInstances = (plugins: IArrTree) => {
-	const arr = [] as pluginArrayTable;
+	const arr = [] as Array<Array<string>>;
 
 	plugins.forEach(({ key, plugin }, index) => {
 		if (plugin.getInstances) {
@@ -73,7 +53,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 		info('Installed Instances');
 
 		const head = ['Plugin', 'Instance', 'Path', 'Version'];
-		printConsoleTable(head, arr);
+		ConsoleTable.print(head, arr);
 		return;
 	}
 
