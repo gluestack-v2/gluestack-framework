@@ -64,7 +64,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./.glue/internals/${target}`;
+    return `./.glue/__generated__/services/${target}`;
   }
 
   async runPostInstall(instanceName: string, target: string) {

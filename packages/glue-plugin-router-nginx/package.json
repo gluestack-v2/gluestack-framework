@@ -36,7 +36,6 @@
     "@types/js-yaml": "^4.0.5"
   },
   "peerDependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
     "@gluestack-v2/glue-plugin-develop": "^0.0.x"
   }
 }
