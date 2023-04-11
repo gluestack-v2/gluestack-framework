@@ -148,6 +148,35 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       } else {
         await copyFolder(functionsPath, installationPath, 3);
         writeSDK(installationPath);
+        await this.updateServices();
+      }
+    }
+  }
+
+  async updateServices() {
+    const plugin: IPlugin | null = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-service-sdk"
+    );
+    if (!plugin || plugin.getInstances().length <= 0) {
+      console.log("> No web plugin found, skipping build...");
+      return;
+    }
+
+    const instances: Array<IInstance> = plugin.getInstances();
+    for await (const instance of instances) {
+      const packagesPath = join(
+        process.cwd(),
+        "./.glue/__generated__/packages"
+      );
+      const servicesPath = join(
+        process.cwd(),
+        "./.glue/__generated__/seal/services"
+      );
+      const paths = fs.readdirSync(servicesPath);
+
+      for (const path of paths) {
+        let servicePath = join(servicesPath, path, "/src");
+        await copyFolder(packagesPath, servicePath, 4);
       }
     }
   }
@@ -216,7 +245,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         workspaces: [name],
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-      console.log("sdk build end");
     }
   }
 }

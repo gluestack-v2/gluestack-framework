@@ -155,7 +155,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const packageContent: any = {
         name: name,
         private: true,
-        workspaces: [name, "packages/sdk/src/sdk"],
+        workspaces: [name, "packages/*"],
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
     }

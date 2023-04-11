@@ -40,7 +40,9 @@
     ".glue/__generated__/packages/sdk/src/sdk",
     "web",
     "functions",
-    ".glue/__generated__/packages"
+    ".glue/__generated__/packages",
+    ".glue/__generated__/packages/sdktest/src/sdktest",
+    "website"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
