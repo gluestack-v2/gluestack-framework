@@ -10,10 +10,15 @@ import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/inte
 
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 
-import { join } from "path";
-import { copyFile, writeFile } from "fs/promises";
+import path, { join } from "path";
+import fs from "fs";
+import copyFile from "./helpers/copy-file";
+import writeFile from "./helpers/write-file";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import fileExists from "./helpers/file-exists";
+import rm from "./helpers/rm";
+import copyFolder from "./helpers/copy-folder";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -106,18 +111,79 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async build(): Promise<void> {
+    // let instanceMap: any = {};
+    // this.app.getPlugins().map((p) =>
+    //   p.getInstances().map((i) => {
+    //     if (instanceMap[i.getCallerPlugin().getName()]) {
+    //       instanceMap[i.getCallerPlugin().getName()].push({
+    //         path: i.getInstallationPath(),
+    //         pluginName: i.getCallerPlugin().getName(),
+    //         instanceName: i.getName(),
+    //       });
+    //     } else {
+    //       instanceMap[i.getCallerPlugin().getName()] = [];
+    //       instanceMap[i.getCallerPlugin().getName()].push({
+    //         path: i.getInstallationPath(),
+    //         pluginName: i.getCallerPlugin().getName(),
+    //         instanceName: i.getName(),
+    //       });
+    //     }
+    //   })
+    // );
+
+    // Copy packages folder to seal services
+    // const generatedServices = fs.readdirSync(generatedWebPath);
+    // for (const service of generatedServices) {
+
+    // }
+
+    // End Copy packages folder to seal services
+
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-web"
     );
+
     if (!plugin || plugin.getInstances().length <= 0) {
       console.log("> No web plugin found, skipping build...");
       return;
     }
 
     const instances: Array<IInstance> = plugin.getInstances();
+
     for await (const instance of instances) {
       const source: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
+      const generatedPkgPath = path.join(
+        process.cwd(),
+        ".glue",
+        "__generated__",
+        "packages"
+      );
+      const copyPkgPath = path.join(
+        process.cwd(),
+        ".glue",
+        "__generated__",
+        "seal",
+        "services",
+        name,
+        "src",
+        name,
+        "packages"
+      );
+
+      // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
+      //   for (const sdk of instanceMap?.[
+      //     "@gluestack-v2/glue-plugin-service-sdk"
+      //   ]) {
+      //     let generatedWebPath = "";
+      //     generatedWebPath = path.join(process.cwd(), sdk.path);
+      if (await fileExists(path.join(copyPkgPath))) {
+        console.log("Removing " + path.join(copyPkgPath));
+
+        rm(path.join(copyPkgPath));
+      }
+
+      await copyFolder(path.join(generatedPkgPath), path.join(copyPkgPath), 7);
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       await this.app.write(source, name);

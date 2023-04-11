@@ -22,7 +22,6 @@
   "license": "MIT",
   "dependencies": {
     "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-web": "^0.0.x",
     "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
     "@gluestack-v2/glue-plugin-service-sdk": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
@@ -37,7 +36,6 @@
   "devDependencies": {},
   "peerDependencies": {
     "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
-    "@gluestack-v2/glue-plugin-web": "^0.0.x",
     "@gluestack-v2/glue-plugin-service-sdk": "^0.0.x"
   }
 }
