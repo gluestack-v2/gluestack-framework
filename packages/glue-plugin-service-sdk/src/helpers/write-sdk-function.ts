@@ -7,7 +7,7 @@ export default function writeSDKFunction(
     try {
       const response = await axios({
         method: "post",
-        url: "http://localhost:3003/api/functions/${functionName}",
+        url: "http://localhost:3013/api/functions/${functionName}",
         data: {${paramsArray.join(",")}},
       });
       return response.data;
