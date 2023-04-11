@@ -208,7 +208,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const name: string = removeSpecialChars(instance.getName());
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      // await this.app.write(source, name);
+      await this.app.write(source, name);
 
       /**
        * @TODO:

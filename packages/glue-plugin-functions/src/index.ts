@@ -146,30 +146,30 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.generateFunctionsInServiceSdk();
 
     // Adding packages in all the seal services
-    const generatedServicesPath = path.join(
-      process.cwd(),
-      ".glue",
-      "__generated__",
-      "seal",
-      "services"
-    );
-    const generatedServices = fs.readdirSync(generatedServicesPath);
-    console.log({ generatedServices });
-    for (const service of generatedServices) {
-      if (
-        await fileExists(
-          path.join(generatedServicesPath, service, "src", "packages")
-        )
-      ) {
-        rm(path.join(generatedServicesPath, service, "src", "packages"));
-      }
+    // const generatedServicesPath = path.join(
+    //   process.cwd(),
+    //   ".glue",
+    //   "__generated__",
+    //   "seal",
+    //   "services"
+    // );
+    // const generatedServices = fs.readdirSync(generatedServicesPath);
+    // console.log({ generatedServices });
+    // for (const service of generatedServices) {
+    //   if (
+    //     await fileExists(
+    //       path.join(generatedServicesPath, service, "src", "packages")
+    //     )
+    //   ) {
+    //     rm(path.join(generatedServicesPath, service, "src", "packages"));
+    //   }
 
-      await copyFolder(
-        path.join(process.cwd(), ".glue", "__generated__", "packages"),
-        path.join(generatedServicesPath, service, "src"),
-        7
-      );
-    }
+    //   await copyFolder(
+    //     path.join(process.cwd(), ".glue", "__generated__", "packages"),
+    //     path.join(generatedServicesPath, service, "src"),
+    //     7
+    //   );
+    // }
 
     // for await (const instance of instances) {
     //   const target: string = instance.getInstallationPath();

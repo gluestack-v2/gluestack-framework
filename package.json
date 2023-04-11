@@ -36,15 +36,16 @@
   },
   "workspaces": [
     "packages/*",
-    ".glue/internals/gateway",
-    ".glue/__generated__/packages/sdk/src/sdk",
     "web",
+    ".glue/__generated__/seal/services/gateway/src",
+    ".glue/__generated__/packages/sdk/src/sdk",
     "functions",
     ".glue/__generated__/packages",
     ".glue/__generated__/packages/sdktest/src/sdktest",
     "website",
     ".glue/__generated__/seal/services/servicegateway/src",
-    ".glue/__generated__/seal/services/servicegateway/src/servicegateway"
+    ".glue/__generated__/seal/services/servicegateway/src/servicegateway",
+    ".glue/__generated__/seal/services/gateway/src/gateway"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
