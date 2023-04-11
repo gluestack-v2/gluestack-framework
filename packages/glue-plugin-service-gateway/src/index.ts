@@ -12,7 +12,12 @@ import { reWriteFile } from "./helpers/rewrite-file";
 
 import { join } from "path";
 import { copyFile } from "fs/promises";
-import { fileExists, removeSpecialChars, Workspaces, writeFile } from "@gluestack/helpers";
+import {
+  fileExists,
+  removeSpecialChars,
+  Workspaces,
+  writeFile,
+} from "@gluestack/helpers";
 
 import path from "path";
 import fs from "fs";
@@ -64,7 +69,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./.glue/__generated__/services/${target}`;
+    return `./.glue/__generated__/seal/services/${target}/src`;
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -130,15 +135,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
       const installationPath = instance.getInstallationPath();
-      if (
-        await fileExists(
-          path.join(installationPath, instancePath)
-        )
-      ) {
+      if (await fileExists(path.join(installationPath, instancePath))) {
         rm(path.join(installationPath, instancePath));
       }
 
-      if (!await fileExists(functionsPath)) {
+      if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
@@ -162,7 +163,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const name: string = removeSpecialChars(instance.getName());
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      await this.app.write(source, name);
+      // await this.app.write(source, name);
 
       /**
        * @TODO:

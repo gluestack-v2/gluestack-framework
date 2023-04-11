@@ -64,7 +64,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./.glue/__generated__/packages/sdk/src/${target}`;
+    return `./.glue/__generated__/packages/${target}/src/${target}`;
   }
 
   getInternalFolderPath(): string {
@@ -125,10 +125,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async generateSDK(instancePath: any) {
-    const GLUE_GENERATED_PKG_PATH: string =
-      ".glue/__generated__/packages/sdk/src" as const;
     const instances = this.getInstances();
     for (const instance of instances) {
+      console.log(instance.getName(), "In functions");
+      const GLUE_GENERATED_PKG_PATH: string =
+        `.glue/__generated__/packages/${instance.getName()}/src` as const;
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
       const installationPath = path.resolve(
@@ -186,7 +187,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
        * 2. seal.service.yaml, dockerfile & package.json movement
        *    into .glue/seal/services/<instance-name>/src
        */
-      const SEAL_SERVICES_PATH: string = ".glue/__generated__/packages/sdk";
+      const SEAL_SERVICES_PATH: string =
+        ".glue/__generated__/packages/" + instance.getName();
       const destination: string = join(
         process.cwd(),
         SEAL_SERVICES_PATH,
@@ -214,6 +216,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         workspaces: [name],
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+      console.log("sdk build end");
     }
   }
 }
