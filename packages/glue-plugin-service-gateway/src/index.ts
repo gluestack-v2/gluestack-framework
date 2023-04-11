@@ -69,7 +69,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./.glue/__generated__/seal/services/${target}/src`;
+    return `./.glue/__generated__/seal/services/${target}/src/${target}`;
   }
 
   async runPostInstall(instanceName: string, target: string) {

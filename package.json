@@ -42,7 +42,9 @@
     "functions",
     ".glue/__generated__/packages",
     ".glue/__generated__/packages/sdktest/src/sdktest",
-    "website"
+    "website",
+    ".glue/__generated__/seal/services/servicegateway/src",
+    ".glue/__generated__/seal/services/servicegateway/src/servicegateway"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",

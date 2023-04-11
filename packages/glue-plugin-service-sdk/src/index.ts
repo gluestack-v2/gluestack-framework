@@ -82,7 +82,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!instance) {
       return;
     }
-    console.log(instance.getInstallationPath(), instanceName, target);
     // update package.json'S name index with the new instance name
     const pluginPackage = `${instance.getInstallationPath()}/package.json`;
     await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
@@ -106,6 +105,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         "INSTANCENAME"
       );
     }
+    console.log("Post install end");
   }
 
   createInstance(
