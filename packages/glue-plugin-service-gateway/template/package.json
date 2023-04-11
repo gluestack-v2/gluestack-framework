@@ -20,6 +20,7 @@
     "moleculer-repl": "^0.7.3"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "moleculer-web": "^0.10.4",
     "nats": "^2.7.1",
     "moleculer": "^0.14.26"
