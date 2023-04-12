@@ -204,11 +204,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const instances: Array<IInstance> = plugin.getInstances();
     for await (const instance of instances) {
-      const source: string = instance.getInstallationPath();
+      const sourcePath = join(this.getTemplateFolderPath());
       const name: string = removeSpecialChars(instance.getName());
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      await this.app.write(source, name);
+      // await this.app.write(sourcePath, name);
+      await copyFolder(sourcePath, instance.getInstallationPath());
 
       /**
        * @TODO:
@@ -216,35 +217,35 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
        * 2. seal.service.yaml, dockerfile & package.json movement
        *    into .glue/seal/services/<instance-name>/src
        */
-      const SEAL_SERVICES_PATH: string =
-        ".glue/__generated__/packages/" + instance.getName();
-      const destination: string = join(
-        process.cwd(),
-        SEAL_SERVICES_PATH,
-        "src"
-      );
-      // move seal.service.yaml
-      await copyFile(
-        instance.getSealServicefile(),
-        join(destination, "seal.service.yaml")
-      );
+      // const SEAL_SERVICES_PATH: string =
+      //   ".glue/__generated__/packages/" + instance.getName();
+      // const destination: string = join(
+      //   process.cwd(),
+      //   SEAL_SERVICES_PATH,
+      //   "src"
+      // );
+      // // move seal.service.yaml
+      // await copyFile(
+      //   instance.getSealServicefile(),
+      //   join(destination, "seal.service.yaml")
+      // );
 
-      // move dockerfile, if exists
-      if (instance.getDockerfile) {
-        await copyFile(
-          instance?.getDockerfile(),
-          join(destination, "Dockerfile")
-        );
-      }
+      // // move dockerfile, if exists
+      // if (instance.getDockerfile) {
+      //   await copyFile(
+      //     instance?.getDockerfile(),
+      //     join(destination, "Dockerfile")
+      //   );
+      // }
 
-      // add package.json with workspaces
-      const packageFile: string = join(destination, "package.json");
-      const packageContent: any = {
-        name: name,
-        private: true,
-        workspaces: [name],
-      };
-      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+      // // add package.json with workspaces
+      // const packageFile: string = join(destination, "package.json");
+      // const packageContent: any = {
+      //   name: name,
+      //   private: true,
+      //   workspaces: [name],
+      // };
+      // await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
     }
   }
 }

@@ -45,7 +45,8 @@
     "website",
     ".glue/__generated__/seal/services/servicegateway/src",
     ".glue/__generated__/seal/services/servicegateway/src/servicegateway",
-    ".glue/__generated__/seal/services/gateway/src/gateway"
+    ".glue/__generated__/seal/services/gateway/src/gateway",
+    ".glue/__generated__/packages/sdktest1/src/sdktest1"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",

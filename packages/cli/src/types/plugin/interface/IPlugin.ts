@@ -21,7 +21,7 @@ export default interface IPlugin {
 	createInstance(
 		key: string,
 		gluePluginStore: IGlueStorePlugin,
-		installationPath: string
+		installationPath?: string
 	): IInstance;
 
 	getInstances(): IInstance[];

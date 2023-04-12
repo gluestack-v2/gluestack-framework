@@ -159,11 +159,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const instances: Array<IInstance> = plugin.getInstances();
     for await (const instance of instances) {
-      const source: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
 
+      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
+      const sourcePath = join(this.getTemplateFolderPath());
+      // await copyFolder(sourcePath, targetPath, 7);
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      // await this.app.write(source, name);
+      await this.app.write(sourcePath, name);
 
       /**
        * @TODO:
@@ -171,7 +173,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
        * 2. seal.service.yaml, dockerfile & package.json movement
        *    into .glue/seal/services/<instance-name>/src
        */
-      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
       const destination: string = join(
         process.cwd(),
         SEAL_SERVICES_PATH,

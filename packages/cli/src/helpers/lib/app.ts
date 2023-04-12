@@ -136,13 +136,18 @@ export default class AppCLI {
 	async createPluginInstance(
 		plugin: IPlugin,
 		instance: string,
-		src: string,
-		target: string
+		src?: string,
+		target?: string
 	) {
 		if (src && target) {
 			await copyFolder(src, target);
 		}
-		return attachPluginInstance(this, plugin, instance, target);
+		return attachPluginInstance(
+			this,
+			plugin,
+			instance,
+			target ? target : ''
+		);
 	}
 
 	// @API: getPluginByName
@@ -177,20 +182,17 @@ export default class AppCLI {
 	}
 
 	// @API: watch
-	watch (cwd: string, pattern: string|string[], callback: IWatchCallback): void {
-		watcher.watch(
-			cwd,
-			pattern,
-			callback
-		);
+	watch(
+		cwd: string,
+		pattern: string | string[],
+		callback: IWatchCallback
+	): void {
+		watcher.watch(cwd, pattern, callback);
 	}
 
 	// @API: writer
-	async write (cwd: string, instanceName: string): Promise<void> {
-		await writer.write(
-			cwd,
-			instanceName
-		);
+	async write(cwd: string, instanceName: string): Promise<void> {
+		await writer.write(cwd, instanceName);
 	}
 
 	// @API: destroy
