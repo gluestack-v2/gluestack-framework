@@ -19,6 +19,7 @@ import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 import fileExists from "./helpers/file-exists";
 import rm from "./helpers/rm";
 import copyFolder from "./helpers/copy-folder";
+import { spawnSync } from "child_process";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -224,6 +225,31 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         workspaces: [name, "packages/**/src/*"],
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+
+      // seal init and seal service add in the services folder
+      const sealInit = spawnSync("sh", [
+        "-c",
+        `cd ${SEAL_SERVICES_PATH} && seal init`,
+      ]);
+
+      if (sealInit.status !== 0) {
+        console.error(`Command failed with code ${sealInit.status}`);
+      }
+      console.log(sealInit.stdout.toString());
+      console.error(sealInit.stderr.toString());
+
+      const sealAddService = spawnSync("sh", [
+        "-c",
+        `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+      ]);
+
+      if (sealAddService.status !== 0) {
+        console.error(`Command failed with code ${sealAddService.status}`);
+      }
+      console.log(sealAddService.stdout.toString());
+      console.error(sealAddService.stderr.toString());
+
+      // manually replace the files in the folder
     }
   }
 }
