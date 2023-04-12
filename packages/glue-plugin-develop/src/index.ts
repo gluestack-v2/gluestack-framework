@@ -13,6 +13,7 @@ import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/inte
 import buildCommand from "./commands/build";
 import watchCommand from "./commands/watch";
 import testCommand from "./commands/test";
+import upCommand from "./commands/up";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -32,6 +33,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   init() {
     this.app.addCommand((program: ICommand) => buildCommand(program, this.app));
     this.app.addCommand((program: ICommand) => watchCommand(program, this.app));
+    this.app.addCommand((program: ICommand) => upCommand(program, this.app));
     this.app.addCommand((program: ICommand) => testCommand(program, this.app));
   }
 
