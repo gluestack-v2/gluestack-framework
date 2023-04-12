@@ -223,33 +223,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         name: name,
         private: true,
         workspaces: [name, "packages/**/src/*"],
+        scripts: {
+          "install-all": "npm install --workspaces --if-present",
+          dev: "npm run dev --workspace @project/" + name,
+        },
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
 
-      // seal init and seal service add in the services folder
-      const sealInit = spawnSync("sh", [
-        "-c",
-        `cd ${SEAL_SERVICES_PATH} && seal init`,
-      ]);
-
-      if (sealInit.status !== 0) {
-        console.error(`Command failed with code ${sealInit.status}`);
-      }
-      console.log(sealInit.stdout.toString());
-      console.error(sealInit.stderr.toString());
-
-      const sealAddService = spawnSync("sh", [
-        "-c",
-        `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
-      ]);
-
-      if (sealAddService.status !== 0) {
-        console.error(`Command failed with code ${sealAddService.status}`);
-      }
-      console.log(sealAddService.stdout.toString());
-      console.error(sealAddService.stderr.toString());
-
-      // manually replace the files in the folder
+      sealInit(SEAL_SERVICES_PATH, name);
     }
   }
+}
+
+function sealInit(SEAL_SERVICES_PATH: string, name: string) {
+  // seal init and seal service add in the services folder
+  const sealInit = spawnSync("sh", [
+    "-c",
+    `cd ${SEAL_SERVICES_PATH} && seal init`,
+  ]);
+
+  if (sealInit.status !== 0) {
+    console.error(`Command failed with code ${sealInit.status}`);
+  }
+  console.log(sealInit.stdout.toString());
+  console.error(sealInit.stderr.toString());
+
+  const sealAddService = spawnSync("sh", [
+    "-c",
+    `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+  ]);
+
+  if (sealAddService.status !== 0) {
+    console.error(`Command failed with code ${sealAddService.status}`);
+  }
+  console.log(sealAddService.stdout.toString());
+  console.error(sealAddService.stderr.toString());
 }
