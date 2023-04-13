@@ -9,19 +9,30 @@ import {
 import { FOLDER_STRUCTURE } from "../../constants/folder-structure";
 import createFoldersFromJson from "../../helpers/create-folders-from-json";
 import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
-import { spawnSync } from "child_process";
+import { spawn } from "child_process";
 
 function upSealService(serviceName: string, servicePlatform: string) {
   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
-  const sealUp = spawnSync("sh", [
+  const sealUp = spawn("sh", [
     "-c",
-    `cd ${SEAL_SERVICES_PATH} && seal service:up -p ${servicePlatform} ${serviceName}`,
+    `cd ${SEAL_SERVICES_PATH} && seal sersvice:up -p ${servicePlatform} ${serviceName}`,
   ]);
-  if (sealUp.status !== 0) {
-    console.error(`Command failed with code ${sealUp.status}`);
+
+  if (sealUp.exitCode !== 0) {
+    error(`Command failed with code ${sealUp.exitCode}`);
   }
-  console.log(sealUp.stdout.toString());
-  console.error(sealUp.stderr.toString());
+  sealUp.stdout.on("data", (data) => {
+    success(`${data}`);
+  });
+  sealUp.stderr.on("data", (data) => {
+    error(`${data}`);
+  });
+
+  // console.log(sealUp.status);
+
+  // success("asf", `kasbkja${sealUp.status}`);
+
+  // error(sealUp.stderr.toString());
 }
 
 export default async (app: AppCLI): Promise<void> => {
