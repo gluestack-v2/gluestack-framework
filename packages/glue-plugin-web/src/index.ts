@@ -72,21 +72,21 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const rootPackage: string = `${process.cwd()}/package.json`;
     await Workspaces.append(rootPackage, instance.getInstallationPath());
 
-    // move seal.service.yaml into the new instance
-    await reWriteFile(
-      `${instance.getSealServicefile()}`,
-      instanceName,
-      "INSTANCENAME"
-    );
+    // // move seal.service.yaml into the new instance
+    // await reWriteFile(
+    //   `${instance.getSealServicefile()}`,
+    //   instanceName,
+    //   "INSTANCENAME"
+    // );
 
-    // move dockerfile into the new instance
-    if (instance.getDockerfile) {
-      await reWriteFile(
-        `${instance?.getDockerfile()}`,
-        instanceName,
-        "INSTANCENAME"
-      );
-    }
+    // // move dockerfile into the new instance
+    // if (instance.getDockerfile) {
+    //   await reWriteFile(
+    //     `${instance?.getDockerfile()}`,
+    //     instanceName,
+    //     "INSTANCENAME"
+    //   );
+    // }
   }
 
   createInstance(
