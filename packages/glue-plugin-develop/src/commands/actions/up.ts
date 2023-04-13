@@ -15,7 +15,7 @@ function upSealService(serviceName: string, servicePlatform: string) {
   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
   const sealUp = spawn("sh", [
     "-c",
-    `cd ${SEAL_SERVICES_PATH} && seal sersvice:up -p ${servicePlatform} ${serviceName}`,
+    `cd ${SEAL_SERVICES_PATH} && seal service:up -p ${servicePlatform} ${serviceName}`,
   ]);
 
   if (sealUp.exitCode !== 0) {
