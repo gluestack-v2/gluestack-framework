@@ -1,37 +1,37 @@
-import { CheckIcon } from '../../Icons/Icons';
-import { styled } from '../../styled';
+import { View as CheckIcon } from "react-native";
+import { styled } from "../../styled";
 export default styled(
   CheckIcon,
   {
-    'w': '100%',
-    'h': '100%',
-    'justifyContent': 'center',
-    'alignItems': 'center',
-    'color': '$primary600',
+    w: "100%",
+    h: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "$primary600",
 
-    ':checked': {
-      'color': '$primary600',
-      ':hover': {
-        color: '$primary700',
+    ":checked": {
+      color: "$primary600",
+      ":hover": {
+        color: "$primary700",
       },
     },
-    '_dark': {
-      'color': '$primary500',
-      ':checked': {
-        'color': '$primary500',
+    _dark: {
+      color: "$primary500",
+      ":checked": {
+        color: "$primary500",
 
-        ':hover': {
-          color: '$primary400',
+        ":hover": {
+          color: "$primary400",
         },
       },
     },
 
-    ':disabled': {
+    ":disabled": {
       opacity: 0.6,
     },
   },
   {
-    ancestorStyle: ['_icon'],
-    DEBUG: 'CHECKBOX_ICON',
+    ancestorStyle: ["_icon"],
+    DEBUG: "CHECKBOX_ICON",
   }
 );

@@ -110,120 +110,85 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  async build(): Promise<void> {
-    // let instanceMap: any = {};
-    // this.app.getPlugins().map((p) =>
-    //   p.getInstances().map((i) => {
-    //     if (instanceMap[i.getCallerPlugin().getName()]) {
-    //       instanceMap[i.getCallerPlugin().getName()].push({
-    //         path: i.getInstallationPath(),
-    //         pluginName: i.getCallerPlugin().getName(),
-    //         instanceName: i.getName(),
-    //       });
-    //     } else {
-    //       instanceMap[i.getCallerPlugin().getName()] = [];
-    //       instanceMap[i.getCallerPlugin().getName()].push({
-    //         path: i.getInstallationPath(),
-    //         pluginName: i.getCallerPlugin().getName(),
-    //         instanceName: i.getName(),
-    //       });
-    //     }
-    //   })
-    // );
-
-    // Copy packages folder to seal services
-    // const generatedServices = fs.readdirSync(generatedWebPath);
-    // for (const service of generatedServices) {
-
-    // }
-
-    // End Copy packages folder to seal services
-
+  async updateServices() {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-components"
     );
-
     if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No web plugin found, skipping build...");
+      console.log("> No components plugin found, skipping build...");
       return;
     }
 
     const instances: Array<IInstance> = plugin.getInstances();
-
     for await (const instance of instances) {
-      const source: string = instance.getInstallationPath();
-      const name: string = removeSpecialChars(instance.getName());
-      const generatedPkgPath = path.join(
+      const packagesPath = join(
         process.cwd(),
-        ".glue",
-        "__generated__",
-        "packages"
+        "./.glue/__generated__/packages"
       );
-      const copyPkgPath = path.join(
+      const servicesPath = join(
         process.cwd(),
-        ".glue",
-        "__generated__",
-        "seal",
-        "services",
-        name,
-        "src",
-        name,
-        "packages"
+        "./.glue/__generated__/seal/services"
       );
-
-      // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
-      //   for (const sdk of instanceMap?.[
-      //     "@gluestack-v2/glue-plugin-service-sdk"
-      //   ]) {
-      //     let generatedWebPath = "";
-      //     generatedWebPath = path.join(process.cwd(), sdk.path);
-      if (await fileExists(path.join(copyPkgPath))) {
-        console.log("Removing " + path.join(copyPkgPath));
-
-        rm(path.join(copyPkgPath));
+      if (fs.existsSync(servicesPath)) {
+        const paths = fs.readdirSync(servicesPath);
+        for (const path1 of paths) {
+          let servicePath = join(servicesPath, path1, "/src");
+          await copyFolder(packagesPath, servicePath, 4);
+        }
+      } else {
+        console.log("No services found");
       }
+    }
+  }
 
-      await copyFolder(path.join(generatedPkgPath), path.join(copyPkgPath), 7);
+  async build(): Promise<void> {
+    const plugin: IPlugin | null = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-components"
+    );
+    if (!plugin || plugin.getInstances().length <= 0) {
+      console.log("> No components plugin found, skipping build...");
+      return;
+    }
 
-      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      await this.app.write(source, name);
-
-      /**
-       * @TODO:
-       * 1. move below code to the glue-plugin-seal or something
-       * 2. seal.service.yaml, dockerfile & package.json movement
-       *    into .glue/seal/services/<instance-name>/src
-       */
-      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
-      const destination: string = join(
+    const instances: Array<IInstance> = plugin.getInstances();
+    for await (const instance of instances) {
+      const sourcePath = join(this.getTemplateFolderPath());
+      const name: string = removeSpecialChars(instance.getName());
+      const packagesPath = join(
         process.cwd(),
-        SEAL_SERVICES_PATH,
-        name,
-        "src"
+        "./.glue/__generated__/packages"
       );
 
-      // move seal.service.yaml
-      await copyFile(
-        instance.getSealServicefile(),
-        join(destination, "seal.service.yaml")
+      let instanceName = instance.getName();
+      const targetPath = join(packagesPath, instanceName, "src");
+      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+      // await this.app.write(sourcePath, name);
+      await copyFolder(sourcePath, targetPath);
+
+      // update package.json'S name index with the new instance name
+      const pluginPackage = `${targetPath}/package.json`;
+      await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+
+      // update root package.json's workspaces with the new instance name
+      const rootPackage: string = `${process.cwd()}/package.json`;
+      await Workspaces.append(rootPackage, instance.getInstallationPath());
+
+      // move seal.service.yaml into the new instance
+      await reWriteFile(
+        `${instance.getSealServicefile()}`,
+        instanceName,
+        "INSTANCENAME"
       );
 
-      // move dockerfile, if exists
+      // move dockerfile into the new instance
       if (instance.getDockerfile) {
-        await copyFile(
-          instance?.getDockerfile(),
-          join(destination, "Dockerfile")
+        await reWriteFile(
+          `${instance?.getDockerfile()}`,
+          instanceName,
+          "INSTANCENAME"
         );
       }
-
-      // add package.json with workspaces
-      const packageFile: string = join(destination, "package.json");
-      const packageContent: any = {
-        name: name,
-        private: true,
-        workspaces: [name, "packages/**/src/*"],
-      };
-      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+      // this.updateServices();
     }
   }
 }

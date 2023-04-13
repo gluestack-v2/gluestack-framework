@@ -166,9 +166,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         "seal",
         "services",
         name,
-        "src",
-        name,
-        "packages"
+        "src"
       );
 
       // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
@@ -221,7 +219,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const packageContent: any = {
         name: name,
         private: true,
-        workspaces: [name, "packages/**/src/*"],
+        workspaces: [name, "packages/**/src"],
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
     }

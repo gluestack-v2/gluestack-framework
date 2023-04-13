@@ -36,14 +36,7 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*",
-    "components",
-    ".glue/__generated__/packages",
-    ".glue/__generated__/packages/sdktest/src/sdktest"
+    "packages/*"
   ],
-  "dependencies": {
-    "@gluestack-v2/glue-plugin-components": "^0.0.2",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2"
-  }
+  "dependencies": {}
 }
