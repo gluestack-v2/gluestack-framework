@@ -8,7 +8,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import { fileExists, removeSpecialChars, Workspaces } from "@gluestack/helpers";
 import { readfile } from "./helpers/readfile";
 import copyFolder from "./helpers/copy-folder";
 import rm from "./helpers/rm";
@@ -176,7 +176,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       for (const path of paths) {
         let servicePath = join(servicesPath, path, "/src");
-        await copyFolder(packagesPath, servicePath, 4);
+        if (await fileExists(servicePath)) {
+          await copyFolder(packagesPath, servicePath, 4);
+        }
       }
     }
   }

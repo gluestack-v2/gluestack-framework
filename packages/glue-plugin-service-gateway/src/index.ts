@@ -24,6 +24,7 @@ import fs from "fs";
 import writeService from "./helpers/write-service";
 import rm from "./helpers/rm";
 import copyFolder from "./helpers/copy-folder";
+import { spawnSync } from "child_process";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -148,6 +149,31 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
+  sealInit(SEAL_SERVICES_PATH: string, name: string) {
+    // seal init and seal service add in the services folder
+    const sealInit = spawnSync("sh", [
+      "-c",
+      `cd ${SEAL_SERVICES_PATH} && seal init`,
+    ]);
+
+    if (sealInit.status !== 0) {
+      console.error(`Command failed with code ${sealInit.status}`);
+    }
+    console.log(sealInit.stdout.toString());
+    console.error(sealInit.stderr.toString());
+
+    const sealAddService = spawnSync("sh", [
+      "-c",
+      `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+    ]);
+
+    if (sealAddService.status !== 0) {
+      console.error(`Command failed with code ${sealAddService.status}`);
+    }
+    console.log(sealAddService.stdout.toString());
+    console.error(sealAddService.stderr.toString());
+  }
+
   async build(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
@@ -205,18 +231,18 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         "src"
       );
       // move seal.service.yaml
-      await copyFile(
-        instance.getSealServicefile(),
-        join(destination, "seal.service.yaml")
-      );
+      // await copyFile(
+      //   instance.getSealServicefile(),
+      //   join(destination, "seal.service.yaml")
+      // );
 
-      // move dockerfile, if exists
-      if (instance.getDockerfile) {
-        await copyFile(
-          instance?.getDockerfile(),
-          join(destination, "Dockerfile")
-        );
-      }
+      // // move dockerfile, if exists
+      // if (instance.getDockerfile) {
+      //   await copyFile(
+      //     instance?.getDockerfile(),
+      //     join(destination, "Dockerfile")
+      //   );
+      // }
 
       // add package.json with workspaces
       const packageFile: string = join(destination, "package.json");
@@ -224,8 +250,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         name: name,
         private: true,
         workspaces: [name],
+        scripts: {
+          "install-all": "npm install --workspaces --if-present",
+          dev: "npm run dev --workspace @project/" + name,
+        },
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+
+      this.sealInit(SEAL_SERVICES_PATH, name);
     }
   }
 }
