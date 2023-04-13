@@ -11,16 +11,13 @@ import createFoldersFromJson from "../../helpers/create-folders-from-json";
 import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
 import { spawn } from "child_process";
 
-function upSealService(serviceName: string, servicePlatform: string) {
+async function upSealService(serviceName: string, servicePlatform: string) {
   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
   const sealUp = spawn("sh", [
     "-c",
     `cd ${SEAL_SERVICES_PATH} && seal service:up -p ${servicePlatform} ${serviceName}`,
   ]);
 
-  if (sealUp.exitCode !== 0) {
-    error(`Command failed with code ${sealUp.exitCode}`);
-  }
   sealUp.stdout.on("data", (data) => {
     success(`${data}`);
   });
@@ -56,7 +53,7 @@ export default async (app: AppCLI): Promise<void> => {
       // @ts-ignore
       if (plugin.sealInit) {
         success("Seal service plugin found!");
-        upSealService(instance.getName(), "local");
+        await upSealService(instance.getName(), "local");
         warning(plugin.getName());
       }
     }
