@@ -249,7 +249,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const packageContent: any = {
         name: name,
         private: true,
-        workspaces: [name],
+        workspaces: [name, "packages/**/src"],
         scripts: {
           "install-all": "npm install --workspaces --if-present",
           dev: "npm run dev --workspace @project/" + name,
