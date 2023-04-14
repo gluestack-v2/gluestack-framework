@@ -10,7 +10,8 @@
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
-    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx"
+    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
+    "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai"
   },
   "repository": {
     "type": "git",
