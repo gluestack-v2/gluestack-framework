@@ -1,704 +1,91 @@
 I am building gluestack-ui, a component library for React Native.
 
-I have a Box component that accepts utility props like p, m, bg etc (as per the styled-system spec).
+I have a Box component that accepts utility props from the below list called gluestackUIPropertyKeyMap which is mapped to react native style properties (as per the styled-system spec).
+
+These are the only acceptable utility props -
+
+`gap`, `gridGap`, `columnGap`, `gridColumnGap`, `rowGap`, `gridRowGap`, `inset`, `insetBlock`, `insetBlockEnd`, `insetBlockStart`, `insetInline`, `insetInlineEnd`, `insetInlineStart`, `margin`, `marginTop`, `marginRight`, `marginBottom`, `marginLeft`, `marginBlock`, `marginBlockEnd`, `marginBlockStart`, `marginInline`, `marginInlineEnd`, `marginInlineStart`, `marginHorizontal`, `marginVertical`, `padding`, `paddingTop`, `paddingRight`, `paddingBottom`, `paddingLeft`, `paddingBlock`, `paddingBlockEnd`, `paddingBlockStart`, `paddingInline`, `paddingInlineEnd`, `paddingInlineStart`, `paddingHorizontal`, `paddingVertical`, `paddingStart`, `paddingEnd`, ` top`, `right`, `bottom`, `left`, `scrollMargin`, `scrollMarginTop`, `scrollMarginRight`, `scrollMarginBottom`, `scrollMarginLeft`, `scrollMarginX`, `scrollMarginY`, `scrollMarginBlock`, `scrollMarginBlockEnd`, `scrollMarginBlockStart`, `scrollMarginInline`, `scrollMarginInlineEnd`, `scrollMarginInlineStart`, `scrollPadding`, `scrollPaddingTop`, `scrollPaddingRight`, `scrollPaddingBottom`, `scrollPaddingLeft`, `scrollPaddingX`, `scrollPaddingY`, `scrollPaddingBlock`, `scrollPaddingBlockEnd`, `scrollPaddingBlockStart`, `scrollPaddingInline`, `scrollPaddingInlineEnd`, `scrollPaddingInlineStart`, `shadowRadius`, `elevation`, `fontSize`, `background`, `backgroundColor`, `backgroundImage`, `borderImage`, `border`, `borderBlock`, `borderBlockEnd`, `borderBlockStart`, `borderBottom`, `borderBottomColor`, `borderColor`, `borderInline`, `borderInlineEnd`, `borderInlineStart`, `borderLeft`, `borderLeftColor`, `borderRight`, `borderRightColor`, `borderTop`, `borderTopColor`, `caretColor`, `color`, `columnRuleColor`, `fill`, `outline`, `outlineColor`, `stroke`, `textDecorationColor`, ` shadowOpacity`, `condition`, `fontFamily`, `fontWeight`, `lineHeight`, `letterSpacing`, `blockSize`, `minBlockSize`, `maxBlockSize`, `inlineSize`, `minInlineSize`, `maxInlineSize`, `width`, `minWidth`, `maxWidth`, `height`, `minHeight`, `maxHeight`, `flexBasis`, `gridTemplateColumns`, `gridTemplateRows`, `borderWidth`, `borderTopWidth`, `borderRightWidth`, `borderBottomWidth`, `borderLeftWidth`, `borderStyle`, `borderTopStyle`, `borderRightStyle`, `borderBottomStyle`, `borderLeftStyle`, `borderRadius`, `borderTopLeftRadius`, `borderTopRightRadius`, `borderBottomRightRadius`, `borderBottomLeftRadius`, `boxShadow`, `textShadow`, `transition`, `zIndex`.
 
 Some examples:
-1. A box with blue background: <Box bg="$blue500" />
-2. Two boxes nested: <Box p="$1"><Box p="$2"></Box></Box>
-3. A box with some margin and bg: <Box mt="$1" bg="$red500" />
+1. A box with blue background: <Box backgroundColor="$blue500" />
+2. Two boxes nested: <Box padding="$1"><Box padding="$2"></Box></Box>
+3. A box with some margin and bg: <Box marginTop="$1" backgroundColor="$red500" />
 
-**Always wrap code inside ```tsx ``` containing a default return function named App.**
+Below are the available aliases should be only alias for all kinds of utility props -
 
-**Always avoid using style prop. Always use inline utility props instead.**
-
-Below is my gluestackUIAliases -
-
-```javascript
-const gluestackUIAliases = {
-  bg: 'backgroundColor',
-  backgroundColor: 'backgroundColor',
-  bgColor: 'backgroundColor',
-  color: 'color',
-  borderColor: 'borderColor',
-  shadowColor: 'shadowColor',
-  shadowOffset: 'shadowOffset',
-  shadowOpacity: 'shadowOpacity',
-  shadowRadius: 'shadowRadius',
-  elevation: 'elevation',
-  // dimension
-  h: 'height',
-  w: 'width',
-  height: 'height',
-  width: 'width',
-  // padding
-  p: 'padding',
-  px: 'paddingHorizontal',
-  py: 'paddingVertical',
-  pt: 'paddingTop',
-  pb: 'paddingBottom',
-  pr: 'paddingRight',
-  pl: 'paddingLeft',
-  padding: 'padding',
-  paddingHorizontal: 'paddingHorizontal',
-  paddingVertical: 'paddingVertical',
-  paddingTop: 'paddingTop',
-  paddingBottom: 'paddingBottom',
-  paddingRight: 'paddingRight',
-  paddingLeft: 'paddingLeft',
-  // margin
-  m: 'margin',
-  mx: 'marginHorizontal',
-  my: 'marginVertical',
-  mt: 'marginTop',
-  mb: 'marginBottom',
-  mr: 'marginRight',
-  ml: 'marginLeft',
-  margin: 'margin',
-  marginHorizontal: 'marginHorizontal',
-  marginVertical: 'marginVertical',
-  marginTop: 'marginTop',
-  marginBottom: 'marginBottom',
-  marginRight: 'marginRight',
-  marginLeft: 'marginLeft',
-  // Borders
-  borderWidth: 'borderWidth',
-  borderRadius: 'borderRadius',
-  borderTopLeftRadius: 'borderTopLeftRadius',
-  borderTopRightRadius: 'borderTopRightRadius',
-  rounded: 'borderRadius',
-  // Typography
-  letterSpacing: 'letterSpacing',
-  lineHeight: 'lineHeight',
-  fontWeight: 'fontWeight',
-  fontFamily: 'fontFamily',
-  fontSize: 'fontSize',
-  shadow: 'shadow',
-  // Media Query
-  condition: 'condition',
-};
-```
-
-gluestackUIAliases can be used as the utility prop name and it is mapped to react-native properties.
-for example, if I want margin in a Box component - I can write <Box m="$2"></Box>
-
-Always use alias key for all the utility props which is mentioned in gluestackUIAliases.
-
-Below is my gluestackUIPropertyKeyMap -
-
-```javascript
-const gluestackUIPropertyKeyMap = {
-  gap: 'space',
-  gridGap: 'space',
-  columnGap: 'space',
-  gridColumnGap: 'space',
-  rowGap: 'space',
-  gridRowGap: 'space',
-  inset: 'space',
-  insetBlock: 'space',
-  insetBlockEnd: 'space',
-  insetBlockStart: 'space',
-  insetInline: 'space',
-  insetInlineEnd: 'space',
-  insetInlineStart: 'space',
-  margin: 'space',
-  marginTop: 'space',
-  marginRight: 'space',
-  marginBottom: 'space',
-  marginLeft: 'space',
-  marginBlock: 'space',
-  marginBlockEnd: 'space',
-  marginBlockStart: 'space',
-  marginInline: 'space',
-  marginInlineEnd: 'space',
-  marginInlineStart: 'space',
-
-  marginHorizontal: 'space',
-  marginVertical: 'space',
-  padding: 'space',
-  paddingTop: 'space',
-  paddingRight: 'space',
-  paddingBottom: 'space',
-  paddingLeft: 'space',
-
-  paddingBlock: 'space',
-  paddingBlockEnd: 'space',
-  paddingBlockStart: 'space',
-  paddingInline: 'space',
-  paddingInlineEnd: 'space',
-  paddingInlineStart: 'space',
-
-  paddingHorizontal: 'space',
-  paddingVertical: 'space',
-  paddingStart: 'space',
-  paddingEnd: 'space',
-
-  top: 'space',
-  right: 'space',
-  bottom: 'space',
-  left: 'space',
-  scrollMargin: 'space',
-  scrollMarginTop: 'space',
-  scrollMarginRight: 'space',
-  scrollMarginBottom: 'space',
-  scrollMarginLeft: 'space',
-  scrollMarginX: 'space',
-  scrollMarginY: 'space',
-  scrollMarginBlock: 'space',
-  scrollMarginBlockEnd: 'space',
-  scrollMarginBlockStart: 'space',
-  scrollMarginInline: 'space',
-  scrollMarginInlineEnd: 'space',
-  scrollMarginInlineStart: 'space',
-  scrollPadding: 'space',
-  scrollPaddingTop: 'space',
-  scrollPaddingRight: 'space',
-  scrollPaddingBottom: 'space',
-  scrollPaddingLeft: 'space',
-  scrollPaddingX: 'space',
-  scrollPaddingY: 'space',
-  scrollPaddingBlock: 'space',
-  scrollPaddingBlockEnd: 'space',
-  scrollPaddingBlockStart: 'space',
-  scrollPaddingInline: 'space',
-  scrollPaddingInlineEnd: 'space',
-  scrollPaddingInlineStart: 'space',
-  shadowRadius: 'space',
-  elevation: 'space',
-
-  fontSize: 'fontSizes',
-
-  background: 'colors',
-  backgroundColor: 'colors',
-  backgroundImage: 'colors',
-  borderImage: 'colors',
-  border: 'colors',
-  borderBlock: 'colors',
-  borderBlockEnd: 'colors',
-  borderBlockStart: 'colors',
-  borderBottom: 'colors',
-  borderBottomColor: 'colors',
-  borderColor: 'colors',
-  borderInline: 'colors',
-  borderInlineEnd: 'colors',
-  borderInlineStart: 'colors',
-  borderLeft: 'colors',
-  borderLeftColor: 'colors',
-  borderRight: 'colors',
-  borderRightColor: 'colors',
-  borderTop: 'colors',
-  borderTopColor: 'colors',
-  caretColor: 'colors',
-  color: 'colors',
-  columnRuleColor: 'colors',
-  fill: 'colors',
-  outline: 'colors',
-  outlineColor: 'colors',
-  stroke: 'colors',
-  textDecorationColor: 'colors',
-  shadowColor: 'colors',
-
-  shadowOpacity: 'opacity',
-
-  // Media Query
-  condition: 'mediaQueries',
-
-  fontFamily: 'fonts',
-
-  fontWeight: 'fontWeights',
-
-  lineHeight: 'lineHeights',
-
-  letterSpacing: 'letterSpacings',
-
-  blockSize: 'space',
-  minBlockSize: 'space',
-  maxBlockSize: 'space',
-  inlineSize: 'space',
-  minInlineSize: 'space',
-  maxInlineSize: 'space',
-  width: 'space',
-  minWidth: 'space',
-  maxWidth: 'space',
-  height: 'space',
-  minHeight: 'space',
-  maxHeight: 'space',
-  flexBasis: 'space',
-  gridTemplateColumns: 'space',
-  gridTemplateRows: 'space',
-
-  borderWidth: 'borderWidths',
-  borderTopWidth: 'borderWidths',
-  borderRightWidth: 'borderWidths',
-  borderBottomWidth: 'borderWidths',
-  borderLeftWidth: 'borderWidths',
-
-  borderStyle: 'borderStyles',
-  borderTopStyle: 'borderStyles',
-  borderRightStyle: 'borderStyles',
-  borderBottomStyle: 'borderStyles',
-  borderLeftStyle: 'borderStyles',
-
-  borderRadius: 'radii',
-  borderTopLeftRadius: 'radii',
-  borderTopRightRadius: 'radii',
-  borderBottomRightRadius: 'radii',
-  borderBottomLeftRadius: 'radii',
-
-  boxShadow: 'colors',
-  textShadow: 'shadows',
-
-  transition: 'transitions',
-
-  zIndex: 'zIndices',
-};
-```
-
-Always use utility props from keys of gluestackUIPropertyKeyMap.
-
-Below is my gluestackUITokens for Colors -
-
-- gluestack ui tokens color for "#fff1f2" or "fff1f2" is "rose50", so when I ask for "#fff1f" or "fff1f" then it should be replaced with "rose50".
-- gluestack ui tokens color for "#ffe4e6" or "ffe4e6" is "rose100", so when I ask for "#ffe4e6" or "ffe4e6" then it should be replaced with "rose100".
-- gluestack ui tokens color for "#fecdd3" or "fecdd3" is "rose200", so when I ask for "#fecdd3" or "fecdd3" then it should be replaced with "rose200".
-- gluestack ui tokens color for "#fda4af" or "fda4af" is "rose300", so when I ask for "#fda4af" or "fda4af" then it should be replaced with "rose300".
-- gluestack ui tokens color for "#fb7185" or "fb7185" is "rose400", so when I ask for "#fb7185" or "fb7185" then it should be replaced with "rose400".
-- gluestack ui tokens color for "#f43f5e" or "f43f5e" is "rose500", so when I ask for "#f43f5e" or "f43f5e" then it should be replaced with "rose500".
-- gluestack ui tokens color for "#e11d48" or "e11d48" is "rose600", so when I ask for "#e11d48" or "e11d48" then it should be replaced with "rose600".
-- gluestack ui tokens color for "#be123c" or "be123c" is "rose700", so when I ask for "#be123c" or "be123c" then it should be replaced with "rose700".
-- gluestack ui tokens color for "#9f1239" or "9f1239" is "rose800", so when I ask for "#9f1239" or "9f1239" then it should be replaced with "rose800".
-- gluestack ui tokens color for "#881337" or "881337" is "rose900", so when I ask for "#881337" or "881337" then it should be replaced with "rose900".
-- gluestack ui tokens color for "#fdf2f8" or "fdf2f8" is "pink50", so when I ask for "#fdf2f8" or "fdf2f8" then it should be replaced with "pink50".
-- gluestack ui tokens color for "#fce7f3" or "fce7f3" is "pink100", so when I ask for "#fce7f3" or "fce7f3" then it should be replaced with "pink100".
-- gluestack ui tokens color for "#fbcfe8" or "fbcfe8" is "pink200", so when I ask for "#fbcfe8" or "fbcfe8" then it should be replaced with "pink200".
-- gluestack ui tokens color for "#f9a8d4" or "f9a8d4" is "pink300", so when I ask for "#f9a8d4" or "f9a8d4" then it should be replaced with "pink300".
-- gluestack ui tokens color for "#f472b6" or "f472b6" is "pink400", so when I ask for "#f472b6" or "f472b6" then it should be replaced with "pink400".
-- gluestack ui tokens color for "#ec4899" or "ec4899" is "pink500", so when I ask for "#ec4899" or "ec4899" then it should be replaced with "pink500".
-- gluestack ui tokens color for "#db2777" or "db2777" is "pink600", so when I ask for "#db2777" or "db2777" then it should be replaced with "pink600".
-- gluestack ui tokens color for "#be185d" or "be185d" is "pink700", so when I ask for "#be185d" or "be185d" then it should be replaced with "pink700".
-- gluestack ui tokens color for "#9d174d" or "9d174d" is "pink800", so when I ask for "#9d174d" or "9d174d" then it should be replaced with "pink800".
-- gluestack ui tokens color for "#831843" or "831843" is "pink900", so when I ask for "#831843" or "831843" then it should be replaced with "pink900".
-- gluestack ui tokens color for "#fdf4ff" or "fdf4ff" is "fuchsia50", so when I ask for "#fdf4ff" or "fdf4ff" then it should be replaced with "fuchsia50".
-- gluestack ui tokens color for "#fae8ff" or "fae8ff" is "fuchsia100", so when I ask for "#fae8ff" or "fae8ff" then it should be replaced with "fuchsia100".
-- gluestack ui tokens color for "#f5d0fe" or "f5d0fe" is "fuchsia200", so when I ask for "#f5d0fe" or "f5d0fe" then it should be replaced with "fuchsia200".
-- gluestack ui tokens color for "#f0abfc" or "f0abfc" is "fuchsia300", so when I ask for "#f0abfc" or "f0abfc" then it should be replaced with "fuchsia300".
-- gluestack ui tokens color for "#e879f9" or "e879f9" is "fuchsia400", so when I ask for "#e879f9" or "e879f9" then it should be replaced with "fuchsia400".
-- gluestack ui tokens color for "#d946ef" or "d946ef" is "fuchsia500", so when I ask for "#d946ef" or "d946ef" then it should be replaced with "fuchsia500".
-- gluestack ui tokens color for "#c026d3" or "c026d3" is "fuchsia600", so when I ask for "#c026d3" or "c026d3" then it should be replaced with "fuchsia600".
-- gluestack ui tokens color for "#a21caf" or "a21caf" is "fuchsia700", so when I ask for "#a21caf" or "a21caf" then it should be replaced with "fuchsia700".
-- gluestack ui tokens color for "#86198f" or "86198f" is "fuchsia800", so when I ask for "#86198f" or "86198f" then it should be replaced with "fuchsia800".
-- gluestack ui tokens color for "#701a75" or "701a75" is "fuchsia900", so when I ask for "#701a75" or "701a75" then it should be replaced with "fuchsia900".
-- gluestack ui tokens color for "#faf5ff" or "faf5ff" is "purple50", so when I ask for "#faf5ff" or "faf5ff" then it should be replaced with "purple50".
-- gluestack ui tokens color for "#f3e8ff" or "f3e8ff" is "purple100", so when I ask for "#f3e8ff" or "f3e8ff" then it should be replaced with "purple100".
-- gluestack ui tokens color for "#e9d5ff" or "e9d5ff" is "purple200", so when I ask for "#e9d5ff" or "e9d5ff" then it should be replaced with "purple200".
-- gluestack ui tokens color for "#d8b4fe" or "d8b4fe" is "purple300", so when I ask for "#d8b4fe" or "d8b4fe" then it should be replaced with "purple300".
-- gluestack ui tokens color for "#c084fc" or "c084fc" is "purple400", so when I ask for "#c084fc" or "c084fc" then it should be replaced with "purple400".
-- gluestack ui tokens color for "#a855f7" or "a855f7" is "purple500", so when I ask for "#a855f7" or "a855f7" then it should be replaced with "purple500".
-- gluestack ui tokens color for "#9333ea" or "9333ea" is "purple600", so when I ask for "#9333ea" or "9333ea" then it should be replaced with "purple600".
-- gluestack ui tokens color for "#7e22ce" or "7e22ce" is "purple700", so when I ask for "#7e22ce" or "7e22ce" then it should be replaced with "purple700".
-- gluestack ui tokens color for "#6b21a8" or "6b21a8" is "purple800", so when I ask for "#6b21a8" or "6b21a8" then it should be replaced with "purple800".
-- gluestack ui tokens color for "#581c87" or "581c87" is "purple900", so when I ask for "#581c87" or "581c87" then it should be replaced with "purple900".
-- gluestack ui tokens color for "#f5f3ff" or "f5f3ff" is "violet50", so when I ask for "#f5f3ff" or "f5f3ff" then it should be replaced with "violet50".
-- gluestack ui tokens color for "#ede9fe" or "ede9fe" is "violet100", so when I ask for "#ede9fe" or "ede9fe" then it should be replaced with "violet100".
-- gluestack ui tokens color for "#ddd6fe" or "ddd6fe" is "violet200", so when I ask for "#ddd6fe" or "ddd6fe" then it should be replaced with "violet200".
-- gluestack ui tokens color for "#c4b5fd" or "c4b5fd" is "violet300", so when I ask for "#c4b5fd" or "c4b5fd" then it should be replaced with "violet300".
-- gluestack ui tokens color for "#a78bfa" or "a78bfa" is "violet400", so when I ask for "#a78bfa" or "a78bfa" then it should be replaced with "violet400".
-- gluestack ui tokens color for "#8b5cf6" or "8b5cf6" is "violet500", so when I ask for "#8b5cf6" or "8b5cf6" then it should be replaced with "violet500".
-- gluestack ui tokens color for "#7c3aed" or "7c3aed" is "violet600", so when I ask for "#7c3aed" or "7c3aed" then it should be replaced with "violet600".
-- gluestack ui tokens color for "#6d28d9" or "6d28d9" is "violet700", so when I ask for "#6d28d9" or "6d28d9" then it should be replaced with "violet700".
-- gluestack ui tokens color for "#5b21b6" or "5b21b6" is "violet800", so when I ask for "#5b21b6" or "5b21b6" then it should be replaced with "violet800".
-- gluestack ui tokens color for "#4c1d95" or "4c1d95" is "violet900", so when I ask for "#4c1d95" or "4c1d95" then it should be replaced with "violet900".
-- gluestack ui tokens color for "#eef2ff" or "eef2ff" is "indigo50", so when I ask for "#eef2ff" or "eef2ff" then it should be replaced with "indigo50".
-- gluestack ui tokens color for "#e0e7ff" or "e0e7ff" is "indigo100", so when I ask for "#e0e7ff" or "e0e7ff" then it should be replaced with "indigo100".
-- gluestack ui tokens color for "#c7d2fe" or "c7d2fe" is "indigo200", so when I ask for "#c7d2fe" or "c7d2fe" then it should be replaced with "indigo200".
-- gluestack ui tokens color for "#a5b4fc" or "a5b4fc" is "indigo300", so when I ask for "#a5b4fc" or "a5b4fc" then it should be replaced with "indigo300".
-- gluestack ui tokens color for "#818cf8" or "818cf8" is "indigo400", so when I ask for "#818cf8" or "818cf8" then it should be replaced with "indigo400".
-- gluestack ui tokens color for "#6366f1" or "6366f1" is "indigo500", so when I ask for "#6366f1" or "6366f1" then it should be replaced with "indigo500".
-- gluestack ui tokens color for "#4f46e5" or "4f46e5" is "indigo600", so when I ask for "#4f46e5" or "4f46e5" then it should be replaced with "indigo600".
-- gluestack ui tokens color for "#4338ca" or "4338ca" is "indigo700", so when I ask for "#4338ca" or "4338ca" then it should be replaced with "indigo700".
-- gluestack ui tokens color for "#3730a3" or "3730a3" is "indigo800", so when I ask for "#3730a3" or "3730a3" then it should be replaced with "indigo800".
-- gluestack ui tokens color for "#312e81" or "312e81" is "indigo900", so when I ask for "#312e81" or "312e81" then it should be replaced with "indigo900".
-- gluestack ui tokens color for "#eff6ff" or "eff6ff" is "blue50", so when I ask for "#eff6ff" or "eff6ff" then it should be replaced with "blue50".
-- gluestack ui tokens color for "#dbeafe" or "dbeafe" is "blue100", so when I ask for "#dbeafe" or "dbeafe" then it should be replaced with "blue100".
-- gluestack ui tokens color for "#bfdbfe" or "bfdbfe" is "blue200", so when I ask for "#bfdbfe" or "bfdbfe" then it should be replaced with "blue200".
-- gluestack ui tokens color for "#93c5fd" or "93c5fd" is "blue300", so when I ask for "#93c5fd" or "93c5fd" then it should be replaced with "blue300".
-- gluestack ui tokens color for "#60a5fa" or "60a5fa" is "blue400", so when I ask for "#60a5fa" or "60a5fa" then it should be replaced with "blue400".
-- gluestack ui tokens color for "#3b82f6" or "3b82f6" is "blue500", so when I ask for "#3b82f6" or "3b82f6" then it should be replaced with "blue500".
-- gluestack ui tokens color for "#2563eb" or "2563eb" is "blue600", so when I ask for "#2563eb" or "2563eb" then it should be replaced with "blue600".
-- gluestack ui tokens color for "#06b6d41a" or "06b6d41a" is "blue600_alpha10", so when I ask for "#06b6d41a" or "06b6d41a" then it should be `blue600_alpha10`"replaced"with
-- gluestack ui tokens color for "#06b6d433" or "06b6d433" is "blue600_alpha20", so when I ask for "#06b6d433" or "06b6d433" then it should be `blue600_alpha20`"replaced"with
-- gluestack ui tokens color for "#1d4ed8" or "1d4ed8" is "blue700", so when I ask for "#1d4ed8" or "1d4ed8" then it should be replaced with "blue700".
-- gluestack ui tokens color for "#1e40af" or "1e40af" is "blue800", so when I ask for "#1e40af" or "1e40af" then it should be replaced with "blue800".
-- gluestack ui tokens color for "#1e3a8a" or "1e3a8a" is "blue900", so when I ask for "#1e3a8a" or "1e3a8a" then it should be replaced with "blue900".
-- gluestack ui tokens color for "#f0f9ff" or "f0f9ff" is "lightBlue50", so when I ask for "#f0f9ff" or "f0f9ff" then it should be replaced with "lightBlue50".
-- gluestack ui tokens color for "#e0f2fe" or "e0f2fe" is "lightBlue100", so when I ask for "#e0f2fe" or "e0f2fe" then it should be replaced with "lightBlue100".
-- gluestack ui tokens color for "#bae6fd" or "bae6fd" is "lightBlue200", so when I ask for "#bae6fd" or "bae6fd" then it should be replaced with "lightBlue200".
-- gluestack ui tokens color for "#7dd3fc" or "7dd3fc" is "lightBlue300", so when I ask for "#7dd3fc" or "7dd3fc" then it should be replaced with "lightBlue300".
-- gluestack ui tokens color for "#38bdf8" or "38bdf8" is "lightBlue400", so when I ask for "#38bdf8" or "38bdf8" then it should be replaced with "lightBlue400".
-- gluestack ui tokens color for "#0ea5e9" or "0ea5e9" is "lightBlue500", so when I ask for "#0ea5e9" or "0ea5e9" then it should be replaced with "lightBlue500".
-- gluestack ui tokens color for "#0284c7" or "0284c7" is "lightBlue600", so when I ask for "#0284c7" or "0284c7" then it should be replaced with "lightBlue600".
-- gluestack ui tokens color for "#0369a1" or "0369a1" is "lightBlue700", so when I ask for "#0369a1" or "0369a1" then it should be replaced with "lightBlue700".
-- gluestack ui tokens color for "#075985" or "075985" is "lightBlue800", so when I ask for "#075985" or "075985" then it should be replaced with "lightBlue800".
-- gluestack ui tokens color for "#0c4a6e" or "0c4a6e" is "lightBlue900", so when I ask for "#0c4a6e" or "0c4a6e" then it should be replaced with "lightBlue900".
-- gluestack ui tokens color for "#dbf4ff" or "dbf4ff" is "darkBlue50", so when I ask for "#dbf4ff" or "dbf4ff" then it should be replaced with "darkBlue50".
-- gluestack ui tokens color for "#addbff" or "addbff" is "darkBlue100", so when I ask for "#addbff" or "addbff" then it should be replaced with "darkBlue100".
-- gluestack ui tokens color for "#7cc2ff" or "7cc2ff" is "darkBlue200", so when I ask for "#7cc2ff" or "7cc2ff" then it should be replaced with "darkBlue200".
-- gluestack ui tokens color for "#4aa9ff" or "4aa9ff" is "darkBlue300", so when I ask for "#4aa9ff" or "4aa9ff" then it should be replaced with "darkBlue300".
-- gluestack ui tokens color for "#1a91ff" or "1a91ff" is "darkBlue400", so when I ask for "#1a91ff" or "1a91ff" then it should be replaced with "darkBlue400".
-- gluestack ui tokens color for "#0077e6" or "0077e6" is "darkBlue500", so when I ask for "#0077e6" or "0077e6" then it should be replaced with "darkBlue500".
-- gluestack ui tokens color for "#005db4" or "005db4" is "darkBlue600", so when I ask for "#005db4" or "005db4" then it should be replaced with "darkBlue600".
-- gluestack ui tokens color for "#004282" or "004282" is "darkBlue700", so when I ask for "#004282" or "004282" then it should be replaced with "darkBlue700".
-- gluestack ui tokens color for "#002851" or "002851" is "darkBlue800", so when I ask for "#002851" or "002851" then it should be replaced with "darkBlue800".
-- gluestack ui tokens color for "#000e21" or "000e21" is "darkBlue900", so when I ask for "#000e21" or "000e21" then it should be replaced with "darkBlue900".
-- gluestack ui tokens color for "#ecfeff" or "ecfeff" is "cyan50", so when I ask for "#ecfeff" or "ecfeff" then it should be replaced with "cyan50".
-- gluestack ui tokens color for "#cffafe" or "cffafe" is "cyan100", so when I ask for "#cffafe" or "cffafe" then it should be replaced with "cyan100".
-- gluestack ui tokens color for "#a5f3fc" or "a5f3fc" is "cyan200", so when I ask for "#a5f3fc" or "a5f3fc" then it should be replaced with "cyan200".
-- gluestack ui tokens color for "#67e8f9" or "67e8f9" is "cyan300", so when I ask for "#67e8f9" or "67e8f9" then it should be replaced with "cyan300".
-- gluestack ui tokens color for "#22d3ee" or "22d3ee" is "cyan400", so when I ask for "#22d3ee" or "22d3ee" then it should be replaced with "cyan400".
-- gluestack ui tokens color for "#06b6d4" or "06b6d4" is "cyan500", so when I ask for "#06b6d4" or "06b6d4" then it should be replaced with "cyan500".
-- gluestack ui tokens color for "#0891b2" or "0891b2" is "cyan600", so when I ask for "#0891b2" or "0891b2" then it should be replaced with "cyan600".
-- gluestack ui tokens color for "#0e7490" or "0e7490" is "cyan700", so when I ask for "#0e7490" or "0e7490" then it should be replaced with "cyan700".
-- gluestack ui tokens color for "#155e75" or "155e75" is "cyan800", so when I ask for "#155e75" or "155e75" then it should be replaced with "cyan800".
-- gluestack ui tokens color for "#164e63" or "164e63" is "cyan900", so when I ask for "#164e63" or "164e63" then it should be replaced with "cyan900".
-- gluestack ui tokens color for "#f0fdfa" or "f0fdfa" is "teal50", so when I ask for "#f0fdfa" or "f0fdfa" then it should be replaced with "teal50".
-- gluestack ui tokens color for "#ccfbf1" or "ccfbf1" is "teal100", so when I ask for "#ccfbf1" or "ccfbf1" then it should be replaced with "teal100".
-- gluestack ui tokens color for "#99f6e4" or "99f6e4" is "teal200", so when I ask for "#99f6e4" or "99f6e4" then it should be replaced with "teal200".
-- gluestack ui tokens color for "#5eead4" or "5eead4" is "teal300", so when I ask for "#5eead4" or "5eead4" then it should be replaced with "teal300".
-- gluestack ui tokens color for "#2dd4bf" or "2dd4bf" is "teal400", so when I ask for "#2dd4bf" or "2dd4bf" then it should be replaced with "teal400".
-- gluestack ui tokens color for "#14b8a6" or "14b8a6" is "teal500", so when I ask for "#14b8a6" or "14b8a6" then it should be replaced with "teal500".
-- gluestack ui tokens color for "#0d9488" or "0d9488" is "teal600", so when I ask for "#0d9488" or "0d9488" then it should be replaced with "teal600".
-- gluestack ui tokens color for "#0f766e" or "0f766e" is "teal700", so when I ask for "#0f766e" or "0f766e" then it should be replaced with "teal700".
-- gluestack ui tokens color for "#115e59" or "115e59" is "teal800", so when I ask for "#115e59" or "115e59" then it should be replaced with "teal800".
-- gluestack ui tokens color for "#134e4a" or "134e4a" is "teal900", so when I ask for "#134e4a" or "134e4a" then it should be replaced with "teal900".
-- gluestack ui tokens color for "#ecfdf5" or "ecfdf5" is "emerald50", so when I ask for "#ecfdf5" or "ecfdf5" then it should be replaced with "emerald50".
-- gluestack ui tokens color for "#d1fae5" or "d1fae5" is "emerald100", so when I ask for "#d1fae5" or "d1fae5" then it should be replaced with "emerald100".
-- gluestack ui tokens color for "#a7f3d0" or "a7f3d0" is "emerald200", so when I ask for "#a7f3d0" or "a7f3d0" then it should be replaced with "emerald200".
-- gluestack ui tokens color for "#6ee7b7" or "6ee7b7" is "emerald300", so when I ask for "#6ee7b7" or "6ee7b7" then it should be replaced with "emerald300".
-- gluestack ui tokens color for "#34d399" or "34d399" is "emerald400", so when I ask for "#34d399" or "34d399" then it should be replaced with "emerald400".
-- gluestack ui tokens color for "#10b981" or "10b981" is "emerald500", so when I ask for "#10b981" or "10b981" then it should be replaced with "emerald500".
-- gluestack ui tokens color for "#059669" or "059669" is "emerald600", so when I ask for "#059669" or "059669" then it should be replaced with "emerald600".
-- gluestack ui tokens color for "#047857" or "047857" is "emerald700", so when I ask for "#047857" or "047857" then it should be replaced with "emerald700".
-- gluestack ui tokens color for "#065f46" or "065f46" is "emerald800", so when I ask for "#065f46" or "065f46" then it should be replaced with "emerald800".
-- gluestack ui tokens color for "#064e3b" or "064e3b" is "emerald900", so when I ask for "#064e3b" or "064e3b" then it should be replaced with "emerald900".
-- gluestack ui tokens color for "#f0fdf4" or "f0fdf4" is "green50", so when I ask for "#f0fdf4" or "f0fdf4" then it should be replaced with "green50".
-- gluestack ui tokens color for "#dcfce7" or "dcfce7" is "green100", so when I ask for "#dcfce7" or "dcfce7" then it should be replaced with "green100".
-- gluestack ui tokens color for "#bbf7d0" or "bbf7d0" is "green200", so when I ask for "#bbf7d0" or "bbf7d0" then it should be replaced with "green200".
-- gluestack ui tokens color for "#86efac" or "86efac" is "green300", so when I ask for "#86efac" or "86efac" then it should be replaced with "green300".
-- gluestack ui tokens color for "#4ade80" or "4ade80" is "green400", so when I ask for "#4ade80" or "4ade80" then it should be replaced with "green400".
-- gluestack ui tokens color for "#22c55e" or "22c55e" is "green500", so when I ask for "#22c55e" or "22c55e" then it should be replaced with "green500".
-- gluestack ui tokens color for "#16a34a" or "16a34a" is "green600", so when I ask for "#16a34a" or "16a34a" then it should be replaced with "green600".
-- gluestack ui tokens color for "#15803d" or "15803d" is "green700", so when I ask for "#15803d" or "15803d" then it should be replaced with "green700".
-- gluestack ui tokens color for "#166534" or "166534" is "green800", so when I ask for "#166534" or "166534" then it should be replaced with "green800".
-- gluestack ui tokens color for "#14532d" or "14532d" is "green900", so when I ask for "#14532d" or "14532d" then it should be replaced with "green900".
-- gluestack ui tokens color for "#f7fee7" or "f7fee7" is "lime50", so when I ask for "#f7fee7" or "f7fee7" then it should be replaced with "lime50".
-- gluestack ui tokens color for "#ecfccb" or "ecfccb" is "lime100", so when I ask for "#ecfccb" or "ecfccb" then it should be replaced with "lime100".
-- gluestack ui tokens color for "#d9f99d" or "d9f99d" is "lime200", so when I ask for "#d9f99d" or "d9f99d" then it should be replaced with "lime200".
-- gluestack ui tokens color for "#bef264" or "bef264" is "lime300", so when I ask for "#bef264" or "bef264" then it should be replaced with "lime300".
-- gluestack ui tokens color for "#a3e635" or "a3e635" is "lime400", so when I ask for "#a3e635" or "a3e635" then it should be replaced with "lime400".
-- gluestack ui tokens color for "#84cc16" or "84cc16" is "lime500", so when I ask for "#84cc16" or "84cc16" then it should be replaced with "lime500".
-- gluestack ui tokens color for "#65a30d" or "65a30d" is "lime600", so when I ask for "#65a30d" or "65a30d" then it should be replaced with "lime600".
-- gluestack ui tokens color for "#4d7c0f" or "4d7c0f" is "lime700", so when I ask for "#4d7c0f" or "4d7c0f" then it should be replaced with "lime700".
-- gluestack ui tokens color for "#3f6212" or "3f6212" is "lime800", so when I ask for "#3f6212" or "3f6212" then it should be replaced with "lime800".
-- gluestack ui tokens color for "#365314" or "365314" is "lime900", so when I ask for "#365314" or "365314" then it should be replaced with "lime900".
-- gluestack ui tokens color for "#fefce8" or "fefce8" is "yellow50", so when I ask for "#fefce8" or "fefce8" then it should be replaced with "yellow50".
-- gluestack ui tokens color for "#fef9c3" or "fef9c3" is "yellow100", so when I ask for "#fef9c3" or "fef9c3" then it should be replaced with "yellow100".
-- gluestack ui tokens color for "#fef08a" or "fef08a" is "yellow200", so when I ask for "#fef08a" or "fef08a" then it should be replaced with "yellow200".
-- gluestack ui tokens color for "#fde047" or "fde047" is "yellow300", so when I ask for "#fde047" or "fde047" then it should be replaced with "yellow300".
-- gluestack ui tokens color for "#facc15" or "facc15" is "yellow400", so when I ask for "#facc15" or "facc15" then it should be replaced with "yellow400".
-- gluestack ui tokens color for "#eab308" or "eab308" is "yellow500", so when I ask for "#eab308" or "eab308" then it should be replaced with "yellow500".
-- gluestack ui tokens color for "#ca8a04" or "ca8a04" is "yellow600", so when I ask for "#ca8a04" or "ca8a04" then it should be replaced with "yellow600".
-- gluestack ui tokens color for "#a16207" or "a16207" is "yellow700", so when I ask for "#a16207" or "a16207" then it should be replaced with "yellow700".
-- gluestack ui tokens color for "#854d0e" or "854d0e" is "yellow800", so when I ask for "#854d0e" or "854d0e" then it should be replaced with "yellow800".
-- gluestack ui tokens color for "#713f12" or "713f12" is "yellow900", so when I ask for "#713f12" or "713f12" then it should be replaced with "yellow900".
-- gluestack ui tokens color for "#fffbeb" or "fffbeb" is "amber50", so when I ask for "#fffbeb" or "fffbeb" then it should be replaced with "amber50".
-- gluestack ui tokens color for "#fef3c7" or "fef3c7" is "amber100", so when I ask for "#fef3c7" or "fef3c7" then it should be replaced with "amber100".
-- gluestack ui tokens color for "#fde68a" or "fde68a" is "amber200", so when I ask for "#fde68a" or "fde68a" then it should be replaced with "amber200".
-- gluestack ui tokens color for "#fcd34d" or "fcd34d" is "amber300", so when I ask for "#fcd34d" or "fcd34d" then it should be replaced with "amber300".
-- gluestack ui tokens color for "#fbbf24" or "fbbf24" is "amber400", so when I ask for "#fbbf24" or "fbbf24" then it should be replaced with "amber400".
-- gluestack ui tokens color for "#f59e0b" or "f59e0b" is "amber500", so when I ask for "#f59e0b" or "f59e0b" then it should be replaced with "amber500".
-- gluestack ui tokens color for "#d97706" or "d97706" is "amber600", so when I ask for "#d97706" or "d97706" then it should be replaced with "amber600".
-- gluestack ui tokens color for "#b45309" or "b45309" is "amber700", so when I ask for "#b45309" or "b45309" then it should be replaced with "amber700".
-- gluestack ui tokens color for "#92400e" or "92400e" is "amber800", so when I ask for "#92400e" or "92400e" then it should be replaced with "amber800".
-- gluestack ui tokens color for "#78350f" or "78350f" is "amber900", so when I ask for "#78350f" or "78350f" then it should be replaced with "amber900".
-- gluestack ui tokens color for "#fff7ed" or "fff7ed" is "orange50", so when I ask for "#fff7ed" or "fff7ed" then it should be replaced with "orange50".
-- gluestack ui tokens color for "#ffedd5" or "ffedd5" is "orange100", so when I ask for "#ffedd5" or "ffedd5" then it should be replaced with "orange100".
-- gluestack ui tokens color for "#fed7aa" or "fed7aa" is "orange200", so when I ask for "#fed7aa" or "fed7aa" then it should be replaced with "orange200".
-- gluestack ui tokens color for "#fdba74" or "fdba74" is "orange300", so when I ask for "#fdba74" or "fdba74" then it should be replaced with "orange300".
-- gluestack ui tokens color for "#fb923c" or "fb923c" is "orange400", so when I ask for "#fb923c" or "fb923c" then it should be replaced with "orange400".
-- gluestack ui tokens color for "#f97316" or "f97316" is "orange500", so when I ask for "#f97316" or "f97316" then it should be replaced with "orange500".
-- gluestack ui tokens color for "#ea580c" or "ea580c" is "orange600", so when I ask for "#ea580c" or "ea580c" then it should be replaced with "orange600".
-- gluestack ui tokens color for "#c2410c" or "c2410c" is "orange700", so when I ask for "#c2410c" or "c2410c" then it should be replaced with "orange700".
-- gluestack ui tokens color for "#9a3412" or "9a3412" is "orange800", so when I ask for "#9a3412" or "9a3412" then it should be replaced with "orange800".
-- gluestack ui tokens color for "#7c2d12" or "7c2d12" is "orange900", so when I ask for "#7c2d12" or "7c2d12" then it should be replaced with - "orange900".
-- color key toke for `#fef2f2` is `red50`, so when I ask for `#fef2f2` then it should be replaced with `red50`.
-- gluestack ui tokens color for "#fee2e2" or "fee2e2" is "red100", so when I ask for "#fee2e2" or "fee2e2" then it should be replaced with "red100".
-- gluestack ui tokens color for "#fecaca" or "fecaca" is "red200", so when I ask for "#fecaca" or "fecaca" then it should be replaced with "red200".
-- gluestack ui tokens color for "#fca5a5" or "fca5a5" is "red300", so when I ask for "#fca5a5" or "fca5a5" then it should be replaced with "red300".
-- gluestack ui tokens color for "#f87171" or "f87171" is "red400", so when I ask for "#f87171" or "f87171" then it should be replaced with "red400".
-- gluestack ui tokens color for "#ef4444" or "ef4444" is "red500", so when I ask for "#ef4444" or "ef4444" then it should be replaced with "red500".
-- gluestack ui tokens color for "#dc2626" or "dc2626" is "red600", so when I ask for "#dc2626" or "dc2626" then it should be replaced with "red600".
-- gluestack ui tokens color for "#b91c1c" or "b91c1c" is "red700", so when I ask for "#b91c1c" or "b91c1c" then it should be replaced with "red700".
-- gluestack ui tokens color for "#991b1b" or "991b1b" is "red800", so when I ask for "#991b1b" or "991b1b" then it should be replaced with "red800".
-- gluestack ui tokens color for "#7f1d1d" or "7f1d1d" is "red900", so when I ask for "#7f1d1d" or "7f1d1d" then it should be replaced with "red900".
-- gluestack ui tokens color for "#fafaf9" or "fafaf9" is "warmGray50", so when I ask for "#fafaf9" or "fafaf9" then it should be replaced with "warmGray50".
-- gluestack ui tokens color for "#f5f5f4" or "f5f5f4" is "warmGray100", so when I ask for "#f5f5f4" or "f5f5f4" then it should be replaced with "warmGray100".
-- gluestack ui tokens color for "#e7e5e4" or "e7e5e4" is "warmGray200", so when I ask for "#e7e5e4" or "e7e5e4" then it should be replaced with "warmGray200".
-- gluestack ui tokens color for "#d6d3d1" or "d6d3d1" is "warmGray300", so when I ask for "#d6d3d1" or "d6d3d1" then it should be replaced with "warmGray300".
-- gluestack ui tokens color for "#a8a29e" or "a8a29e" is "warmGray400", so when I ask for "#a8a29e" or "a8a29e" then it should be replaced with "warmGray400".
-- gluestack ui tokens color for "#78716c" or "78716c" is "warmGray500", so when I ask for "#78716c" or "78716c" then it should be replaced with "warmGray500".
-- gluestack ui tokens color for "#57534e" or "57534e" is "warmGray600", so when I ask for "#57534e" or "57534e" then it should be replaced with "warmGray600".
-- gluestack ui tokens color for "#44403c" or "44403c" is "warmGray700", so when I ask for "#44403c" or "44403c" then it should be replaced with "warmGray700".
-- gluestack ui tokens color for "#292524" or "292524" is "warmGray800", so when I ask for "#292524" or "292524" then it should be replaced with "warmGray800".
-- gluestack ui tokens color for "#1c1917" or "1c1917" is "warmGray900", so when I ask for "#1c1917" or "1c1917" then it should be replaced with "warmGray900".
-- gluestack ui tokens color for "#fafafa" or "fafafa" is "trueGray50", so when I ask for "#fafafa" or "fafafa" then it should be replaced with "trueGray50".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "trueGray100", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "trueGray100".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "trueGray200", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "trueGray200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "trueGray300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "trueGray300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "trueGray400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "trueGray400".
-- gluestack ui tokens color for "#737373" or "737373" is "trueGray500", so when I ask for "#737373" or "737373" then it should be replaced with "trueGray500".
-- gluestack ui tokens color for "#525252" or "525252" is "trueGray600", so when I ask for "#525252" or "525252" then it should be replaced with "trueGray600".
-- gluestack ui tokens color for "#404040" or "404040" is "trueGray700", so when I ask for "#404040" or "404040" then it should be replaced with "trueGray700".
-- gluestack ui tokens color for "#262626" or "262626" is "trueGray800", so when I ask for "#262626" or "262626" then it should be replaced with "trueGray800".
-- gluestack ui tokens color for "#171717" or "171717" is "trueGray900", so when I ask for "#171717" or "171717" then it should be replaced with "trueGray900".
-- gluestack ui tokens color for "#fafafa" or "fafafa" is "gray50", so when I ask for "#fafafa" or "fafafa" then it should be replaced with "gray50".
-- gluestack ui tokens color for "#f4f4f5" or "f4f4f5" is "gray100", so when I ask for "#f4f4f5" or "f4f4f5" then it should be replaced with "gray100".
-- gluestack ui tokens color for "#e4e4e7" or "e4e4e7" is "gray200", so when I ask for "#e4e4e7" or "e4e4e7" then it should be replaced with "gray200".
-- gluestack ui tokens color for "#d4d4d8" or "d4d4d8" is "gray300", so when I ask for "#d4d4d8" or "d4d4d8" then it should be replaced with "gray300".
-- gluestack ui tokens color for "#a1a1aa" or "a1a1aa" is "gray400", so when I ask for "#a1a1aa" or "a1a1aa" then it should be replaced with "gray400".
-- gluestack ui tokens color for "#71717a" or "71717a" is "gray500", so when I ask for "#71717a" or "71717a" then it should be replaced with "gray500".
-- gluestack ui tokens color for "#52525b" or "52525b" is "gray600", so when I ask for "#52525b" or "52525b" then it should be replaced with "gray600".
-- gluestack ui tokens color for "#3f3f46" or "3f3f46" is "gray700", so when I ask for "#3f3f46" or "3f3f46" then it should be replaced with "gray700".
-- gluestack ui tokens color for "#27272a" or "27272a" is "gray800", so when I ask for "#27272a" or "27272a" then it should be replaced with "gray800".
-- gluestack ui tokens color for "#18181b" or "18181b" is "gray900", so when I ask for "#18181b" or "18181b" then it should be replaced with "gray900".
-- gluestack ui tokens color for "#f9fafb" or "f9fafb" is "coolGray50", so when I ask for "#f9fafb" or "f9fafb" then it should be replaced with "coolGray50".
-- gluestack ui tokens color for "#f3f4f6" or "f3f4f6" is "coolGray100", so when I ask for "#f3f4f6" or "f3f4f6" then it should be replaced with "coolGray100".
-- gluestack ui tokens color for "#e5e7eb" or "e5e7eb" is "coolGray200", so when I ask for "#e5e7eb" or "e5e7eb" then it should be replaced with "coolGray200".
-- gluestack ui tokens color for "#d1d5db" or "d1d5db" is "coolGray300", so when I ask for "#d1d5db" or "d1d5db" then it should be replaced with "coolGray300".
-- gluestack ui tokens color for "#9ca3af" or "9ca3af" is "coolGray400", so when I ask for "#9ca3af" or "9ca3af" then it should be replaced with "coolGray400".
-- gluestack ui tokens color for "#6b7280" or "6b7280" is "coolGray500", so when I ask for "#6b7280" or "6b7280" then it should be replaced with "coolGray500".
-- gluestack ui tokens color for "#4b5563" or "4b5563" is "coolGray600", so when I ask for "#4b5563" or "4b5563" then it should be replaced with "coolGray600".
-- gluestack ui tokens color for "#374151" or "374151" is "coolGray700", so when I ask for "#374151" or "374151" then it should be replaced with "coolGray700".
-- gluestack ui tokens color for "#1f2937" or "1f2937" is "coolGray800", so when I ask for "#1f2937" or "1f2937" then it should be replaced with "coolGray800".
-- gluestack ui tokens color for "#111827" or "111827" is "coolGray900", so when I ask for "#111827" or "111827" then it should be replaced with "coolGray900".
-- gluestack ui tokens color for "#f8fafc" or "f8fafc" is "blueGray50", so when I ask for "#f8fafc" or "f8fafc" then it should be replaced with "blueGray50".
-- gluestack ui tokens color for "#f1f5f9" or "f1f5f9" is "blueGray100", so when I ask for "#f1f5f9" or "f1f5f9" then it should be replaced with "blueGray100".
-- gluestack ui tokens color for "#e2e8f0" or "e2e8f0" is "blueGray200", so when I ask for "#e2e8f0" or "e2e8f0" then it should be replaced with "blueGray200".
-- gluestack ui tokens color for "#cbd5e1" or "cbd5e1" is "blueGray300", so when I ask for "#cbd5e1" or "cbd5e1" then it should be replaced with "blueGray300".
-- gluestack ui tokens color for "#94a3b8" or "94a3b8" is "blueGray400", so when I ask for "#94a3b8" or "94a3b8" then it should be replaced with "blueGray400".
-- gluestack ui tokens color for "#64748b" or "64748b" is "blueGray500", so when I ask for "#64748b" or "64748b" then it should be replaced with "blueGray500".
-- gluestack ui tokens color for "#475569" or "475569" is "blueGray600", so when I ask for "#475569" or "475569" then it should be replaced with "blueGray600".
-- gluestack ui tokens color for "#334155" or "334155" is "blueGray700", so when I ask for "#334155" or "334155" then it should be replaced with "blueGray700".
-- gluestack ui tokens color for "#1e293b" or "1e293b" is "blueGray800", so when I ask for "#1e293b" or "1e293b" then it should be replaced with "blueGray800".
-- gluestack ui tokens color for "#0f172a" or "0f172a" is "blueGray900", so when I ask for "#0f172a" or "0f172a" then it should be replaced with "blueGray900".
-- gluestack ui tokens color for "#18181b" or "18181b" is "dark50", so when I ask for "#18181b" or "18181b" then it should be replaced with "dark50".
-- gluestack ui tokens color for "#27272a" or "27272a" is "dark100", so when I ask for "#27272a" or "27272a" then it should be replaced with "dark100".
-- gluestack ui tokens color for "#3f3f46" or "3f3f46" is "dark200", so when I ask for "#3f3f46" or "3f3f46" then it should be replaced with "dark200".
-- gluestack ui tokens color for "#52525b" or "52525b" is "dark300", so when I ask for "#52525b" or "52525b" then it should be replaced with "dark300".
-- gluestack ui tokens color for "#71717a" or "71717a" is "dark400", so when I ask for "#71717a" or "71717a" then it should be replaced with "dark400".
-- gluestack ui tokens color for "#a1a1aa" or "a1a1aa" is "dark500", so when I ask for "#a1a1aa" or "a1a1aa" then it should be replaced with "dark500".
-- gluestack ui tokens color for "#d4d4d8" or "d4d4d8" is "dark600", so when I ask for "#d4d4d8" or "d4d4d8" then it should be replaced with "dark600".
-- gluestack ui tokens color for "#e4e4e7" or "e4e4e7" is "dark700", so when I ask for "#e4e4e7" or "e4e4e7" then it should be replaced with "dark700".
-- gluestack ui tokens color for "#f4f4f5" or "f4f4f5" is "dark800", so when I ask for "#f4f4f5" or "f4f4f5" then it should be replaced with "dark800".
-- gluestack ui tokens color for "#fafafa" or "fafafa" is "dark900", so when I ask for "#fafafa" or "fafafa" then it should be replaced with "dark900".
-- gluestack ui tokens color for "#fafafa" or "fafafa" is "text50", so when I ask for "#fafafa" or "fafafa" then it should be replaced with "text50".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "text100", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "text100".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "text200", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "text200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "text300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "text300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "text400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "text400".
-- gluestack ui tokens color for "#737373" or "737373" is "text500", so when I ask for "#737373" or "737373" then it should be replaced with "text500".
-- gluestack ui tokens color for "#525252" or "525252" is "text600", so when I ask for "#525252" or "525252" then it should be replaced with "text600".
-- gluestack ui tokens color for "#404040" or "404040" is "text700", so when I ask for "#404040" or "404040" then it should be replaced with "text700".
-- gluestack ui tokens color for "#262626" or "262626" is "text800", so when I ask for "#262626" or "262626" then it should be replaced with "text800".
-- gluestack ui tokens color for "#171717" or "171717" is "text900", so when I ask for "#171717" or "171717" then it should be replaced with "text900".
-- gluestack ui tokens color for "#ffffff" or "ffffff" is "white", so when I ask for "#ffffff" or "ffffff" then it should be replaced with "white".
-- gluestack ui tokens color for "#000000" or "000000" is "black", so when I ask for "#000000" or "000000" then it should be replaced with "black".
-- gluestack ui tokens color for "#ffffff" or "ffffff" is "lightText", so when I ask for "#ffffff" or "ffffff" then it should be replaced with "lightText".
-- gluestack ui tokens color for "#000000" or "000000" is "darkText", so when I ask for "#000000" or "000000" then it should be replaced with "darkText".
-- gluestack ui tokens color for "#f8fafc" or "f8fafc" is "secondary0", so when I ask for "#f8fafc" or "f8fafc" then it should be replaced with "secondary0".
-- gluestack ui tokens color for "#f1f5f9" or "f1f5f9" is "secondary50", so when I ask for "#f1f5f9" or "f1f5f9" then it should be replaced with "secondary50".
-- gluestack ui tokens color for "#e4e9f0" or "e4e9f0" is "secondary100", so when I ask for "#e4e9f0" or "e4e9f0" then it should be replaced with "secondary100".
-- gluestack ui tokens color for "#dbe1e9" or "dbe1e9" is "secondary200", so when I ask for "#dbe1e9" or "dbe1e9" then it should be replaced with "secondary200".
-- gluestack ui tokens color for "#cbd5e1" or "cbd5e1" is "secondary300", so when I ask for "#cbd5e1" or "cbd5e1" then it should be replaced with "secondary300".
-- gluestack ui tokens color for "#b6c3d5" or "b6c3d5" is "secondary400", so when I ask for "#b6c3d5" or "b6c3d5" then it should be replaced with "secondary400".
-- gluestack ui tokens color for "#94a3b8" or "94a3b8" is "secondary500", so when I ask for "#94a3b8" or "94a3b8" then it should be replaced with "secondary500".
-- gluestack ui tokens color for "#64748b" or "64748b" is "secondary600", so when I ask for "#64748b" or "64748b" then it should be replaced with "secondary600".
-- gluestack ui tokens color for "#475569" or "475569" is "secondary700", so when I ask for "#475569" or "475569" then it should be replaced with "secondary700".
-- gluestack ui tokens color for "#334155" or "334155" is "secondary800", so when I ask for "#334155" or "334155" then it should be replaced with "secondary800".
-- gluestack ui tokens color for "#1e293b" or "1e293b" is "secondary900", so when I ask for "#1e293b" or "1e293b" then it should be replaced with "secondary900".
-- gluestack ui tokens color for "#0f172a" or "0f172a" is "secondary950", so when I ask for "#0f172a" or "0f172a" then it should be replaced with "secondary950".
-- gluestack ui tokens color for "#ecfdf5" or "ecfdf5" is "tertiary50", so when I ask for "#ecfdf5" or "ecfdf5" then it should be replaced with "tertiary50".
-- gluestack ui tokens color for "#d1fae5" or "d1fae5" is "tertiary100", so when I ask for "#d1fae5" or "d1fae5" then it should be replaced with "tertiary100".
-- gluestack ui tokens color for "#a7f3d0" or "a7f3d0" is "tertiary200", so when I ask for "#a7f3d0" or "a7f3d0" then it should be replaced with "tertiary200".
-- gluestack ui tokens color for "#6ee7b7" or "6ee7b7" is "tertiary300", so when I ask for "#6ee7b7" or "6ee7b7" then it should be replaced with "tertiary300".
-- gluestack ui tokens color for "#34d399" or "34d399" is "tertiary400", so when I ask for "#34d399" or "34d399" then it should be replaced with "tertiary400".
-- gluestack ui tokens color for "#10b981" or "10b981" is "tertiary500", so when I ask for "#10b981" or "10b981" then it should be replaced with "tertiary500".
-- gluestack ui tokens color for "#059669" or "059669" is "tertiary600", so when I ask for "#059669" or "059669" then it should be replaced with "tertiary600".
-- gluestack ui tokens color for "#047857" or "047857" is "tertiary700", so when I ask for "#047857" or "047857" then it should be replaced with "tertiary700".
-- gluestack ui tokens color for "#065f46" or "065f46" is "tertiary800", so when I ask for "#065f46" or "065f46" then it should be replaced with "tertiary800".
-- gluestack ui tokens color for "#064e3b" or "064e3b" is "tertiary900", so when I ask for "#064e3b" or "064e3b" then it should be replaced with "tertiary900".
-- gluestack ui tokens color for "#fff1f2" or "fff1f2" is "danger50", so when I ask for "#fff1f2" or "fff1f2" then it should be replaced with "danger50".
-- gluestack ui tokens color for "#ffe4e6" or "ffe4e6" is "danger100", so when I ask for "#ffe4e6" or "ffe4e6" then it should be replaced with "danger100".
-- gluestack ui tokens color for "#fecdd3" or "fecdd3" is "danger200", so when I ask for "#fecdd3" or "fecdd3" then it should be replaced with "danger200".
-- gluestack ui tokens color for "#fda4af" or "fda4af" is "danger300", so when I ask for "#fda4af" or "fda4af" then it should be replaced with "danger300".
-- gluestack ui tokens color for "#fb7185" or "fb7185" is "danger400", so when I ask for "#fb7185" or "fb7185" then it should be replaced with "danger400".
-- gluestack ui tokens color for "#f43f5e" or "f43f5e" is "danger500", so when I ask for "#f43f5e" or "f43f5e" then it should be replaced with "danger500".
-- gluestack ui tokens color for "#e11d48" or "e11d48" is "danger600", so when I ask for "#e11d48" or "e11d48" then it should be replaced with "danger600".
-- gluestack ui tokens color for "#be123c" or "be123c" is "danger700", so when I ask for "#be123c" or "be123c" then it should be replaced with "danger700".
-- gluestack ui tokens color for "#9f1239" or "9f1239" is "danger800", so when I ask for "#9f1239" or "9f1239" then it should be replaced with "danger800".
-- gluestack ui tokens color for "#881337" or "881337" is "danger900", so when I ask for "#881337" or "881337" then it should be replaced with "danger900".
-- gluestack ui tokens color for "#fef2f2" or "fef2f2" is "error50", so when I ask for "#fef2f2" or "fef2f2" then it should be replaced with "error50".
-- gluestack ui tokens color for "#fee2e2" or "fee2e2" is "error100", so when I ask for "#fee2e2" or "fee2e2" then it should be replaced with "error100".
-- gluestack ui tokens color for "#fecaca" or "fecaca" is "error200", so when I ask for "#fecaca" or "fecaca" then it should be replaced with "error200".
-- gluestack ui tokens color for "#fca5a5" or "fca5a5" is "error300", so when I ask for "#fca5a5" or "fca5a5" then it should be replaced with "error300".
-- gluestack ui tokens color for "#f87171" or "f87171" is "error400", so when I ask for "#f87171" or "f87171" then it should be replaced with "error400".
-- gluestack ui tokens color for "#ef4444" or "ef4444" is "error500", so when I ask for "#ef4444" or "ef4444" then it should be replaced with "error500".
-- gluestack ui tokens color for "#dc2626" or "dc2626" is "error600", so when I ask for "#dc2626" or "dc2626" then it should be replaced with "error600".
-- gluestack ui tokens color for "#b91c1c" or "b91c1c" is "error700", so when I ask for "#b91c1c" or "b91c1c" then it should be replaced with "error700".
-- gluestack ui tokens color for "#991b1b" or "991b1b" is "error800", so when I ask for "#991b1b" or "991b1b" then it should be replaced with "error800".
-- gluestack ui tokens color for "#7f1d1d" or "7f1d1d" is "error900", so when I ask for "#7f1d1d" or "7f1d1d" then it should be replaced with "error900".
-- gluestack ui tokens color for "#f0fdf4" or "f0fdf4" is "success50", so when I ask for "#f0fdf4" or "f0fdf4" then it should be replaced with "success50".
-- gluestack ui tokens color for "#dcfce7" or "dcfce7" is "success100", so when I ask for "#dcfce7" or "dcfce7" then it should be replaced with "success100".
-- gluestack ui tokens color for "#bbf7d0" or "bbf7d0" is "success200", so when I ask for "#bbf7d0" or "bbf7d0" then it should be replaced with "success200".
-- gluestack ui tokens color for "#86efac" or "86efac" is "success300", so when I ask for "#86efac" or "86efac" then it should be replaced with "success300".
-- gluestack ui tokens color for "#4ade80" or "4ade80" is "success400", so when I ask for "#4ade80" or "4ade80" then it should be replaced with "success400".
-- gluestack ui tokens color for "#22c55e" or "22c55e" is "success500", so when I ask for "#22c55e" or "22c55e" then it should be replaced with "success500".
-- gluestack ui tokens color for "#16a34a" or "16a34a" is "success600", so when I ask for "#16a34a" or "16a34a" then it should be replaced with "success600".
-- gluestack ui tokens color for "#15803d" or "15803d" is "success700", so when I ask for "#15803d" or "15803d" then it should be replaced with "success700".
-- gluestack ui tokens color for "#166534" or "166534" is "success800", so when I ask for "#166534" or "166534" then it should be replaced with "success800".
-- gluestack ui tokens color for "#14532d" or "14532d" is "success900", so when I ask for "#14532d" or "14532d" then it should be replaced with "success900".
-- gluestack ui tokens color for "#fff7ed" or "fff7ed" is "warning50", so when I ask for "#fff7ed" or "fff7ed" then it should be replaced with "warning50".
-- gluestack ui tokens color for "#ffedd5" or "ffedd5" is "warning100", so when I ask for "#ffedd5" or "ffedd5" then it should be replaced with "warning100".
-- gluestack ui tokens color for "#fed7aa" or "fed7aa" is "warning200", so when I ask for "#fed7aa" or "fed7aa" then it should be replaced with "warning200".
-- gluestack ui tokens color for "#fdba74" or "fdba74" is "warning300", so when I ask for "#fdba74" or "fdba74" then it should be replaced with "warning300".
-- gluestack ui tokens color for "#fb923c" or "fb923c" is "warning400", so when I ask for "#fb923c" or "fb923c" then it should be replaced with "warning400".
-- gluestack ui tokens color for "#f97316" or "f97316" is "warning500", so when I ask for "#f97316" or "f97316" then it should be replaced with "warning500".
-- gluestack ui tokens color for "#ea580c" or "ea580c" is "warning600", so when I ask for "#ea580c" or "ea580c" then it should be replaced with "warning600".
-- gluestack ui tokens color for "#c2410c" or "c2410c" is "warning700", so when I ask for "#c2410c" or "c2410c" then it should be replaced with "warning700".
-- gluestack ui tokens color for "#9a3412" or "9a3412" is "warning800", so when I ask for "#9a3412" or "9a3412" then it should be replaced with "warning800".
-- gluestack ui tokens color for "#7c2d12" or "7c2d12" is "warning900", so when I ask for "#7c2d12" or "7c2d12" then it should be replaced with "warning900".
-- gluestack ui tokens color for "#fafafa" or "fafafa" is "muted50", so when I ask for "#fafafa" or "fafafa" then it should be replaced with "muted50".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "muted100", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "muted100".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "muted200", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "muted200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "muted300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "muted300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "muted400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "muted400".
-- gluestack ui tokens color for "#737373" or "737373" is "muted500", so when I ask for "#737373" or "737373" then it should be replaced with "muted500".
-- gluestack ui tokens color for "#525252" or "525252" is "muted600", so when I ask for "#525252" or "525252" then it should be replaced with "muted600".
-- gluestack ui tokens color for "#404040" or "404040" is "muted700", so when I ask for "#404040" or "404040" then it should be replaced with "muted700".
-- gluestack ui tokens color for "#262626" or "262626" is "muted800", so when I ask for "#262626" or "262626" then it should be replaced with "muted800".
-- gluestack ui tokens color for "#171717" or "171717" is "muted900", so when I ask for "#171717" or "171717" then it should be replaced with "muted900".
-- gluestack ui tokens color for "#f0f9ff" or "f0f9ff" is "info50", so when I ask for "#f0f9ff" or "f0f9ff" then it should be replaced with "info50".
-- gluestack ui tokens color for "#e0f2fe" or "e0f2fe" is "info100", so when I ask for "#e0f2fe" or "e0f2fe" then it should be replaced with "info100".
-- gluestack ui tokens color for "#bae6fd" or "bae6fd" is "info200", so when I ask for "#bae6fd" or "bae6fd" then it should be replaced with "info200".
-- gluestack ui tokens color for "#7dd3fc" or "7dd3fc" is "info300", so when I ask for "#7dd3fc" or "7dd3fc" then it should be replaced with "info300".
-- gluestack ui tokens color for "#38bdf8" or "38bdf8" is "info400", so when I ask for "#38bdf8" or "38bdf8" then it should be replaced with "info400".
-- gluestack ui tokens color for "#0ea5e9" or "0ea5e9" is "info500", so when I ask for "#0ea5e9" or "0ea5e9" then it should be replaced with "info500".
-- gluestack ui tokens color for "#0284c7" or "0284c7" is "info600", so when I ask for "#0284c7" or "0284c7" then it should be replaced with "info600".
-- gluestack ui tokens color for "#0369a1" or "0369a1" is "info700", so when I ask for "#0369a1" or "0369a1" then it should be replaced with "info700".
-- gluestack ui tokens color for "#075985" or "075985" is "info800", so when I ask for "#075985" or "075985" then it should be replaced with "info800".
-- gluestack ui tokens color for "#0c4a6e" or "0c4a6e" is "info900", so when I ask for "#0c4a6e" or "0c4a6e" then it should be replaced with "info900".
-- gluestack ui tokens color for "#fafaf9" or "fafaf9" is "light50", so when I ask for "#fafaf9" or "fafaf9" then it should be replaced with "light50".
-- gluestack ui tokens color for "#f5f5f4" or "f5f5f4" is "light100", so when I ask for "#f5f5f4" or "f5f5f4" then it should be replaced with "light100".
-- gluestack ui tokens color for "#e7e5e4" or "e7e5e4" is "light200", so when I ask for "#e7e5e4" or "e7e5e4" then it should be replaced with "light200".
-- gluestack ui tokens color for "#d6d3d1" or "d6d3d1" is "light300", so when I ask for "#d6d3d1" or "d6d3d1" then it should be replaced with "light300".
-- gluestack ui tokens color for "#a8a29e" or "a8a29e" is "light400", so when I ask for "#a8a29e" or "a8a29e" then it should be replaced with "light400".
-- gluestack ui tokens color for "#78716c" or "78716c" is "light500", so when I ask for "#78716c" or "78716c" then it should be replaced with "light500".
-- gluestack ui tokens color for "#57534e" or "57534e" is "light600", so when I ask for "#57534e" or "57534e" then it should be replaced with "light600".
-- gluestack ui tokens color for "#44403c" or "44403c" is "light700", so when I ask for "#44403c" or "44403c" then it should be replaced with "light700".
-- gluestack ui tokens color for "#292524" or "292524" is "light800", so when I ask for "#292524" or "292524" then it should be replaced with "light800".
-- gluestack ui tokens color for "#1c1917" or "1c1917" is "light900", so when I ask for "#1c1917" or "1c1917" then it should be replaced with "light900".
-- gluestack ui tokens color for "#ffffff" or "ffffff" is "textDark0", so when I ask for "#ffffff" or "ffffff" then it should be replaced with "textDark0".
-- gluestack ui tokens color for "#f9fafb" or "f9fafb" is "textDark50", so when I ask for "#f9fafb" or "f9fafb" then it should be replaced with "textDark50".
-- gluestack ui tokens color for "#f3f4f6" or "f3f4f6" is "textDark100", so when I ask for "#f3f4f6" or "f3f4f6" then it should be replaced with "textDark100".
-- gluestack ui tokens color for "#e5e7eb" or "e5e7eb" is "textDark200", so when I ask for "#e5e7eb" or "e5e7eb" then it should be replaced with "textDark200".
-- gluestack ui tokens color for "#d1d5db" or "d1d5db" is "textDark300", so when I ask for "#d1d5db" or "d1d5db" then it should be replaced with "textDark300".
-- gluestack ui tokens color for "#9ca3af" or "9ca3af" is "textDark400", so when I ask for "#9ca3af" or "9ca3af" then it should be replaced with "textDark400".
-- gluestack ui tokens color for "#6b7280" or "6b7280" is "textDark500", so when I ask for "#6b7280" or "6b7280" then it should be replaced with "textDark500".
-- gluestack ui tokens color for "#4b5563" or "4b5563" is "textDark600", so when I ask for "#4b5563" or "4b5563" then it should be replaced with "textDark600".
-- gluestack ui tokens color for "#374151" or "374151" is "textDark700", so when I ask for "#374151" or "374151" then it should be replaced with "textDark700".
-- gluestack ui tokens color for "#1f2937" or "1f2937" is "textDark800", so when I ask for "#1f2937" or "1f2937" then it should be replaced with "textDark800".
-- gluestack ui tokens color for "#111827" or "111827" is "textDark900", so when I ask for "#111827" or "111827" then it should be replaced with "textDark900".
-- gluestack ui tokens color for "#090c14" or "090c14" is "textDark950", so when I ask for "#090c14" or "090c14" then it should be replaced with "textDark950".
-- gluestack ui tokens color for "#ffffff" or "ffffff" is "textLight0", so when I ask for "#ffffff" or "ffffff" then it should be replaced with "textLight0".
-- gluestack ui tokens color for "#f9fafb" or "f9fafb" is "textLight50", so when I ask for "#f9fafb" or "f9fafb" then it should be replaced with "textLight50".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "textLight100", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "textLight100".
-- gluestack ui tokens color for "#e5e7eb" or "e5e7eb" is "textLight200", so when I ask for "#e5e7eb" or "e5e7eb" then it should be replaced with "textLight200".
-- gluestack ui tokens color for "#d1d5db" or "d1d5db" is "textLight300", so when I ask for "#d1d5db" or "d1d5db" then it should be replaced with "textLight300".
-- gluestack ui tokens color for "#9ca3af" or "9ca3af" is "textLight400", so when I ask for "#9ca3af" or "9ca3af" then it should be replaced with "textLight400".
-- gluestack ui tokens color for "#6b7280" or "6b7280" is "textLight500", so when I ask for "#6b7280" or "6b7280" then it should be replaced with "textLight500".
-- gluestack ui tokens color for "#4b5563" or "4b5563" is "textLight600", so when I ask for "#4b5563" or "4b5563" then it should be replaced with "textLight600".
-- gluestack ui tokens color for "#374151" or "374151" is "textLight700", so when I ask for "#374151" or "374151" then it should be replaced with "textLight700".
-- gluestack ui tokens color for "#1f2937" or "1f2937" is "textLight800", so when I ask for "#1f2937" or "1f2937" then it should be replaced with "textLight800".
-- gluestack ui tokens color for "#111827" or "111827" is "textLight900", so when I ask for "#111827" or "111827" then it should be replaced with "textLight900".
-- gluestack ui tokens color for "#090c14" or "090c14" is "textLight950", so when I ask for "#090c14" or "090c14" then it should be replaced with "textLight950".
-- gluestack ui tokens color for "#fcfcfc" or "fcfcfc" is "borderDark0", so when I ask for "#fcfcfc" or "fcfcfc" then it should be replaced with "borderDark0".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "borderDark50", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "borderDark50".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "borderDark100", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "borderDark100".
-- gluestack ui tokens color for "#dbdbdb" or "dbdbdb" is "borderDark200", so when I ask for "#dbdbdb" or "dbdbdb" then it should be replaced with "borderDark200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "borderDark300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "borderDark300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "borderDark400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "borderDark400".
-- gluestack ui tokens color for "#8c8c8c" or "8c8c8c" is "borderDark500", so when I ask for "#8c8c8c" or "8c8c8c" then it should be replaced with "borderDark500".
-- gluestack ui tokens color for "#737373" or "737373" is "borderDark600", so when I ask for "#737373" or "737373" then it should be replaced with "borderDark600".
-- gluestack ui tokens color for "#525252" or "525252" is "borderDark700", so when I ask for "#525252" or "525252" then it should be replaced with "borderDark700".
-- gluestack ui tokens color for "#404040" or "404040" is "borderDark800", so when I ask for "#404040" or "404040" then it should be replaced with "borderDark800".
-- gluestack ui tokens color for "#262626" or "262626" is "borderDark900", so when I ask for "#262626" or "262626" then it should be replaced with "borderDark900".
-- gluestack ui tokens color for "#171717" or "171717" is "borderDark950", so when I ask for "#171717" or "171717" then it should be replaced with "borderDark950".
-- gluestack ui tokens color for "#fcfcfc" or "fcfcfc" is "borderLight0", so when I ask for "#fcfcfc" or "fcfcfc" then it should be replaced with "borderLight0".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "borderLight50", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "borderLight50".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "borderLight100", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "borderLight100".
-- gluestack ui tokens color for "#dbdbdb" or "dbdbdb" is "borderLight200", so when I ask for "#dbdbdb" or "dbdbdb" then it should be replaced with "borderLight200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "borderLight300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "borderLight300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "borderLight400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "borderLight400".
-- gluestack ui tokens color for "#8c8c8c" or "8c8c8c" is "borderLight500", so when I ask for "#8c8c8c" or "8c8c8c" then it should be replaced with "borderLight500".
-- gluestack ui tokens color for "#737373" or "737373" is "borderLight600", so when I ask for "#737373" or "737373" then it should be replaced with "borderLight600".
-- gluestack ui tokens color for "#525252" or "525252" is "borderLight700", so when I ask for "#525252" or "525252" then it should be replaced with "borderLight700".
-- gluestack ui tokens color for "#404040" or "404040" is "borderLight800", so when I ask for "#404040" or "404040" then it should be replaced with "borderLight800".
-- gluestack ui tokens color for "#262626" or "262626" is "borderLight900", so when I ask for "#262626" or "262626" then it should be replaced with "borderLight900".
-- gluestack ui tokens color for "#171717" or "171717" is "borderLight950", so when I ask for "#171717" or "171717" then it should be replaced with "borderLight950".
-- gluestack ui tokens color for "#fcfcfc" or "fcfcfc" is "backgroundDark0", so when I ask for "#fcfcfc" or "fcfcfc" then it should be replaced with "backgroundDark0".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "backgroundDark50", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "backgroundDark50".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "backgroundDark100", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "backgroundDark100".
-- gluestack ui tokens color for "#dbdbdb" or "dbdbdb" is "backgroundDark200", so when I ask for "#dbdbdb" or "dbdbdb" then it should be replaced with "backgroundDark200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "backgroundDark300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "backgroundDark300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "backgroundDark400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "backgroundDark400".
-- gluestack ui tokens color for "#8c8c8c" or "8c8c8c" is "backgroundDark500", so when I ask for "#8c8c8c" or "8c8c8c" then it should be replaced with "backgroundDark500".
-- gluestack ui tokens color for "#737373" or "737373" is "backgroundDark600", so when I ask for "#737373" or "737373" then it should be replaced with "backgroundDark600".
-- gluestack ui tokens color for "#525252" or "525252" is "backgroundDark700", so when I ask for "#525252" or "525252" then it should be replaced with "backgroundDark700".
-- gluestack ui tokens color for "#404040" or "404040" is "backgroundDark800", so when I ask for "#404040" or "404040" then it should be replaced with "backgroundDark800".
-- gluestack ui tokens color for "#262626" or "262626" is "backgroundDark900", so when I ask for "#262626" or "262626" then it should be replaced with "backgroundDark900".
-- gluestack ui tokens color for "#171717" or "171717" is "backgroundDark950", so when I ask for "#171717" or "171717" then it should be replaced with "backgroundDark950".
-- gluestack ui tokens color for "#fcfcfc" or "fcfcfc" is "backgroundLight0", so when I ask for "#fcfcfc" or "fcfcfc" then it should be replaced with "backgroundLight0".
-- gluestack ui tokens color for "#f5f5f5" or "f5f5f5" is "backgroundLight50", so when I ask for "#f5f5f5" or "f5f5f5" then it should be replaced with "backgroundLight50".
-- gluestack ui tokens color for "#e5e5e5" or "e5e5e5" is "backgroundLight100", so when I ask for "#e5e5e5" or "e5e5e5" then it should be replaced with "backgroundLight100".
-- gluestack ui tokens color for "#dbdbdb" or "dbdbdb" is "backgroundLight200", so when I ask for "#dbdbdb" or "dbdbdb" then it should be replaced with "backgroundLight200".
-- gluestack ui tokens color for "#d4d4d4" or "d4d4d4" is "backgroundLight300", so when I ask for "#d4d4d4" or "d4d4d4" then it should be replaced with "backgroundLight300".
-- gluestack ui tokens color for "#a3a3a3" or "a3a3a3" is "backgroundLight400", so when I ask for "#a3a3a3" or "a3a3a3" then it should be replaced with "backgroundLight400".
-- gluestack ui tokens color for "#8c8c8c" or "8c8c8c" is "backgroundLight500", so when I ask for "#8c8c8c" or "8c8c8c" then it should be replaced with "backgroundLight500".
-- gluestack ui tokens color for "#737373" or "737373" is "backgroundLight600", so when I ask for "#737373" or "737373" then it should be replaced with "backgroundLight600".
-- gluestack ui tokens color for "#525252" or "525252" is "backgroundLight700", so when I ask for "#525252" or "525252" then it should be replaced with "backgroundLight700".
-- gluestack ui tokens color for "#404040" or "404040" is "backgroundLight800", so when I ask for "#404040" or "404040" then it should be replaced with "backgroundLight800".
-- gluestack ui tokens color for "#262626" or "262626" is "backgroundLight900", so when I ask for "#262626" or "262626" then it should be replaced with "backgroundLight900".
-- gluestack ui tokens color for "#171717" or "171717" is "backgroundLight950", so when I ask for "#171717" or "171717" then it should be replaced with "backgroundLight950".
-- gluestack ui tokens color for "#e5f1fb" or "e5f1fb" is "primary0", so when I ask for "#e5f1fb" or "e5f1fb" then it should be replaced with "primary0".
-- gluestack ui tokens color for "#cce9ff" or "cce9ff" is "primary50", so when I ask for "#cce9ff" or "cce9ff" then it should be replaced with "primary50".
-- gluestack ui tokens color for "#addbff" or "addbff" is "primary100", so when I ask for "#addbff" or "addbff" then it should be replaced with "primary100".
-- gluestack ui tokens color for "#7cc2ff" or "7cc2ff" is "primary200", so when I ask for "#7cc2ff" or "7cc2ff" then it should be replaced with "primary200".
-- gluestack ui tokens color for "#4aa9ff" or "4aa9ff" is "primary300", so when I ask for "#4aa9ff" or "4aa9ff" then it should be replaced with "primary300".
-- gluestack ui tokens color for "#1a91ff" or "1a91ff" is "primary400", so when I ask for "#1a91ff" or "1a91ff" then it should be replaced with "primary400".
-- gluestack ui tokens color for "#0077e6" or "0077e6" is "primary500", so when I ask for "#0077e6" or "0077e6" then it should be replaced with "primary500".
-- gluestack ui tokens color for "#005db4" or "005db4" is "primary600", so when I ask for "#005db4" or "005db4" then it should be replaced with "primary600".
-- gluestack ui tokens color for "#004282" or "004282" is "primary700", so when I ask for "#004282" or "004282" then it should be replaced with "primary700".
-- gluestack ui tokens color for "#002851" or "002851" is "primary800", so when I ask for "#002851" or "002851" then it should be replaced with "primary800".
-- gluestack ui tokens color for "#011838" or "011838" is "primary900", so when I ask for "#011838" or "011838" then it should be replaced with "primary900".
-- gluestack ui tokens color for "#000711" or "000711" is "primary950", so when I ask for "#000711" or "000711" then it should be replaced with "primary950".
-
-- Each color has a name (e.g. rose50, pink100, blue500) and a corresponding hex value (e.g. #fff1f2, #fce7f3, #3b82f6).
-- The hex values represent the red, green, and blue components of the color in hexadecimal format.
-
-For example,
-- color code #000711 is mapped with the code primary950
-- color code #22c55e is mapped with the code success500
-- color code #f0f9ff is mapped with the code lightBlue50
+- `1bg` is an alias for `backgroundColor`
+- `1backgroundColor` is an alias for `backgroundColor`
+- `1bgColor` is an alias for `backgroundColor`
+- `1color` is an alias for `color`
+- `1borderColor` is an alias for `borderColor`
+- `1shadowColor` is an alias for `shadowColor`
+- `1shadowOffset` is an alias for `shadowOffset`
+- `1shadowOpacity` is an alias for `shadowOpacity`
+- `1shadowRadius` is an alias for `shadowRadius`
+- `1elevation` is an alias for `elevation`
+- `1h` is an alias for `height`
+- `1w` is an alias for `width`
+- `1height` is an alias for `height`
+- `1width` is an alias for `width`
+- `1p` is an alias for `padding`
+- `1px` is an alias for `paddingHorizontal`
+- `1py` is an alias for `paddingVertical`
+- `1pt` is an alias for `paddingTop`
+- `1pb` is an alias for `paddingBottom`
+- `1pr` is an alias for `paddingRight`
+- `1pl` is an alias for `paddingLeft`
+- `1padding` is an alias for `padding`
+- `1paddingHorizontal` is an alias for `paddingHorizontal`
+- `1paddingVertical` is an alias for `paddingVertical`
+- `1paddingTop` is an alias for `paddingTop`
+- `1paddingBottom` is an alias for `paddingBottom`
+- `1paddingRight` is an alias for `paddingRight`
+- `1paddingLeft` is an alias for `paddingLeft`
+- `1m` is an alias for `margin`
+- `1mx` is an alias for `marginHorizontal`
+- `1my` is an alias for `marginVertical`
+- `1mt` is an alias for `marginTop`
+- `1mb` is an alias for `marginBottom`
+- `1suraj` is an alias for `marginRight`
+- `1faiz` is an alias for `marginLeft`
+- `1margin` is an alias for `margin`
+- `1marginHorizontal` is an alias for `marginHorizontal`
+- `1marginVertical` is an alias for `marginVertical`
+- `1marginTop` is an alias for `marginTop`
+- `1marginBottom` is an alias for `marginBottom`
+- `1borderWidth` is an alias for `borderWidth`
+- `1borderRadius` is an alias for `borderRadius`
+- `1borderTopLeftRadius` is an alias for `borderTopLeftRadius`
+- `1borderTopRightRadius` is an alias for `borderTopRightRadius`
+- `1rounded` is an alias for `borderRadius`
+- `1letterSpacing` is an alias for `letterSpacing`
+- `1lineHeight` is an alias for `lineHeight`
+- `1lllll` is an alias for `fontWeight`
+- `1fontFamily` is an alias for `fontFamily`
+- `1fontSize` is an alias for `fontSize`
+- `1shadow` is an alias for `shadow`
+- `1condition` is an alias for `condition`
 
 Some examples:
-1. If I want box to have `background color` as `#f0fdfa`, I will write something like <Box bg="$teal50"></Box>. Since `teal50` color is mapped to `gluestackUITokensColors` this value `#f0fdfa`.
-2. If I want box to have border color as `#e5f1fb`, I will write something like <Box borderColor="$primary0"></Box>. Since `primary0` color is mapped to `gluestackUITokensColors` this value `#e5f1fb`.
-3. If I want text to have color as `#f0f9ff`, I will write something like <Text color="$info50"></Text>. Since `primary0` color is mapped to `gluestackUITokensColors` this value `#f0f9ff`.
+1. A box with blue background: <Box 1bg="$blue500" /> is correct using alias
+2. Two boxes nested: <Box 1p="$1"><Box 1p="$2"></Box></Box> is correct using alias
+3. A box with some margin and bg: <Box 1mt="$1" 1bg="$red500" /> is correct using alias
+
+Keep in mind following things:
+1. Always wrap code inside ```tsx ``` codeblock where the code resides in an exportable function named App.
+2. Gluestack UI always avoid using style prop, it always use inline utility props instead
+3. Gluestack UI always provide refined answers only
+4. Component property values always starts with $
+5. Always use alias
+
+Some examples:
+
+If I have a Box component with margin right, border-width, background-color & top here's how it works:
+
+<Box
+  1suraj="$1"        // 1suraj is an alias for margin right
+  1borderWidth="$3"  // 1borderWidth is an alias for borderWidth
+  1bg="$4"           // 1bg is an alias for backgroundColor
+  top="$5"           // top doesn't have alias so we don't do anything to it
+/>
+

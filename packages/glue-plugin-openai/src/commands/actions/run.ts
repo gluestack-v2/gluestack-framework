@@ -89,7 +89,7 @@ const saveResponseToWebPlugin = async (app: AppCLI, prompt: string, response: an
 	content = content.split('##DONE##')[0].trim();
 
 	// prefix prompt with //
-	content = `// ${prompt}\n${content}`;
+	content = `@prompt: ${prompt}\n${content}`;
 
 	await writeFile(filepath, trimContent(content));
 
@@ -97,7 +97,7 @@ const saveResponseToWebPlugin = async (app: AppCLI, prompt: string, response: an
 };
 
 const trimContent = (output: string): string => {
-	const codeRegex = /```(jsx|javascript|typescript|ts|tsx)\n([\s\S]*?)```/g;
+	const codeRegex = /```(|jsx|javascript|typescript|ts|tsx)\n([\s\S]*?)```/g;
   let lastIndex = 0;
   let match = null;
   let result = '';

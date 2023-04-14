@@ -1,4 +1,4 @@
-from gpt_index import SimpleDirectoryReader, GPTListIndex, GPTSimpleVectorIndex, LLMPredictor, PromptHelper
+from llama_index import LLMPredictor, GPTSimpleVectorIndex, PromptHelper, ServiceContext, SimpleDirectoryReader
 from langchain.chat_models import ChatOpenAI
 
 def construct_index(directory_path):
@@ -9,11 +9,13 @@ def construct_index(directory_path):
 
 	prompt_helper = PromptHelper(max_input_size, num_outputs, max_chunk_overlap, chunk_size_limit=chunk_size_limit)
 
-	llm_predictor = LLMPredictor(llm=ChatOpenAI(temperature=0.7, model_name="gpt-4", max_tokens=num_outputs))
+	llm_predictor = LLMPredictor(llm=ChatOpenAI(temperature=0.4, model_name="gpt-4"))
+
+	service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
 	documents = SimpleDirectoryReader(directory_path).load_data()
 
-	index = GPTSimpleVectorIndex(documents, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+	index = GPTSimpleVectorIndex.from_documents(documents, service_context=service_context)
 
 	index.save_to_disk('openai/index.json')
 

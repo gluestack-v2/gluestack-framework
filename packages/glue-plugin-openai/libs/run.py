@@ -1,6 +1,8 @@
 # pip install -r requirements.txt
 
-from gpt_index import GPTSimpleVectorIndex
+from llama_index import GPTSimpleVectorIndex
+from llama_index.optimization.optimizer import SentenceEmbeddingOptimizer
+
 import sys
 
 EMPTY_RESPONSE = 'Empty Response'
@@ -10,11 +12,12 @@ def chatbot(input_text, max_length=1000):
 	response = ''
 	while len(response) < max_length:
 		query_text = input_text + response
-		response_chunk = index.query(query_text, response_mode="compact").response
+		response_chunk = index.query(query_text, optimizer=SentenceEmbeddingOptimizer(percentile_cutoff=0.5)).response
 		if response_chunk == EMPTY_RESPONSE:
 			break
 		if not response_chunk:
 			break
+		print("chunk:", response_chunk)
 		response += response_chunk
 	response = response.rstrip()  # remove trailing whitespace
 	while response.endswith(EMPTY_RESPONSE):

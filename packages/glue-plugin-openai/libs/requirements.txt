@@ -27,7 +27,6 @@ filelock==3.11.0
 fonttools==4.39.3
 frozenlist==1.3.3
 fsspec==2023.4.0
-gpt-index==0.4.24
 h11==0.14.0
 httpcore==0.16.3
 httpx==0.23.3
@@ -41,6 +40,7 @@ kiwisolver==1.4.4
 langchain==0.0.136
 libmagic==1.0
 linkify-it-py==2.0.0
+llama-index==0.5.15
 lxml==4.9.2
 Markdown==3.4.3
 markdown-it-py==2.2.0
