@@ -105,17 +105,22 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         log(`File ${path} has been added`);
         // const instanceName = `${path}`.split("/")[0];
         const instanceName = "sdk";
-        let destPath = this.getInstanceInfo(instanceName).destPath;
+        let destPath = [
+          this.getSDKInstanceInfo(instanceName).destPath,
+          this.getGatewayInstanceInfo("gateway").destPath,
+        ];
         let srcPath = path1.join(process.cwd(), path);
-        console.log(destPath, "PATHSSS", srcPath);
         if (await fileExists(srcPath)) {
           const data = fs.readFileSync(srcPath, {
             encoding: "utf8",
           });
-          writeFile(`${destPath}/${path}`, data);
-          // this.updateServices();
-          // @ts-ignore
-          plugin.generateFunctionsInServiceSdk();
+          destPath.map((target) => {
+            writeFile(`${target}/${path}`, data);
+            // @ts-ignore
+            plugin.generateFunctionsInServiceGateway();
+            // @ts-ignore
+            plugin.generateFunctionsInServiceSdk();
+          });
         }
       })
       .on("change", async (path) => {
@@ -123,34 +128,87 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         // const srcPath=
         // const instanceName = `${path}`.split("/")[0];
         const instanceName = "sdk";
-        let destPath = this.getInstanceInfo(instanceName).destPath;
-        // let srcPath = this.getInstanceInfo(instanceName).srcPath;
+        let destPath = [
+          this.getSDKInstanceInfo(instanceName).destPath,
+          this.getGatewayInstanceInfo("gateway").destPath,
+        ];
+        // let srcPath = this.getSDKInstanceInfo(instanceName).srcPath;
         let srcPath = path1.join(process.cwd(), path);
         if (await fileExists(srcPath)) {
           const data = fs.readFileSync(srcPath, {
             encoding: "utf8",
           });
-          writeFile(`${destPath}/${path}`, data);
-          // this.updateServices();
-          // this.app.generateFunctionsInServiceSdk();
-          // @ts-ignore
-          plugin.generateFunctionsInServiceSdk();
+          destPath.map((target) => {
+            writeFile(`${target}/${path}`, data);
+            // @ts-ignore
+            plugin.generateFunctionsInServiceGateway();
+            // @ts-ignore
+            plugin.generateFunctionsInServiceSdk();
+          });
+          // // @ts-ignore
+          // plugin.generateFunctionsInServiceSdk();
         }
       })
       .on("unlink", async (path) => {
         log(`File ${path} has been removed`);
         // const instanceName = `${path}`.split("/")[0];
         const instanceName = "sdk";
-        let destPath = this.getInstanceInfo(instanceName).destPath;
-        if (await fileExists(destPath)) {
-          unlinkSync(`${destPath}/${path}`);
-          // this.updateServices();
-          // this.app.generateFunctionsInServiceSdk();
-          // @ts-ignore
-          plugin.generateFunctionsInServiceSdk();
-        }
+        let destPath = [
+          this.getSDKInstanceInfo(instanceName).destPath,
+          this.getGatewayInstanceInfo("gateway").destPath,
+        ];
+        destPath.map(async (target) => {
+          if (await fileExists(target)) {
+            unlinkSync(`${target}/${path}`);
+
+            // this.updateServices();
+            // this.app.generateFunctionsInServiceSdk();
+            // @ts-ignore
+            plugin.generateFunctionsInServiceGateway();
+            // @ts-ignore
+            plugin.generateFunctionsInServiceSdk();
+          }
+        });
       });
     return [];
+  }
+
+  getGatewayInstanceInfo(instanceName: string) {
+    const plugin: IPlugin | null = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-service-gateway"
+    );
+
+    const instances: Array<IInstance> | undefined = plugin?.getInstances();
+
+    if (instances)
+      for (const instance of instances) {
+        if (instanceName == instance.getName()) {
+          let destPath = this.getGatewayGeneratedPath(instanceName);
+          let srcPath = path1.join(
+            process.cwd(),
+            instance.getInstallationPath()
+          );
+          return { destPath, srcPath };
+        }
+      }
+    return {
+      err: `No instance with ${instanceName} found.`,
+      srcPath: "",
+      destPath: "",
+    };
+  }
+
+  getGatewayGeneratedPath(name: string) {
+    return path1.join(
+      process.cwd(),
+      ".glue",
+      "__generated__",
+      "seal",
+      "services",
+      name,
+      "src",
+      name
+    );
   }
 
   getInstances() {
@@ -214,7 +272,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
   }
 
-  getInstanceInfo(instanceName: string) {
+  getSDKInstanceInfo(instanceName: string) {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-sdk"
     );

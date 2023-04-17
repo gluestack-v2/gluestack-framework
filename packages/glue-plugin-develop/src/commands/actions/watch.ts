@@ -20,11 +20,13 @@ export default async (app: AppCLI): Promise<void> => {
         });
         watcher.on("change", async function (path: string) {
           // this.app;
-          if (!instance.getInstallationPath().includes("__generated__")) {
-            warning("Building ", plugin.getName());
-            let res = await plugin.build();
-            console.log(res);
-          }
+          // if (!instance.getInstallationPath().includes("__generated__")) {
+          //   warning("Building ", plugin.getName());
+          //   if (plugin.build) {
+          //     let res = await plugin.build();
+          //     console.log(res);
+          //   }
+          // }
         });
         // watcher.
         // .on("addDir", function (path: string) {
