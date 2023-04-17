@@ -160,7 +160,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       );
 
       let instanceName = instance.getName();
-      const targetPath = join(packagesPath, instanceName, "src");
+      const targetPath = join(packagesPath, instanceName, "src", instanceName);
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       // await this.app.write(sourcePath, name);
       await copyFolder(sourcePath, targetPath);
