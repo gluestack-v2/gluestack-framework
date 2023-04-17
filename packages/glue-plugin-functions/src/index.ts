@@ -1,7 +1,7 @@
 // @ts-ignore
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
-
+import chokidar from "chokidar";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
 
@@ -133,17 +133,24 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
   async build(): Promise<void> {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-functions"
-    );
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No functions plugin found, skipping build");
-      return;
-    }
+    return new Promise(async (resolve: any, reject) => {
+      try {
+        const plugin: IPlugin | null = this.app.getPluginByName(
+          "@gluestack-v2/glue-plugin-functions"
+        );
+        if (!plugin || plugin.getInstances().length <= 0) {
+          console.log("> No functions plugin found, skipping build");
+          return;
+        }
 
-    // const instances: Array<IInstance> = plugin.getInstances();
-    this.generateFunctionsInServiceGateway();
-    this.generateFunctionsInServiceSdk();
+        // const instances: Array<IInstance> = plugin.getInstances();
+        this.generateFunctionsInServiceGateway();
+        this.generateFunctionsInServiceSdk();
+        resolve("Build Successful");
+      } catch (err) {
+        reject(err);
+      }
+    });
 
     // Adding packages in all the seal services
     // const generatedServicesPath = path.join(

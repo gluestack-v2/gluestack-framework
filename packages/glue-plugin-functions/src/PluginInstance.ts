@@ -1,5 +1,5 @@
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-
+import chokidar from "chokidar";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance";
@@ -48,7 +48,40 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return this.installationPath;
   }
 
+  // watch(): string[] {
+  //   return ["."];
+  // }
   watch(): string[] {
-    return ["."];
+    console.log("watching", this.app);
+    // let buildInstance = this.app.build();
+    try {
+      var watcher = chokidar.watch(this.getInstallationPath(), {
+        ignored: /[\/\\]\./,
+        persistent: true,
+      });
+      watcher.on("all", function (path: string) {
+        // this.app;
+      });
+      // .on("addDir", function (path: string) {
+      //   console.log("Directory", path, "has been added");
+      // })
+      // .on("change", function (path: string) {
+      //   console.log("Fiasfasfasle", path, "has been changed");
+      // })
+      // .on("unlink", function (path: string) {
+      //   console.log("File", path, "has been removed");
+      // })
+      // .on("unlinkDir", function (path: string) {
+      //   console.log("Directory", path, "has been removed");
+      // })
+      // .on("error", function (error) {
+      //   console.error("Error happened", error);
+      // }
+      // );
+    } catch (err) {
+      console.log("> watcher error:", err);
+    }
+
+    return [];
   }
 }
