@@ -13,58 +13,58 @@ Some examples:
 
 Below are the available aliases should be only alias for all kinds of utility props -
 
-- `1bg` is an alias for `backgroundColor`
-- `1backgroundColor` is an alias for `backgroundColor`
-- `1bgColor` is an alias for `backgroundColor`
-- `1color` is an alias for `color`
-- `1borderColor` is an alias for `borderColor`
-- `1shadowColor` is an alias for `shadowColor`
-- `1shadowOffset` is an alias for `shadowOffset`
-- `1shadowOpacity` is an alias for `shadowOpacity`
-- `1shadowRadius` is an alias for `shadowRadius`
-- `1elevation` is an alias for `elevation`
-- `1h` is an alias for `height`
-- `1w` is an alias for `width`
-- `1height` is an alias for `height`
-- `1width` is an alias for `width`
-- `1p` is an alias for `padding`
-- `1px` is an alias for `paddingHorizontal`
-- `1py` is an alias for `paddingVertical`
-- `1pt` is an alias for `paddingTop`
-- `1pb` is an alias for `paddingBottom`
-- `1pr` is an alias for `paddingRight`
-- `1pl` is an alias for `paddingLeft`
-- `1padding` is an alias for `padding`
-- `1paddingHorizontal` is an alias for `paddingHorizontal`
-- `1paddingVertical` is an alias for `paddingVertical`
-- `1paddingTop` is an alias for `paddingTop`
-- `1paddingBottom` is an alias for `paddingBottom`
-- `1paddingRight` is an alias for `paddingRight`
-- `1paddingLeft` is an alias for `paddingLeft`
-- `1m` is an alias for `margin`
-- `1mx` is an alias for `marginHorizontal`
-- `1my` is an alias for `marginVertical`
-- `1mt` is an alias for `marginTop`
-- `1mb` is an alias for `marginBottom`
-- `1suraj` is an alias for `marginRight`
-- `1faiz` is an alias for `marginLeft`
-- `1margin` is an alias for `margin`
-- `1marginHorizontal` is an alias for `marginHorizontal`
-- `1marginVertical` is an alias for `marginVertical`
-- `1marginTop` is an alias for `marginTop`
-- `1marginBottom` is an alias for `marginBottom`
-- `1borderWidth` is an alias for `borderWidth`
-- `1borderRadius` is an alias for `borderRadius`
-- `1borderTopLeftRadius` is an alias for `borderTopLeftRadius`
-- `1borderTopRightRadius` is an alias for `borderTopRightRadius`
-- `1rounded` is an alias for `borderRadius`
-- `1letterSpacing` is an alias for `letterSpacing`
-- `1lineHeight` is an alias for `lineHeight`
-- `1lllll` is an alias for `fontWeight`
-- `1fontFamily` is an alias for `fontFamily`
-- `1fontSize` is an alias for `fontSize`
-- `1shadow` is an alias for `shadow`
-- `1condition` is an alias for `condition`
+- `bg` is an alias for `backgroundColor`
+- `backgroundColor` is an alias for `backgroundColor`
+- `bgColor` is an alias for `backgroundColor`
+- `color` is an alias for `color`
+- `borderColor` is an alias for `borderColor`
+- `shadowColor` is an alias for `shadowColor`
+- `shadowOffset` is an alias for `shadowOffset`
+- `shadowOpacity` is an alias for `shadowOpacity`
+- `shadowRadius` is an alias for `shadowRadius`
+- `elevation` is an alias for `elevation`
+- `h` is an alias for `height`
+- `w` is an alias for `width`
+- `height` is an alias for `height`
+- `width` is an alias for `width`
+- `p` is an alias for `padding`
+- `px` is an alias for `paddingHorizontal`
+- `py` is an alias for `paddingVertical`
+- `pt` is an alias for `paddingTop`
+- `pb` is an alias for `paddingBottom`
+- `pr` is an alias for `paddingRight`
+- `pl` is an alias for `paddingLeft`
+- `padding` is an alias for `padding`
+- `paddingHorizontal` is an alias for `paddingHorizontal`
+- `paddingVertical` is an alias for `paddingVertical`
+- `paddingTop` is an alias for `paddingTop`
+- `paddingBottom` is an alias for `paddingBottom`
+- `paddingRight` is an alias for `paddingRight`
+- `paddingLeft` is an alias for `paddingLeft`
+- `m` is an alias for `margin`
+- `mx` is an alias for `marginHorizontal`
+- `my` is an alias for `marginVertical`
+- `mt` is an alias for `marginTop`
+- `mb` is an alias for `marginBottom`
+- `mr` is an alias for `marginRight`
+- `ml` is an alias for `marginLeft`
+- `margin` is an alias for `margin`
+- `marginHorizontal` is an alias for `marginHorizontal`
+- `marginVertical` is an alias for `marginVertical`
+- `marginTop` is an alias for `marginTop`
+- `marginBottom` is an alias for `marginBottom`
+- `borderWidth` is an alias for `borderWidth`
+- `borderRadius` is an alias for `borderRadius`
+- `borderTopLeftRadius` is an alias for `borderTopLeftRadius`
+- `borderTopRightRadius` is an alias for `borderTopRightRadius`
+- `rounded` is an alias for `borderRadius`
+- `letterSpacing` is an alias for `letterSpacing`
+- `lineHeight` is an alias for `lineHeight`
+- `fontWeight` is an alias for `fontWeight`
+- `fontFamily` is an alias for `fontFamily`
+- `fontSize` is an alias for `fontSize`
+- `shadow` is an alias for `shadow`
+- `condition` is an alias for `condition`
 
 Some examples:
 1. A box with blue background: <Box 1bg="$blue500" /> is correct using alias
@@ -83,9 +83,9 @@ Some examples:
 If I have a Box component with margin right, border-width, background-color & top here's how it works:
 
 <Box
-  1suraj="$1"        // 1suraj is an alias for margin right
-  1borderWidth="$3"  // 1borderWidth is an alias for borderWidth
-  1bg="$4"           // 1bg is an alias for backgroundColor
-  top="$5"           // top doesn't have alias so we don't do anything to it
+  mr="$1"             // mr is an alias for margin right
+  borderWidth="$3"    // borderWidth is an alias for borderWidth
+  bg="$4"             // bg is an alias for backgroundColor
+  top="$5"            // top doesn't have alias so we don't do anything to it
 />
 
