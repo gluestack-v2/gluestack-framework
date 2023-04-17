@@ -1,6 +1,7 @@
 // @ts-ignore
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
+import chokidar from "chokidar";
 
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
@@ -11,7 +12,7 @@ import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/inte
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 
 import path, { join } from "path";
-import fs from "fs";
+
 import copyFile from "./helpers/copy-file";
 import writeFile from "./helpers/write-file";
 import { reWriteFile } from "./helpers/rewrite-file";
@@ -136,6 +137,53 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     console.error(sealAddService.stderr.toString());
   }
 
+  // async watchFolders(src: any, dest: any) {
+  //   chokidar.watch(".").on("all", (event, path) => {
+  //     console.log(event, path);
+  //   });
+  //   // const watcher = chokidar.watch("file, dir, glob, or array", {
+  //   //   ignored: /(^|[\/\\])\../, // ignore dotfiles
+  //   //   persistent: true,
+  //   // });
+
+  //   // // Something to use when events are received.
+  //   // const log = console.log.bind(console);
+  //   // // Add event listeners.
+  //   // watcher
+  //   //   .on("add", (path) => log(`File ${path} has been added`))
+  //   //   .on("change", (path) => log(`File ${path} has been changed`))
+  //   //   .on("unlink", (path) => log(`File ${path} has been removed`));
+
+  //   // // More possible events.
+  //   // watcher
+  //   //   .on("addDir", (path) => log(`Directory ${path} has been added`))
+  //   //   .on("unlinkDir", (path) => log(`Directory ${path} has been removed`))
+  //   //   .on("error", (error) => log(`Watcher error: ${error}`))
+  //   //   .on("ready", () => log("Initial scan complete. Ready for changes"))
+  //   //   .on("raw", (event, path, details) => {
+  //   //     // internal
+  //   //     log("Raw event info:", event, path, details);
+  //   //   });
+  // }
+
+  getGeneratedPath(name: any) {
+    const generatedPkgPath = path.join(
+      process.cwd(),
+      ".glue",
+      "__generated__",
+      "packages"
+    );
+    return path.join(
+      process.cwd(),
+      ".glue",
+      "__generated__",
+      "seal",
+      "services",
+      name,
+      "src"
+    );
+  }
+
   async build(): Promise<void> {
     // let instanceMap: any = {};
     // this.app.getPlugins().map((p) =>
@@ -185,15 +233,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         "__generated__",
         "packages"
       );
-      const copyPkgPath = path.join(
-        process.cwd(),
-        ".glue",
-        "__generated__",
-        "seal",
-        "services",
-        name,
-        "src"
-      );
+      const copyPkgPath = this.getGeneratedPath(name);
 
       // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
       //   for (const sdk of instanceMap?.[

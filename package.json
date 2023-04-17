@@ -37,10 +37,10 @@
   },
   "workspaces": [
     "packages/*",
-    "website",
     "functions",
     ".glue/__generated__/packages",
-    ".glue/__generated__/seal/services/servicegateway/src/servicegateway",
+    "website",
+    ".glue/__generated__/seal/services/gateway/src/gateway",
     ".glue/__generated__/packages/sdk/src/sdk"
   ],
   "dependencies": {
