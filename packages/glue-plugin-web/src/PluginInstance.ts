@@ -43,16 +43,12 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   watch(): any {
-    const watcher = chokidar.watch(this.getInstances(), {
-      ignored: [/(^|[\/\\])\../, "**/node_modules"], // ignore dotfiles
-      persistent: true,
-    });
-    const log = console.log.bind(console);
-    // Add event listeners.
+    this.app.watch(process.cwd(), this.getInstances(), async (event, path) => {
+      const log = console.log.bind(console);
+      // Add event listeners.
 
-    watcher
-      .on("add", async (path) => {
-        log(`File ${path} has been added`);
+      if (event === "add") {
+        // log(`File ${path} has been added`);
         const instanceName = `${path}`.split("/")[0];
         let destPath = this.getInstanceInfo(instanceName).destPath;
         let srcPath = path1.join(process.cwd(), path);
@@ -62,8 +58,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           });
           writeFile(`${destPath}/${path}`, data);
         }
-      })
-      .on("change", async (path) => {
+      }
+      if (event === "change") {
         log(`File ${path} has been changed`);
         // const srcPath=
         const instanceName = `${path}`.split("/")[0];
@@ -76,15 +72,16 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           });
           writeFile(`${destPath}/${path}`, data);
         }
-      })
-      .on("unlink", async (path) => {
+      }
+      if (event === "unlink") {
         log(`File ${path} has been removed`);
         const instanceName = `${path}`.split("/")[0];
         let destPath = this.getInstanceInfo(instanceName).destPath;
         if (await fileExists(destPath)) {
           unlinkSync(`${destPath}/${path}`);
         }
-      });
+      }
+    });
     return [];
   }
 

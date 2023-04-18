@@ -1,7 +1,8 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
-import { copyFolder } from '../file';
+import { copyFolder, fileExists } from '../file';
+import fs from 'fs';
 import { injectPluginStore } from '../getStorePath';
 import {
 	getTopToBottomPluginInstanceTree,
@@ -18,6 +19,7 @@ import { IWatchCallback } from '../../types/app/interface/IWatcher';
 import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
+import { join } from 'path';
 
 type PluginConstructor = new (
 	app: AppCLI,
@@ -218,6 +220,25 @@ export default class AppCLI {
 	async initLocalCommands() {
 		for (const command of commands()) {
 			this.addCommand(command);
+		}
+	}
+
+	async updateServices() {
+		const packagesPath = join(
+			process.cwd(),
+			'./.glue/__generated__/packages'
+		);
+		const servicesPath = join(
+			process.cwd(),
+			'./.glue/__generated__/seal/services'
+		);
+		const paths = fs.readdirSync(servicesPath);
+
+		for (const path of paths) {
+			let servicePath = join(servicesPath, path, '/src');
+			if (await fileExists(servicePath)) {
+				await copyFolder(packagesPath, servicePath, 4);
+			}
 		}
 	}
 }

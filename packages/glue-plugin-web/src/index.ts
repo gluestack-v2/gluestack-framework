@@ -1,7 +1,6 @@
 // @ts-ignore
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
-import chokidar from "chokidar";
 
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
@@ -227,12 +226,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     for await (const instance of instances) {
       const source: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
-      const generatedPkgPath = path.join(
-        process.cwd(),
-        ".glue",
-        "__generated__",
-        "packages"
-      );
       const copyPkgPath = this.getGeneratedPath(name);
 
       // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
@@ -247,10 +240,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         rm(path.join(copyPkgPath));
       }
 
-      await copyFolder(path.join(generatedPkgPath), path.join(copyPkgPath), 7);
-
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       await this.app.write(source, name);
+
+      await this.app.updateServices();
 
       /**
        * @TODO:
