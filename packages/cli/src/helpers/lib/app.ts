@@ -1,7 +1,7 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
-import { copyFolder, fileExists } from '../file';
+import { copyFolder, fileExists, rm } from '../file';
 import fs from 'fs';
 import { injectPluginStore } from '../getStorePath';
 import {
@@ -237,6 +237,9 @@ export default class AppCLI {
 		for (const path of paths) {
 			let servicePath = join(servicesPath, path, '/src');
 			if (await fileExists(servicePath)) {
+				if (await fileExists(join(servicePath))) {
+					await rm(join(servicePath, 'packages'));
+				}
 				await copyFolder(packagesPath, servicePath, 4);
 			}
 		}

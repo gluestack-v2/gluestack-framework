@@ -90,20 +90,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   //   return [];}
 
   watch(): any {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-functions"
-    );
-    const watcher = chokidar.watch(this.getInstances(), {
-      ignored: [/(^|[\/\\])\../, "**/node_modules"], // ignore dotfiles
-      persistent: true,
-    });
-    const log = console.log.bind(console);
-    // Add event listeners.
-
-    watcher
-      .on("add", async (path) => {
-        log(`File ${path} has been added`);
+    this.app.watch(process.cwd(), this.getInstances(), async (event, path) => {
+      const plugin: IPlugin | null = this.app.getPluginByName(
+        "@gluestack-v2/glue-plugin-functions"
+      );
+      const log = console.log.bind(console);
+      // Add event listeners.
+      if (event === "add") {
         // const instanceName = `${path}`.split("/")[0];
+        // TODO: Hardcoded instance name
         const instanceName = "sdk";
         let destPath = [
           this.getSDKInstanceInfo(instanceName).destPath,
@@ -122,8 +117,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
             plugin.generateFunctionsInServiceSdk();
           });
         }
-      })
-      .on("change", async (path) => {
+      }
+      if (event === "change") {
         log(`File ${path} has been changed`);
         // const srcPath=
         // const instanceName = `${path}`.split("/")[0];
@@ -148,8 +143,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           // // @ts-ignore
           // plugin.generateFunctionsInServiceSdk();
         }
-      })
-      .on("unlink", async (path) => {
+      }
+      if (event === "unlink") {
         log(`File ${path} has been removed`);
         // const instanceName = `${path}`.split("/")[0];
         const instanceName = "sdk";
@@ -158,10 +153,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           this.getGatewayInstanceInfo("gateway").destPath,
         ];
         destPath.map(async (target) => {
-          if (await fileExists(target)) {
+          if (await fileExists(`${target}/${path}`)) {
             unlinkSync(`${target}/${path}`);
 
-            // this.updateServices();
             // this.app.generateFunctionsInServiceSdk();
             // @ts-ignore
             plugin.generateFunctionsInServiceGateway();
@@ -169,7 +163,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
             plugin.generateFunctionsInServiceSdk();
           }
         });
-      });
+      }
+    });
     return [];
   }
 
@@ -228,36 +223,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         watchPaths.push(instance.getInstallationPath());
       }
     return watchPaths;
-  }
-
-  async updateServices() {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-sdk"
-    );
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No web plugin found, skipping build...");
-      return;
-    }
-
-    const instances: Array<IInstance> = plugin.getInstances();
-    for await (const instance of instances) {
-      const packagesPath = path1.join(
-        process.cwd(),
-        "./.glue/__generated__/packages"
-      );
-      const servicesPath = path1.join(
-        process.cwd(),
-        "./.glue/__generated__/seal/services"
-      );
-      const paths = fs.readdirSync(servicesPath);
-
-      for (const path of paths) {
-        let servicePath = path1.join(servicesPath, path, "/src");
-        if (await fileExists(servicePath)) {
-          await copyFolder(packagesPath, servicePath, 4);
-        }
-      }
-    }
   }
 
   getGeneratedPath(name: any) {
