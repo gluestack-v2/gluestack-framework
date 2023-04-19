@@ -1,4 +1,4 @@
-- name: postgres_madhav
+- name: DB_NAME_TEMPLATE_STRING
   kind: postgres
   configuration:
     connection_info:

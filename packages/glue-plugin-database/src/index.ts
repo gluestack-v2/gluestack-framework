@@ -87,26 +87,57 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       // Create the .env file content
       const envContent = `ADMIN_SECRET_KEY=${answers.ADMIN_SECRET_KEY}
-      POSTGRES_USER=${answers.POSTGRES_USER}
-      POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
-      POSTGRES_DB=${answers.POSTGRES_DB}
-      DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
+    POSTGRES_USER=${answers.POSTGRES_USER}
+    POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
+    POSTGRES_DB=${answers.POSTGRES_DB}
+    DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
 
-      console.log(path.join(instance.getInstallationPath(), ".env"));
-      // Write the .env file
+      // Write the .env file at database root
       fs.writeFileSync(
-        path.join(instance.getInstallationPath(), ".env"),
+        join(instance.getInstallationPath(), ".env"),
         envContent
       );
+
+      const graphqlEnvContent = `HASURA_GRAPHQL_ADMIN_SECRET=${answers.ADMIN_SECRET_KEY}`;
+
+      // Write the .env file at graphql root
+      fs.writeFileSync(
+        join(instance.getInstallationPath(), "graphql/.env"),
+        graphqlEnvContent
+      );
+
+      //Change DB name in metadata/databases/databases.yaml file
+      let databaseFileContent = fs.readFileSync(
+        join(
+          instance.getInstallationPath(),
+          "graphql/metadata/databases/databases.yaml"
+        ),
+        "utf-8"
+      );
+
+      //Change DB name in metadata/databases/databases.yaml file
+      databaseFileContent = databaseFileContent.replace(
+        "DB_NAME_TEMPLATE_STRING",
+        answers.POSTGRES_DB
+      );
+
+      fs.writeFileSync(
+        join(
+          instance.getInstallationPath(),
+          "graphql/metadata/databases/databases.yaml"
+        ),
+        databaseFileContent
+      );
+
+      // Create a database folder in migrations
+      fs.mkdirSync(
+        join(
+          instance.getInstallationPath(),
+          "graphql/migrations",
+          answers.POSTGRES_DB
+        )
+      );
     })();
-
-    // // update package.json'S name index with the new instance name
-    // const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-    // await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
-
-    // // update root package.json's workspaces with the new instance name
-    // const rootPackage: string = `${process.cwd()}/package.json`;
-    // await Workspaces.append(rootPackage, instance.getInstallationPath());
   }
 
   createInstance(
@@ -275,7 +306,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       };
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
 
-      this.sealInit(SEAL_SERVICES_PATH, name);
+      // this.sealInit(SEAL_SERVICES_PATH, name);
     }
   }
 }
