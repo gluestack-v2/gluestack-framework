@@ -14,6 +14,7 @@ import buildCommand from "./commands/build";
 import watchCommand from "./commands/watch";
 import testCommand from "./commands/test";
 import upCommand from "./commands/up";
+import removeCommand from "./commands/remove";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -35,6 +36,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app.addCommand((program: ICommand) => watchCommand(program, this.app));
     this.app.addCommand((program: ICommand) => upCommand(program, this.app));
     this.app.addCommand((program: ICommand) => testCommand(program, this.app));
+    this.app.addCommand((program: ICommand) =>
+      removeCommand(program, this.app)
+    );
   }
 
   destroy() {
