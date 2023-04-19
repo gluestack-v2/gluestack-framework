@@ -271,40 +271,26 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
        * 2. seal.service.yaml, dockerfile & package.json movement
        *    into .glue/seal/services/<instance-name>/src
        */
-      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
-      const destination: string = join(
-        process.cwd(),
-        SEAL_SERVICES_PATH,
-        name,
-        "src"
-      );
-
-      // move seal.service.yaml
-      // await copyFile(
-      //   instance.getSealServicefile(),
-      //   join(destination, "seal.service.yaml")
+      // const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
+      // const destination: string = join(
+      //   process.cwd(),
+      //   SEAL_SERVICES_PATH,
+      //   name,
+      //   "src"
       // );
 
-      // // move dockerfile, if exists
-      // if (instance.getDockerfile) {
-      //   await copyFile(
-      //     instance?.getDockerfile(),
-      //     join(destination, "Dockerfile")
-      //   );
-      // }
-
-      // add package.json with workspaces
-      const packageFile: string = join(destination, "package.json");
-      const packageContent: any = {
-        name: name,
-        private: true,
-        workspaces: [name, "packages/**/src"],
-        scripts: {
-          "install-all": "npm install --workspaces --if-present",
-          dev: "npm run dev --workspace @project/" + name,
-        },
-      };
-      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+      // // add package.json with workspaces
+      // const packageFile: string = join(destination, "package.json");
+      // const packageContent: any = {
+      //   name: name,
+      //   private: true,
+      //   workspaces: [name, "packages/**/src"],
+      //   scripts: {
+      //     "install-all": "npm install --workspaces --if-present",
+      //     dev: "npm run dev --workspace @project/" + name,
+      //   },
+      // };
+      // await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
 
       // this.sealInit(SEAL_SERVICES_PATH, name);
     }
