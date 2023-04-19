@@ -234,7 +234,7 @@ export default class AppCLI {
 		);
 		const paths = fs.readdirSync(servicesPath);
 
-		for (const path of paths) {
+		for await (const path of paths) {
 			let servicePath = join(servicesPath, path, '/src');
 			if (await fileExists(servicePath)) {
 				if (await fileExists(join(servicePath))) {

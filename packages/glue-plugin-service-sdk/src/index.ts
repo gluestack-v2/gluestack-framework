@@ -126,7 +126,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateSDK(instancePath: any) {
     const instances = this.getInstances();
-    for (const instance of instances) {
+    for await (const instance of instances) {
       const GLUE_GENERATED_PKG_PATH: string =
         `.glue/__generated__/packages/${instance.getName()}/src` as const;
       const functionsPath = path.resolve(process.cwd(), instancePath);

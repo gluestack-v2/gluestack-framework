@@ -132,7 +132,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateService(instancePath: any) {
     const instances = this.getInstances();
-    for (const instance of instances) {
+    for await (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
       const installationPath = instance.getInstallationPath();

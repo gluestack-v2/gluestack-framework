@@ -17,7 +17,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   isOfTypeInstance: boolean = false;
   gluePluginStore: IGlueStorePlugin;
   installationPath: string;
-
+  watchAddedFileMap: Map<string, boolean> = new Map();
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -42,48 +42,76 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  watch(): string[] {
-    this.app.watch(process.cwd(), this.getInstances(), async (event, path) => {
-      const log = console.log.bind(console);
-      // Add event listeners.
-
-      if (event === "add") {
-        const instanceName = `${path}`.split("/")[0];
-        let destPath = this.getInstanceInfo(instanceName).destPath;
-        let srcPath = path1.join(process.cwd(), path);
-        if (await fileExists(srcPath)) {
-          const data = fs.readFileSync(srcPath, {
-            encoding: "utf8",
-          });
-          writeFile(`${destPath}/${path}`, data);
-          await this.app.updateServices();
-        }
-      }
-      if (event === "change") {
-        log(`File ${path} has been changed`);
-        // const srcPath=
-        const instanceName = `${path}`.split("/")[0];
-        let destPath = this.getInstanceInfo(instanceName).destPath;
-        // let srcPath = this.getInstanceInfo(instanceName).srcPath;
-        let srcPath = path1.join(process.cwd(), path);
-        if (await fileExists(srcPath)) {
-          const data = fs.readFileSync(srcPath, {
-            encoding: "utf8",
-          });
-          writeFile(`${destPath}/${path}`, data);
-          await this.app.updateServices();
-        }
-      }
-      if (event === "unlink") {
-        log(`File ${path} has been removed`);
-        const instanceName = `${path}`.split("/")[0];
-        let destPath = this.getInstanceInfo(instanceName).destPath;
-        if (await fileExists(destPath)) {
-          unlinkSync(`${destPath}/${path}`);
-          await this.app.updateServices();
-        }
+  getInstallationPathFilesRecursively(dir: string): string[] {
+    const files: string[] = [];
+    const list = fs.readdirSync(dir);
+    list.forEach((file) => {
+      file = path1.join(dir, file);
+      const stat = fs.statSync(file);
+      if (stat && stat.isDirectory()) {
+        files.push(...this.getInstallationPathFilesRecursively(file));
+      } else {
+        files.push(file);
       }
     });
+    return files;
+  }
+
+  watch(): string[] {
+    this.app.watch(
+      process.cwd(),
+      this.getInstancesWatchPaths(),
+      async (event, path) => {
+        const log = console.log.bind(console);
+        // Add event listeners.
+        if (event === "add") {
+          const instanceName = `${path}`.split("/")[0];
+          let destPath = this.getInstanceInfo(instanceName).destPath;
+          let srcPath = path1.join(process.cwd(), path);
+          if (!this.watchAddedFileMap.get(path)) {
+            let allFiles = this.getInstallationPathFilesRecursively(
+              this.getInstallationPath()
+            );
+            for (const file of allFiles) {
+              this.watchAddedFileMap.set(file, true);
+            }
+            if (await fileExists(srcPath)) {
+              const data = fs.readFileSync(srcPath, {
+                encoding: "utf8",
+              });
+              writeFile(`${destPath}/${path}`, data);
+              await this.app.updateServices();
+            }
+          } else {
+            this.watchAddedFileMap.set(srcPath, true);
+          }
+        }
+        if (event === "change") {
+          log(`File ${path} has been changed`);
+          // const srcPath=
+          const instanceName = `${path}`.split("/")[0];
+          let destPath = this.getInstanceInfo(instanceName).destPath;
+          // let srcPath = this.getInstanceInfo(instanceName).srcPath;
+          let srcPath = path1.join(process.cwd(), path);
+          if (await fileExists(srcPath)) {
+            const data = fs.readFileSync(srcPath, {
+              encoding: "utf8",
+            });
+            writeFile(`${destPath}/${path}`, data);
+            await this.app.updateServices();
+          }
+        }
+        if (event === "unlink") {
+          log(`File ${path} has been removed`);
+          const instanceName = `${path}`.split("/")[0];
+          let destPath = this.getInstanceInfo(instanceName).destPath;
+          if (await fileExists(destPath)) {
+            unlinkSync(`${destPath}/${path}`);
+            await this.app.updateServices();
+          }
+        }
+      }
+    );
     return [];
   }
 
@@ -106,7 +134,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
   }
 
-  getInstances() {
+  getInstancesWatchPaths() {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-components"
     );
