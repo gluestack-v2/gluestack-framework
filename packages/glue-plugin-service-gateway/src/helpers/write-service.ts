@@ -12,6 +12,29 @@ import moleculerFunctionsServiceTemplateFunc from "./functions-service-template"
 function filePathExtension(filePath: string) {
   return filePath.split(".").pop() ?? "";
 }
+
+function getNestedFilePaths(dirPath: any, fileList: any = []) {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((file) => {
+    const filePath = path.join(dirPath, file);
+    const stats = fs.statSync(filePath);
+
+    if (stats.isDirectory()) {
+      // If the file is a directory, recursively call the function
+      // to get nested file paths
+      getNestedFilePaths(filePath, fileList);
+    } else {
+      // If the file is a regular file, add its path to the fileList
+      fileList.push(filePath);
+    }
+  });
+
+  return fileList;
+}
+
+// Usage: Pass the directory path as an argument to the function
+
 const writeService = (installationPath: string) => {
   const moleculerFunctionsServiceTemplate =
     moleculerFunctionsServiceTemplateFunc();
@@ -22,69 +45,51 @@ const writeService = (installationPath: string) => {
     "services",
     "functions.service.js"
   );
-
-  // const sdkPath = path.join(__dirname, "..", "packages", "sdk");
-  // const sdkSrcIndex = path.join(sdkPath, "src", "index.ts");
-
-  // const watcher = chokidar.watch(`${functionsPath}/**/*`, {
-  //   ignored: /^\./, // ignore dotfiles
-  //   persistent: true, // keep watching even if there are no changes
-  //   awaitWriteFinish: true,
-  // });
-
-  // watcher.on("all", (event, file) => {
-  //   console.log(`${event} detected on ${file}`);
-
-  // if (event === "change") {
-  // console.log(`Found change in ${file}`);
-
-  const files = fs.readdirSync(functionsPath);
+  const files = getNestedFilePaths(functionsPath);
 
   let sdkFunctions = ``;
   let moleculerActions: any = {};
   let moleculerImportStatements = ``;
 
   files.forEach((functionFile: string, _index: number) => {
-    const filePath = path.join(functionsPath, functionFile);
-    if (!["ts", "tsx", "js", "jsx"].includes(filePathExtension(filePath))) {
+    const filePath = functionFile;
+    if (
+      ["json"].includes(filePathExtension(filePath)) ||
+      filePath.includes("node_modules")
+    ) {
       return;
     }
     const functionName = getFileNameWithoutExtension(filePath);
-    const functionCodeString = fs.readFileSync(filePath, "utf8");
 
-    // const filePathFromFunctions = getPathAfterString(filePath, "functions/");
-    // const moleculerFunctionPath = path.join(
-    //   __dirname,
-    //   moleculerFunctionsPath,
-    //   filePathFromFunctions
-    // );
+    if (fs.existsSync(filePath)) {
+      const functionPath = ("./" + filePath).replace(installationPath, "");
+      const functionCodeString = fs.readFileSync(filePath, "utf8");
+      const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
+      const matches = functionCodeString.match(regex);
+      if (matches && matches[1]) {
+        let params = matches[1].split(/\s*,\s*/);
+        let sdkFunction = writeSDKFunction(functionName, params, functionPath);
+        sdkFunctions += sdkFunction + "\n";
+      } else {
+        console.log(
+          "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
+        );
+      }
 
-    // writeFile(moleculerFunctionPath, functionCodeString);
-    const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
-    const matches = functionCodeString.match(regex);
-    if (matches && matches[1]) {
-      let params = matches[1].split(/\s*,\s*/);
-      let sdkFunction = writeSDKFunction(functionName, params);
-      sdkFunctions += sdkFunction + "\n";
-    } else {
-      console.log(
-        "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
-      );
+      // Create actions object
+      let action: any = {};
+      action.rest = {
+        method: "POST",
+        path: functionPath,
+      };
+      action.handler = functionName + "Handler";
+
+      moleculerActions[functionName] = action;
+
+      // Create Import Statement
+      let functionImportStatement = `const ${functionName}Handler = require("..${functionPath}");`;
+      moleculerImportStatements += functionImportStatement + "\n";
     }
-
-    // Create actions object
-    let action: any = {};
-    action.rest = {
-      method: "POST",
-      path: "/" + functionName,
-    };
-    action.handler = functionName + "Handler";
-
-    moleculerActions[functionName] = action;
-
-    // Create Import Statement
-    let functionImportStatement = `const ${functionName}Handler = require("../functions/${functionName}");`;
-    moleculerImportStatements += functionImportStatement + "\n";
   });
 
   let finalString = moleculerFunctionsServiceTemplate.replace(

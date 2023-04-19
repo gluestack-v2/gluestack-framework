@@ -147,6 +147,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       } else {
         await copyFolder(functionsPath, installationPath, 3);
         writeSDK(installationPath);
+        // @ts-ignore
         await this.app.updateServices();
       }
     }

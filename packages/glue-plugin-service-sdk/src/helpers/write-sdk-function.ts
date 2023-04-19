@@ -1,13 +1,14 @@
 export default function writeSDKFunction(
   functionName: string,
-  paramsArray: Array<string>
+  paramsArray: Array<string>,
+  functionPath: string
 ) {
   let functionString = `
   async ${functionName}(${paramsArray.join(", ")}) {
     try {
       const response = await axios({
         method: "post",
-        url: "http://localhost:3013/api/functions/${functionName}",
+        url: "http://localhost:3003/api${functionPath}",
         data: {${paramsArray.join(",")}},
       });
       return response.data;
