@@ -26,12 +26,5 @@
       "directory": "./functions",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-web": [
-    {
-      "instance": "website",
-      "directory": "./website",
-      "container_store": {}
-    }
   ]
 }

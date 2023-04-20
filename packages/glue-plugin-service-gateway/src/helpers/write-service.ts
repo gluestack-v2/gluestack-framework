@@ -13,6 +13,22 @@ function filePathExtension(filePath: string) {
   return filePath.split(".").pop() ?? "";
 }
 
+function camelCaseArray(arr: any) {
+  // Join array elements with a space
+  const joinedString = arr.join(" ");
+
+  // Split joinedString by space and capitalize each word except the first
+  const words = joinedString.split(" ");
+  for (let i = 1; i < words.length; i++) {
+    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+  }
+
+  // Concatenate capitalized words
+  const camelCaseString = words.join("");
+
+  return camelCaseString;
+}
+
 function getNestedFilePaths(dirPath: any, fileList: any = []) {
   const files = fs.readdirSync(dirPath);
 
@@ -68,15 +84,15 @@ const writeService = (installationPath: string) => {
       const functionCodeString = fs.readFileSync(filePath, "utf8");
       const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
       const matches = functionCodeString.match(regex);
-      if (matches && matches[1]) {
-        let params = matches[1].split(/\s*,\s*/);
-        let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-        sdkFunctions += sdkFunction + "\n";
-      } else {
-        console.log(
-          "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
-        );
-      }
+      // if (matches && matches[1]) {
+      //   let params = matches[1].split(/\s*,\s*/);
+      //   let sdkFunction = writeSDKFunction(functionName, params, functionPath);
+      //   sdkFunctions += sdkFunction + "\n";
+      // } else {
+      //   console.log(
+      //     "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
+      //   );
+      // }
 
       // Create actions object
       let action: any = {};
@@ -84,12 +100,16 @@ const writeService = (installationPath: string) => {
         method: "POST",
         path: functionPath,
       };
-      action.handler = functionName + "Handler";
+      const funcPath = functionPath.split("/");
+      funcPath.splice(0, 2);
+      action.handler = camelCaseArray(funcPath) + "Handler";
 
-      moleculerActions[functionName] = action;
+      moleculerActions[funcPath.join(".")] = action;
 
       // Create Import Statement
-      let functionImportStatement = `const ${functionName}Handler = require("..${functionPath}");`;
+      let functionImportStatement = `const ${camelCaseArray(
+        funcPath
+      )}Handler = require("..${functionPath}");`;
       moleculerImportStatements += functionImportStatement + "\n";
     }
   });
