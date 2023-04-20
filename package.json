@@ -40,6 +40,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-database": "^0.0.1"
+    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
   }
 }

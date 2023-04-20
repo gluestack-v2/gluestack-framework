@@ -7,6 +7,7 @@ import sdkIndexTemplateFunc from "./sdk-template";
 function filePathExtension(filePath: string) {
   return filePath.split(".").pop() ?? "";
 }
+let functionsMap: any = {};
 
 function getNestedFilePaths(dirPath: any, fileList: any = []) {
   const files = fs.readdirSync(dirPath);
@@ -28,19 +29,58 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
   return fileList;
 }
 
+const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
+  const pathArr = path.split("/");
+  // console.log(sdkFunction);
+  let obj = {};
+  let current: any = obj;
+  for (let i = 0; i < pathArr.length - 1; i++) {
+    if (pathArr[i] !== "") {
+      // if (i == pathArr.length - 1) {
+      //   console.log(i, "in if");
+      //   current[pathArr[i]] = sdkFunction;
+      // } else {
+
+      current[pathArr[i]] = {};
+      // }
+      current = current[pathArr[i]];
+    }
+  }
+  current[pathArr[pathArr.length - 1]] =
+    "****" + pathArr[pathArr.length - 1] + "****";
+  functionsMap["****" + pathArr[pathArr.length - 1] + "****"] = sdkFunction;
+
+  return obj;
+};
+
+const deepMerge = (obj1: any, obj2: any) => {
+  let output = { ...obj1 };
+  for (let key in obj2) {
+    if (obj2.hasOwnProperty(key)) {
+      if (
+        typeof obj2[key] === "object" &&
+        obj1.hasOwnProperty(key) &&
+        typeof obj1[key] === "object"
+      ) {
+        output[key] = deepMerge(obj1[key], obj2[key]);
+      } else {
+        output[key] = obj2[key];
+      }
+    }
+  }
+  return output;
+};
+
 const writeSDK = (installationPath: string, functionName: string) => {
-
-  // get plugin by name functions
-  // get all instances
-
+  let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
   const functionsPath = path.join(installationPath, functionName);
   const sdkPath = path.join(installationPath, ".");
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
-  // const files = fs.readdirSync(functionsPath);
+
   const files = getNestedFilePaths(functionsPath);
   let sdkFunctions = ``;
-
+  let finalString = ``;
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
     if (
@@ -50,16 +90,40 @@ const writeSDK = (installationPath: string, functionName: string) => {
       return;
     }
     const functionName = getFileNameWithoutExtension(filePath);
-    const functionPath = filePath.replace(installationPath, "");
+    let functionPath = filePath.replace(installationPath, "");
+    functionPath = functionPath.split(".").slice(0, -1).join(".");
 
     const functionCodeString = fs.readFileSync(filePath, "utf8");
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
+
     if (matches && matches[1]) {
       let params = matches[1].split(/\s*,\s*/);
       let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-      // console.log(sdkFunctions);
+      obj = {
+        ...obj,
+        ...deepMerge(
+          obj,
+          createFunctionFromPath(functionPath, {}, sdkFunction)
+        ),
+      };
+
+      finalString = JSON.stringify(obj).replace(":", "=");
+      finalString = finalString.substring(1, finalString.length - 1);
+
+      // console.log(
+      //   functionName,
+      //   JSON.stringify(obj),
+      //   "****" + functionName + "****",
+      //   functionsMap,
+      //   obj,
+      //   "\n"
+      // );
+      Object.keys(functionsMap).map((key: any) => {
+        finalString = finalString.replace(`"${key}"`, functionsMap[key]);
+      });
+
       sdkFunctions += sdkFunction + "\n";
     } else {
       console.log(
@@ -74,7 +138,7 @@ const writeSDK = (installationPath: string, functionName: string) => {
     sdkSrcIndex,
     sdkIndexTemplate.replace(
       "// **---Functions will be added after this---**",
-      sdkFunctions
+      finalString
     )
   );
 };

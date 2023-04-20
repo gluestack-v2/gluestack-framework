@@ -124,7 +124,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  sealInit(SEAL_SERVICES_PATH: string, name: string) {
+  async sealInit(SEAL_SERVICES_PATH: string, name: string) {
     // seal init and seal service add in the services folder
     const sealInit = spawnSync("sh", [
       "-c",
@@ -204,7 +204,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       };
 
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-      this.sealInit(SEAL_SERVICES_PATH, name);
+      await this.sealInit(SEAL_SERVICES_PATH, name);
     }
   }
 }

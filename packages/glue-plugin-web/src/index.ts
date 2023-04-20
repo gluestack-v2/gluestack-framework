@@ -17,6 +17,7 @@ import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
 import { PluginInstance } from "./PluginInstance";
 import { reWriteFile } from "./helpers/rewrite-file";
+import { rmdir } from "fs/promises";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -90,7 +91,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  sealInit(SEAL_SERVICES_PATH: string, name: string) {
+  async sealInit(SEAL_SERVICES_PATH: string, name: string) {
     // seal init and seal service add in the services folder
     const sealInit = spawnSync("sh", [
       "-c",
@@ -144,11 +145,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const name: string = removeSpecialChars(instance.getName());
       const copyPkgPath = this.getGeneratedPath(name);
 
-      if (await fileExists(join(copyPkgPath))) {
-        console.log("Removing " + join(copyPkgPath));
-
-        rm(join(copyPkgPath));
-      }
+      // if (await fileExists(copyPkgPath)) {
+      //   rm(copyPkgPath);
+      // }
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       await this.app.write(source, name);
@@ -183,7 +182,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
 
-      this.sealInit(SEAL_SERVICES_PATH, name);
+      await this.sealInit(SEAL_SERVICES_PATH, name);
     }
   }
 }
