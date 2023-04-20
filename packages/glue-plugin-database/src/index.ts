@@ -12,10 +12,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 
 import path, { join } from "path";
 import fs from "fs";
-import copyFile from "./helpers/copy-file";
-import writeFile from "./helpers/write-file";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import { removeSpecialChars } from "@gluestack/helpers";
 import fileExists from "./helpers/file-exists";
 import rm from "./helpers/rm";
 import copyFolder from "./helpers/copy-folder";
@@ -66,19 +63,29 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-    (async () => {
       const questions: prompts.PromptObject[] = [
-        { name: "POSTGRES_USER", type: "text", message: "Database user:" },
+        {
+          name: "POSTGRES_USER", type: "text",
+          message: "Database user:",
+          validate: (value: string) => value !== ''
+        },
         {
           name: "POSTGRES_PASSWORD",
           type: "password",
           message: "Database password:",
+          validate: (value: string) => value !== ''
         },
-        { name: "POSTGRES_DB", type: "text", message: "Database name:" },
+        {
+          name: "POSTGRES_DB",
+          type: "text",
+          message: "Database name:",
+          validate: (value: string) => value !== ''
+        },
         {
           name: "ADMIN_SECRET_KEY",
           type: "text",
           message: "Admin Secret Key For Hasura Console:",
+          validate: (value: string) => value !== ''
         },
       ];
 
@@ -137,7 +144,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           answers.POSTGRES_DB
         )
       );
-    })();
   }
 
   createInstance(

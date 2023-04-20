@@ -28,9 +28,13 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
   return fileList;
 }
 
-const writeSDK = (installationPath: string) => {
+const writeSDK = (installationPath: string, functionName: string) => {
+
+  // get plugin by name functions
+  // get all instances
+
   const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = path.join(installationPath, "functions");
+  const functionsPath = path.join(installationPath, functionName);
   const sdkPath = path.join(installationPath, ".");
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
   // const files = fs.readdirSync(functionsPath);

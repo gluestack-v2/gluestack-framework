@@ -35,15 +35,14 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
 
 // Usage: Pass the directory path as an argument to the function
 
-const writeService = (installationPath: string) => {
+const writeService = (installationPath: string, instanceName: string) => {
   const moleculerFunctionsServiceTemplate =
     moleculerFunctionsServiceTemplateFunc();
-  const functionsPath = path.join(installationPath, "functions");
-  const moleculerFunctionsPath = path.join(installationPath, "functions");
+  const functionsPath = path.join(installationPath, instanceName);
   const moleculerFunctionsServicePath = path.join(
     installationPath,
     "services",
-    "functions.service.js"
+    `${instanceName}.service.js`
   );
   const files = getNestedFilePaths(functionsPath);
 

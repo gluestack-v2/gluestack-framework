@@ -1,21 +1,22 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import {
   success,
   warning,
   error,
 } from "@gluestack-v2/framework-cli/build/helpers/print";
+import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import { spawn } from "child_process";
 
-function upSealService(serviceName: string, opts: any) {
+const upSealService = (serviceName: string, opts: any) => {
   let servicePlatform = "local";
 
-  if (Object.keys(opts).length > 0) {
-    if (opts.platform) {
-      servicePlatform = opts.platform;
-    } else {
-      servicePlatform = opts.p;
-    }
-  }
+  // if (Object.keys(opts).length > 0) {
+  //   if (opts.platform) {
+  //     servicePlatform = opts.platform;
+  //   } else {
+  //     servicePlatform = opts.p;
+  //   }
+  // }
+
   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
   const sealUp = spawn("sh", [
     "-c",

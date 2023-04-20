@@ -14,7 +14,8 @@
     "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
     "watch:service-gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
-    "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components"
+    "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
+    "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai"
   },
   "repository": {
     "type": "git",
@@ -38,5 +39,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@gluestack-v2/glue-plugin-database": "^0.0.1"
+  }
 }

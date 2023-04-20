@@ -8,6 +8,7 @@
 .glue/__generated__
 
 # Ignoring others
+.env
 node_modules
 .next
 package-lock.json
@@ -16,3 +17,5 @@ build/
 
 # Internal testing files
 test.js
+openai
+website

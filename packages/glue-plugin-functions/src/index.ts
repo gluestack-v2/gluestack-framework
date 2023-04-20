@@ -1,20 +1,17 @@
+
 // @ts-ignore
 import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
-import chokidar from "chokidar";
+
+import { Workspaces } from "@gluestack/helpers";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
-
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+
+import { PluginInstance } from "./PluginInstance";
 import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import copyFolder from "./helpers/copy-folder";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import path from "path";
-import fs from "fs";
+
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -31,12 +28,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    // this.app.addEventListener("booting.web", (...args: any[]): void => {
-    //   console.log({ message: "booting web event listener", args });
-    //   console.log(this.gluePluginStore.get("message"));
-    //   this.gluePluginStore.set("message", "Hello from function plugin");
-    //   console.log(this.gluePluginStore.get("message"));
-    // });
+    //
   }
 
   destroy() {
@@ -88,6 +80,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   generateFunctionsInServiceGateway() {
     const instances = this.getInstances();
     for (const instance of instances) {
+      const name = instance.getName();
       const installationPath = instance.getInstallationPath();
 
       const plugin = this.app.getPluginByName(
@@ -95,22 +88,23 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       ) as IPlugin;
 
       // @ts-ignore
-      plugin.generateService(installationPath);
+      plugin.generateService(installationPath, name);
     }
   }
 
   generateFunctionsInServiceSdk() {
     const instances = this.getInstances();
     for (const instance of instances) {
+      const name = instance.getName();
       const installationPath = instance.getInstallationPath();
+
       const plugin = this.app.getPluginByName(
         "@gluestack-v2/glue-plugin-service-sdk"
       ) as IPlugin;
-      //@ts-ignore
-      plugin.generateSDK(installationPath);
-    }
 
-    //  Get instance by name and call its generate function in service sdk
+      // @ts-ignore
+      plugin.generateSDK(installationPath, name);
+    }
   }
 
   createInstance(
@@ -132,8 +126,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
+
   async build(): Promise<void> {
-    return new Promise(async (resolve: any, reject) => {
+    return new Promise((resolve: any, reject) => {
       try {
         const plugin: IPlugin | null = this.app.getPluginByName(
           "@gluestack-v2/glue-plugin-functions"
@@ -143,46 +138,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           return;
         }
 
-        // const instances: Array<IInstance> = plugin.getInstances();
         this.generateFunctionsInServiceGateway();
         this.generateFunctionsInServiceSdk();
+
         resolve("Build Successful");
       } catch (err) {
         reject(err);
       }
     });
-
-    // Adding packages in all the seal services
-    // const generatedServicesPath = path.join(
-    //   process.cwd(),
-    //   ".glue",
-    //   "__generated__",
-    //   "seal",
-    //   "services"
-    // );
-    // const generatedServices = fs.readdirSync(generatedServicesPath);
-    // console.log({ generatedServices });
-    // for (const service of generatedServices) {
-    //   if (
-    //     await fileExists(
-    //       path.join(generatedServicesPath, service, "src", "packages")
-    //     )
-    //   ) {
-    //     rm(path.join(generatedServicesPath, service, "src", "packages"));
-    //   }
-
-    //   await copyFolder(
-    //     path.join(process.cwd(), ".glue", "__generated__", "packages"),
-    //     path.join(generatedServicesPath, service, "src"),
-    //     7
-    //   );
-    // }
-
-    // for await (const instance of instances) {
-    //   const target: string = instance.getInstallationPath();
-    //   const name: string = removeSpecialChars(instance.getName());
-
-    //   await this.app.write(target, name);
-    // }
   }
 }
