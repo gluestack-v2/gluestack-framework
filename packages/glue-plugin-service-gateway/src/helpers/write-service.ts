@@ -1,14 +1,10 @@
 import path from "path";
 import fs from "fs";
-
-// const sdkIndexTemplate = require("./templates/sdkIndexTemplate")();
-
 import writeFile from "./write-file";
-import getPathAfterString from "./get-path-after-string";
-import writeSDKFunction from "./write-sdk-function";
 import replaceHandlerNames from "./replace-handler-names";
 import getFileNameWithoutExtension from "./get-file-name-without-ext";
 import moleculerFunctionsServiceTemplateFunc from "./functions-service-template";
+
 function filePathExtension(filePath: string) {
   return filePath.split(".").pop() ?? "";
 }
@@ -83,15 +79,6 @@ const writeService = (installationPath: string, instanceName: string) => {
       const functionCodeString = fs.readFileSync(filePath, "utf8");
       const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
       const matches = functionCodeString.match(regex);
-      // if (matches && matches[1]) {
-      //   let params = matches[1].split(/\s*,\s*/);
-      //   let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-      //   sdkFunctions += sdkFunction + "\n";
-      // } else {
-      //   console.log(
-      //     "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
-      //   );
-      // }
 
       // Create actions object
       let action: any = {};
@@ -125,15 +112,5 @@ const writeService = (installationPath: string, instanceName: string) => {
 
   // Create functions service with all the actions and imports
   writeFile(moleculerFunctionsServicePath, finalString);
-
-  // Create SDK index file with all the functions
-  // createFileWithPath(
-  //   sdkSrcIndex,
-  //   sdkIndexTemplate.replace(
-  //     "// **---Functions will be added after this---**",
-  //     sdkFunctions
-  //   )
-  // );
-  // }
 };
 export default writeService;
