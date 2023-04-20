@@ -62,7 +62,9 @@ const writeService = (installationPath: string) => {
     const functionName = getFileNameWithoutExtension(filePath);
 
     if (fs.existsSync(filePath)) {
-      const functionPath = ("./" + filePath).replace(installationPath, "");
+      let functionPath = ("./" + filePath).replace(installationPath, "");
+      functionPath = functionPath.split(".").slice(0, -1).join(".");
+
       const functionCodeString = fs.readFileSync(filePath, "utf8");
       const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
       const matches = functionCodeString.match(regex);

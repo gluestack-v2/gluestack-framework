@@ -4,17 +4,21 @@ export default function writeSDKFunction(
   functionPath: string
 ) {
   let functionString = `
-  async ${functionName}(${paramsArray.join(", ")}) {
-    try {
-      const response = await axios({
-        method: "post",
-        url: "http://localhost:3003/api${functionPath}",
-        data: {${paramsArray.join(",")}},
-      });
-      return response.data;
-    } catch (err) {
-      return err.message;
-    }
+  (${paramsArray.join(", ")})=>{
+    return new Promise(async (resolve, reject) => {
+      // Your async function code here
+      try {
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:3003/api${functionPath}",
+          data: {${paramsArray.join(",")}},
+        });
+
+        resolve(response.data);
+      } catch (error) {
+        reject(error.message);
+      }
+    });
   }
   `;
   return functionString;
