@@ -71,13 +71,13 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (installationPath: string) => {
+const writeSDK = (installationPath: string, functionName: string) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = path.join(installationPath, "functions");
+  const functionsPath = path.join(installationPath, functionName);
   const sdkPath = path.join(installationPath, ".");
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
-  // const files = fs.readdirSync(functionsPath);
+
   const files = getNestedFilePaths(functionsPath);
   let sdkFunctions = ``;
   let finalString = ``;

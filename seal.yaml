@@ -3,8 +3,8 @@ ingress:
     port: 8080
     options:
       - location: /
-        rewrite_key: /(.*)
-        rewrite_value: /$1
+        rewrite_key: ^/(.*)
+        rewrite_value: /$1 break
         client_max_body_size: 50
         proxy_http_version: 1.1
         proxy_cache_bypass: '$http_upgrade'
@@ -16,27 +16,27 @@ ingress:
         proxy_set_header_x_forwarded_proto: '$scheme'
         proxy_pass: http://website:9000
       - location: /dashboard
-        rewrite_key: /(.*)
-        rewrite_value: /$1
+        rewrite_key: ^/(.*)
+        rewrite_value: /$1 break
         proxy_pass: http://dashboard:9000
   - domain: api.local.gluestack.io
     port: 8081
     options:
       - location: /landlord
-        rewrite_key: /landlord/(.*)
-        rewrite_value: /$1
+        rewrite_key: ^/landlord/(.*)
+        rewrite_value: /$1 break
         proxy_pass: http://landlord:9000
         size_in_mb: 500
       - location: /tenant
-        rewrite_key: /tenant/(.*)
-        rewrite_value: /$1
+        rewrite_key: ^/tenant/(.*)
+        rewrite_value: /$1 break
         proxy_pass: http://tenant:9000
         size_in_mb: 500
   - domain: admin.local.gluestack.io
     port: 8082
     options:
       - location: /
-        rewrite_key: /(.*)
-        rewrite_value: /$1
+        rewrite_key: ^/(.*)
+        rewrite_value: /$1 break
         proxy_pass: http://strapi:9000
         size_in_mb: 500

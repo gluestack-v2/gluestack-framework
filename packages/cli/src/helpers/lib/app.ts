@@ -237,8 +237,8 @@ export default class AppCLI {
 		for await (const path of paths) {
 			let servicePath = join(servicesPath, path, '/src');
 			if (await fileExists(servicePath)) {
-				if (await fileExists(join(servicePath))) {
-					await rm(join(servicePath, 'packages'));
+				if (await fileExists(servicePath)) {
+					rm(join(servicePath, 'packages'));
 				}
 				await copyFolder(packagesPath, servicePath, 4);
 			}

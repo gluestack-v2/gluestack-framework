@@ -1,12 +1,7 @@
+import { readFileSync, writeFileSync, existsSync, rmSync } from "fs";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import {
-  success,
-  warning,
-  error,
-} from "@gluestack-v2/framework-cli/build/helpers/print";
+import { error } from "@gluestack-v2/framework-cli/build/helpers/print";
 import { fileExists } from "@gluestack/helpers";
-import fs from "fs";
-import * as prettier from "prettier";
 
 const updateInternalsFile = async (
   pluginName: string,
@@ -18,19 +13,20 @@ const updateInternalsFile = async (
   }
 
   // adding the installed plugins
-  const pluginInstancesFilePath =
-    process.cwd() + "/.glue/internals/plugin-instances.json";
+  const pluginInstancesFilePath = process.cwd() + "/.glue/internals/plugin-instances.json";
 
-  const data = fs.readFileSync(pluginInstancesFilePath, { encoding: "utf-8" });
+  const data = readFileSync(pluginInstancesFilePath, { encoding: "utf-8" });
   const updatedInstanceArr = JSON.parse(data);
+
   JSON.parse(data)[pluginName].map((instanceInfo: any, index: number) => {
     if (instanceInfo.instance == instanceName) {
       updatedInstanceArr[pluginName].splice(index, 1);
     }
   });
-  fs.writeFileSync(
+
+  writeFileSync(
     pluginInstancesFilePath,
-    JSON.stringify(updatedInstanceArr),
+    JSON.stringify(updatedInstanceArr, null, 2),
     "utf8"
   );
 
@@ -42,14 +38,16 @@ const updateInternalsFile = async (
 
 export default async (app: AppCLI, instanceName: any): Promise<void> => {
   for await (const plugin of app.plugins) {
+
     let instances = plugin.getInstances();
-    for (let instance of instances) {
+    for await (let instance of instances) {
+
       if (instanceName == instance.getName()) {
-        const folderPath = await plugin.getInstallationPath(instanceName);
-        if (fs.existsSync(folderPath)) {
-          // console.log(instance.getName(), "INSTANCE NAME", folderPath);
+
+        const folderPath = plugin.getInstallationPath(instanceName);
+        if (existsSync(folderPath)) {
           try {
-            fs.rmSync(folderPath, { recursive: true });
+            rmSync(folderPath, { recursive: true });
           } catch (err) {
             error(`${err}`);
           }
