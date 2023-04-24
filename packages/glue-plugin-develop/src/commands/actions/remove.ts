@@ -55,6 +55,7 @@ export default async (app: AppCLI, instanceName: any): Promise<void> => {
           }
         }
         updateInternalsFile(plugin.getName(), instance.getName());
+        await instance.runPostUninstall?.();
       }
     }
   }
