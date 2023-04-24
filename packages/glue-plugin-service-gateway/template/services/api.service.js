@@ -30,7 +30,7 @@ module.exports = {
 			{
 				path: "/api",
 
-				whitelist: ["**"],
+				// ***Update Whitlisted services here***
 
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
 				use: [],

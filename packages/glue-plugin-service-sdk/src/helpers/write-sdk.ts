@@ -46,9 +46,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
-  current[pathArr[pathArr.length - 1]] =
-    "****" + pathArr[pathArr.length - 1] + "****";
-  functionsMap["****" + pathArr[pathArr.length - 1] + "****"] = sdkFunction;
+  current[pathArr[pathArr.length - 1]] = "****" + path + "****";
+  functionsMap["****" + path + "****"] = sdkFunction;
 
   return obj;
 };
@@ -112,14 +111,6 @@ const writeSDK = (installationPath: string, functionName: string) => {
       finalString = JSON.stringify(obj).replace(":", "=");
       finalString = finalString.substring(1, finalString.length - 1);
 
-      // console.log(
-      //   functionName,
-      //   JSON.stringify(obj),
-      //   "****" + functionName + "****",
-      //   functionsMap,
-      //   obj,
-      //   "\n"
-      // );
       Object.keys(functionsMap).map((key: any) => {
         finalString = finalString.replace(`"${key}"`, functionsMap[key]);
       });

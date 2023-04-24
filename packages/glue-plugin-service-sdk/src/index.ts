@@ -106,15 +106,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         `.glue/__generated__/packages/${instance.getName()}/src` as const;
       const functionsPath = resolve(process.cwd(), instancePath);
 
-      const installationPath = resolve(
-        GLUE_GENERATED_PKG_PATH,
-        instance.name
-      );
-      if (
-        existsSync(
-          resolve(process.cwd(), installationPath, instancePath)
-        )
-      ) {
+      const installationPath = resolve(GLUE_GENERATED_PKG_PATH, instance.name);
+      if (existsSync(resolve(process.cwd(), installationPath, instancePath))) {
         rm(resolve(process.cwd(), installationPath, instancePath));
       }
       if (!existsSync(functionsPath)) {
