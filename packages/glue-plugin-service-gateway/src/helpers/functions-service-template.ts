@@ -30,7 +30,9 @@ const template = (instanceName: string) =>
    /**
     * Events
     */
-   events: {},
+   events: {
+     // **---Add Events Here---**
+   },
 
    /**
     * Methods

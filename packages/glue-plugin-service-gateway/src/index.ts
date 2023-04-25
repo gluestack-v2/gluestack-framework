@@ -161,50 +161,50 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const instances: Array<IInstance> = plugin.getInstances();
-    // for await (const instance of instances) {
-    //   const name: string = removeSpecialChars(instance.getName());
+    for await (const instance of instances) {
+      const name: string = removeSpecialChars(instance.getName());
 
-    //   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
-    //   const sourcePath = join(this.getTemplateFolderPath());
+      const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
+      const sourcePath = join(this.getTemplateFolderPath());
 
-    //   await this.app.write(sourcePath, name);
+      await this.app.write(sourcePath, name);
 
-    //   let instanceName = instance.getName();
-    //   // update package.json'S name index with the new instance name
-    //   const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-    //   await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+      let instanceName = instance.getName();
+      // update package.json'S name index with the new instance name
+      const pluginPackage = `${instance.getInstallationPath()}/package.json`;
+      await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
 
-    //   // update root package.json's workspaces with the new instance name
-    //   const rootPackage: string = `${process.cwd()}/package.json`;
-    //   await Workspaces.append(rootPackage, instance.getInstallationPath());
+      // update root package.json's workspaces with the new instance name
+      const rootPackage: string = `${process.cwd()}/package.json`;
+      await Workspaces.append(rootPackage, instance.getInstallationPath());
 
-    //   /**
-    //    * @TODO:
-    //    * 1. move below code to the glue-plugin-seal or something
-    //    * 2. seal.service.yaml, dockerfile & package.json movement
-    //    *    into .glue/seal/services/<instance-name>/src
-    //    */
-    //   const destination: string = join(
-    //     process.cwd(),
-    //     SEAL_SERVICES_PATH,
-    //     instance.name,
-    //     "src"
-    //   );
+      /**
+       * @TODO:
+       * 1. move below code to the glue-plugin-seal or something
+       * 2. seal.service.yaml, dockerfile & package.json movement
+       *    into .glue/seal/services/<instance-name>/src
+       */
+      const destination: string = join(
+        process.cwd(),
+        SEAL_SERVICES_PATH,
+        instance.name,
+        "src"
+      );
 
-    //   // add package.json with workspaces
-    //   const packageFile: string = join(destination, "package.json");
-    //   const packageContent: any = {
-    //     name: name,
-    //     private: true,
-    //     workspaces: [name, "packages/**/src"],
-    //     scripts: {
-    //       "install-all": "npm install --workspaces --if-present",
-    //       dev: "npm run dev --workspace @project/" + name,
-    //     },
-    //   };
+      // add package.json with workspaces
+      const packageFile: string = join(destination, "package.json");
+      const packageContent: any = {
+        name: name,
+        private: true,
+        workspaces: [name, "packages/**/src"],
+        scripts: {
+          "install-all": "npm install --workspaces --if-present",
+          dev: "npm run dev --workspace @project/" + name,
+        },
+      };
 
-    //   await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-    //   // await this.sealInit(SEAL_SERVICES_PATH, name);
-    // }
+      await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+      await this.sealInit(SEAL_SERVICES_PATH, name);
+    }
   }
 }
