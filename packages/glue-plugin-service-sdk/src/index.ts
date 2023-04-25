@@ -99,29 +99,26 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateSDK(instancePath: any, instanceName: string) {
+  async generateSDK(
+    instancePath: any,
+    instanceName: string,
+    ignoredPaths: string[]
+  ) {
     const instances = this.getInstances();
     for await (const instance of instances) {
       const GLUE_GENERATED_PKG_PATH: string =
         `.glue/__generated__/packages/${instance.getName()}/src` as const;
       const functionsPath = resolve(process.cwd(), instancePath);
 
-      const installationPath = resolve(
-        GLUE_GENERATED_PKG_PATH,
-        instance.name
-      );
-      if (
-        existsSync(
-          resolve(process.cwd(), installationPath, instancePath)
-        )
-      ) {
+      const installationPath = resolve(GLUE_GENERATED_PKG_PATH, instance.name);
+      if (existsSync(resolve(process.cwd(), installationPath, instancePath))) {
         rm(resolve(process.cwd(), installationPath, instancePath));
       }
       if (!existsSync(functionsPath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
-        writeSDK(installationPath, instanceName);
+        writeSDK(installationPath, instanceName, ignoredPaths);
         // @ts-ignore
         await this.app.updateServices();
       }
