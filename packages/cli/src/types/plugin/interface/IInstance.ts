@@ -16,6 +16,7 @@ export default interface IInstance {
 	getCallerPlugin(): IPlugin;
 	getInstallationPath(): string;
 	watch(): string[];
+	runPostUninstall?: () => Promise<void>;
 
 	// seal
 	getDockerfile?: () => string;

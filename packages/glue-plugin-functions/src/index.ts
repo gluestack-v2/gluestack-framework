@@ -1,4 +1,3 @@
-
 // @ts-ignore
 import packageJSON from "../package.json";
 
@@ -56,6 +55,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `./${target}`;
   }
 
+  getIgnoredPaths(): string[] {
+    return ["middlewares", "events"];
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
@@ -77,7 +80,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     await Workspaces.append(rootPackage, instance.getInstallationPath());
   }
 
-  generateFunctionsInServiceGateway() {
+  generateFunctionsInServiceGateway(ignoredPaths: string[]) {
     const instances = this.getInstances();
     for (const instance of instances) {
       const name = instance.getName();
@@ -88,11 +91,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       ) as IPlugin;
 
       // @ts-ignore
-      plugin.generateService(installationPath, name);
+      plugin.generateService(installationPath, name, ignoredPaths);
     }
   }
 
-  generateFunctionsInServiceSdk() {
+  generateFunctionsInServiceSdk(ignoredPaths: string[]) {
     const instances = this.getInstances();
     for (const instance of instances) {
       const name = instance.getName();
@@ -103,7 +106,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       ) as IPlugin;
 
       // @ts-ignore
-      plugin.generateSDK(installationPath, name);
+      plugin.generateSDK(installationPath, name, ignoredPaths);
     }
   }
 
@@ -138,8 +141,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           return;
         }
 
-        this.generateFunctionsInServiceGateway();
-        this.generateFunctionsInServiceSdk();
+        this.generateFunctionsInServiceGateway(this.getIgnoredPaths());
+        this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
         resolve("Build Successful");
       } catch (err) {

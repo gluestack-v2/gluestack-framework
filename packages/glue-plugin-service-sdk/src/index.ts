@@ -99,7 +99,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateSDK(instancePath: any, instanceName: string) {
+  async generateSDK(
+    instancePath: any,
+    instanceName: string,
+    ignoredPaths: string[]
+  ) {
     const instances = this.getInstances();
     for await (const instance of instances) {
       const GLUE_GENERATED_PKG_PATH: string =
@@ -114,7 +118,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
-        writeSDK(installationPath, instanceName);
+        writeSDK(installationPath, instanceName, ignoredPaths);
         // @ts-ignore
         await this.app.updateServices();
       }

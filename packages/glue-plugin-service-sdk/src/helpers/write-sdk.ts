@@ -70,7 +70,11 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (installationPath: string, functionName: string) => {
+const writeSDK = (
+  installationPath: string,
+  functionName: string,
+  ignoredPaths: string[]
+) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
   const functionsPath = path.join(installationPath, functionName);

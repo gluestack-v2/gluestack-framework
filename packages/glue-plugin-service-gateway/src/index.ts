@@ -105,7 +105,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  async generateService(instancePath: string, instanceName: string) {
+  async generateService(
+    instancePath: string,
+    instanceName: string,
+    ignoredPaths: string[]
+  ) {
     const instances = this.getInstances();
     for await (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
@@ -119,7 +123,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
-        writeService(installationPath, instanceName);
+        writeService(installationPath, instanceName, ignoredPaths);
       }
     }
   }
@@ -198,7 +202,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         private: true,
         workspaces: [name, "packages/**/src"],
         scripts: {
-          "install-all": "npm install --workspaces --if-present",
+          "install-all":
+            "npm install --workspaces --if-present --legacy-peer-deps",
           dev: "npm run dev --workspace @project/" + name,
         },
       };
