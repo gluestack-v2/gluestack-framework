@@ -1,3 +1,8 @@
+import {
+  warning,
+  success,
+} from "@gluestack-v2/framework-cli/build/helpers/print";
+import fs from "fs";
 // @ts-ignore
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
@@ -23,6 +28,8 @@ import writeService from "./helpers/write-service";
 import rm from "./helpers/rm";
 import copyFolder from "./helpers/copy-folder";
 import { spawnSync } from "child_process";
+import writeMoleculerConfig from "./helpers/write-moleculer-config";
+import writeQueuesService from "./helpers/write-queues-service";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -120,6 +127,63 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       } else {
         await copyFolder(functionsPath, installationPath, 3);
         writeService(installationPath, instanceName);
+      }
+    }
+  }
+
+  async generateQueuesService(instancePath: string, instanceName: string) {
+    // console.log("CALLED", instancePath, instanceName);
+    const instances = this.getInstances();
+    for await (const instance of instances) {
+      const targetPkgJson: string = join(
+        process.cwd(),
+        instance.getInstallationPath(),
+        "package.json"
+      );
+
+      if (await fileExists(targetPkgJson)) {
+        const data = await require(targetPkgJson);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        // hard-coded the version here
+        data.devDependencies["@moleculer/channels"] = "^0.1.6";
+        let stringData = JSON.stringify(data, null, 2);
+        await fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added @moleculer/channels to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add @moleculer/channels to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+
+      // Add middleware and import to moleculer.config.js of gateway instance
+      const targetMoleculerConfig: string = join(
+        process.cwd(),
+        instance.getInstallationPath(),
+        "moleculer.config.js"
+      );
+      writeMoleculerConfig(targetMoleculerConfig);
+
+      const queuesPath = path.resolve(process.cwd(), instancePath);
+
+      const installationPath = instance.getInstallationPath();
+      if (await fileExists(path.join(installationPath, instancePath))) {
+        rm(path.join(installationPath, instancePath));
+      }
+
+      if (!(await fileExists(queuesPath))) {
+        console.log("> No queues plugin found, create instance first");
+      } else {
+        await copyFolder(queuesPath, installationPath, 3);
+
+        writeQueuesService(
+          this.getInstallationPath(instanceName),
+          instance.getInstallationPath(),
+          instanceName
+        );
       }
     }
   }

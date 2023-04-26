@@ -55,33 +55,27 @@ const writeQueuesService = (
   const moleculerQueuesServiceTemplate =
     moleculerQueuesServiceTemplateFunc(instanceName);
 
-  const queuesPath = path.join(process.cwd(), installationPath);
-  // const moleculerFunctionsPath = path.join(installationPath, "functions");
+  // const queuesPath = path.join(process.cwd(), installationPath);
+  // console.log(installationPath);
+  const queuesPath = path.join(generatedServiceGatewayPath, instanceName);
 
   const moleculerQueuesServiceTemplatePath = path.join(
     generatedServiceGatewayPath,
     "services",
     `${instanceName}.service.js`
   );
-};
 
-const writeService = (installationPath: string, instanceName: string) => {
-  const moleculerFunctionsServiceTemplate =
-    moleculerQueuesServiceTemplateFunc(instanceName);
-  const functionsPath = path.join(installationPath, instanceName);
-  const moleculerFunctionsServicePath = path.join(
-    installationPath,
-    "services",
-    `${instanceName}.service.js`
-  );
-  const files = getNestedFilePaths(functionsPath);
+  // console.log(moleculerQueuesServiceTemplate);
+  console.log(queuesPath, moleculerQueuesServiceTemplatePath);
+  const files = getNestedFilePaths(queuesPath);
 
   let sdkFunctions = ``;
-  let moleculerActions: any = {};
+  let moleculerActions = ``;
+  let moleculerChannels: any = {};
   let moleculerImportStatements = ``;
 
-  files.forEach((functionFile: string, _index: number) => {
-    const filePath = functionFile;
+  files.forEach((queueFile: string, _index: number) => {
+    const filePath = queueFile;
     if (
       ["json"].includes(filePathExtension(filePath)) ||
       filePath.includes("node_modules")
@@ -91,33 +85,27 @@ const writeService = (installationPath: string, instanceName: string) => {
     const functionName = getFileNameWithoutExtension(filePath);
 
     if (fs.existsSync(filePath)) {
-      let functionPath = ("./" + filePath).replace(installationPath, "");
+      let functionPath = ("./" + filePath).replace(
+        generatedServiceGatewayPath,
+        ""
+      );
       functionPath = functionPath.split(".").slice(0, -1).join(".");
 
-      const functionCodeString = fs.readFileSync(filePath, "utf8");
-      const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
-      const matches = functionCodeString.match(regex);
-      // if (matches && matches[1]) {
-      //   let params = matches[1].split(/\s*,\s*/);
-      //   let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-      //   sdkFunctions += sdkFunction + "\n";
-      // } else {
-      //   console.log(
-      //     "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
-      //   );
-      // }
-
       // Create actions object
-      let action: any = {};
-      action.rest = {
-        method: "POST",
-        path: functionPath,
-      };
+      let actionHandlerString = `${functionName}: {
+        handler: async function (ctx) {
+          this.broker.sendToChannel("${functionName}", ctx);
+        },
+      },`;
+
       const funcPath = functionPath.split("/");
       funcPath.splice(0, 2);
-      action.handler = camelCaseArray(funcPath) + "Handler";
 
-      moleculerActions[funcPath.join(".")] = action;
+      let channel: any = {};
+      channel.handler = camelCaseArray(funcPath) + "Handler";
+
+      moleculerChannels[functionName] = channel;
+      moleculerActions += actionHandlerString;
 
       // Create Import Statement
       let functionImportStatement = `const ${camelCaseArray(
@@ -127,27 +115,23 @@ const writeService = (installationPath: string, instanceName: string) => {
     }
   });
 
-  let finalString = moleculerFunctionsServiceTemplate.replace(
-    "// **---Add Actions Here---**",
-    replaceHandlerNames(JSON.stringify(moleculerActions, null, 2))
+  let finalString = moleculerQueuesServiceTemplate.replace(
+    "// ***---Add Actions Here---***",
+    `{${moleculerActions}}`
   );
 
   finalString = finalString.replace(
-    "// **---Add Imports Here---**",
+    "// ***---Add Imports Here---***",
     moleculerImportStatements
   );
 
-  // Create functions service with all the actions and imports
-  writeFile(moleculerFunctionsServicePath, finalString);
+  finalString = finalString.replace(
+    "// ***---Add Channels Here---***",
+    replaceHandlerNames(JSON.stringify(moleculerChannels, null, 2))
+  );
 
-  // Create SDK index file with all the functions
-  // createFileWithPath(
-  //   sdkSrcIndex,
-  //   sdkIndexTemplate.replace(
-  //     "// **---Functions will be added after this---**",
-  //     sdkFunctions
-  //   )
-  // );
-  // }
+  // Create functions service with all the actions and imports
+  writeFile(moleculerQueuesServiceTemplatePath, finalString);
 };
+
 export default writeQueuesService;
