@@ -12,12 +12,9 @@ import { join } from "path";
 import { spawnSync } from "child_process";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 
-import rm from "./helpers/rm";
 import writeFile from "./helpers/write-file";
-import fileExists from "./helpers/file-exists";
 import { PluginInstance } from "./PluginInstance";
 import { reWriteFile } from "./helpers/rewrite-file";
-import { rmdir } from "fs/promises";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -143,11 +140,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     for await (const instance of instances) {
       const source: string = instance.getInstallationPath();
       const name: string = removeSpecialChars(instance.getName());
-      const copyPkgPath = this.getGeneratedPath(name);
-
-      // if (await fileExists(copyPkgPath)) {
-      //   rm(copyPkgPath);
-      // }
 
       // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
       await this.app.write(source, name);

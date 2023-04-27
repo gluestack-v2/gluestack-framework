@@ -9,14 +9,6 @@ import { spawn } from "child_process";
 const upSealService = (serviceName: string, opts: any) => {
   let servicePlatform = "local";
 
-  // if (Object.keys(opts).length > 0) {
-  //   if (opts.platform) {
-  //     servicePlatform = opts.platform;
-  //   } else {
-  //     servicePlatform = opts.p;
-  //   }
-  // }
-
   const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
   const sealUp = spawn("sh", [
     "-c",

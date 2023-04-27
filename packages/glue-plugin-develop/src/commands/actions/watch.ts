@@ -8,6 +8,18 @@ import {
 } from "@gluestack-v2/framework-cli/build/helpers/print";
 
 export default async (app: AppCLI): Promise<void> => {
+  app.watch(
+    process.cwd(), [
+      '.glue/internals/plugin-instances.json',
+    ], async (event: string, path: string) => {
+
+      info("Restarting watcher since new changes found...");
+
+      await watchInstances(app);
+  });
+};
+
+const watchInstances = async (app: AppCLI): Promise<void> => {
   for await (const plugin of app.plugins) {
     for await (const instance of plugin.instances) {
       success("Found instance", instance.getName());
@@ -20,16 +32,9 @@ export default async (app: AppCLI): Promise<void> => {
         continue;
       }
 
-      warning(instance.getName(), "watching for changes");
-      const cwd: string = join(process.cwd(), instance.getInstallationPath());
+      warning(instance.getName(), "running watch method...");
 
-      // AppCLI watch API
-      app.watch(cwd, instance.watch(), async (event: string, path: string) => {
-        info(`${instance.getName()}`, `${event.green} :: ${path.yellow}`);
-
-        // AppCLI write API
-        await app.write(cwd, instance.getName());
-      });
+      instance.watch();
     }
   }
 };
