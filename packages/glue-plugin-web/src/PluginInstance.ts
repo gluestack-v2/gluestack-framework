@@ -42,7 +42,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  watch(): any {
+  async watch(): Promise<void> {
     this.app.watch(process.cwd(), this.getInstances(), async (event, path) => {
       const log = console.log.bind(console);
       // Add event listeners.
@@ -82,7 +82,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         }
       }
     });
-    return [];
   }
 
   getDockerfile(): string {

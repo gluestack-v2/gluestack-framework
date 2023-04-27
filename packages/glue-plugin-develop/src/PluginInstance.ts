@@ -36,8 +36,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  watch(): string[] {
-    return [];
+  async watch(): Promise<void> {
+    //
   }
 
   getDockerfile(): string {
