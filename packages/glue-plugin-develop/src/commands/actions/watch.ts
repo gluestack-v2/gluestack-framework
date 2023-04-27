@@ -24,17 +24,17 @@ const watchInstances = async (app: AppCLI): Promise<void> => {
     for await (const instance of plugin.instances) {
       success("Found instance", instance.getName());
 
-      if (!instance.watch || !instance.watch().length) {
+      if (!instance.watch) {
         warning(
           `${instance.getName()}`,
-          "contains no watch method or it exists but returns an empty array"
+          "contains no watch method"
         );
         continue;
       }
 
       warning(instance.getName(), "running watch method...");
 
-      instance.watch();
+      await instance.watch();
     }
   }
 };

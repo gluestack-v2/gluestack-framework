@@ -30,7 +30,7 @@ export default abstract class BaseGluestackPluginInstance
 
 	abstract init(): void;
 	abstract destroy(): void;
-	abstract watch(): string[];
+	abstract watch(): Promise<void>;
 
 	getName(): string {
 		return this.name;
