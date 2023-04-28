@@ -36,8 +36,4 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   destroy() {
     //
   }
-
-  watch(): string[] {
-    return [];
-  }
 }
