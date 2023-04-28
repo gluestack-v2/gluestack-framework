@@ -1,1 +1,44 @@
-{}
+{
+  "@gluestack-v2/glue-plugin-develop": [
+    {
+      "instance": "develop",
+      "directory": "./develop",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-gateway": [
+    {
+      "instance": "gateway",
+      "directory": "./.glue/__generated__/seal/services/gateway/src/gateway",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-sdk": [
+    {
+      "instance": "sdk",
+      "directory": "./.glue/__generated__/packages/sdk/src/sdk",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-functions": [
+    {
+      "instance": "functions",
+      "directory": "./functions",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-web": [
+    {
+      "instance": "website",
+      "directory": "./website",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-components": [
+    {
+      "instance": "components",
+      "directory": "./components",
+      "container_store": {}
+    }
+  ]
+}

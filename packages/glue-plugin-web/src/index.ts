@@ -1,7 +1,6 @@
 // @ts-ignore
 import packageJSON from "../package.json";
 
-
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
@@ -173,7 +172,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const packageContent: any = {
         name: name,
         private: true,
-        workspaces: [name, "packages/**/src"],
+        workspaces: [name, "packages/**"],
         scripts: {
           "install-all": "npm install --workspaces --if-present",
           dev: "npm run dev --workspace @project/" + name,

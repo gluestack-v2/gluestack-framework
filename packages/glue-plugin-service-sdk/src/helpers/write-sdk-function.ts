@@ -1,10 +1,10 @@
 export default function writeSDKFunction(
   functionName: string,
-  paramsArray: Array<string>,
+  paramsArray: Array<string> | [],
   functionPath: string
 ) {
   let functionString = `
-  (${paramsArray.join(":any, ") + ":any"})=>{
+  (${paramsArray.join(":any, ")} ${paramsArray.length > 0 && ":any"})=>{
     return new Promise(async (resolve:any, reject:any) => {
       // Your async function code here
       try {

@@ -245,7 +245,7 @@ function getEvents(filePathData: any) {
     filePathData.funcPath
   )}Handler = require("..${filePathData.functionPath}");`;
   functionImportStatement += "\n";
-  console.log(functionImportStatement);
+
   events = eventsTemplate(
     eventNameIndex,
     camelCaseArray(

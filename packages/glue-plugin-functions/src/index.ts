@@ -56,7 +56,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getIgnoredPaths(): string[] {
-    return ["middlewares", "events"];
+    return ["middlewares", "events", "private"];
   }
 
   async runPostInstall(instanceName: string, target: string) {
