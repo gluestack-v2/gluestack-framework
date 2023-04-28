@@ -1,5 +1,4 @@
 
-import { join } from "path";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import {
   info,

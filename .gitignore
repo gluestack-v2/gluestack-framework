@@ -3,6 +3,7 @@
 # plugin-instance and plugins json files
 #
 .glue/internals
+!.glue/internals/store/@gluestack-v2/glue-plugin-develop
 !.glue/internals/plugin-instances.json
 !.glue/internals/plugin.json
 .glue/__generated__
