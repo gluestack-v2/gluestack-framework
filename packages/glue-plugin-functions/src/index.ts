@@ -4,7 +4,7 @@ import packageJSON from "../package.json";
 
 import { Workspaces } from "@gluestack/helpers";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
@@ -77,21 +77,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     await Workspaces.append(rootPackage, instance.getInstallationPath());
   }
 
-  generateFunctionsInServiceGateway() {
-    const instances = this.getInstances();
-    for (const instance of instances) {
-      const name = instance.getName();
-      const installationPath = instance.getInstallationPath();
-
-      const plugin = this.app.getPluginByName(
-        "@gluestack-v2/glue-plugin-service-gateway"
-      ) as IPlugin;
-
-      // @ts-ignore
-      plugin.generateService(installationPath, name);
-    }
-  }
-
   generateFunctionsInServiceSdk() {
     const instances = this.getInstances();
     for (const instance of instances) {
@@ -127,24 +112,24 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  async build(): Promise<void> {
-    return new Promise((resolve: any, reject) => {
-      try {
-        const plugin: IPlugin | null = this.app.getPluginByName(
-          "@gluestack-v2/glue-plugin-functions"
-        );
-        if (!plugin || plugin.getInstances().length <= 0) {
-          console.log("> No functions plugin found, skipping build");
-          return;
-        }
+  // async build(): Promise<void> {
+  //   return new Promise((resolve: any, reject) => {
+  //     try {
+  //       const plugin: IPlugin | null = this.app.getPluginByName(
+  //         "@gluestack-v2/glue-plugin-functions"
+  //       );
+  //       if (!plugin || plugin.getInstances().length <= 0) {
+  //         console.log("> No functions plugin found, skipping build");
+  //         return;
+  //       }
 
-        this.generateFunctionsInServiceGateway();
-        this.generateFunctionsInServiceSdk();
+  //       this.generateFunctionsInServiceGateway();
+  //       this.generateFunctionsInServiceSdk();
 
-        resolve("Build Successful");
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
+  //       resolve("Build Successful");
+  //     } catch (err) {
+  //       reject(err);
+  //     }
+  //   });
+  // }
 }

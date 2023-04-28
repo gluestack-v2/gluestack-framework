@@ -27,5 +27,6 @@ export default interface IPlugin {
 	getInstances(): IInstance[];
 
 	// app-cli apis
-	build?: () => Promise<void>;
+	build(): Promise<void>;
+	watch(callback?: Function): Promise<void>;
 }

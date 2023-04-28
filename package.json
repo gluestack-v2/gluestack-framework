@@ -11,8 +11,8 @@
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
     "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
-    "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
-    "watch:service-gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
+    "watch:sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
+    "watch:gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
     "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
     "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai"
@@ -37,9 +37,17 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "functions",
+    ".glue/__generated__/packages",
+    ".glue/__generated__/seal/services/gateway/src/gateway",
+    ".glue/__generated__/packages/sdk/src/sdk"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2"
+    "@gluestack-v2/framework-cli": "^0.0.2",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2"
   }
 }

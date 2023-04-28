@@ -184,7 +184,7 @@ export default class AppCLI {
 	}
 
 	// @API: watch
-	watch(
+	listen(
 		cwd: string,
 		pattern: string | string[],
 		callback: IWatchCallback
@@ -192,9 +192,40 @@ export default class AppCLI {
 		watcher.watch(cwd, pattern, callback);
 	}
 
+	watch(
+		source: string,
+		destination: string,
+		callback: IWatchCallback
+	): void {
+		this.listen(source, ['./'], (event: string, path: string) => {
+			const sourcePath = join(source, path);
+			const destinationPath = join(destination, path);
+
+			switch(event) {
+				case 'add':
+					fs.copyFileSync(sourcePath, destinationPath);
+					break;
+				case 'addDir':
+					fs.mkdirSync(destinationPath, { recursive: true });
+					break;
+				case 'change':
+					fs.copyFileSync(sourcePath, destinationPath);
+					break;
+				case 'unlinkDir':
+					fs.rmSync(destinationPath, { recursive: true });
+					break;
+				case 'unlink':
+					fs.rmSync(destinationPath);
+					break;
+			}
+
+			callback(event, path);
+		})
+	}
+
 	// @API: writer
-	async write(cwd: string, instanceName: string): Promise<void> {
-		await writer.write(cwd, instanceName);
+	async write(source: string, destination: string): Promise<void> {
+		await writer.write(source, destination);
 	}
 
 	// @API: destroy

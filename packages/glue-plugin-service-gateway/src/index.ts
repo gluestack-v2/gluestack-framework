@@ -3,7 +3,7 @@ import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
 
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
@@ -115,6 +115,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         rm(path.join(installationPath, instancePath));
       }
 
+      console.log('>> functions:', functionsPath);
+
       if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
@@ -206,5 +208,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
       await this.sealInit(SEAL_SERVICES_PATH, name);
     }
+  }
+
+  async watch() {
+
   }
 }

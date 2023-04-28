@@ -5,7 +5,7 @@ import { PluginInstance } from "./PluginInstance";
 import { join, resolve } from "path";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
@@ -99,31 +99,23 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateSDK(instancePath: any, instanceName: string) {
+  async generateSDK(sourcePath: string, instanceName: string) {
     const instances = this.getInstances();
+
     for await (const instance of instances) {
       const GLUE_GENERATED_PKG_PATH: string =
         `.glue/__generated__/packages/${instance.getName()}/src` as const;
-      const functionsPath = resolve(process.cwd(), instancePath);
 
       const installationPath = resolve(
         GLUE_GENERATED_PKG_PATH,
         instance.name
       );
-      if (
-        existsSync(
-          resolve(process.cwd(), installationPath, instancePath)
-        )
-      ) {
-        rm(resolve(process.cwd(), installationPath, instancePath));
-      }
-      if (!existsSync(functionsPath)) {
+
+      if (!existsSync(sourcePath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
-        await copyFolder(functionsPath, installationPath, 3);
+        await copyFolder(sourcePath, installationPath, 3);
         writeSDK(installationPath, instanceName);
-        // @ts-ignore
-        await this.app.updateServices();
       }
     }
   }

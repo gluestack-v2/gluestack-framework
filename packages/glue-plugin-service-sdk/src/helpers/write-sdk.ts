@@ -74,8 +74,8 @@ const deepMerge = (obj1: any, obj2: any) => {
 const writeSDK = (installationPath: string, functionName: string) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = path.join(installationPath, functionName);
-  const sdkPath = path.join(installationPath, ".");
+  const functionsPath = installationPath;
+  const sdkPath = installationPath;
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
 
   const files = getNestedFilePaths(functionsPath);

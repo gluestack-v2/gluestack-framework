@@ -1,8 +1,10 @@
-import AppCLI from '../helpers/lib/app';
+import { join } from 'path';
 
+import AppCLI from '../helpers/lib/app';
 import IPlugin from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGlueStorePlugin from './store/interface/IGluePluginStore';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 
 export default abstract class BaseGluestackPluginInstance
 	implements IInstance
@@ -30,7 +32,14 @@ export default abstract class BaseGluestackPluginInstance
 
 	abstract init(): void;
 	abstract destroy(): void;
-	abstract watch(): Promise<void>;
+
+	async build(): Promise<void> {
+		//
+	}
+
+	async watch(callback?: Function): Promise<void> {
+		//
+	}
 
 	getName(): string {
 		return this.name;
@@ -50,5 +59,29 @@ export default abstract class BaseGluestackPluginInstance
 
 	getSealServicefile(): string {
 		return `${this.getInstallationPath()}/seal.service.yaml`;
+	}
+
+	getGeneratedPath(name: any) {
+    return join(
+      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      name,
+      "src"
+    );
+  }
+
+	getSourcePath(): string {
+		return join(process.cwd(), this.getName());
+	}
+
+	getDestinationPath(): string {
+		return join(process.cwd(), this.getGeneratedPath(this.getName()));
+	}
+
+	public get _sourcePath() : string {
+		return this.getSourcePath();
+	}
+
+	public get _destinationPath() : string {
+		return this.getDestinationPath();
 	}
 }
