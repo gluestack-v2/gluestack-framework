@@ -212,7 +212,9 @@ function getActions(
       path: finalPathArr.functionPath,
     };
 
-    action.handler = camelCaseArray(finalPathArr.funcPath) + "Handler";
+    action.handler = `(ctx) => {const serverSDK = new Ctx(ctx); return ${
+      camelCaseArray(finalPathArr.funcPath) + "Handler"
+    }(serverSDK);},`;
 
     serviceAction[finalPathArr.funcPath.join(".")] = action;
 
@@ -308,7 +310,8 @@ function createService(
   finalString = finalString.replace(
     "// **---Add Imports Here---**",
     moleculerImportStatements.actionImportPath +
-      moleculerImportStatements.eventImportPath
+      moleculerImportStatements.eventImportPath +
+      `const Ctx = require("../serverSdk");`
   );
   writeFile(path, finalString);
 }
