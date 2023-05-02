@@ -68,7 +68,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         // TODO: OPTIMIZE UPDATES
         this.generateFunctionsInServiceGateway();
         this.generateFunctionsInServiceSdk();
-        this.app.updateServices();
+
+        if (callback) {
+          callback(event, path);
+        }
       }
     );
   }
@@ -94,7 +97,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateSDK(this._sourcePath, this.getName());
   }
 
-  async build () {
+  async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     // @ts-ignore
     this.generateFunctionsInServiceGateway();
