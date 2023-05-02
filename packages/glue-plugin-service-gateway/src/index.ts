@@ -130,31 +130,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  async sealInit(SEAL_SERVICES_PATH: string, name: string) {
-    // seal init and seal service add in the services folder
-    const sealInit = spawnSync("sh", [
-      "-c",
-      `cd ${SEAL_SERVICES_PATH} && seal init`,
-    ]);
-
-    if (sealInit.status !== 0) {
-      console.error(`Command failed with code ${sealInit.status}`);
-    }
-
-    console.log(sealInit.stdout.toString());
-    console.error(sealInit.stderr.toString());
-
-    const sealAddService = spawnSync("sh", [
-      "-c",
-      `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
-    ]);
-
-    if (sealAddService.status !== 0) {
-      console.error(`Command failed with code ${sealAddService.status}`);
-    }
-
-    console.log(sealAddService.stdout.toString());
-    console.error(sealAddService.stderr.toString());
-  }
-
 }

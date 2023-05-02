@@ -5,10 +5,11 @@ import IPlugin from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGlueStorePlugin from './store/interface/IGluePluginStore';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
-
+import { SEAL_SERVICES_PATH } from '../constants/seal';
 
 import { Workspaces } from "@gluestack/helpers";
 import { writeFile, rewriteFile } from '../helpers/file';
+import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
 	implements IInstance {
@@ -78,7 +79,8 @@ export default abstract class BaseGluestackPluginInstance
 		return join(
 			process.cwd(),
 			GLUE_GENERATED_SEAL_SERVICES_PATH,
-			this.getName()
+			this.getName(),
+			'src'
 		);
 	}
 
@@ -120,5 +122,33 @@ export default abstract class BaseGluestackPluginInstance
 		};
 
 		await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+	}
+
+
+	async sealInit() {
+		// seal init and seal service add in the services folder
+		const sealInit = spawnSync("sh", [
+			"-c",
+			`cd ${SEAL_SERVICES_PATH} && seal init`,
+		]);
+
+		if (sealInit.status !== 0) {
+			console.error(`Command failed with code ${sealInit.status}`);
+		}
+
+		console.log(sealInit.stdout.toString());
+		console.error(sealInit.stderr.toString());
+
+		const sealAddService = spawnSync("sh", [
+			"-c",
+			`cd ${SEAL_SERVICES_PATH} && seal service:add ${this.getName()} ./${this.getName()}/src`,
+		]);
+
+		if (sealAddService.status !== 0) {
+			console.error(`Command failed with code ${sealAddService.status}`);
+		}
+
+		console.log(sealAddService.stdout.toString());
+		console.error(sealAddService.stderr.toString());
 	}
 }

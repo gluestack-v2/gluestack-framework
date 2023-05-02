@@ -91,11 +91,11 @@ const writeSDK = (sourcePath: string, installationPath: string) => {
     ) {
       return;
     }
-    for (let i = 0; i < ignoredPaths.length; i++) {
-      if (filePath.includes("/" + ignoredPaths[i] + "/")) {
-        return;
-      }
-    }
+    // for (let i = 0; i < ignoredPaths.length; i++) {
+    //   if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+    //     return;
+    //   }
+    // }
 
     const functionName = getFileNameWithoutExtension(filePath);
 

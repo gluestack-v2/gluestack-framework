@@ -18,9 +18,9 @@
     "watch:cron": "npm run watch --workspace @gluestack-v2/glue-plugin-cron",
     "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai",
     "watch:events": "npm run watch --workspace @gluestack-v2/glue-plugin-events",
-    
-    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions",
-    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:sdk & npm run watch:functions & npm run watch:web"
+    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-events events",
+    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events",
+    "clean": "echo 'hello'"
   },
   "repository": {
     "type": "git",
@@ -43,16 +43,13 @@
   },
   "workspaces": [
     "packages/*",
-    "functions",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/web",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/functions",
     ".glue/__generated__/packages",
-    ".glue/__generated__/seal/services/gateway/src/gateway",
-    ".glue/__generated__/packages/sdk/src/sdk",
-    "website",
-    "components",
-    "events"
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src/gateway",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/packages/sdk/src/sdk"
   ],
   "dependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.*",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
+    "@gluestack-v2/framework-cli": "^0.0.*"
   }
 }

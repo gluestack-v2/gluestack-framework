@@ -126,7 +126,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     return instances[0].getName();
   }
-
+  // Override getDestinationPath
   getDestinationPath() {
     const gatewayInstanceName: string = this.getGatewayInstanceInfo();
 

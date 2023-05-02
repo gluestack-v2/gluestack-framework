@@ -20,7 +20,7 @@ function getPlugin(
 		);
 	} catch (e) {
 		if (throwErrorAndExit) {
-			error('Plugin not initialized');
+			error('Plugin not initialized', e);
 			process.exit(0);
 		}
 	}
