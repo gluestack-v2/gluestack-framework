@@ -10,7 +10,7 @@ import { FOLDER_STRUCTURE } from "../../constants/folder-structure";
 import createFoldersFromJson from "../../helpers/create-folders-from-json";
 import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
 
-export default async (app: AppCLI): Promise<void> => {
+export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
   // creates folders from FOLDER_STRUCTURE constant
   await createFoldersFromJson(FOLDER_STRUCTURE, process.cwd());
 
@@ -22,6 +22,10 @@ export default async (app: AppCLI): Promise<void> => {
 
   // builds plugins
   for await (const plugin of app.plugins) {
+    if (pluginName !== '' && plugin.getName() !== pluginName) {
+      continue;
+    }
+
     success("Found plugin", plugin.getName());
 
     if (!plugin.build) {

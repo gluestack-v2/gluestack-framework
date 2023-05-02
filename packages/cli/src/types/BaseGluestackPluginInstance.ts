@@ -6,6 +6,10 @@ import IInstance from './plugin/interface/IInstance';
 import IGlueStorePlugin from './store/interface/IGluePluginStore';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 
+
+import { Workspaces } from "@gluestack/helpers";
+import { writeFile, rewriteFile } from '../helpers/file';
+
 export default abstract class BaseGluestackPluginInstance
 	implements IInstance
 {
@@ -69,12 +73,27 @@ export default abstract class BaseGluestackPluginInstance
     );
   }
 
+	getDestinationPath(): string {
+		return join(process.cwd(), this.getGeneratedPath(this.getName()));
+	}
+
 	getSourcePath(): string {
 		return join(process.cwd(), this.getName());
 	}
 
-	getDestinationPath(): string {
-		return join(process.cwd(), this.getGeneratedPath(this.getName()));
+
+
+
+  getWorkspacePath(): string {
+    return join(
+      process.cwd(),
+      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      this.getName()
+    );
+  }
+
+  public get _workspacePath() : string {
+		return this.getWorkspacePath();
 	}
 
 	public get _sourcePath() : string {
@@ -84,4 +103,34 @@ export default abstract class BaseGluestackPluginInstance
 	public get _destinationPath() : string {
 		return this.getDestinationPath();
 	}
+
+
+  async updateInstancePackageJSON() {
+		// update package.json'S name index with the new instance name
+		const pluginPackage = `${this._destinationPath}/package.json`;
+		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
+	 }
+
+	 async updateRootPackageJSON() {
+		 // update root package.json's workspaces with the new instance name
+		 const rootPackage: string = `${process.cwd()}/package.json`;
+		 await Workspaces.append(rootPackage, this._destinationPath);
+	 }
+
+
+	 async updateWorkspacePackageJSON() {
+		 // // add package.json with workspaces
+		 const packageFile: string = join(this._workspacePath, "package.json");
+		 const packageContent: any = {
+			 name: this.getName(),
+			 private: true,
+			 workspaces: [this.getName(), "packages/**/src"],
+			 scripts: {
+				 "install-all": "npm install --workspaces --if-present",
+				 dev: "npm run dev --workspace @project/" + this.getName(),
+			 },
+		 };
+
+		 await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+	 }
 }

@@ -153,7 +153,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     console.error(sealAddService.stderr.toString());
   }
 
-  async build(): Promise<void> {
+  async build_old(): Promise<void> {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
@@ -210,7 +210,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  async watch() {
+  // async watch() {
 
-  }
+  // }
 }
