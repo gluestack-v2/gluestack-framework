@@ -22,11 +22,11 @@ class Ctx {
 
 	queues = {
 		push: (functionName, params) => {
-			// Uncomment to debug
-			// console.log("Queues Data", {
-			// 	functionName: functionName,
-			// 	params: params,
-			// });
+			//Console to debug
+			console.log("Queues Data", {
+				functionName: functionName,
+				params: params,
+			});
 
 			return this._ctx.call("queues.push", {
 				data: { functionName: functionName, params: params },
