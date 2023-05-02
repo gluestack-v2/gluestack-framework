@@ -6,7 +6,7 @@ class Watcher implements IWatcher {
 		const globs = typeof pattern === 'string' ? [pattern] : pattern;
 
 		try {
-			chokidar
+			const watcher: chokidar.FSWatcher = chokidar
 				.watch(globs, {
 					persistent: true,
 					cwd: cwd,
@@ -16,10 +16,11 @@ class Watcher implements IWatcher {
 						'**/build/**',
 						'**/.next/**',
 					],
-				})
-				.on('all', async (event: string, path: string) => {
-					if (callback) callback(event, path);
 				});
+
+			watcher.on('all', async (event: string, path: string) => {
+				if (callback) callback(event, path);
+			});
 		} catch (err) {
 			console.log('> watcher error:', err);
 		}

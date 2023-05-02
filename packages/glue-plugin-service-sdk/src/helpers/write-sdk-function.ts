@@ -1,11 +1,11 @@
 export default function writeSDKFunction(
   functionName: string,
-  paramsArray: Array<string>,
+  paramsArray: Array<string> | [],
   functionPath: string
 ) {
   let functionString = `
-  (${paramsArray.join(":any, ") + ": any"})=>{
-    return new Promise(async (resolve: any, reject: any) => {
+  (${paramsArray.join(":any, ")} ${paramsArray.length > 0 && ":any"})=>{
+    return new Promise(async (resolve:any, reject:any) => {
       // Your async function code here
       try {
         const response = await axios({
@@ -15,7 +15,7 @@ export default function writeSDKFunction(
         });
 
         resolve(response.data);
-      } catch (error: any) {
+      } catch (error:any) {
         reject(error.message);
       }
     });

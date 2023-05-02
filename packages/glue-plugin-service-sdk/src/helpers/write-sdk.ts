@@ -46,9 +46,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
-  current[pathArr[pathArr.length - 1]] =
-    "****" + pathArr[pathArr.length - 1] + "****";
-  functionsMap["****" + pathArr[pathArr.length - 1] + "****"] = sdkFunction;
+  current[pathArr[pathArr.length - 1]] = "****" + path + "****";
+  functionsMap["****" + path + "****"] = sdkFunction;
 
   return obj;
 };
@@ -71,65 +70,65 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (installationPath: string, functionName: string) => {
+const writeSDK = (sourcePath: string, installationPath: string) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = path.join(installationPath, functionName);
-  const sdkPath = path.join(installationPath, ".");
+  const functionsPath = sourcePath;
+  const sdkPath = installationPath;
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
 
   const files = getNestedFilePaths(functionsPath);
+
+
   let sdkFunctions = ``;
   let finalString = ``;
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
+
     if (
       ["json"].includes(filePathExtension(filePath)) ||
       filePath.includes("node_modules")
     ) {
       return;
     }
+    // for (let i = 0; i < ignoredPaths.length; i++) {
+    //   if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+    //     return;
+    //   }
+    // }
+
     const functionName = getFileNameWithoutExtension(filePath);
-    let functionPath = filePath.replace(installationPath, "");
+
+    let functionPath = filePath.replace(sourcePath, "");
     functionPath = functionPath.split(".").slice(0, -1).join(".");
 
     const functionCodeString = fs.readFileSync(filePath, "utf8");
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
-
+    let params: any = [];
     if (matches && matches[1]) {
-      let params = matches[1].split(/\s*,\s*/);
-      let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-      obj = {
-        ...obj,
-        ...deepMerge(
-          obj,
-          createFunctionFromPath(functionPath, {}, sdkFunction)
-        ),
-      };
-
-      finalString = JSON.stringify(obj).replace(":", "=");
-      finalString = finalString.substring(1, finalString.length - 1);
-
-      // console.log(
-      //   functionName,
-      //   JSON.stringify(obj),
-      //   "****" + functionName + "****",
-      //   functionsMap,
-      //   obj,
-      //   "\n"
-      // );
-      Object.keys(functionsMap).map((key: any) => {
-        finalString = finalString.replace(`"${key}"`, functionsMap[key]);
-      });
-
-      sdkFunctions += sdkFunction + "\n";
+      params = matches[1].split(/\s*,\s*/);
     } else {
+      params = [];
       console.log(
         "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
       );
     }
+    let sdkFunction = writeSDKFunction(functionName, params, functionPath);
+    obj = {
+      ...obj,
+      ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
+    };
+
+    finalString = JSON.stringify(obj).replace(":", "=");
+    finalString = finalString.substring(1, finalString.length - 1);
+
+    Object.keys(functionsMap).map((key: any) => {
+      finalString = finalString.replace(`"${key}"`, functionsMap[key]);
+    });
+
+    sdkFunctions += sdkFunction + "\n";
   });
 
   // Create SDK index file with all the functions

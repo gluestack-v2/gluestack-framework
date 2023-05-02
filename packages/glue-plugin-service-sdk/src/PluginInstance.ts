@@ -3,8 +3,9 @@ import { join } from "path";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance";
+import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import fileExists from "./helpers/file-exists";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -38,70 +39,63 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  watch(): any {
-    return [];
+  getDockerfile(): string {
+    return `${this._destinationPath}/Dockerfile`;
   }
 
-  getInstances() {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-sdk"
-    );
-
-    const instances: Array<IInstance> | undefined = plugin?.getInstances();
-
-    let watchPaths = [];
-    if (instances) {
-      for (const instance of instances) {
-        watchPaths.push(instance.getInstallationPath());
-      }
-    }
-
-    return watchPaths;
+  getSealServicefile(): string {
+    return `${this._destinationPath}/seal.service.yaml`;
   }
 
-  getGeneratedPath(name: any) {
+  getSourcePath(): string {
+    return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
+  }
+
+  getDestinationPath(): string {
     return join(
       process.cwd(),
       ".glue",
       "__generated__",
       "packages",
-      name,
+      this.getName(),
       "src",
-      name
+      this.getName()
     );
   }
 
-  getInstanceInfo(instanceName: string) {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-sdk"
-    );
 
-    const instances: Array<IInstance> | undefined = plugin?.getInstances();
-    if (!instances || instances.length <= 0) {
-      return {
-        err: `No instance with ${instanceName} found.`,
-        srcPath: "",
-        destPath: "",
-      };
-    }
+  async build() {
 
-    for (const instance of instances) {
-      if (instanceName == instance.getName()) {
-        let destPath = this.getGeneratedPath(instanceName);
-        let srcPath = join(
-          process.cwd(),
-          instance.getInstallationPath()
-        );
-        return { destPath, srcPath };
+
+    await this.app.write(this._sourcePath, this._destinationPath);
+    await this.updateInstancePackageJSON();
+    await this.updateRootPackageJSON();
+
+  }
+
+  async watch() {
+    // NO NEED TO WATCH
+
+
+    if (!await fileExists(this._destinationPath)) {
+      try {
+        await this.build();
+      } catch (error) {
+        console.log('>> Instance does not exits:', this.getName());
+        return;
       }
     }
-  }
 
-  getDockerfile(): string {
-    return `${this.getInstallationPath()}/Dockerfile`;
-  }
+    // COPY THIS SECTION of code for any other plugin instace watch
 
-  getSealServicefile(): string {
-    return `${this.getInstallationPath()}/seal.service.yaml`;
+
+    // this.app.watch(
+    //   this._sourcePath,
+    //   this._destinationPath,
+    //   async (event, path) => {
+    //     // TODO: OPTIMIZE UPDATES
+    //     // this.app.updateServices();
+    //   }
+    // );
   }
 }

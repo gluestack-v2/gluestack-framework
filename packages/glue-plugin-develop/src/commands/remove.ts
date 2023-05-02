@@ -6,7 +6,6 @@ import action from "./actions/remove";
 export default async (program: any, app: AppCLI): Promise<void> => {
   const command: ICommand = program
     .command("remove")
-    // .option("<instanceName>", "Choose Instance")
     .description("Removes the given instance.")
     .addArgument(
       new Argument("<instance-name>", "name of the instance to be removed")

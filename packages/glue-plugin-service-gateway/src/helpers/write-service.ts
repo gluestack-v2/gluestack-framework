@@ -9,8 +9,17 @@ function filePathExtension(filePath: string) {
   return filePath.split(".").pop() ?? "";
 }
 
+const eventsTemplate = (eventName: any, eventHandler: any) => {
+  return `
+  "${eventName}": {
+    handler: ${eventHandler},
+  },
+`;
+};
+
 function camelCaseArray(arr: any) {
   // Join array elements with a space
+
   const joinedString = arr.join(" ");
 
   // Split joinedString by space and capitalize each word except the first
@@ -24,6 +33,18 @@ function camelCaseArray(arr: any) {
 
   return camelCaseString;
 }
+
+const removeDashAndCamelCase = (str: any) => {
+  const words = str.split("-");
+  const camelCaseStr = words.reduce((acc: any, word: any, index: any) => {
+    if (index === 0) {
+      return word;
+    }
+    const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
+    return acc + capitalizedWord;
+  }, "");
+  return camelCaseStr;
+};
 
 function getNestedFilePaths(dirPath: any, fileList: any = []) {
   const files = fs.readdirSync(dirPath);
@@ -46,21 +67,26 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
 }
 
 // Usage: Pass the directory path as an argument to the function
+// Molecular service Actions/import statement
+let moleculerActions: any = {};
+let moleculerImportPaths = ``;
 
-const writeService = (installationPath: string, instanceName: string) => {
-  const moleculerFunctionsServiceTemplate =
-    moleculerFunctionsServiceTemplateFunc(instanceName);
+// Private service Actions/import statement
+let privateMoleculerActions: any = {};
+let privateMoleculerImportStatements = ``;
+
+let molecularEvents = ``;
+let privateMolecularEvents = ``;
+
+let eventsImportPaths = ``;
+
+const writeService = (
+  installationPath: string,
+  instanceName: string,
+  ignoredPaths: string[]
+) => {
   const functionsPath = path.join(installationPath, instanceName);
-  const moleculerFunctionsServicePath = path.join(
-    installationPath,
-    "services",
-    `${instanceName}.service.js`
-  );
   const files = getNestedFilePaths(functionsPath);
-
-  let sdkFunctions = ``;
-  let moleculerActions: any = {};
-  let moleculerImportStatements = ``;
 
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
@@ -70,47 +96,243 @@ const writeService = (installationPath: string, instanceName: string) => {
     ) {
       return;
     }
-    const functionName = getFileNameWithoutExtension(filePath);
 
-    if (fs.existsSync(filePath)) {
-      let functionPath = ("./" + filePath).replace(installationPath, "");
-      functionPath = functionPath.split(".").slice(0, -1).join(".");
-
-      const functionCodeString = fs.readFileSync(filePath, "utf8");
-      const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
-      const matches = functionCodeString.match(regex);
-
-      // Create actions object
-      let action: any = {};
-      action.rest = {
-        method: "POST",
-        path: functionPath,
+    // Get Private Actions, events, importd
+    if (filePath.includes("/private/")) {
+      privateMoleculerActions = {
+        ...privateMoleculerActions,
+        ...getPrivateActions(installationPath, instanceName, filePath).actions,
       };
-      const funcPath = functionPath.split("/");
-      funcPath.splice(0, 2);
-      action.handler = camelCaseArray(funcPath) + "Handler";
 
-      moleculerActions[funcPath.join(".")] = action;
+      privateMoleculerImportStatements =
+        privateMoleculerImportStatements +
+        getPrivateActions(installationPath, instanceName, filePath).importPaths;
+      if (filePath.includes("/private/events/")) {
+        let privateMolecularData = getEvents(
+          getPrivatePath(filePath, installationPath)
+        );
+        privateMolecularEvents = privateMolecularData.events;
+      }
 
-      // Create Import Statement
-      let functionImportStatement = `const ${camelCaseArray(
-        funcPath
-      )}Handler = require("..${functionPath}");`;
-      moleculerImportStatements += functionImportStatement + "\n";
+      return;
     }
+
+    if (filePath.includes("/events/")) {
+      molecularEvents += getEvents(getPaths(filePath, installationPath)).events;
+      eventsImportPaths += getEvents(
+        getPaths(filePath, installationPath)
+      ).importPaths;
+      return;
+    }
+    // Get Actions
+    moleculerActions = {
+      ...moleculerActions,
+      ...getActions(installationPath, instanceName, filePath).actions,
+    };
+    moleculerImportPaths =
+      moleculerImportPaths +
+      getActions(installationPath, instanceName, filePath).importPaths;
   });
 
+  // Writing Molecular Actions and events for instance
+  createService(
+    moleculerActions,
+    moleculerFunctionsServiceTemplateFunc(instanceName),
+    {
+      actionImportPath: moleculerImportPaths,
+      eventImportPath: eventsImportPaths,
+    },
+    path.join(installationPath, "services", `${instanceName}.service.js`),
+    molecularEvents
+  );
+
+  // Writing Molecular Actions and events for private service
+  createService(
+    privateMoleculerActions,
+    moleculerFunctionsServiceTemplateFunc("private"),
+    { actionImportPath: privateMoleculerImportStatements, eventImportPath: "" },
+    path.join(installationPath, "services", `private.service.js`),
+    privateMolecularEvents
+  );
+
+  updateApiGateway(installationPath, instanceName);
+};
+
+const getPrivateActions = (
+  installationPath: string,
+  instanceName: string,
+  filePath: string
+) => {
+  let obj: any = {};
+  let privateEvents = ``;
+  let functionImportStatement = ``;
+
+  if (fs.existsSync(filePath)) {
+    let finalPathArr = getPrivatePath(filePath, installationPath);
+
+    // Create actions object
+    let action: any = {};
+    action.rest = {
+      method: "POST",
+      path: finalPathArr.functionPath,
+    };
+
+    action.handler = camelCaseArray(finalPathArr.funcPath) + "Handler";
+    if (!filePath.includes("/events/"))
+      obj[finalPathArr.funcPath.join(".")] = action;
+    // if (filePath.includes("/events/")) {
+    //   privateEvents = getEvents(filePath, installationPath).events;
+    // }
+    // Create Import Statement
+    functionImportStatement = `const ${camelCaseArray(
+      finalPathArr.funcPath.map((str) => removeDashAndCamelCase(str))
+    )}Handler = require("..${finalPathArr.functionPath}");`;
+    functionImportStatement += "\n";
+  }
+  return {
+    actions: obj,
+    importPaths: functionImportStatement,
+  };
+};
+
+function getActions(
+  installationPath: string,
+  instanceName: string,
+  filePath: string
+) {
+  let serviceAction: any = {};
+  let functionImportStatement = ``;
+  if (fs.existsSync(filePath)) {
+    let finalPathArr = getPaths(filePath, installationPath);
+
+    // Create actions object
+    let action: any = {};
+    action.rest = {
+      method: "POST",
+      path: finalPathArr.functionPath,
+    };
+
+    action.handler = `(ctx) => {const serverSDK = new Ctx(ctx); return ${
+      camelCaseArray(finalPathArr.funcPath) + "Handler"
+    }(serverSDK);},`;
+
+    serviceAction[finalPathArr.funcPath.join(".")] = action;
+
+    // Create Import Statement
+    functionImportStatement = `const ${camelCaseArray(
+      finalPathArr.funcPath
+    )}Handler = require("..${finalPathArr.functionPath}");`;
+    functionImportStatement += "\n";
+  }
+
+  return {
+    actions: serviceAction,
+    importPaths: functionImportStatement,
+    // events: serviceAction
+  };
+}
+
+function getEvents(filePathData: any) {
+  // let eventsPath = funcPath.filter((str) => str !== "events");
+  // let res = getPaths(filePath, installationPath);
+  let events = ``;
+  const eventsIndex = filePathData.funcPath.indexOf("events");
+  let eventNameIndex = filePathData.funcPath[1];
+  // Check if the separator is present in the array
+  if (eventsIndex !== -1) {
+    eventNameIndex = filePathData.funcPath[eventsIndex + 1];
+  }
+  let functionImportStatement = ``;
+  functionImportStatement = `const ${camelCaseArray(
+    filePathData.funcPath
+  )}Handler = require("..${filePathData.functionPath}");`;
+  functionImportStatement += "\n";
+
+  events = eventsTemplate(
+    eventNameIndex,
+    camelCaseArray(
+      filePathData.funcPath.map((str: any) => removeDashAndCamelCase(str))
+    ) + "Handler"
+  );
+
+  return { events, importPaths: functionImportStatement };
+}
+
+function updateApiGateway(installationPath: string, instanceName: string) {
+  const apiGatewayPath = path.join(
+    installationPath,
+    "services",
+    "api.service.js"
+  );
+  const whitelistedArr = [`${instanceName}.**`];
+  const data = fs.readFileSync(apiGatewayPath, {
+    encoding: "utf-8",
+  });
+  let writeData = ``;
+  let whitelist: any = {};
+  if (data.includes("// ***Update Whitlisted services here***")) {
+    writeData = data.replace(
+      "// ***Update Whitlisted services here***",
+      `whitelist: ${JSON.stringify(whitelistedArr)},`
+    );
+    fs.writeFileSync(apiGatewayPath, writeData);
+  } else {
+    const regex = /whitelist(.*)\n/gm;
+    const matches: any = data.match(regex);
+
+    eval(`whitelist = {${matches[0]}}`);
+    let whitelistArray = whitelist.whitelist;
+    if (!whitelistArray.includes(`${instanceName}.**`)) {
+      whitelistArray = [...whitelistArray, ...whitelistedArr];
+      writeData = data.replace(matches[0], JSON.stringify(whitelistArray));
+      fs.writeFileSync(apiGatewayPath, writeData);
+    }
+  }
+}
+
+function createService(
+  moleculerActions: any,
+  moleculerFunctionsServiceTemplate: any,
+  moleculerImportStatements: any,
+  path: string,
+  eventsData: string
+) {
   let finalString = moleculerFunctionsServiceTemplate.replace(
     "// **---Add Actions Here---**",
     replaceHandlerNames(JSON.stringify(moleculerActions, null, 2))
   );
 
   finalString = finalString.replace(
-    "// **---Add Imports Here---**",
-    moleculerImportStatements
+    "// **---Add Events Here---**",
+    eventsData + "// **---Add Events Here---**"
   );
 
-  // Create functions service with all the actions and imports
-  writeFile(moleculerFunctionsServicePath, finalString);
-};
+  finalString = finalString.replace(
+    "// **---Add Imports Here---**",
+    moleculerImportStatements.actionImportPath +
+      moleculerImportStatements.eventImportPath +
+      `const Ctx = require("../serverSdk");`
+  );
+  writeFile(path, finalString);
+}
+
+function getPrivatePath(filePath: string, installationPath: string) {
+  let functionPath = ("./" + filePath).replace(installationPath, "");
+  functionPath = functionPath.split(".").slice(0, -1).join(".");
+  let funcPath = functionPath.split("/");
+  funcPath.splice(0, 2);
+  funcPath = funcPath.filter((str) => str !== "private");
+  return { funcPath, functionPath };
+}
+
+function getPaths(filePath: string, installationPath: string) {
+  // Dynamic route of a given action
+  let functionPath = ("./" + filePath).replace(installationPath, "");
+  functionPath = functionPath.split(".").slice(0, -1).join(".");
+  // An Array of actions name for nested routes
+  const funcPath = functionPath.split("/");
+  funcPath.splice(0, 2);
+  return { funcPath, functionPath };
+}
+
 export default writeService;
