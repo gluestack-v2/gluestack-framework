@@ -54,7 +54,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   getSourcePath(): string {
     return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
-	}
+  }
 
   getGeneratedPath() {
     return join(
@@ -65,9 +65,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
   }
 
-	getDestinationPath(): string {
-		return join(process.cwd(), this.getGeneratedPath());
-	}
+  getDestinationPath(): string {
+    return join(process.cwd(), this.getGeneratedPath());
+  }
 
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
@@ -80,14 +80,14 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async watch() {
 
-    // if (!await fileExists(this._destinationPath)) {
-    //   try {
-    //     await this.build();
-    //   } catch (error) {
-    //     console.log('>> Instance does not exits:', this.getName());
-    //     return;
-    //   }
-    // }
+    if (!await fileExists(this._destinationPath)) {
+      try {
+        await this.build();
+      } catch (error) {
+        console.log('>> Instance does not exits:', this.getName());
+        return;
+      }
+    }
 
     // this.app.watch(
     //   this._sourcePath,

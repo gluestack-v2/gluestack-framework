@@ -5,6 +5,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import fileExists from "./helpers/file-exists";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -48,10 +49,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   getSourcePath(): string {
     return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
-	}
+  }
 
-	 getDestinationPath(): string {
-		return join(
+  getDestinationPath(): string {
+    return join(
       process.cwd(),
       ".glue",
       "__generated__",
@@ -60,7 +61,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       "src",
       this.getName()
     );
-	}
+  }
 
 
   async build() {
@@ -74,15 +75,19 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async watch() {
     // NO NEED TO WATCH
+
+
+    if (!await fileExists(this._destinationPath)) {
+      try {
+        await this.build();
+      } catch (error) {
+        console.log('>> Instance does not exits:', this.getName());
+        return;
+      }
+    }
+
     // COPY THIS SECTION of code for any other plugin instace watch
-    // if (!await fileExists(this._destinationPath)) {
-    //   try {
-    //     await this.build();
-    //   } catch (error) {
-    //     console.log('>> Instance does not exits:', this.getName());
-    //     return;
-    //   }
-    // }
+
 
     // this.app.watch(
     //   this._sourcePath,

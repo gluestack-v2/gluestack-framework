@@ -11,8 +11,7 @@ import { Workspaces } from "@gluestack/helpers";
 import { writeFile, rewriteFile } from '../helpers/file';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance
-{
+	implements IInstance {
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;
@@ -75,27 +74,27 @@ export default abstract class BaseGluestackPluginInstance
 		return join(process.cwd(), this.getName());
 	}
 
-  getWorkspacePath(): string {
-    return join(
-      process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
-      this.getName()
-    );
-  }
+	getWorkspacePath(): string {
+		return join(
+			process.cwd(),
+			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			this.getName()
+		);
+	}
 
-  public get _workspacePath() : string {
+	public get _workspacePath(): string {
 		return this.getWorkspacePath();
 	}
 
-	public get _sourcePath() : string {
+	public get _sourcePath(): string {
 		return this.getSourcePath();
 	}
 
-	public get _destinationPath() : string {
+	public get _destinationPath(): string {
 		return this.getDestinationPath();
 	}
 
-  async updateInstancePackageJSON() {
+	async updateInstancePackageJSON() {
 		// update package.json'S name index with the new instance name
 		const pluginPackage = `${this._destinationPath}/package.json`;
 		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
@@ -115,7 +114,7 @@ export default abstract class BaseGluestackPluginInstance
 			private: true,
 			workspaces: [this.getName(), "packages/**/src"],
 			scripts: {
-				"install-all": "npm install --workspaces --if-present",
+				"install:all": "npm install --workspaces --if-present",
 				dev: "npm run dev --workspace @project/" + this.getName(),
 			},
 		};

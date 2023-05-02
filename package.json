@@ -4,18 +4,19 @@
   "description": "Gluestack V2 Framework CLI Project",
   "main": "index",
   "scripts": {
-    "install-all": "npm install --workspaces --if-present",
+    "install:all": "npm install --workspaces --if-present",
     "build:plugins": "npm run build --workspaces --if-present",
     "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
-    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
     "watch:sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
     "watch:gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
+    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
-    "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai"
+    "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai",
+    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:sdk & npm run watch:functions & npm run watch:web"
   },
   "repository": {
     "type": "git",

@@ -25,34 +25,6 @@ export default async (app: AppCLI): Promise<void> => {
   await watchInstances(app);
 };
 
-// const restart = async (app: AppCLI) => {
-//   const watcher = chokidar.watch(['./.glue/internals'], {
-//     persistent: true,
-//     cwd: process.cwd(),
-//     ignored: [
-//       '**/node_modules/**',
-//       '**/dist/**',
-//       '**/build/**',
-//       '**/.next/**',
-//     ]
-//   });
-
-
-//   watcher.on('all', async (event: string, path: string) => {
-//     console.log({ event, path });
-
-//     switch (event) {
-//       case 'add':
-//       case 'addDir':
-//       case 'unlink':
-//       case 'unlinkDir':
-//       case 'change':
-//         await watcher.close();
-//         await watchInstances(app);
-//         break;
-//     }
-//   });
-// }
 
 const watchInstances = async (app: AppCLI): Promise<void> => {
   for await (const plugin of app.plugins) {
