@@ -55,29 +55,23 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
 
-  getInstallationPath(target: string): string {
-    return `./${target}`;
-  }
+  // getInstallationPath(target: string): string {
+  //   return `./${target}`;
+  // }
 
   async runPostInstall(instanceName: string, target: string) {
-    const instance: IInstance = await this.app.createPluginInstance(
-      this,
-      instanceName,
-      this.getTemplateFolderPath(),
-      target
-    );
+    const plugin: IPlugin = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-queues"
+    ) as IPlugin;
 
-    if (!instance) {
-      return;
+    // Validation
+    if (plugin?.getInstances()?.[0]) {
+      throw new Error(
+        `queues instance already installed as ${plugin
+          .getInstances()[0]
+          .getName()}`
+      );
     }
-
-    // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-    await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
-
-    // update root package.json's workspaces with the new instance name
-    const rootPackage = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance.getInstallationPath());
   }
 
   createInstance(
@@ -112,7 +106,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       // @ts-ignore
       plugin.generateQueuesService(installationPath, name);
-      // console.log(plugin.generateQueuesService, "MADHAV");
     }
   }
 
@@ -120,11 +113,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return new Promise((resolve: any, reject) => {
       try {
         if (this.getInstances().length <= 0) {
-          console.log("> No functions plugin found, skipping build");
+          console.log("> No queues plugin found, skipping build");
           return;
         }
-
         this.generateQueuesInServiceGateway();
+
         // this.generateFunctionsInServiceSdk();
 
         resolve("Build Successful");
@@ -132,45 +125,5 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         reject(err);
       }
     });
-
-    // writeQueuesService(
-    //   this.getInstallationPath(queuesInstance.name),
-    //   serviceGatewayInstance.getInstallationPath(),
-    //   queuesInstance.name
-    // );
-
-    // Write Queue Service
   }
-
-  // Adding packages in all the seal services
-  // const generatedServicesPath = path.join(
-  //   process.cwd(),
-  //   ".glue",
-  //   "__generated__",
-  //   "seal",
-  //   "services"
-  // );
-  // const generatedServices = fs.readdirSync(generatedServicesPath);
-  // console.log({ generatedServices });
-  // for (const service of generatedServices) {
-  //   if (
-  //     await fileExists(
-  //       path.join(generatedServicesPath, service, "src", "packages")
-  //     )
-  //   ) {
-  //     rm(path.join(generatedServicesPath, service, "src", "packages"));
-  //   }
-
-  //   await copyFolder(
-  //     path.join(process.cwd(), ".glue", "__generated__", "packages"),
-  //     path.join(generatedServicesPath, service, "src"),
-  //     7
-  //   );
-  // }
-
-  // for await (const instance of instances) {
-  //   const target: string = instance.getInstallationPath();
-  //   const name: string = removeSpecialChars(instance.getName());
-  //   await this.app.write(target, name);
-  // }
 }

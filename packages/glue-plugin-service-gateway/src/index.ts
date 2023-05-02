@@ -147,44 +147,41 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         // hard-coded the version here
-        data.devDependencies["@moleculer/channels"] = "^0.1.6";
+        data.devDependencies["moleculer-bee-queue"] = "^0.1.10";
         let stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
-          "We have added @moleculer/channels to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+          "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
         );
       } else {
         warning(
-          "We could not find the package.json for service-gateway instance\n Please add @moleculer/channels to your service-gateway package.json\n and restart your service-gateway instance \n"
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
         );
       }
+      writeQueuesService(instance.getInstallationPath(), instanceName);
 
       // Add middleware and import to moleculer.config.js of gateway instance
-      const targetMoleculerConfig: string = join(
-        process.cwd(),
-        instance.getInstallationPath(),
-        "moleculer.config.js"
-      );
-      writeMoleculerConfig(targetMoleculerConfig);
+      // const targetMoleculerConfig: string = join(
+      //   process.cwd(),
+      //   instance.getInstallationPath(),
+      //   "moleculer.config.js"
+      // );
+      // writeMoleculerConfig(targetMoleculerConfig);
 
-      const queuesPath = path.resolve(process.cwd(), instancePath);
+      // const queuesPath = path.resolve(process.cwd(), instancePath);
 
-      const installationPath = instance.getInstallationPath();
-      if (await fileExists(path.join(installationPath, instancePath))) {
-        rm(path.join(installationPath, instancePath));
-      }
+      // const installationPath = instance.getInstallationPath();
+      // if (await fileExists(path.join(installationPath, instancePath))) {
+      //   rm(path.join(installationPath, instancePath));
+      // }
 
-      if (!(await fileExists(queuesPath))) {
-        console.log("> No queues plugin found, create instance first");
-      } else {
-        await copyFolder(queuesPath, installationPath, 3);
+      // if (!(await fileExists(queuesPath))) {
+      //   console.log("> No queues plugin found, create instance first");
+      // } else {
+      //   await copyFolder(queuesPath, installationPath, 3);
 
-        writeQueuesService(
-          this.getInstallationPath(instanceName),
-          instance.getInstallationPath(),
-          instanceName
-        );
-      }
+      //   writeQueuesService(instance.getInstallationPath(), instanceName);
+      // }
     }
   }
 
