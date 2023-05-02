@@ -5,7 +5,7 @@ import { PluginInstance } from './PluginInstance';
 import { join } from 'path';
 import { copyFile } from 'fs/promises';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluestack-plugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
@@ -77,8 +77,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     await copyFile(
-      join(instance.getInstallationPath(), "/.env.example"),
-      join(instance.getInstallationPath(), "/.env")
+      join(instance._sourcePath, ".env.example"),
+      join(instance._sourcePath, ".env")
     );
   }
 

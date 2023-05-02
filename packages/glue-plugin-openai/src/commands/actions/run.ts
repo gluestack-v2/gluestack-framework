@@ -31,7 +31,7 @@ export default async (app: AppCLI, prompt: string): Promise<void> => {
 
 	const dictionary: string = join(
 		process.cwd(),
-		instance.getInstallationPath(),
+		instance._sourcePath,
 		'index.json'
 	);
 	if (!dictionary) {
@@ -40,7 +40,7 @@ export default async (app: AppCLI, prompt: string): Promise<void> => {
 		process.exit(1);
 	}
 
-	const envfilepath: string = join(process.cwd(), instance.getInstallationPath(), '.env');
+	const envfilepath: string = join(process.cwd(), instance._sourcePath, '.env');
 	if (!await fileExists(envfilepath)) {
 		error(`Plugin "${pluginName}"`, ` env file at location "${relative('.', envfilepath)}" not found`);
 		process.exit(1);
@@ -79,7 +79,7 @@ const saveResponseToWebPlugin = async (app: AppCLI, prompt: string, response: an
 
 	info(`Found "${instance.getName()}" instance`, `plugin "${pluginName}"`);
 
-	const filepath: string = join(instance.getInstallationPath(), 'pages/index.tsx');
+	const filepath: string = join(instance._sourcePath, 'pages/index.tsx');
 	if (!await fileExists(filepath)) {
 		error(`Instance "${instance.getName()}"`, `file at location "${relative('.', filepath)}" not found`);
 		process.exit(1);

@@ -10,7 +10,7 @@
 
 ```bash
 # Run this command from your project's root directory
-$ npm run install-all;
+$ npm run install:all;
 ```
 
 ## Create plugin builds (in production mode)
@@ -78,7 +78,7 @@ $ node build/index run:service website --platform docker --ports 3000:9000
 $ node build/index run:service website --platform local
 ```
 
-npm run install-all
+npm run install:all
 npm run build:plugins
 node glue add @gluestack-v2/glue-plugin-develop develop
 node glue add @gluestack-v2/glue-plugin-web web

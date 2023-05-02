@@ -5,6 +5,8 @@ import copyFolder from './copy-folder';
 import fileExists from './file-exists';
 import writeFile from './write-file';
 import readFile from './read-file';
+import rewriteFile from './rewrite-file';
+
 import rm from './rm';
 import checkFolderIsEmpty from './check-folder-is-empty';
 
@@ -18,4 +20,5 @@ export {
 	appendFileContent,
 	rm,
 	checkFolderIsEmpty,
+	rewriteFile
 };

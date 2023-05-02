@@ -43,4 +43,26 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	getInstances(): IInstance[] {
 		return this.instances;
 	}
+
+	async build(): Promise<void> {
+    const instances: Array<IInstance> = this.getInstances();
+
+    for await (const instance of instances) {
+      await instance.build();
+    }
+  }
+
+  async watch (callback: Function): Promise<void> {
+    const instances: Array<IInstance> = this.getInstances();
+    for await (const instance of instances) {
+      if (instance.watch) {
+        await instance.watch((event: string, path: string) => {
+          // use this for debuggin
+          if (callback) {
+            callback(event, path);
+          }
+        });
+      }
+    }
+  }
 }

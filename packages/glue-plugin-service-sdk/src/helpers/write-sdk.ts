@@ -70,18 +70,16 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (
-  installationPath: string,
-  functionName: string,
-  ignoredPaths: string[]
-) => {
+const writeSDK = (sourcePath: string, installationPath: string) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = path.join(installationPath, functionName);
-  const sdkPath = path.join(installationPath, ".");
+  const functionsPath = sourcePath;
+  const sdkPath = installationPath;
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
 
   const files = getNestedFilePaths(functionsPath);
+
+
   let sdkFunctions = ``;
   let finalString = ``;
   files.forEach((functionFile: string, _index: number) => {
@@ -100,7 +98,8 @@ const writeSDK = (
     }
 
     const functionName = getFileNameWithoutExtension(filePath);
-    let functionPath = filePath.replace(installationPath, "");
+
+    let functionPath = filePath.replace(sourcePath, "");
     functionPath = functionPath.split(".").slice(0, -1).join(".");
 
     const functionCodeString = fs.readFileSync(filePath, "utf8");

@@ -1,35 +1,45 @@
-
-import { join } from "path";
+import chokidar from 'chokidar';
+import { Workspaces } from "@gluestack/helpers";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import {
-  info,
   success,
   warning,
 } from "@gluestack-v2/framework-cli/build/helpers/print";
 
+import { FOLDER_STRUCTURE } from "../../constants/folder-structure";
+import createFoldersFromJson from "../../helpers/create-folders-from-json";
+import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
+import { join } from 'path';
+
 export default async (app: AppCLI): Promise<void> => {
+  // creates folders from FOLDER_STRUCTURE constant
+  await createFoldersFromJson(FOLDER_STRUCTURE, process.cwd());
+
+  // add __generated__/packages into workspaces
+  await Workspaces.append(
+    `${process.cwd()}/package.json`,
+    GLUE_GENERATED_PACKAGES_PATH
+  );
+
+  // await restart(app);
+  await watchInstances(app);
+};
+
+
+const watchInstances = async (app: AppCLI): Promise<void> => {
   for await (const plugin of app.plugins) {
-    for await (const instance of plugin.instances) {
-      success("Found instance", instance.getName());
+    success("Found plugin", plugin.getName());
 
-      if (!instance.watch || !instance.watch().length) {
-        warning(
-          `${instance.getName()}`,
-          "contains no watch method or it exists but returns an empty array"
-        );
-        continue;
-      }
-
-      warning(instance.getName(), "watching for changes");
-      const cwd: string = join(process.cwd(), instance.getInstallationPath());
-
-      // AppCLI watch API
-      app.watch(cwd, instance.watch(), async (event: string, path: string) => {
-        info(`${instance.getName()}`, `${event.green} :: ${path.yellow}`);
-
-        // AppCLI write API
-        await app.write(cwd, instance.getName());
-      });
+    if (!plugin.watch) {
+      warning(
+        `${plugin.getName()}`,
+        "contains no watch method"
+      );
+      continue;
     }
+
+    warning(plugin.getName(), "running watch method...");
+
+    await plugin.watch();
   }
 };

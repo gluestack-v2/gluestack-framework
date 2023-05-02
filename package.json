@@ -4,20 +4,23 @@
   "description": "Gluestack V2 Framework CLI Project",
   "main": "index",
   "scripts": {
-    "install-all": "npm install --workspaces --if-present",
+    "install:all": "npm install --workspaces --if-present",
     "build:plugins": "npm run build --workspaces --if-present",
     "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
-    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
-    "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
-    "watch:service-gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
+    "watch:sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
+    "watch:gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
+    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
     "watch:cron": "npm run watch --workspace @gluestack-v2/glue-plugin-cron",
     "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai",
-    "watch:events": "npm run watch --workspace @gluestack-v2/glue-plugin-events"
+    "watch:events": "npm run watch --workspace @gluestack-v2/glue-plugin-events",
+    
+    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions",
+    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:sdk & npm run watch:functions & npm run watch:web"
   },
   "repository": {
     "type": "git",
@@ -49,12 +52,7 @@
     "events"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-components": "^0.0.2",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-events": "^0.0.2",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
-    "@gluestack-v2/glue-plugin-web": "^0.0.2"
+    "@gluestack-v2/framework-cli": "^0.0.*",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
   }
 }

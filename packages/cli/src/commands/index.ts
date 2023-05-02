@@ -1,11 +1,9 @@
 'use strict';
 import install from './install';
 import instanceList from './instance-list';
-import pluginList from './plugin-list';
-import pluginInit from './plugin-init';
 
 const commands = () => {
-	return [install, instanceList, pluginList, pluginInit];
+	return [install, instanceList];
 };
 
 export default commands;

@@ -42,7 +42,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 	plugins.forEach(({ key, plugin }, index) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance: IInstance) => {
-				const installationPath = pluginInstance.getInstallationPath ? pluginInstance.getInstallationPath() : '';
+				const installationPath = pluginInstance._destinationPath || '';
 				const pluginInstanceArr = [key, pluginInstance.getName(), installationPath, plugin.getVersion()] as string[];
 				arr.push(pluginInstanceArr);
 			});

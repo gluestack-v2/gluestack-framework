@@ -5,7 +5,7 @@ import { PluginInstance } from "./PluginInstance";
 import { join, resolve } from "path";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
@@ -62,9 +62,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
 
-  getInstallationPath(target: string): string {
-    return `./.glue/__generated__/packages/${target}/src/${target}`;
-  }
+  // getInstallationPath(target: string): string {
+  //   return `./.glue/__generated__/packages/${target}/src/${target}`;
+  // }
 
   getInternalFolderPath(): string {
     return `${process.cwd()}/node_modules/${this.getName()}/internal`;
@@ -99,28 +99,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async generateSDK(
-    instancePath: any,
-    instanceName: string,
-    ignoredPaths: string[]
-  ) {
+  async generateSDK(sourcePath: string, instanceName: string) {
     const instances = this.getInstances();
     for await (const instance of instances) {
-      const GLUE_GENERATED_PKG_PATH: string =
-        `.glue/__generated__/packages/${instance.getName()}/src` as const;
-      const functionsPath = resolve(process.cwd(), instancePath);
-
-      const installationPath = resolve(GLUE_GENERATED_PKG_PATH, instance.name);
-      if (existsSync(resolve(process.cwd(), installationPath, instancePath))) {
-        rm(resolve(process.cwd(), installationPath, instancePath));
-      }
-      if (!existsSync(functionsPath)) {
+      if (!existsSync(sourcePath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
-        await copyFolder(functionsPath, installationPath, 3);
-        writeSDK(installationPath, instanceName, ignoredPaths);
-        // @ts-ignore
-        await this.app.updateServices();
+
+        writeSDK(sourcePath, instance._destinationPath);
       }
     }
   }
@@ -135,49 +121,5 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getSealServicefile(): string {
     return `${this.getInternalFolderPath()}/seal.service.yaml`;
-  }
-
-  async build(): Promise<void> {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-sdk"
-    );
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No web plugin found, skipping build...");
-      return;
-    }
-
-    const instances: Array<IInstance> = plugin.getInstances();
-    for await (const instance of instances) {
-      const sourcePath = join(this.getTemplateFolderPath());
-
-      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      // await this.app.write(sourcePath, name);
-      await copyFolder(sourcePath, instance.getInstallationPath());
-
-      let instanceName = instance.getName();
-      // update package.json'S name index with the new instance name
-      const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-      await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
-
-      // update root package.json's workspaces with the new instance name
-      const rootPackage: string = `${process.cwd()}/package.json`;
-      await Workspaces.append(rootPackage, instance.getInstallationPath());
-
-      // move seal.service.yaml into the new instance
-      await reWriteFile(
-        `${instance.getSealServicefile()}`,
-        instanceName,
-        "INSTANCENAME"
-      );
-
-      // move dockerfile into the new instance
-      if (instance.getDockerfile) {
-        await reWriteFile(
-          `${instance?.getDockerfile()}`,
-          instanceName,
-          "INSTANCENAME"
-        );
-      }
-    }
   }
 }
