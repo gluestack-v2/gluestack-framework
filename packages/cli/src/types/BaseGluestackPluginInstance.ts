@@ -53,36 +53,27 @@ export default abstract class BaseGluestackPluginInstance
 		return this.callerPlugin;
 	}
 
-	getInstallationPath(): string {
-		return this.installationPath;
-	}
-
 	getDockerfile(): string {
-		return `${this.getInstallationPath()}/Dockerfile`;
+		return `${this._workspacePath}/Dockerfile`;
 	}
 
 	getSealServicefile(): string {
-		return `${this.getInstallationPath()}/seal.service.yaml`;
+		return `${this._workspacePath}/seal.service.yaml`;
 	}
 
-	getGeneratedPath(name: any) {
-    return join(
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
-      name,
-      "src"
-    );
-  }
-
 	getDestinationPath(): string {
-		return join(process.cwd(), this.getGeneratedPath(this.getName()));
+		return join(
+			process.cwd(),
+			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			this.getName(),
+			"src",
+			this.getName()
+		);
 	}
 
 	getSourcePath(): string {
 		return join(process.cwd(), this.getName());
 	}
-
-
-
 
   getWorkspacePath(): string {
     return join(
@@ -104,33 +95,31 @@ export default abstract class BaseGluestackPluginInstance
 		return this.getDestinationPath();
 	}
 
-
   async updateInstancePackageJSON() {
 		// update package.json'S name index with the new instance name
 		const pluginPackage = `${this._destinationPath}/package.json`;
 		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
-	 }
+	}
 
-	 async updateRootPackageJSON() {
-		 // update root package.json's workspaces with the new instance name
-		 const rootPackage: string = `${process.cwd()}/package.json`;
-		 await Workspaces.append(rootPackage, this._destinationPath);
-	 }
+	async updateRootPackageJSON() {
+		// update root package.json's workspaces with the new instance name
+		const rootPackage: string = `${process.cwd()}/package.json`;
+		await Workspaces.append(rootPackage, this._destinationPath);
+	}
 
+	async updateWorkspacePackageJSON() {
+		// // add package.json with workspaces
+		const packageFile: string = join(this._workspacePath, "package.json");
+		const packageContent: any = {
+			name: this.getName(),
+			private: true,
+			workspaces: [this.getName(), "packages/**/src"],
+			scripts: {
+				"install-all": "npm install --workspaces --if-present",
+				dev: "npm run dev --workspace @project/" + this.getName(),
+			},
+		};
 
-	 async updateWorkspacePackageJSON() {
-		 // // add package.json with workspaces
-		 const packageFile: string = join(this._workspacePath, "package.json");
-		 const packageContent: any = {
-			 name: this.getName(),
-			 private: true,
-			 workspaces: [this.getName(), "packages/**/src"],
-			 scripts: {
-				 "install-all": "npm install --workspaces --if-present",
-				 dev: "npm run dev --workspace @project/" + this.getName(),
-			 },
-		 };
-
-		 await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-	 }
+		await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+	}
 }

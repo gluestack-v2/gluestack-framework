@@ -10,7 +10,7 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
     "@gluestack-v2/glue-plugin-router-nginx",
   ) as IPlugin;
 
-  const path: string = plugin.getInstances()[0].getInstallationPath();
+  const path: string = plugin.getInstances()[0]._sourcePath;
 
   const configYaml = await readFile('seal.yaml', 'utf8');
   let config: Config;

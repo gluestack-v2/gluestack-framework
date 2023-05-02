@@ -69,19 +69,19 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance.getInstallationPath()}/package.json`;
+    const pluginPackage = `${instance._sourcePath}/package.json`;
     await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
 
     // update root package.json's workspaces with the new instance name
     const rootPackage = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance.getInstallationPath());
+    await Workspaces.append(rootPackage, instance._sourcePath);
   }
 
   generateFunctionsInServiceSdk() {
     const instances = this.getInstances();
     for (const instance of instances) {
       const name = instance.getName();
-      const installationPath = instance.getInstallationPath();
+      const installationPath = instance._sourcePath;
 
       const plugin = this.app.getPluginByName(
         "@gluestack-v2/glue-plugin-service-sdk"
@@ -111,25 +111,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
-
-  // async build(): Promise<void> {
-  //   return new Promise((resolve: any, reject) => {
-  //     try {
-  //       const plugin: IPlugin | null = this.app.getPluginByName(
-  //         "@gluestack-v2/glue-plugin-functions"
-  //       );
-  //       if (!plugin || plugin.getInstances().length <= 0) {
-  //         console.log("> No functions plugin found, skipping build");
-  //         return;
-  //       }
-
-  //       this.generateFunctionsInServiceGateway();
-  //       this.generateFunctionsInServiceSdk();
-
-  //       resolve("Build Successful");
-  //     } catch (err) {
-  //       reject(err);
-  //     }
-  //   });
-  // }
 }

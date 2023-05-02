@@ -43,70 +43,36 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getDockerfile(): string {
-    return `${this.getInstallationPath()}/Dockerfile`;
+    return `${this._sourcePath}/Dockerfile`;
   }
 
   getSealServicefile(): string {
-    return `${this.getInstallationPath()}/seal.service.yaml`;
+    return `${this._sourcePath}/seal.service.yaml`;
   }
 
+
   async build () {
-    const source: string = this.getInstallationPath();
-    const name: string = removeSpecialChars(this.getName());
-
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-    await this.app.write(source, name);
-
-    await this.app.updateServices();
-
-    /**
-     * @TODO:
-     * 1. move below code to the glue-plugin-seal or something
-     * 2. seal.service.yaml, dockerfile & package.json movement
-     *    into .glue/seal/services/<instance-name>/src
-     */
-    const SEAL_SERVICES_PATH: string = GLUE_GENERATED_SEAL_SERVICES_PATH;
-    const destination: string = join(
-      process.cwd(),
-      SEAL_SERVICES_PATH,
-      name,
-      "src"
-    );
-
-    // add package.json with workspaces
-    const packageFile: string = join(destination, "package.json");
-    const packageContent: any = {
-      name: name,
-      private: true,
-      workspaces: [name, "packages/**/src"],
-      scripts: {
-        "install-all": "npm install --workspaces --if-present",
-        dev: "npm run dev --workspace @project/" + name,
-      },
-    };
-
-    await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-
-    // await this.sealInit(SEAL_SERVICES_PATH, name);
+    await this.app.write(this._sourcePath, this._destinationPath);
   }
 
   async watch(callback: Function): Promise<void> {
-    if (!await fileExists(this.getGeneratedPath(this.getName()))) {
-      try {
-        await this.build();
-      } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
-        return;
-      }
-    }
 
-    const sourcePath = this.getSourcePath();
-    const destinationPath = this.getDestinationPath();
+    // if (!await fileExists(this.getGeneratedPath())) {
+    //   try {
+    //     await this.build();
+    //   } catch (error) {
+    //     console.log('>> Instance does not exits:', this.getName());
+    //     return;
+    //   }
+    // }
 
-    this.app.watch(
-      sourcePath,
-      destinationPath,
-      async (event, path) => callback(event, path)
-    );
+    // const sourcePath = this.getSourcePath();
+    // const destinationPath = this.getDestinationPath();
+
+    // this.app.watch(
+    //   sourcePath,
+    //   destinationPath,
+    //   async (event, path) => callback(event, path)
+    // );
   }
 }

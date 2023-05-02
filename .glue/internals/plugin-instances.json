@@ -5,12 +5,5 @@
       "directory": "./develop",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-service-gateway": [
-    {
-      "instance": "gateway",
-      "directory": "./.glue/__generated__/seal/services/gateway/src/gateway",
-      "container_store": {}
-    }
   ]
 }

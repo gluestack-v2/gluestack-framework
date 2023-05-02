@@ -9,12 +9,14 @@ export default interface IInstance {
 	gluePluginStore: IGlueStorePlugin;
 	installationPath?: string;
 	isOfTypeInstance: boolean;
+	_destinationPath: string;
+	_sourcePath: string;
+	_workspacePath: string;
 
 	init(): any;
 	destroy(): any;
 	getName(): string;
 	getCallerPlugin(): IPlugin;
-	getInstallationPath(): string;
 
 	build(): Promise<void>;
 	watch(callback?: Function): Promise<void>;

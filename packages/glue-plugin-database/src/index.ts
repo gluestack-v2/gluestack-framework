@@ -101,7 +101,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       // Write the .env file at database root
       fs.writeFileSync(
-        join(instance.getInstallationPath(), ".env"),
+        join(instance._sourcePath, ".env"),
         envContent
       );
 
@@ -109,14 +109,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       // Write the .env file at graphql root
       fs.writeFileSync(
-        join(instance.getInstallationPath(), "graphql/.env"),
+        join(instance._sourcePath, "graphql/.env"),
         graphqlEnvContent
       );
 
       //Change DB name in metadata/databases/databases.yaml file
       let databaseFileContent = fs.readFileSync(
         join(
-          instance.getInstallationPath(),
+          instance._sourcePath,
           "graphql/metadata/databases/databases.yaml"
         ),
         "utf-8"
@@ -130,7 +130,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       fs.writeFileSync(
         join(
-          instance.getInstallationPath(),
+          instance._sourcePath,
           "graphql/metadata/databases/databases.yaml"
         ),
         databaseFileContent
@@ -139,7 +139,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       // Create a database folder in migrations
       fs.mkdirSync(
         join(
-          instance.getInstallationPath(),
+          instance._sourcePath,
           "graphql/migrations",
           answers.POSTGRES_DB
         )
@@ -193,112 +193,5 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
     console.log(sealAddService.stdout.toString());
     console.error(sealAddService.stderr.toString());
-  }
-
-  async build(): Promise<void> {
-    // let instanceMap: any = {};
-    // this.app.getPlugins().map((p) =>
-    //   p.getInstances().map((i) => {
-    //     if (instanceMap[i.getCallerPlugin().getName()]) {
-    //       instanceMap[i.getCallerPlugin().getName()].push({
-    //         path: i.getInstallationPath(),
-    //         pluginName: i.getCallerPlugin().getName(),
-    //         instanceName: i.getName(),
-    //       });
-    //     } else {
-    //       instanceMap[i.getCallerPlugin().getName()] = [];
-    //       instanceMap[i.getCallerPlugin().getName()].push({
-    //         path: i.getInstallationPath(),
-    //         pluginName: i.getCallerPlugin().getName(),
-    //         instanceName: i.getName(),
-    //       });
-    //     }
-    //   })
-    // );
-
-    // Copy packages folder to seal services
-    // const generatedServices = fs.readdirSync(generatedWebPath);
-    // for (const service of generatedServices) {
-
-    // }
-
-    // End Copy packages folder to seal services
-
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-database"
-    );
-
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No database plugin found, skipping build...");
-      return;
-    }
-
-    const instances: Array<IInstance> = plugin.getInstances();
-
-    for await (const instance of instances) {
-      const source: string = instance.getInstallationPath();
-      const name: string = removeSpecialChars(instance.getName());
-      const generatedPkgPath = path.join(
-        process.cwd(),
-        ".glue",
-        "__generated__",
-        "packages"
-      );
-      const copyPkgPath = path.join(
-        process.cwd(),
-        ".glue",
-        "__generated__",
-        "seal",
-        "services",
-        name,
-        "src"
-      );
-
-      // if (instanceMap?.["@gluestack-v2/glue-plugin-service-sdk"]) {
-      //   for (const sdk of instanceMap?.[
-      //     "@gluestack-v2/glue-plugin-service-sdk"
-      //   ]) {
-      //     let generatedWebPath = "";
-      //     generatedWebPath = path.join(process.cwd(), sdk.path);
-      if (await fileExists(path.join(copyPkgPath))) {
-        console.log("Removing " + path.join(copyPkgPath));
-
-        rm(path.join(copyPkgPath));
-      }
-
-      await copyFolder(path.join(generatedPkgPath), path.join(copyPkgPath), 7);
-
-      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      await this.app.write(source, name);
-
-      /**
-       * @TODO:
-       * 1. move below code to the glue-plugin-seal or something
-       * 2. seal.service.yaml, dockerfile & package.json movement
-       *    into .glue/seal/services/<instance-name>/src
-       */
-      // const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services";
-      // const destination: string = join(
-      //   process.cwd(),
-      //   SEAL_SERVICES_PATH,
-      //   name,
-      //   "src"
-      // );
-
-      // // add package.json with workspaces
-      // const packageFile: string = join(destination, "package.json");
-      // const packageContent: any = {
-      //   name: name,
-      //   private: true,
-      //   workspaces: [name, "packages/**/src"],
-      //   scripts: {
-      //     "install-all": "npm install --workspaces --if-present",
-      //     dev: "npm run dev --workspace @project/" + name,
-      //   },
-      // };
-      // await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
-
-      // this.sealInit(SEAL_SERVICES_PATH, name);
-    }
   }
 }

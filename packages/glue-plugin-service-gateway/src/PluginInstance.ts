@@ -48,9 +48,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return this.callerPlugin;
   }
 
-  getInstallationPath(): string {
-    return this.installationPath;
-  }
+  // getInstallationPath(): string {
+  //   return this.installationPath;
+  // }
 
   getSourcePath(): string {
     return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
@@ -69,7 +69,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 		return join(process.cwd(), this.getGeneratedPath());
 	}
 
-
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
 
@@ -81,32 +80,32 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async watch() {
 
-    if (!await fileExists(this._destinationPath)) {
-      try {
-        await this.build();
-      } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
-        return;
-      }
-    }
+    // if (!await fileExists(this._destinationPath)) {
+    //   try {
+    //     await this.build();
+    //   } catch (error) {
+    //     console.log('>> Instance does not exits:', this.getName());
+    //     return;
+    //   }
+    // }
 
-    this.app.watch(
-      this._sourcePath,
-      this._destinationPath,
-      async (event, path) => {
-        // TODO: OPTIMIZE UPDATES
-        // this.app.updateServices();
-      }
-    );
+    // this.app.watch(
+    //   this._sourcePath,
+    //   this._destinationPath,
+    //   async (event, path) => {
+    //     // TODO: OPTIMIZE UPDATES
+    //     // this.app.updateServices();
+    //   }
+    // );
 
 
   }
 
   getDockerfile(): string {
-    return `${this.getInstallationPath()}/Dockerfile`;
+    return `${this._destinationPath}/Dockerfile`;
   }
 
   getSealServicefile(): string {
-    return `${this.getInstallationPath()}/seal.service.yaml`;
+    return `${this._destinationPath}/seal.service.yaml`;
   }
 }

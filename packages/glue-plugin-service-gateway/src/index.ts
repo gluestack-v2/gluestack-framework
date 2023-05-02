@@ -68,9 +68,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
 
-  getInstallationPath(target: string): string {
-    return `./.glue/__generated__/seal/services/${target}/src/${target}`;
-  }
+  // getInstallationPath(target: string): string {
+  //   return `./.glue/__generated__/seal/services/${target}/src/${target}`;
+  // }
 
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
@@ -110,7 +110,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     for await (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
-      const installationPath = instance.getInstallationPath();
+      const installationPath = instance._destinationPath;
       if (await fileExists(path.join(installationPath, instancePath))) {
         rm(path.join(installationPath, instancePath));
       }
@@ -173,12 +173,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       let instanceName = instance.getName();
       // update package.json'S name index with the new instance name
-      const pluginPackage = `${instance.getInstallationPath()}/package.json`;
+      const pluginPackage = `${instance._destinationPath}/package.json`;
       await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
 
       // update root package.json's workspaces with the new instance name
       const rootPackage: string = `${process.cwd()}/package.json`;
-      await Workspaces.append(rootPackage, instance.getInstallationPath());
+      await Workspaces.append(rootPackage, instance._destinationPath);
 
       /**
        * @TODO:
@@ -209,8 +209,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       await this.sealInit(SEAL_SERVICES_PATH, name);
     }
   }
-
-  // async watch() {
-
-  // }
 }

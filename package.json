@@ -37,17 +37,10 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*",
-    "functions",
-    ".glue/__generated__/packages",
-    ".glue/__generated__/packages/sdk/src/sdk",
-    "/Users/faizahmedfarooqui/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src",
-    "/Users/faizahmedfarooqui/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src/gateway"
+    "packages/*"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2"
+    "@gluestack-v2/framework-cli": "^0.0.*",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
   }
 }

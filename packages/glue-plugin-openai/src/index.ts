@@ -77,8 +77,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     await copyFile(
-      join(instance.getInstallationPath(), "/.env.example"),
-      join(instance.getInstallationPath(), "/.env")
+      join(instance._sourcePath, ".env.example"),
+      join(instance._sourcePath, ".env")
     );
   }
 

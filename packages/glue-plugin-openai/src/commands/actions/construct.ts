@@ -22,7 +22,7 @@ export default async (app: AppCLI): Promise<void> => {
 		process.exit(1);
 	}
 
-	const envfilepath: string = join(process.cwd(), instance.getInstallationPath(), '.env');
+	const envfilepath: string = join(process.cwd(), instance._sourcePath, '.env');
 	if (!await fileExists(envfilepath)) {
 		error(`Plugin "${pluginName}"`, `env file at location "${relative('.', envfilepath)}" not found`);
 		process.exit(1);
