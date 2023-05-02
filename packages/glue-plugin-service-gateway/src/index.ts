@@ -119,8 +119,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         rm(path.join(installationPath, instancePath));
       }
 
-      console.log('>> functions:', functionsPath);
-
       if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
@@ -129,5 +127,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       }
     }
   }
-
 }
