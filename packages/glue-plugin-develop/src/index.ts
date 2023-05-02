@@ -33,7 +33,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   init() {
     this.app.addCommand((program: ICommand) => buildCommand(program, this.app));
     this.app.addCommand((program: ICommand) => watchCommand(program, this.app));
-    this.app.addCommand((program: ICommand) => removeCommand(program, this.app));
+    this.app.addCommand((program: ICommand) =>
+      removeCommand(program, this.app)
+    );
     this.app.addCommand((program: ICommand) => upCommand(program, this.app));
   }
 

@@ -104,4 +104,5 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getSealServicefile(): string {
     return `${this._destinationPath}/seal.service.yaml`;
   }
+
 }

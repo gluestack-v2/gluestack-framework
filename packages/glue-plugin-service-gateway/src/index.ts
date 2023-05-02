@@ -1,3 +1,8 @@
+import {
+  warning,
+  success,
+} from "@gluestack-v2/framework-cli/build/helpers/print";
+import fs from "fs";
 // @ts-ignore
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
@@ -23,6 +28,8 @@ import writeService from "./helpers/write-service";
 import rm from "./helpers/rm";
 import copyFolder from "./helpers/copy-folder";
 import { spawnSync } from "child_process";
+import writeMoleculerConfig from "./helpers/write-moleculer-config";
+import writeQueuesService from "./helpers/write-queues-service";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -111,6 +118,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     ignoredPaths: string[]
   ) {
     const instances = this.getInstances();
+    if (this.instances.length === 0) {
+      return;
+    }
     for await (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
@@ -125,6 +135,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         await copyFolder(functionsPath, installationPath, 3);
         writeService(installationPath, instanceName, ignoredPaths);
       }
+    }
+  }
+
+  async generateQueuesService(queueInstanceName: string) {
+    if (this.instances.length === 0) {
+      return;
+    }
+
+    const instances = this.getInstances();
+    for await (const instance of instances) {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
+
+      if (await fileExists(targetPkgJson)) {
+        const data = await require(targetPkgJson);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        // hard-coded the version here
+        data.devDependencies["moleculer-bee-queue"] = "^0.1.10";
+        let stringData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+      writeQueuesService(instance._destinationPath, queueInstanceName);
     }
   }
 }

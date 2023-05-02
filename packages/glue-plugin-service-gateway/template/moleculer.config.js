@@ -1,5 +1,7 @@
 "use strict";
 
+// **---Add Imports Here---**
+
 /**
  * Moleculer ServiceBroker configuration file
  *

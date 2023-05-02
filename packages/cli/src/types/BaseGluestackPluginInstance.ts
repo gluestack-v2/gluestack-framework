@@ -8,7 +8,7 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 import { SEAL_SERVICES_PATH } from '../constants/seal';
 
 import { Workspaces } from "@gluestack/helpers";
-import { writeFile, rewriteFile } from '../helpers/file';
+import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
@@ -38,10 +38,6 @@ export default abstract class BaseGluestackPluginInstance
 	abstract destroy(): void;
 
 	async build(): Promise<void> {
-		//
-	}
-
-	async watch(callback?: Function): Promise<void> {
 		//
 	}
 
@@ -150,5 +146,23 @@ export default abstract class BaseGluestackPluginInstance
 
 		console.log(sealAddService.stdout.toString());
 		console.error(sealAddService.stderr.toString());
+	}
+
+
+	async watch(callback?: Function): Promise<void> {
+
+		if (!await fileExists(this._destinationPath)) {
+			try {
+				await this.build();
+			} catch (error) {
+				console.log('>> Instance does not exits:', this.getName());
+				return;
+			}
+		}
+
+		if (callback) {
+			callback();
+		}
+
 	}
 }
