@@ -117,7 +117,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     instanceName: string,
     ignoredPaths: string[]
   ) {
+
     const instances = this.getInstances();
+    if (this.instances.length === 0) {
+      return;
+    }
     for await (const instance of instances) {
       const functionsPath = path.resolve(process.cwd(), instancePath);
 
@@ -137,58 +141,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  async generateQueuesService(instancePath: string, instanceName: string) {
-    // // console.log("CALLED", instancePath, instanceName);
-    // const instances = this.getInstances();
-    // for await (const instance of instances) {
-    //   const targetPkgJson: string = join(
-    //     process.cwd(),
-    //     instance.getInstallationPath(),
-    //     "package.json"
-    //   );
+  async generateQueuesService(queueInstanceName: string) {
 
-    //   if (await fileExists(targetPkgJson)) {
-    //     const data = await require(targetPkgJson);
-    //     if (!data.devDependencies) {
-    //       data.devDependencies = {};
-    //     }
-    //     // hard-coded the version here
-    //     data.devDependencies["moleculer-bee-queue"] = "^0.1.10";
-    //     let stringData = JSON.stringify(data, null, 2);
-    //     await fs.writeFileSync(targetPkgJson, stringData);
-    //     success(
-    //       "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
-    //     );
-    //   } else {
-    //     warning(
-    //       "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
-    //     );
-    //   }
-    //   writeQueuesService(instance.getInstallationPath(), instanceName);
+    if (this.instances.length === 0) {
+      return;
+    }
 
-    //   // Add middleware and import to moleculer.config.js of gateway instance
-    //   // const targetMoleculerConfig: string = join(
-    //   //   process.cwd(),
-    //   //   instance.getInstallationPath(),
-    //   //   "moleculer.config.js"
-    //   // );
-    //   // writeMoleculerConfig(targetMoleculerConfig);
+    const instances = this.getInstances();
+    for await (const instance of instances) {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
 
-    //   // const queuesPath = path.resolve(process.cwd(), instancePath);
+      if (await fileExists(targetPkgJson)) {
+        const data = await require(targetPkgJson);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        // hard-coded the version here
+        data.devDependencies["moleculer-bee-queue"] = "^0.1.10";
+        let stringData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+      writeQueuesService(instance._destinationPath, queueInstanceName);
 
-    //   // const installationPath = instance.getInstallationPath();
-    //   // if (await fileExists(path.join(installationPath, instancePath))) {
-    //   //   rm(path.join(installationPath, instancePath));
-    //   // }
-
-    //   // if (!(await fileExists(queuesPath))) {
-    //   //   console.log("> No queues plugin found, create instance first");
-    //   // } else {
-    //   //   await copyFolder(queuesPath, installationPath, 3);
-
-    //   //   writeQueuesService(instance.getInstallationPath(), instanceName);
-    //   // }
-    // }
+    }
   }
 
 }

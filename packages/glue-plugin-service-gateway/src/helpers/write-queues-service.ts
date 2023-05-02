@@ -54,82 +54,12 @@ const writeQueuesService = (
   const moleculerQueuesServiceTemplate =
     moleculerQueuesServiceTemplateFunc(instanceName);
 
-  // const queuesPath = path.join(process.cwd(), installationPath);
-  // console.log(installationPath);
-  const queuesPath = path.join(generatedServiceGatewayPath, instanceName);
-
   const moleculerQueuesServiceTemplatePath = path.join(
     generatedServiceGatewayPath,
     "services",
     `${instanceName}.service.js`
   );
 
-  // console.log(moleculerQueuesServiceTemplate);
-  // console.log(queuesPath, moleculerQueuesServiceTemplatePath);
-  // const files = getNestedFilePaths(queuesPath);
-
-  // let sdkFunctions = ``;
-  // let moleculerActions = ``;
-  // let moleculerChannels: any = {};
-  // let moleculerImportStatements = ``;
-
-  // files.forEach((queueFile: string, _index: number) => {
-  //   const filePath = queueFile;
-  //   if (
-  //     ["json"].includes(filePathExtension(filePath)) ||
-  //     filePath.includes("node_modules")
-  //   ) {
-  //     return;
-  //   }
-  //   const functionName = getFileNameWithoutExtension(filePath);
-
-  //   if (fs.existsSync(filePath)) {
-  //     let functionPath = ("./" + filePath).replace(
-  //       generatedServiceGatewayPath,
-  //       ""
-  //     );
-  //     functionPath = functionPath.split(".").slice(0, -1).join(".");
-
-  //     // Create actions object
-  //     let actionHandlerString = `${functionName}: {
-  //       handler: async function (ctx) {
-  //         this.broker.sendToChannel("${functionName}", ctx);
-  //       },
-  //     },`;
-
-  //     const funcPath = functionPath.split("/");
-  //     funcPath.splice(0, 2);
-
-  //     let channel: any = {};
-  //     channel.handler = camelCaseArray(funcPath) + "Handler";
-
-  //     moleculerChannels[functionName] = channel;
-  //     moleculerActions += actionHandlerString;
-
-  //     // Create Import Statement
-  //     let functionImportStatement = `const ${camelCaseArray(
-  //       funcPath
-  //     )}Handler = require("..${functionPath}");`;
-  //     moleculerImportStatements += functionImportStatement + "\n";
-  //   }
-  // });
-
-  // let finalString = moleculerQueuesServiceTemplate.replace(
-  //   "// ***---Add Actions Here---***",
-  //   `{${moleculerActions}}`
-  // );
-
-  // finalString = finalString.replace(
-  //   "// ***---Add Imports Here---***",
-  //   moleculerImportStatements
-  // );
-
-  // finalString = finalString.replace(
-  //   "// ***---Add Channels Here---***",
-  //   replaceHandlerNames(JSON.stringify(moleculerChannels, null, 2))
-  // );
-
-  // Create functions service with all the actions and imports
   writeFile(moleculerQueuesServiceTemplatePath, moleculerQueuesServiceTemplate);
 };
 

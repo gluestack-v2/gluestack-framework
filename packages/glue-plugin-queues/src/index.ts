@@ -2,12 +2,12 @@
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { Workspaces } from "@gluestack/helpers";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 // import { readfile } from "./helpers/read-file";
 // import writeCronService from "./helpers/write-cron-service";
 // Do not edit the name of this class
@@ -94,36 +94,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  generateQueuesInServiceGateway() {
-    const instances = this.getInstances();
-    for (const instance of instances) {
-      const name = instance.getName();
-      const installationPath = instance.getInstallationPath();
-
-      const plugin = this.app.getPluginByName(
-        "@gluestack-v2/glue-plugin-service-gateway"
-      ) as IPlugin;
-
-      // @ts-ignore
-      plugin.generateQueuesService(installationPath, name);
-    }
-  }
-
-  async build(): Promise<void> {
-    return new Promise((resolve: any, reject) => {
-      try {
-        if (this.getInstances().length <= 0) {
-          console.log("> No queues plugin found, skipping build");
-          return;
-        }
-        this.generateQueuesInServiceGateway();
-
-        // this.generateFunctionsInServiceSdk();
-
-        resolve("Build Successful");
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
 }

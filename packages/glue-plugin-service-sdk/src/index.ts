@@ -101,6 +101,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateSDK(sourcePath: string, instanceName: string) {
     const instances = this.getInstances();
+
+    if (this.instances.length === 0) {
+      return;
+    }
+
     for await (const instance of instances) {
       if (!existsSync(sourcePath)) {
         console.log("> No functions plugin found, create instance first");
