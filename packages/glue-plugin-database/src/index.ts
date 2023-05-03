@@ -63,87 +63,75 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-      const questions: prompts.PromptObject[] = [
-        {
-          name: "POSTGRES_USER", type: "text",
-          message: "Database user:",
-          validate: (value: string) => value !== ''
-        },
-        {
-          name: "POSTGRES_PASSWORD",
-          type: "password",
-          message: "Database password:",
-          validate: (value: string) => value !== ''
-        },
-        {
-          name: "POSTGRES_DB",
-          type: "text",
-          message: "Database name:",
-          validate: (value: string) => value !== ''
-        },
-        {
-          name: "ADMIN_SECRET_KEY",
-          type: "text",
-          message: "Admin Secret Key For Hasura Console:",
-          validate: (value: string) => value !== ''
-        },
-      ];
+    const questions: prompts.PromptObject[] = [
+      {
+        name: "POSTGRES_USER",
+        type: "text",
+        message: "Database user:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "POSTGRES_PASSWORD",
+        type: "password",
+        message: "Database password:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "POSTGRES_DB",
+        type: "text",
+        message: "Database name:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "ADMIN_SECRET_KEY",
+        type: "text",
+        message: "Admin Secret Key For Hasura Console:",
+        validate: (value: string) => value !== "",
+      },
+    ];
 
-      // Prompt the user for input values
-      const answers = await prompts(questions);
+    // Prompt the user for input values
+    const answers = await prompts(questions);
 
-      // Create the .env file content
-      const envContent = `ADMIN_SECRET_KEY=${answers.ADMIN_SECRET_KEY}
+    // Create the .env file content
+    const envContent = `ADMIN_SECRET_KEY=${answers.ADMIN_SECRET_KEY}
     POSTGRES_USER=${answers.POSTGRES_USER}
     POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
     POSTGRES_DB=${answers.POSTGRES_DB}
     DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
 
-      // Write the .env file at database root
-      fs.writeFileSync(
-        join(instance._sourcePath, ".env"),
-        envContent
-      );
+    // Write the .env file at database root
+    fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
 
-      const graphqlEnvContent = `HASURA_GRAPHQL_ADMIN_SECRET=${answers.ADMIN_SECRET_KEY}`;
+    const graphqlEnvContent = `HASURA_GRAPHQL_ADMIN_SECRET=${answers.ADMIN_SECRET_KEY}`;
 
-      // Write the .env file at graphql root
-      fs.writeFileSync(
-        join(instance._sourcePath, "graphql/.env"),
-        graphqlEnvContent
-      );
+    // Write the .env file at graphql root
+    fs.writeFileSync(
+      join(instance._sourcePath, "graphql/.env"),
+      graphqlEnvContent
+    );
 
-      //Change DB name in metadata/databases/databases.yaml file
-      let databaseFileContent = fs.readFileSync(
-        join(
-          instance._sourcePath,
-          "graphql/metadata/databases/databases.yaml"
-        ),
-        "utf-8"
-      );
+    //Change DB name in metadata/databases/databases.yaml file
+    let databaseFileContent = fs.readFileSync(
+      join(instance._sourcePath, "graphql/metadata/databases/databases.yaml"),
+      "utf-8"
+    );
 
-      //Change DB name in metadata/databases/databases.yaml file
-      databaseFileContent = databaseFileContent.replace(
-        "DB_NAME_TEMPLATE_STRING",
-        answers.POSTGRES_DB
-      );
+    //Change DB name in metadata/databases/databases.yaml file
+    databaseFileContent = databaseFileContent.replace(
+      "DB_NAME_TEMPLATE_STRING",
+      answers.POSTGRES_DB
+    );
 
-      fs.writeFileSync(
-        join(
-          instance._sourcePath,
-          "graphql/metadata/databases/databases.yaml"
-        ),
-        databaseFileContent
-      );
+    fs.writeFileSync(
+      join(instance._sourcePath, "graphql/metadata/databases/databases.yaml"),
+      databaseFileContent
+    );
 
-      // Create a database folder in migrations
-      fs.mkdirSync(
-        join(
-          instance._sourcePath,
-          "graphql/migrations",
-          answers.POSTGRES_DB
-        )
-      );
+    // Create a database folder in migrations
+    fs.mkdirSync(
+      join(instance._sourcePath, "graphql/migrations", answers.POSTGRES_DB)
+    );
   }
 
   createInstance(

@@ -196,7 +196,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     module.exports.${instanceName}Middlewares = {
       // Wrap local action handlers (legacy middleware handler)
       localAction: (next, action) => {
-        Object.keys(userCustomMiddlewares).forEach((key) => {
+		    for (let key in userCustomMiddlewares) {
           if (action.name === key) {
             return function (ctx) {
               const serverSDK = new ServerSDK(ctx);
@@ -208,7 +208,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         return next;
       },
       remoteAction: (next, action) => {
-        Object.keys(userCustomMiddlewares).forEach((key) => {
+		    for (let key in userCustomMiddlewares) {
           if (action.name === key) {
             return function (ctx) {
               const serverSDK = new ServerSDK(ctx);
@@ -247,11 +247,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
   async generateCrons(cronInstancePath: string, cronInstanceName: string) {
-
     const instances = this.getInstances();
-    if (
-      instances.length <= 0
-    ) {
+    if (instances.length <= 0) {
       console.log("> No functions plugin found, skipping build");
       return;
     }
@@ -263,6 +260,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       );
       if (await fileExists(targetPkgJson)) {
         let data: any = await readfile(targetPkgJson);
+
         data = JSON.parse(data);
         if (!data.devDependencies) {
           data.devDependencies = {};
@@ -279,7 +277,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       }
 
-      writeCronService(
+      await writeCronService(
         cronInstancePath,
         instance._destinationPath,
         cronInstanceName
