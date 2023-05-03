@@ -47,10 +47,7 @@
   },
   "workspaces": [
     "packages/*",
-    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/functions",
-    ".glue/__generated__/packages",
-    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src/gateway",
-    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/packages/sdk"
+    ".glue/__generated__/packages"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-crons": "^0.0.1",

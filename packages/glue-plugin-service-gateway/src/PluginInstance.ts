@@ -86,15 +86,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         return;
       }
     }
-
-    // this.app.watch(
-    //   this._sourcePath,
-    //   this._destinationPath,
-    //   async (event, path) => {
-    //     // TODO: OPTIMIZE UPDATES
-    //     // this.app.updateServices();
-    //   }
-    // );
   }
 
   getDockerfile(): string {
