@@ -3,7 +3,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 
 import { join } from "path";
 import fs, { unlinkSync } from "fs";
@@ -51,12 +51,16 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return this.callerPlugin;
   }
 
+  getIgnoredPaths(): string[] {
+    return ["middlewares", "events", "private"];
+  }
+
   async watch(callback?: Function): Promise<void> {
-    if (!await fileExists(this._destinationPath)) {
+    if (!(await fileExists(this._destinationPath))) {
       try {
         await this.build();
       } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
+        console.log(">> Instance does not exits:", this.getName());
         return;
       }
     }
@@ -67,7 +71,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       async (event, path) => {
         // TODO: OPTIMIZE UPDATES
         this.generateFunctionsInServiceGateway();
-        this.generateFunctionsInServiceSdk();
+        this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
         if (callback) {
           callback(event, path);
@@ -88,13 +92,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateService(installationPath, name);
   }
 
-  generateFunctionsInServiceSdk() {
+  generateFunctionsInServiceSdk(ignoredPaths: any) {
     const plugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-sdk"
     ) as IPlugin;
 
     // @ts-ignore
-    plugin.generateSDK(this._sourcePath, this.getName());
+    plugin.generateSDK(this._sourcePath, this.getName(), ignoredPaths);
   }
 
   async build() {
@@ -103,7 +107,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     this.generateFunctionsInServiceGateway();
 
     // @ts-ignore
-    this.generateFunctionsInServiceSdk();
+    this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
     await this.app.updateServices();
   }
@@ -114,13 +118,17 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
 
     if (!plugin) {
-      console.error(`Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`);
+      console.error(
+        `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
+      );
       return "";
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
     if (!instances || instances.length <= 0) {
-      console.error(`No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`);
+      console.error(
+        `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
+      );
       return "";
     }
 

@@ -54,6 +54,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
+    await this.writeEventsService();
+  }
+
+  async writeEventsService() {
+    writeFile(join(this._destinationPath, "services"), eventsTemplate());
   }
 
   async watch(callback?: any) {

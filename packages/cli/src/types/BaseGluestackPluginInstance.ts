@@ -7,7 +7,7 @@ import IGlueStorePlugin from './store/interface/IGluePluginStore';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 import { SEAL_SERVICES_PATH } from '../constants/seal';
 
-import { Workspaces } from "@gluestack/helpers";
+import { Workspaces } from '@gluestack/helpers';
 import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
@@ -62,7 +62,7 @@ export default abstract class BaseGluestackPluginInstance
 			process.cwd(),
 			GLUE_GENERATED_SEAL_SERVICES_PATH,
 			this.getName(),
-			"src",
+			'src',
 			this.getName()
 		);
 	}
@@ -95,13 +95,13 @@ export default abstract class BaseGluestackPluginInstance
 	async updateSourcePackageJSON() {
 		// update package.json'S name index with the new instance name
 		const pluginPackage = `${this._sourcePath}/package.json`;
-		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
+		await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
 	}
 
 	async updateDestinationPackageJSON() {
 		// update package.json'S name index with the new instance name
 		const pluginPackage = `${this._destinationPath}/package.json`;
-		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
+		await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
 	}
 
 	async updateRootPackageJSON() {
@@ -112,25 +112,30 @@ export default abstract class BaseGluestackPluginInstance
 
 	async updateWorkspacePackageJSON() {
 		// // add package.json with workspaces
-		const packageFile: string = join(this._workspacePath, "package.json");
+		const packageFile: string = join(
+			this._workspacePath,
+			'package.json'
+		);
 		const packageContent: any = {
 			name: this.getName(),
 			private: true,
-			workspaces: [this.getName(), "packages/**/src"],
+			workspaces: [this.getName(), 'packages/**'],
 			scripts: {
-				"install:all": "npm install --workspaces --if-present",
-				dev: "npm run dev --workspace @project/" + this.getName(),
+				'install-all': 'npm install --workspaces --if-present',
+				dev: 'npm run dev --workspace @project/' + this.getName(),
 			},
 		};
 
-		await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
+		await writeFile(
+			packageFile,
+			JSON.stringify(packageContent, null, 2)
+		);
 	}
-
 
 	async sealInit() {
 		// seal init and seal service add in the services folder
-		const sealInit = spawnSync("sh", [
-			"-c",
+		const sealInit = spawnSync('sh', [
+			'-c',
 			`cd ${SEAL_SERVICES_PATH} && seal init`,
 		]);
 
@@ -147,17 +152,17 @@ export default abstract class BaseGluestackPluginInstance
 		]);
 
 		if (sealAddService.status !== 0) {
-			console.error(`Command failed with code ${sealAddService.status}`);
+			console.error(
+				`Command failed with code ${sealAddService.status}`
+			);
 		}
 
 		console.log(sealAddService.stdout.toString());
 		console.error(sealAddService.stderr.toString());
 	}
 
-
 	async watch(callback?: Function): Promise<void> {
-
-		if (!await fileExists(this._destinationPath)) {
+		if (!(await fileExists(this._destinationPath))) {
 			try {
 				await this.build();
 			} catch (error) {
@@ -169,6 +174,5 @@ export default abstract class BaseGluestackPluginInstance
 		if (callback) {
 			callback();
 		}
-
 	}
 }

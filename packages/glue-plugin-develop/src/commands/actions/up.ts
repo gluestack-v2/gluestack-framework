@@ -22,7 +22,7 @@ const upSealService = (serviceName: string, opts: any) => {
   sealUp.stderr.on("data", (data) => {
     error(`${data}`);
   });
-}
+};
 
 const upAllServices = () => {
   let servicePlatform = "local";

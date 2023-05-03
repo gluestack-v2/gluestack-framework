@@ -70,7 +70,11 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (sourcePath: string, installationPath: string) => {
+const writeSDK = (
+  sourcePath: string,
+  installationPath: string,
+  ignoredPaths: string[]
+) => {
   let obj = {};
   const sdkIndexTemplate = sdkIndexTemplateFunc();
   const functionsPath = sourcePath;
@@ -78,7 +82,6 @@ const writeSDK = (sourcePath: string, installationPath: string) => {
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
 
   const files = getNestedFilePaths(functionsPath);
-
 
   let sdkFunctions = ``;
   let finalString = ``;
@@ -91,15 +94,16 @@ const writeSDK = (sourcePath: string, installationPath: string) => {
     ) {
       return;
     }
-    // for (let i = 0; i < ignoredPaths.length; i++) {
-    //   if (filePath.includes("/" + ignoredPaths[i] + "/")) {
-    //     return;
-    //   }
-    // }
+
+    for (let i = 0; i < ignoredPaths.length; i++) {
+      if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+        return;
+      }
+    }
 
     const functionName = getFileNameWithoutExtension(filePath);
 
-    let functionPath = filePath.replace(sourcePath, "");
+    let functionPath = filePath.replace(process.cwd(), "");
     functionPath = functionPath.split(".").slice(0, -1).join(".");
 
     const functionCodeString = fs.readFileSync(filePath, "utf8");
@@ -115,6 +119,7 @@ const writeSDK = (sourcePath: string, installationPath: string) => {
         "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
       );
     }
+    // console.log(ign);
     let sdkFunction = writeSDKFunction(functionName, params, functionPath);
     obj = {
       ...obj,

@@ -19,6 +19,7 @@ build/
 test.js
 openai
 web
+website
 components
 functions
 events
