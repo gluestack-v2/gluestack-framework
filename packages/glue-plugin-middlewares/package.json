@@ -1,12 +1,12 @@
 {
-  "name": "@gluestack-v2/glue-plugin-cron",
-  "version": "0.0.1",
-  "description": "Gluestack V2 Cron Plugin",
+  "name": "@gluestack-v2/glue-plugin-middlewares",
+  "version": "0.0.2",
+  "description": "Gluestack V2 events Plugin",
   "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gluestack-v2/framework-cli",
-    "directory": "packages/glue-plugin-web"
+    "directory": "packages/glue-plugin-events"
   },
   "keywords": [
     "gluestack",
@@ -22,10 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
-    "chokidar": "^3.5.3",
     "prompts": "^2.4.2",
     "typescript": "^4.9.5"
   },
@@ -33,7 +32,8 @@
     "watch": "tsc --watch",
     "build": "tsc"
   },
+  "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x"
+    "@gluestack-v2/glue-plugin-functions": "^0.0.x"
   }
 }

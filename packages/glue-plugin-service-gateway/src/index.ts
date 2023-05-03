@@ -13,7 +13,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import { reWriteFile } from "./helpers/rewrite-file";
+import { readfile } from "./helpers/readfile";
 
 import { join } from "path";
 import {
@@ -30,6 +30,7 @@ import copyFolder from "./helpers/copy-folder";
 import { spawnSync } from "child_process";
 import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
+import writeCronService from "./helpers/write-cron-service";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -117,7 +118,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     instanceName: string,
     ignoredPaths: string[]
   ) {
-
     const instances = this.getInstances();
     if (this.instances.length === 0) {
       return;
@@ -130,8 +130,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         rm(path.join(installationPath, instancePath));
       }
 
-      console.log('>> functions:', functionsPath);
-
       if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
@@ -142,7 +140,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async generateQueuesService(queueInstanceName: string) {
-
     if (this.instances.length === 0) {
       return;
     }
@@ -172,8 +169,121 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       }
       writeQueuesService(instance._destinationPath, queueInstanceName);
-
     }
   }
 
+  async generateMiddlewares(instancePath: string, instanceName: string) {
+    const instances: Array<IInstance> = this.getInstances();
+
+    if (instances.length <= 0) {
+      console.log("> No events plugin found, skipping build...");
+      return;
+    }
+
+    let finalCode = ``;
+    for await (const instance of instances) {
+      // create a file index.js
+
+      finalCode = finalCode.concat(
+        `
+    const userCustomMiddlewares = require("./middleware");\n
+    const ServerSDK = require("../serverSDK");
+
+    function createNext(serverSDK, next) {
+      return next.bind(serverSDK._ctx)
+    }
+
+    module.exports.${instanceName}Middlewares = {
+      // Wrap local action handlers (legacy middleware handler)
+      localAction: (next, action) => {
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
+      remoteAction: (next, action) => {
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
+    };
+    `
+      );
+
+      let middlewareFolderPath = join(instance._destinationPath, instanceName);
+
+      writeFile(join(middlewareFolderPath, "index.js"), finalCode);
+      // Add middlewares in moleculer.config.js
+
+      let moleculerConfigPath = join(
+        instance._destinationPath,
+        "moleculer.config.js"
+      );
+      let moleculerConfig = await readfile(moleculerConfigPath);
+      moleculerConfig = moleculerConfig.replace(
+        "/* User Custom Middleware Imports */",
+        `const { ${instanceName}Middlewares } = require("./middlewares");`
+      );
+
+      moleculerConfig = moleculerConfig.replace(
+        "/* User Custom Middleware */",
+        `${instanceName}Middlewares, /* User Custom Middleware */`
+      );
+
+      await writeFile(moleculerConfigPath, moleculerConfig);
+    }
+  }
+  async generateCrons(cronInstancePath: string, cronInstanceName: string) {
+
+    const instances = this.getInstances();
+    if (
+      instances.length <= 0
+    ) {
+      console.log("> No functions plugin found, skipping build");
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
+      if (await fileExists(targetPkgJson)) {
+        let data: any = await readfile(targetPkgJson);
+        data = JSON.parse(data);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        data.devDependencies["moleculer-cron"] = "latest";
+        let stringData = JSON.stringify(data, null, 2);
+        await fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added moleculer-cron to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-cron to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+
+      writeCronService(
+        cronInstancePath,
+        instance._destinationPath,
+        cronInstanceName
+      );
+    });
+  }
 }

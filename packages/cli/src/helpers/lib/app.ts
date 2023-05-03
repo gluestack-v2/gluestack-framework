@@ -129,7 +129,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => {}
+		callback = (...args: any) => { }
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -201,22 +201,24 @@ export default class AppCLI {
 			const sourcePath = join(source, path);
 			const destinationPath = join(destination, path);
 
-			switch(event) {
-				case 'add':
-					fs.copyFileSync(sourcePath, destinationPath);
-					break;
-				case 'addDir':
-					fs.mkdirSync(destinationPath, { recursive: true });
-					break;
-				case 'change':
-					fs.copyFileSync(sourcePath, destinationPath);
-					break;
-				case 'unlinkDir':
-					fs.rmSync(destinationPath, { recursive: true });
-					break;
-				case 'unlink':
-					fs.rmSync(destinationPath);
-					break;
+			if (destination) {
+				switch (event) {
+					case 'add':
+						fs.copyFileSync(sourcePath, destinationPath);
+						break;
+					case 'addDir':
+						fs.mkdirSync(destinationPath, { recursive: true });
+						break;
+					case 'change':
+						fs.copyFileSync(sourcePath, destinationPath);
+						break;
+					case 'unlinkDir':
+						fs.rmSync(destinationPath, { recursive: true });
+						break;
+					case 'unlink':
+						fs.rmSync(destinationPath);
+						break;
+				}
 			}
 
 			callback(event, path);

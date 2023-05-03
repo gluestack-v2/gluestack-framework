@@ -4,7 +4,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import { join } from "path";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 import writeFile from "./helpers/write-file";
 import { fileExists } from "@gluestack/helpers";
 
@@ -71,19 +71,18 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
-    await this.updateInstancePackageJSON();
+    await this.updateDestinationPackageJSON();
     await this.updateRootPackageJSON();
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
   }
 
   async watch() {
-
-    if (!await fileExists(this._destinationPath)) {
+    if (!(await fileExists(this._destinationPath))) {
       try {
         await this.build();
       } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
+        console.log(">> Instance does not exits:", this.getName());
         return;
       }
     }
@@ -96,8 +95,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //     // this.app.updateServices();
     //   }
     // );
-
-
   }
 
   getDockerfile(): string {

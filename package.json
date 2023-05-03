@@ -15,12 +15,13 @@
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
     "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
     "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
-    "watch:cron": "npm run watch --workspace @gluestack-v2/glue-plugin-cron",
+    "watch:crons": "npm run watch --workspace @gluestack-v2/glue-plugin-crons",
     "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai",
     "watch:events": "npm run watch --workspace @gluestack-v2/glue-plugin-events",
+    "watch:middlewares": "npm run watch --workspace @gluestack-v2/glue-plugin-middlewares",
     "watch:queues": "npm run watch --workspace @gluestack-v2/glue-plugin-queues",
-    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-queues queues",
-    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues",
+    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares",
+    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares",
     "clean": "echo 'hello'"
   },
   "repository": {
@@ -43,9 +44,17 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*"
-    ],
+    "packages/*",
+    ".glue/__generated__/packages",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src/gateway"
+  ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2"
+    "@gluestack-v2/glue-plugin-crons": "^0.0.1",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
+    "@gluestack-v2/glue-plugin-middlewares": "^0.0.2",
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
+    "@gluestack-v2/glue-plugin-web": "^0.0.2"
   }
 }

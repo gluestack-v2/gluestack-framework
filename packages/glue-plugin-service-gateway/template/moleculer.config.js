@@ -29,6 +29,9 @@
  *
  * @type {import('moleculer').BrokerOptions}
  */
+
+/* User Custom Middleware Imports */
+
 module.exports = {
 	// Namespace of nodes to segment your nodes on the same network.
 	namespace: "",
@@ -195,7 +198,7 @@ module.exports = {
 
 	// Register custom middlewares
 	middlewares: [
-		// **---Add Middlewares Here---**
+		/* User Custom Middleware */
 	],
 
 	// Register custom REPL commands.

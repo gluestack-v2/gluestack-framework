@@ -10,6 +10,7 @@ import action from './actions/watch';
 export default async (program: ICommand, app: AppCLI) => {
 	const command: ICommand = program
 		.command('watch')
+		.argument('[pluginName]', 'Plugin name', '')
 		.description(
 			'Watches the instances for changes and restarts them'
 		)
