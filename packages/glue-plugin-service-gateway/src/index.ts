@@ -173,8 +173,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async generateMiddlewares(instancePath: string, instanceName: string) {
-
-
     const instances: Array<IInstance> = this.getInstances();
 
     if (instances.length <= 0) {
@@ -182,15 +180,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-
     let finalCode = ``;
     for await (const instance of instances) {
-
       // create a file index.js
-      let userMiddlewares = await readfile(join(instancePath, "middleware.js"));
-      userMiddlewares = JSON.parse(userMiddlewares);
-
-      console.log(userMiddlewares, "klskdjflskdjflkj")
 
       finalCode = finalCode.concat(
         `
@@ -204,37 +196,30 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     module.exports.${instanceName}Middlewares = {
       // Wrap local action handlers (legacy middleware handler)
       localAction: (next, action) => {
-        switch (action.name) {
-          ${Object.keys(userMiddlewares)
-          .map((key) => {
-            return `case "${key}": {
-              return function (ctx) {
-                const serverSDK = new ServerSDK(ctx);
-                const customNext = createNext(serverSDK, next);
-                return userCustomMiddlewares["${key}"](customNext, serverSDK);
-              };
-            }
-          `;
-          })
-          .join("")}
-          default:
-            return next;
-        }
-      }
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
     };
     `
       );
-
-
-      console.log(finalCode, ">>>>>>")
-
 
       let middlewareFolderPath = join(instance._destinationPath, instanceName);
 
       writeFile(join(middlewareFolderPath, "index.js"), finalCode);
       // Add middlewares in moleculer.config.js
 
-      let moleculerConfigPath = join(instance._destinationPath, "moleculer.config.js");
+      let moleculerConfigPath = join(
+        instance._destinationPath,
+        "moleculer.config.js"
+      );
       let moleculerConfig = await readfile(moleculerConfigPath);
       moleculerConfig = moleculerConfig.replace(
         "/* User Custom Middleware Imports */",
