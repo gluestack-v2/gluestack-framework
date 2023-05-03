@@ -64,36 +64,61 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const questions: prompts.PromptObject[] = [
+      // {
+      //   name: "POSTGRES_USER",
+      //   type: "text",
+      //   message: "Database user:",
+      //   validate: (value: string) => value !== "",
+      // },
+      // {
+      //   name: "POSTGRES_PASSWORD",
+      //   type: "password",
+      //   message: "Database password:",
+      //   validate: (value: string) => value !== "",
+      // },
+      // {
+      //   name: "POSTGRES_DB",
+      //   type: "text",
+      //   message: "Database name:",
+      //   validate: (value: string) => value !== "",
+      // },
       {
-        name: "POSTGRES_USER",
+        name: "ADMIN_SECRET_KEY",
         type: "text",
-        message: "Database user:",
+        message: "Admin Secret Key For Hasura Console:",
         validate: (value: string) => value !== "",
       },
-      {
-        name: "POSTGRES_PASSWORD",
-        type: "password",
-        message: "Database password:",
-        validate: (value: string) => value !== "",
-      },
-      {
-        name: "POSTGRES_DB",
-        type: "text",
-        message: "Database name:",
-        validate: (value: string) => value !== "",
-      }
     ];
 
     // Prompt the user for input values
     const answers = await prompts(questions);
 
     // Create the .env file content
-    const envContent = `POSTGRES_USER=${answers.POSTGRES_USER}
-    POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
-    POSTGRES_DB=${answers.POSTGRES_DB}
-    DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
+    const envContent = `ADMIN_SECRET_KEY=${answers.ADMIN_SECRET_KEY}`;
+
     // Write the .env file at database root
     fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
+
+    const graphqlEnvContent = `HASURA_GRAPHQL_ADMIN_SECRET=${answers.ADMIN_SECRET_KEY}`;
+
+    // Write the .env file at graphql root
+    fs.writeFileSync(
+      join(instance._sourcePath, ".env"),
+      graphqlEnvContent
+    );
+
+    instance.updateSourcePackageJSON();
+
+    // //Change DB name in metadata/databases/databases.yaml file
+    // let databaseFileContent = fs.readFileSync(
+    //   join(instance._sourcePath, "metadata/databases/databases.yaml"),
+    //   "utf-8"
+    // );
+
+    // fs.writeFileSync(
+    //   join(instance._sourcePath, "metadata/databases/databases.yaml"),
+    //   databaseFileContent
+    // );
 
   }
 

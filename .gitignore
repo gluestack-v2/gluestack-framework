@@ -25,3 +25,5 @@ events
 web
 middlewares
 crons
+database
+graphql

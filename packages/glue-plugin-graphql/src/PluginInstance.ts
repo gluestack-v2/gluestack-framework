@@ -55,6 +55,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
+    this.updateWorkspacePackageJSON();
     this.sealInit();
   }
 }

@@ -143,7 +143,7 @@ export default abstract class BaseGluestackPluginInstance
 
 		const sealAddService = spawnSync("sh", [
 			"-c",
-			`cd ${SEAL_SERVICES_PATH} && seal service:add ${this.getName()} ./${this.getName()}/src`,
+			`cd ${SEAL_SERVICES_PATH} && seal service:add ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
 		]);
 
 		if (sealAddService.status !== 0) {

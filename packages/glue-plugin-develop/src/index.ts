@@ -11,6 +11,7 @@ import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interf
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
 import upCommand from "./commands/up";
+import downCommand from "./commands/down";
 import buildCommand from "./commands/build";
 import watchCommand from "./commands/watch";
 import removeCommand from "./commands/remove";
@@ -37,6 +38,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       removeCommand(program, this.app)
     );
     this.app.addCommand((program: ICommand) => upCommand(program, this.app));
+    this.app.addCommand((program: ICommand) => downCommand(program, this.app));
   }
 
   destroy() {
@@ -82,11 +84,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
-  async build () {
+  async build() {
     //
   }
 
-  async watch () {
+  async watch() {
     //
   }
 }
