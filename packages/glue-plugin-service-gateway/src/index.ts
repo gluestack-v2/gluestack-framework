@@ -196,7 +196,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     module.exports.${instanceName}Middlewares = {
       // Wrap local action handlers (legacy middleware handler)
       localAction: (next, action) => {
-        Object.keys(userCustomMiddlewares).forEach((key) => {
+		    for (let key in userCustomMiddlewares) {
           if (action.name === key) {
             return function (ctx) {
               const serverSDK = new ServerSDK(ctx);
@@ -208,7 +208,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         return next;
       },
       remoteAction: (next, action) => {
-        Object.keys(userCustomMiddlewares).forEach((key) => {
+		    for (let key in userCustomMiddlewares) {
           if (action.name === key) {
             return function (ctx) {
               const serverSDK = new ServerSDK(ctx);
