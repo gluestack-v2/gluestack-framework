@@ -51,6 +51,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return this.callerPlugin;
   }
 
+  getIgnoredPaths(): string[] {
+    return ["middlewares", "events", "private"];
+  }
+
   async watch(callback?: Function): Promise<void> {
     if (!(await fileExists(this._destinationPath))) {
       try {
@@ -67,7 +71,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       async (event, path) => {
         // TODO: OPTIMIZE UPDATES
         this.generateFunctionsInServiceGateway();
-        this.generateFunctionsInServiceSdk();
+        this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
         if (callback) {
           callback(event, path);
@@ -88,13 +92,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateService(installationPath, name);
   }
 
-  generateFunctionsInServiceSdk() {
+  generateFunctionsInServiceSdk(ignoredPaths: any) {
     const plugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-sdk"
     ) as IPlugin;
 
     // @ts-ignore
-    plugin.generateSDK(this._sourcePath, this.getName());
+    plugin.generateSDK(this._sourcePath, this.getName(), ignoredPaths);
   }
 
   async build() {
@@ -103,7 +107,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     this.generateFunctionsInServiceGateway();
 
     // @ts-ignore
-    this.generateFunctionsInServiceSdk();
+    this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
     await this.app.updateServices();
   }

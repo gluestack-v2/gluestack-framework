@@ -55,6 +55,5 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
     await this.app.updateServices();
-
   }
 }

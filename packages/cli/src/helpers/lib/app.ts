@@ -129,7 +129,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => { }
+		callback = (...args: any) => {}
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -222,7 +222,7 @@ export default class AppCLI {
 			}
 
 			callback(event, path);
-		})
+		});
 	}
 
 	// @API: writer
@@ -265,16 +265,20 @@ export default class AppCLI {
 			process.cwd(),
 			'./.glue/__generated__/seal/services'
 		);
-		const paths = fs.readdirSync(servicesPath);
-
-		for await (const path of paths) {
-			let servicePath = join(servicesPath, path, '/src');
-			if (await fileExists(servicePath)) {
-				if (await fileExists(servicePath)) {
-					rm(join(servicePath, 'packages'));
+		if (fs.existsSync(servicesPath)) {
+			const paths = fs.readdirSync(servicesPath);
+			if (paths.length > 0)
+				for await (const path of paths) {
+					let servicePath = join(servicesPath, path, '/src');
+					if (await fileExists(servicePath)) {
+						if (await fileExists(servicePath)) {
+							rm(join(servicePath, 'packages'));
+						}
+						await copyFolder(packagesPath, servicePath, 4);
+					}
 				}
-				await copyFolder(packagesPath, servicePath, 4);
-			}
+		} else {
+			console.log('No services found');
 		}
 	}
 }

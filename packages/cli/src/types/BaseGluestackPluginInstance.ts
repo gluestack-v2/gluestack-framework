@@ -96,7 +96,7 @@ export default abstract class BaseGluestackPluginInstance
 	async updateSourcePackageJSON() {
 		// update package.json'S name index with the new instance name
 		const pluginPackage = `${this._sourcePath}/package.json`;
-		await rewriteFile(pluginPackage, this.getName(), "INSTANCENAME");
+		await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
 	}
 
 	async updateDestinationPackageJSON() {
@@ -122,7 +122,7 @@ export default abstract class BaseGluestackPluginInstance
 			private: true,
 			workspaces: [this.getName(), 'packages/**'],
 			scripts: {
-				'install:all': 'npm install --workspaces --if-present',
+				'install-all': 'npm install --workspaces --if-present',
 				dev: 'npm run dev --workspace @project/' + this.getName(),
 			},
 		};
