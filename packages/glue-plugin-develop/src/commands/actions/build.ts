@@ -37,7 +37,6 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
     try {
       await plugin.build();
     } catch (e) {
-      console.log('>>>>', e);
       error(plugin.getName(), "build failed");
     }
   }

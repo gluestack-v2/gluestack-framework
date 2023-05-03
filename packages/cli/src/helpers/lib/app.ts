@@ -267,7 +267,6 @@ export default class AppCLI {
 			GLUE_GENERATED_SEAL_SERVICES_PATH
 		);
 
-		console.log({ packagesPath, servicesPath }, ">>>");
 		if (fs.existsSync(servicesPath)) {
 			const paths = fs.readdirSync(servicesPath);
 			if (paths.length > 0)
