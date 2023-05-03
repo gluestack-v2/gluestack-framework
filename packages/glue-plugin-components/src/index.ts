@@ -64,28 +64,29 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance._sourcePath}/package.json`;
-    await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+    // const pluginPackage = `${instance._sourcePath}/package.json`;
+    // await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+    await instance.updateSourcePackageJSON();
 
     // update root package.json's workspaces with the new instance name
-    const rootPackage: string = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance._sourcePath);
+    // const rootPackage: string = `${process.cwd()}/package.json`;
+    // await Workspaces.append(rootPackage, instance._sourcePath);
 
-    // move seal.service.yaml into the new instance
-    await reWriteFile(
-      `${instance.getSealServicefile()}`,
-      instanceName,
-      "INSTANCENAME"
-    );
+    // // move seal.service.yaml into the new instance
+    // await reWriteFile(
+    //   `${instance.getSealServicefile()}`,
+    //   instanceName,
+    //   "INSTANCENAME"
+    // );
 
     // move dockerfile into the new instance
-    if (instance.getDockerfile) {
-      await reWriteFile(
-        `${instance?.getDockerfile()}`,
-        instanceName,
-        "INSTANCENAME"
-      );
-    }
+    // if (instance.getDockerfile) {
+    //   await reWriteFile(
+    //     `${instance?.getDockerfile()}`,
+    //     instanceName,
+    //     "INSTANCENAME"
+    //   );
+    // }
   }
 
   createInstance(
@@ -101,6 +102,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       installationPath
     );
     this.instances.push(instance);
+
     return instance;
   }
   testFunction() {
@@ -141,54 +143,54 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
   }
 
-  async build(): Promise<void> {
-    const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-components"
-    );
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log("> No components plugin found, skipping build...");
-      return;
-    }
+  // async build(): Promise<void> {
+  //   const plugin: IPlugin | null = this.app.getPluginByName(
+  //     "@gluestack-v2/glue-plugin-components"
+  //   );
+  //   if (!plugin || plugin.getInstances().length <= 0) {
+  //     console.log("> No components plugin found, skipping build...");
+  //     return;
+  //   }
 
-    const instances: Array<IInstance> = plugin.getInstances();
-    for await (const instance of instances) {
-      const sourcePath = join(this.getTemplateFolderPath());
-      const name: string = removeSpecialChars(instance.getName());
-      const packagesPath = join(
-        process.cwd(),
-        "./.glue/__generated__/packages"
-      );
+  //   const instances: Array<IInstance> = plugin.getInstances();
+  //   for await (const instance of instances) {
+  //     const sourcePath = join(this.getTemplateFolderPath());
+  //     const name: string = removeSpecialChars(instance.getName());
+  //     const packagesPath = join(
+  //       process.cwd(),
+  //       "./.glue/__generated__/packages"
+  //     );
 
-      let instanceName = instance.getName();
-      const targetPath = join(packagesPath, instanceName, "src", instanceName);
-      // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-      // await this.app.write(sourcePath, name);
-      await copyFolder(sourcePath, targetPath);
+  //     let instanceName = instance.getName();
+  //     const targetPath = join(packagesPath, instanceName, "src", instanceName);
+  //     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+  //     // await this.app.write(sourcePath, name);
+  //     await copyFolder(sourcePath, targetPath);
 
-      // update package.json'S name index with the new instance name
-      const pluginPackage = `${targetPath}/package.json`;
-      await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+  //     // update package.json'S name index with the new instance name
+  //     const pluginPackage = `${targetPath}/package.json`;
+  //     await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
 
-      // update root package.json's workspaces with the new instance name
-      const rootPackage: string = `${process.cwd()}/package.json`;
-      await Workspaces.append(rootPackage, instance._sourcePath);
+  //     // update root package.json's workspaces with the new instance name
+  //     const rootPackage: string = `${process.cwd()}/package.json`;
+  //     await Workspaces.append(rootPackage, instance._sourcePath);
 
-      // move seal.service.yaml into the new instance
-      await reWriteFile(
-        `${instance.getSealServicefile()}`,
-        instanceName,
-        "INSTANCENAME"
-      );
+  //     // move seal.service.yaml into the new instance
+  //     await reWriteFile(
+  //       `${instance.getSealServicefile()}`,
+  //       instanceName,
+  //       "INSTANCENAME"
+  //     );
 
-      // move dockerfile into the new instance
-      if (instance.getDockerfile) {
-        await reWriteFile(
-          `${instance?.getDockerfile()}`,
-          instanceName,
-          "INSTANCENAME"
-        );
-      }
-      // this.updateServices();
-    }
-  }
+  //     // move dockerfile into the new instance
+  //     if (instance.getDockerfile) {
+  //       await reWriteFile(
+  //         `${instance?.getDockerfile()}`,
+  //         instanceName,
+  //         "INSTANCENAME"
+  //       );
+  //     }
+  //     // this.updateServices();
+  //   }
+  // }
 }

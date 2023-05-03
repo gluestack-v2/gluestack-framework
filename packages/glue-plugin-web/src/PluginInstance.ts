@@ -50,6 +50,18 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._sourcePath}/seal.service.yaml`;
   }
 
+  async watch(callback: any) {
+    await this.app.watch(
+      this._sourcePath,
+      this._destinationPath,
+      (events, path) => {
+        if (callback) {
+          callback(events, path);
+        }
+      }
+    );
+  }
+
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateWorkspacePackageJSON();
