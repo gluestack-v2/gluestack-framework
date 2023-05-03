@@ -1,9 +1,14 @@
+import { join } from "path";
+import { removeSpecialChars } from "@gluestack/helpers";
 
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
+import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/gluestack-plugin-instance';
+import writeFile from "./helpers/write-file";
+import fileExists from "./helpers/file-exists";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -37,7 +42,21 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  watch(): string[] {
-    return [];
+  getDockerfile(): string {
+    return `${this._sourcePath}/Dockerfile`;
   }
+
+  getSealServicefile(): string {
+    return `${this._sourcePath}/seal.service.yaml`;
+  }
+
+
+  async build() {
+    await this.app.write(this._sourcePath, this._destinationPath);
+    await this.updateWorkspacePackageJSON();
+    await this.sealInit();
+    await this.app.updateServices();
+
+  }
+
 }

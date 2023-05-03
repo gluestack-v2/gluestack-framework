@@ -7,13 +7,27 @@ export default interface IInstance {
 	name: string;
 	callerPlugin: IPlugin;
 	gluePluginStore: IGlueStorePlugin;
-	installationPath: string;
+	installationPath?: string;
 	isOfTypeInstance: boolean;
+	_destinationPath: string;
+	_sourcePath: string;
+	_workspacePath: string;
 
 	init(): any;
 	destroy(): any;
 	getName(): string;
 	getCallerPlugin(): IPlugin;
-	getInstallationPath(): string;
-	watch(): string[];
+
+	build(): Promise<void>;
+	watch(callback?: Function): Promise<void>;
+
+	// seal
+	getDockerfile?: () => string;
+	getSealServicefile(): string;
+
+
+	updateSourcePackageJSON(): Promise<void>;
+	updateDestinationPackageJSON(): Promise<void>;
+	updateRootPackageJSON(): Promise<void>;
+	updateWorkspacePackageJSON(): Promise<void>;
 }

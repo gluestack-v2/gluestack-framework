@@ -88,7 +88,7 @@ export const attachPluginInstance = (
 	app: AppCLI,
 	plugin: IPlugin,
 	instance: string,
-	directory: string
+	directory?: string
 ) => {
 	return plugin.createInstance(
 		instance,

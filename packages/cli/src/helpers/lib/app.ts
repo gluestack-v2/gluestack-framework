@@ -1,7 +1,8 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
-import { copyFolder } from '../file';
+import { copyFolder, fileExists, rm } from '../file';
+import fs from 'fs';
 import { injectPluginStore } from '../getStorePath';
 import {
 	getTopToBottomPluginInstanceTree,
@@ -18,6 +19,7 @@ import { IWatchCallback } from '../../types/app/interface/IWatcher';
 import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
+import { join } from 'path';
 
 type PluginConstructor = new (
 	app: AppCLI,
@@ -127,7 +129,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => {}
+		callback = (...args: any) => { }
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -136,13 +138,18 @@ export default class AppCLI {
 	async createPluginInstance(
 		plugin: IPlugin,
 		instance: string,
-		src: string,
-		target: string
+		src?: string,
+		target?: string
 	) {
 		if (src && target) {
 			await copyFolder(src, target);
 		}
-		return attachPluginInstance(this, plugin, instance, target);
+		return attachPluginInstance(
+			this,
+			plugin,
+			instance,
+			target ? target : ''
+		);
 	}
 
 	// @API: getPluginByName
@@ -177,22 +184,50 @@ export default class AppCLI {
 	}
 
 	// @API: watch
-	watch (cwd: string, pattern: string|string[], callback: IWatchCallback): void {
-		watcher.watch(
-			cwd,
-			pattern,
-			callback
-		);
+	listen(
+		cwd: string,
+		pattern: string | string[],
+		callback: IWatchCallback
+	): void {
+		watcher.watch(cwd, pattern, callback);
+	}
+
+	watch(
+		source: string,
+		destination: string,
+		callback: IWatchCallback
+	): void {
+		this.listen(source, ['./'], (event: string, path: string) => {
+			const sourcePath = join(source, path);
+			const destinationPath = join(destination, path);
+
+			if (destination) {
+				switch (event) {
+					case 'add':
+						fs.copyFileSync(sourcePath, destinationPath);
+						break;
+					case 'addDir':
+						fs.mkdirSync(destinationPath, { recursive: true });
+						break;
+					case 'change':
+						fs.copyFileSync(sourcePath, destinationPath);
+						break;
+					case 'unlinkDir':
+						fs.rmSync(destinationPath, { recursive: true });
+						break;
+					case 'unlink':
+						fs.rmSync(destinationPath);
+						break;
+				}
+			}
+
+			callback(event, path);
+		})
 	}
 
 	// @API: writer
-	async write (cwd: string, instanceName: string): Promise<void> {
-		console.log({ cwd, instanceName });
-
-		await writer.write(
-			cwd,
-			instanceName
-		);
+	async write(source: string, destination: string): Promise<void> {
+		await writer.write(source, destination);
 	}
 
 	// @API: destroy
@@ -218,6 +253,28 @@ export default class AppCLI {
 	async initLocalCommands() {
 		for (const command of commands()) {
 			this.addCommand(command);
+		}
+	}
+
+	async updateServices() {
+		const packagesPath = join(
+			process.cwd(),
+			'./.glue/__generated__/packages'
+		);
+		const servicesPath = join(
+			process.cwd(),
+			'./.glue/__generated__/seal/services'
+		);
+		const paths = fs.readdirSync(servicesPath);
+
+		for await (const path of paths) {
+			let servicePath = join(servicesPath, path, '/src');
+			if (await fileExists(servicePath)) {
+				if (await fileExists(servicePath)) {
+					rm(join(servicePath, 'packages'));
+				}
+				await copyFolder(packagesPath, servicePath, 4);
+			}
 		}
 	}
 }

@@ -21,10 +21,12 @@ export default interface IPlugin {
 	createInstance(
 		key: string,
 		gluePluginStore: IGlueStorePlugin,
-		installationPath: string
+		installationPath?: string
 	): IInstance;
 
 	getInstances(): IInstance[];
 
-	build?: () => Promise<void>;
+	// app-cli apis
+	build(): Promise<void>;
+	watch(callback?: Function): Promise<void>;
 }

@@ -1,0 +1,10 @@
+[
+  {
+    "schedule": "* * * * *",
+    "path": "/functions/add"
+  },
+  {
+    "schedule": "* * * * *",
+    "path": "https://api.github.com/users"
+  }
+]

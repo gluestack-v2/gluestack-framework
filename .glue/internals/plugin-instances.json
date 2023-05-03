@@ -1,14 +1,1 @@
-{
-  "@gluestack-v2/glue-plugin-database": [
-    {
-      "instance": "database",
-      "directory": "./database",
-      "container_store": {}
-    },
-    {
-      "instance": "databas22",
-      "directory": "./databas22",
-      "container_store": {}
-    }
-  ]
-}
+{}

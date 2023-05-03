@@ -1,22 +1,23 @@
 // @ts-ignore
-import packageJSON from '../package.json';
-import { PluginInstance } from './PluginInstance';
+import packageJSON from "../package.json";
 
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/gluestack-plugin';
+import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import { join } from "path";
+import { spawnSync } from "child_process";
+import { Workspaces } from "@gluestack/helpers";
 
-import { reWriteFile } from './helpers/rewrite-file';
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import { PluginInstance } from "./PluginInstance";
+import { reWriteFile } from "./helpers/rewrite-file";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
+  type: "stateless" | "stateful" | "devonly" = "stateless";
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -44,25 +45,16 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    const instance: IInstance =
-      await this.app.createPluginInstance(
-        this,
-        instanceName,
-        this.getTemplateFolderPath(),
-        target
-      );
-
+    const instance: IInstance = await this.app.createPluginInstance(
+      this,
+      instanceName,
+      this.getTemplateFolderPath(),
+      target
+    );
     if (!instance) {
       return;
     }
-
-    // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-    await reWriteFile(pluginPackage, instanceName, 'INSTANCENAME');
-
-    // update root package.json's workspaces with the new instance name
-    const rootPackage = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance.getInstallationPath());
+    await instance.updateSourcePackageJSON();
   }
 
   createInstance(
@@ -85,20 +77,28 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  async build(): Promise<void> {
-    const plugin: IPlugin | null = this.app.getPluginByName('@gluestack-v2/glue-plugin-web');
-    if (!plugin || plugin.getInstances().length <= 0) {
-      console.log('> No web plugin found, skipping build');
-      return;
-    }
+  // async sealInit(SEAL_SERVICES_PATH: string, name: string) {
+  //   // seal init and seal service add in the services folder
+  //   const sealInit = spawnSync("sh", [
+  //     "-c",
+  //     `cd ${SEAL_SERVICES_PATH} && seal init`,
+  //   ]);
 
-    const instances: Array<IInstance> = plugin.getInstances();
-    for await (const instance of instances) {
+  //   if (sealInit.status !== 0) {
+  //     console.error(`Command failed with code ${sealInit.status}`);
+  //   }
+  //   console.log(sealInit.stdout.toString());
+  //   console.error(sealInit.stderr.toString());
 
-      const target: string = instance.getInstallationPath();
-      const name: string = removeSpecialChars(instance.getName());
+  //   const sealAddService = spawnSync("sh", [
+  //     "-c",
+  //     `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+  //   ]);
 
-      await this.app.write(target, name);
-    }
-  }
+  //   if (sealAddService.status !== 0) {
+  //     console.error(`Command failed with code ${sealAddService.status}`);
+  //   }
+  //   console.log(sealAddService.stdout.toString());
+  //   console.error(sealAddService.stderr.toString());
+  // }
 }

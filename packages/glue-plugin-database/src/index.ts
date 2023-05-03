@@ -3,23 +3,28 @@ import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
 
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/gluestack-plugin";
+import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import { reWriteFile } from "./helpers/rewrite-file";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 
-// import { runner as postgresList } from "./commands/postgresList";
-// import { runner as postgresConfig, writeInstance } from "./commands/postgresConfig";
+import path, { join } from "path";
+import fs from "fs";
+import { removeSpecialChars } from "@gluestack/helpers";
+import fileExists from "./helpers/file-exists";
+import rm from "./helpers/rm";
+import copyFolder from "./helpers/copy-folder";
+import { spawnSync } from "child_process";
+// @ts-ignore
+import prompts from "prompts";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: "stateless" | "stateful" | "devonly" = "stateless";
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -31,10 +36,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    this.app.dispatchEvent("booting.database", this.getName());
-
-    // this.app.addCommand((program: any) => postgresList(program, this));
-    // this.app.addCommand((program: any) => postgresConfig(program, this));
+    //
   }
 
   destroy() {
@@ -49,33 +51,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
-    return this.type;
-  }
-
-  // @ts-ignore
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
-
-  getInstallationPath(target: string): string {
-    return `./${target}`;
-  }
-
   async runPostInstall(instanceName: string, target: string) {
-    const plugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-develop"
-    ) as IPlugin;
-
-    // Validation
-    if (plugin?.getInstances()?.[0]) {
-      throw new Error(
-        `database instance already installed as ${plugin
-          .getInstances()[0]
-          .getName()}`
-      );
-    }
-
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
@@ -83,31 +59,79 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       target
     );
 
-    if (instance) {
-      // await writeInstance(instance);
-      // await createFolder(`${instance.getInstallationPath()}/db`);
-      // await createFolder(`${instance.getInstallationPath()}/init.db`);
-    }
-
     if (!instance) {
       return;
     }
 
-    // rewrite router.js with the installed instance name
-    // const routerFile = `${instance.getInstallationPath()}/router.js`;
-    // await reWriteFile(
-    //   routerFile,
-    //   removeSpecialChars(instanceName),
-    //   "INSTANCENAME"
-    // );
+    const questions: prompts.PromptObject[] = [
+      {
+        name: "POSTGRES_USER",
+        type: "text",
+        message: "Database user:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "POSTGRES_PASSWORD",
+        type: "password",
+        message: "Database password:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "POSTGRES_DB",
+        type: "text",
+        message: "Database name:",
+        validate: (value: string) => value !== "",
+      },
+      {
+        name: "ADMIN_SECRET_KEY",
+        type: "text",
+        message: "Admin Secret Key For Hasura Console:",
+        validate: (value: string) => value !== "",
+      },
+    ];
 
-    // update package.json'S name index with the new instance name
-    // const pluginPackage = `${instance.getInstallationPath()}/package.json`;
-    // await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+    // Prompt the user for input values
+    const answers = await prompts(questions);
 
-    // update root package.json's workspaces with the new instance name
-    const rootPackage = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance.getInstallationPath());
+    // Create the .env file content
+    const envContent = `ADMIN_SECRET_KEY=${answers.ADMIN_SECRET_KEY}
+    POSTGRES_USER=${answers.POSTGRES_USER}
+    POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
+    POSTGRES_DB=${answers.POSTGRES_DB}
+    DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
+
+    // Write the .env file at database root
+    fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
+
+    const graphqlEnvContent = `HASURA_GRAPHQL_ADMIN_SECRET=${answers.ADMIN_SECRET_KEY}`;
+
+    // Write the .env file at graphql root
+    fs.writeFileSync(
+      join(instance._sourcePath, "graphql/.env"),
+      graphqlEnvContent
+    );
+
+    //Change DB name in metadata/databases/databases.yaml file
+    let databaseFileContent = fs.readFileSync(
+      join(instance._sourcePath, "graphql/metadata/databases/databases.yaml"),
+      "utf-8"
+    );
+
+    //Change DB name in metadata/databases/databases.yaml file
+    databaseFileContent = databaseFileContent.replace(
+      "DB_NAME_TEMPLATE_STRING",
+      answers.POSTGRES_DB
+    );
+
+    fs.writeFileSync(
+      join(instance._sourcePath, "graphql/metadata/databases/databases.yaml"),
+      databaseFileContent
+    );
+
+    // Create a database folder in migrations
+    fs.mkdirSync(
+      join(instance._sourcePath, "graphql/migrations", answers.POSTGRES_DB)
+    );
   }
 
   createInstance(
@@ -126,7 +150,36 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
 
+  testFunction() {
+    console.log("test");
+  }
+
   getInstances(): IInstance[] {
     return this.instances;
+  }
+
+  sealInit(SEAL_SERVICES_PATH: string, name: string) {
+    // seal init and seal service add in the services folder
+    const sealInit = spawnSync("sh", [
+      "-c",
+      `cd ${SEAL_SERVICES_PATH} && seal init`,
+    ]);
+
+    if (sealInit.status !== 0) {
+      console.error(`Command failed with code ${sealInit.status}`);
+    }
+    console.log(sealInit.stdout.toString());
+    console.error(sealInit.stderr.toString());
+
+    const sealAddService = spawnSync("sh", [
+      "-c",
+      `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+    ]);
+
+    if (sealAddService.status !== 0) {
+      console.error(`Command failed with code ${sealAddService.status}`);
+    }
+    console.log(sealAddService.stdout.toString());
+    console.error(sealAddService.stderr.toString());
   }
 }

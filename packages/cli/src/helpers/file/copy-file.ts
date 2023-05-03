@@ -16,7 +16,15 @@ const copyFile = async (
 		}
 	}
 
-	await writeFile(targetFile, fs.readFileSync(source, 'utf8'));
+	let res = await writeFile(
+		targetFile,
+		fs.readFileSync(source, 'utf8')
+	);
+	if (res) {
+		return Promise.resolve();
+	} else {
+		return Promise.reject();
+	}
 };
 
 export default copyFile;

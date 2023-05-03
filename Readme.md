@@ -1,14 +1,16 @@
 # Gluestack V2 Plugin Development
 
 > Important Notes:
-> 1. Please checkout to the **develop** branch to access latest (beta) version. Thank You!
-> 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**.
+>
+> 1. You'll need node version >= 18 & < 19
+> 2. Please checkout to the **develop** branch to access latest (beta) version
+> 3. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**
 
 ## Install npm dependencies
 
 ```bash
 # Run this command from your project's root directory
-$ npm run install-all;
+$ npm run install:all;
 ```
 
 ## Create plugin builds (in production mode)
@@ -53,3 +55,33 @@ Commands:
   watch                                      Watches the instances for changes and restarts them
   help [command]                             display help for command
 ```
+
+## Create Gluestack Project Build
+
+```bash
+# Goto project's root directory and run the following command
+$ node glue build
+```
+
+## Run Gluestack Project Build
+
+```bash
+# Goto seal scripts
+$ cd .glue/seal/scripts
+# Install npm dependencies
+$ npm install
+# Create scripts build
+$ npm run build
+# Here's how you can run your web plugin instance in docker
+$ node build/index run:service website --platform docker --ports 3000:9000
+# Here's how you can run your web plugin instance in local
+$ node build/index run:service website --platform local
+```
+
+npm run install:all
+npm run build:plugins
+node glue add @gluestack-v2/glue-plugin-develop develop
+node glue add @gluestack-v2/glue-plugin-web web
+node glue add @gluestack-v2/glue-plugin-service-sdk sdk
+node glue add @gluestack-v2/glue-plugin-service-gateway gateway
+node glue add @gluestack-v2/glue-plugin-functions functions

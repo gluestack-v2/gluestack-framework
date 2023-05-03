@@ -9,14 +9,18 @@ function getPlugin(
 	throwErrorAndExit: boolean = false
 ) {
 	try {
-		const { GlueStackPlugin } = require(path);
-		return new GlueStackPlugin(
+		const plugin = require(path);
+		if (!plugin.GlueStackPlugin) {
+			return;
+		}
+
+		return new plugin.GlueStackPlugin(
 			app,
 			injectPluginStore(app, pluginName)
 		);
 	} catch (e) {
 		if (throwErrorAndExit) {
-			error('Plugin not initialized');
+			error('Plugin not initialized', e);
 			process.exit(0);
 		}
 	}

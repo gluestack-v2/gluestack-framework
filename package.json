@@ -4,12 +4,25 @@
   "description": "Gluestack V2 Framework CLI Project",
   "main": "index",
   "scripts": {
-    "install-all": "npm install --workspaces --if-present",
+    "install:all": "npm install --workspaces --if-present",
     "build:plugins": "npm run build --workspaces --if-present",
     "lint:plugins": "npm run lint --workspaces --if-present",
     "watch:cli": "npm run watch --workspace @gluestack-v2/framework-cli",
+    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
-    "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop"
+    "watch:sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
+    "watch:gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
+    "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
+    "watch:router-nginx": "npm run watch --workspace @gluestack-v2/glue-plugin-router-nginx",
+    "watch:components": "npm run watch --workspace @gluestack-v2/glue-plugin-components",
+    "watch:crons": "npm run watch --workspace @gluestack-v2/glue-plugin-crons",
+    "watch:openai": "npm run watch --workspace @gluestack-v2/glue-plugin-openai",
+    "watch:events": "npm run watch --workspace @gluestack-v2/glue-plugin-events",
+    "watch:middlewares": "npm run watch --workspace @gluestack-v2/glue-plugin-middlewares",
+    "watch:queues": "npm run watch --workspace @gluestack-v2/glue-plugin-queues",
+    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares",
+    "watch:all": "npm run watch:cli & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares",
+    "clean": "echo 'hello'"
   },
   "repository": {
     "type": "git",
@@ -32,5 +45,6 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {}
 }
