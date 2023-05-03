@@ -4,6 +4,7 @@ import fs from "fs";
 // const sdkIndexTemplate = require("./templates/sdkIndexTemplate")();
 
 import writeFile from "./write-file";
+import { readfile } from "./readfile";
 // import getPathAfterString from "./get-path-after-string";
 // import writeSDKFunction from "./write-sdk-function";
 // import replaceHandlerNames from "./replace-handler-names";
@@ -34,7 +35,7 @@ function getCamelCaseName(name: string) {
 
 // Usage: Pass the directory path as an argument to the function
 
-const writeCronService = (
+const writeCronService = async (
   installationPath: string,
   generatedServiceGatewayPath: string,
   instanceName: string
@@ -53,7 +54,8 @@ const writeCronService = (
   );
   // console.log("> Writing cron service", moleculerCronServiceTemplatePath);
 
-  const crons = require(cronPath);
+  let crons: any = await readfile(path.join(cronPath, "index.json"));
+  crons = JSON.parse(crons);
 
   let cronsObj = "";
   let actionsObj = "";
