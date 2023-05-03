@@ -24,4 +24,10 @@ export default interface IInstance {
 	// seal
 	getDockerfile?: () => string;
 	getSealServicefile(): string;
+
+
+	updateSourcePackageJSON(): Promise<void>;
+	updateDestinationPackageJSON(): Promise<void>;
+	updateRootPackageJSON(): Promise<void>;
+	updateWorkspacePackageJSON(): Promise<void>;
 }

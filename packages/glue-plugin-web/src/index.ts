@@ -51,18 +51,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       this.getTemplateFolderPath(),
       target
     );
-
     if (!instance) {
       return;
     }
-
-    // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance._sourcePath}/package.json`;
-    await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
-
-    // update root package.json's workspaces with the new instance name
-    const rootPackage: string = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance._sourcePath);
+    await instance.updateSourcePackageJSON();
   }
 
   createInstance(
@@ -85,28 +77,28 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  async sealInit(SEAL_SERVICES_PATH: string, name: string) {
-    // seal init and seal service add in the services folder
-    const sealInit = spawnSync("sh", [
-      "-c",
-      `cd ${SEAL_SERVICES_PATH} && seal init`,
-    ]);
+  // async sealInit(SEAL_SERVICES_PATH: string, name: string) {
+  //   // seal init and seal service add in the services folder
+  //   const sealInit = spawnSync("sh", [
+  //     "-c",
+  //     `cd ${SEAL_SERVICES_PATH} && seal init`,
+  //   ]);
 
-    if (sealInit.status !== 0) {
-      console.error(`Command failed with code ${sealInit.status}`);
-    }
-    console.log(sealInit.stdout.toString());
-    console.error(sealInit.stderr.toString());
+  //   if (sealInit.status !== 0) {
+  //     console.error(`Command failed with code ${sealInit.status}`);
+  //   }
+  //   console.log(sealInit.stdout.toString());
+  //   console.error(sealInit.stderr.toString());
 
-    const sealAddService = spawnSync("sh", [
-      "-c",
-      `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
-    ]);
+  //   const sealAddService = spawnSync("sh", [
+  //     "-c",
+  //     `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+  //   ]);
 
-    if (sealAddService.status !== 0) {
-      console.error(`Command failed with code ${sealAddService.status}`);
-    }
-    console.log(sealAddService.stdout.toString());
-    console.error(sealAddService.stderr.toString());
-  }
+  //   if (sealAddService.status !== 0) {
+  //     console.error(`Command failed with code ${sealAddService.status}`);
+  //   }
+  //   console.log(sealAddService.stdout.toString());
+  //   console.error(sealAddService.stderr.toString());
+  // }
 }
