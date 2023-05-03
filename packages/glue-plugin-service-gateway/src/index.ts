@@ -205,7 +205,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
               return userCustomMiddlewares[key](customNext, serverSDK);
             };
           }
-        });
+        }
         return next;
       },
       remoteAction: (next, action) => {
@@ -217,7 +217,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
               return userCustomMiddlewares[key](customNext, serverSDK);
             };
           }
-        });
+        }
         return next;
       },
     };
@@ -287,9 +287,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async generateEventsService() {
-
     const instances = this.getInstances();
-
 
     if (instances.length <= 0) {
       console.log("> No functions plugin found, skipping build");
@@ -297,9 +295,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     instances.forEach(async (instance) => {
-      const destination = join(instance._destinationPath, "services", 'events.service.js');
+      const destination = join(
+        instance._destinationPath,
+        "services",
+        "events.service.js"
+      );
       writeFile(destination, eventsTemplate());
     });
-
   }
 }
