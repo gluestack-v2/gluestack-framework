@@ -57,8 +57,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       ".glue",
       "__generated__",
       "packages",
-      this.getName(),
-      "src",
       this.getName()
     );
   }

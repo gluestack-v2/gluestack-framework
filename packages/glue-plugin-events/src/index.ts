@@ -5,7 +5,6 @@ import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import { eventsTemplate } from "./helpers/template";
 import { join } from "path";
 import { spawnSync } from "child_process";
 import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
@@ -61,6 +60,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (!instance) {
       return;
     }
+
+    instance.updateSourcePackageJSON();
   }
 
   createInstance(

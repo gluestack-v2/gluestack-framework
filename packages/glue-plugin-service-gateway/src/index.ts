@@ -31,6 +31,7 @@ import { spawnSync } from "child_process";
 import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
 import writeCronService from "./helpers/write-cron-service";
+import { eventsTemplate } from "./helpers/template";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -283,5 +284,22 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         cronInstanceName
       );
     });
+  }
+
+  async generateEventsService() {
+
+    const instances = this.getInstances();
+
+
+    if (instances.length <= 0) {
+      console.log("> No functions plugin found, skipping build");
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const destination = join(instance._destinationPath, "services", 'events.service.js');
+      writeFile(destination, eventsTemplate());
+    });
+
   }
 }

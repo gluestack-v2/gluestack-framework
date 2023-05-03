@@ -20,6 +20,7 @@ import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
 import { join } from 'path';
+import { GLUE_GENERATED_PACKAGES_PATH, GLUE_GENERATED_SEAL_SERVICES_PATH } from '../../constants/gluestack.v2';
 
 type PluginConstructor = new (
 	app: AppCLI,
@@ -129,7 +130,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => {}
+		callback = (...args: any) => { }
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -259,12 +260,14 @@ export default class AppCLI {
 	async updateServices() {
 		const packagesPath = join(
 			process.cwd(),
-			'./.glue/__generated__/packages'
+			GLUE_GENERATED_PACKAGES_PATH
 		);
 		const servicesPath = join(
 			process.cwd(),
-			'./.glue/__generated__/seal/services'
+			GLUE_GENERATED_SEAL_SERVICES_PATH
 		);
+
+		console.log({ packagesPath, servicesPath }, ">>>");
 		if (fs.existsSync(servicesPath)) {
 			const paths = fs.readdirSync(servicesPath);
 			if (paths.length > 0)
@@ -274,7 +277,7 @@ export default class AppCLI {
 						if (await fileExists(servicePath)) {
 							rm(join(servicePath, 'packages'));
 						}
-						await copyFolder(packagesPath, servicePath, 4);
+						await copyFolder(packagesPath, servicePath + "/packages");
 					}
 				}
 		} else {

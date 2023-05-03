@@ -109,7 +109,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // @ts-ignore
     this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
-    await this.app.updateServices();
   }
 
   getGatewayInstanceInfo() {

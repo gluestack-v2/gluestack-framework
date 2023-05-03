@@ -113,9 +113,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       if (!existsSync(sourcePath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
-        writeSDK(sourcePath, instance._destinationPath, ignoredPaths);
+        await writeSDK(sourcePath, instance._destinationPath, ignoredPaths);
       }
     }
+    this.app.updateServices();
+
   }
 
   getInstances(): IInstance[] {

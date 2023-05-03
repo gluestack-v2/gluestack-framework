@@ -10,7 +10,6 @@ import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
-import { eventsTemplate } from "./helpers/template";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -58,12 +57,19 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async writeEventsService() {
-    writeFile(join(this._destinationPath, "services"), eventsTemplate());
+    const plugin = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-service-gateway"
+    ) as IPlugin;
+
+    // @ts-ignore
+    plugin.generateEventsService();
+
   }
 
   async watch(callback?: any) {
-    this.app.watch(this._sourcePath, this._destinationPath, (events, path) => {
+    this.app.watch(this._sourcePath, this._destinationPath, async (events, path) => {
       if (callback) {
+        await this.writeEventsService();
         callback(events, path);
       }
     });

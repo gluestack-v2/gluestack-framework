@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import writeFile from "./write-file";
+import { writeFile } from "@gluestack/helpers";
 import writeSDKFunction from "./write-sdk-function";
 import getFileNameWithoutExtension from "./get-file-name-without-ext";
 import sdkIndexTemplateFunc from "./sdk-template";
@@ -70,7 +70,7 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
-const writeSDK = (
+const writeSDK = async (
   sourcePath: string,
   installationPath: string,
   ignoredPaths: string[]
@@ -80,6 +80,7 @@ const writeSDK = (
   const functionsPath = sourcePath;
   const sdkPath = installationPath;
   const sdkSrcIndex = path.join(sdkPath, "index.ts");
+
 
   const files = getNestedFilePaths(functionsPath);
 
@@ -137,8 +138,7 @@ const writeSDK = (
   });
 
   // Create SDK index file with all the functions
-
-  writeFile(
+  await writeFile(
     sdkSrcIndex,
     sdkIndexTemplate.replace(
       "// **---Functions will be added after this---**",
