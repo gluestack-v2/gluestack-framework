@@ -1,5 +1,5 @@
 import 'colors';
-import { resolve } from 'path';
+import { relative } from 'path';
 import { ConsoleTable } from '@gluestack/helpers';
 
 import { error, info, newline, warning } from '../helpers/print';
@@ -44,7 +44,7 @@ const printPluginInstances = (plugins: IArrTree) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance: IInstance) => {
 				const installationPath = pluginInstance._destinationPath || '';
-				const pluginInstanceArr = [key, pluginInstance.getName(), resolve('.', pluginInstance._sourcePath), plugin.getVersion()] as string[];
+				const pluginInstanceArr = [key, pluginInstance.getName(), relative('.', pluginInstance._sourcePath), plugin.getVersion()] as string[];
 				arr.push(pluginInstanceArr);
 			});
 		}
