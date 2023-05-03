@@ -100,6 +100,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       const SEAL_SERVICES_PATH: string = ".glue/__generated__/seal/services/";
       const instanceName = instance.getName();
       const instancePath = join(
+        process.cwd(),
         SEAL_SERVICES_PATH,
         instanceName,
         "src",
@@ -150,22 +151,14 @@ module.exports.${instance.getName()}Middlewares = {
 
         let serviceGatewayPath = join(instancePath, "middlewares");
 
-        if (!fileExists(serviceGatewayPath)) {
+        if (!(await fileExists(serviceGatewayPath))) {
           spawnSync("mkdir", ["-p", serviceGatewayPath]);
         }
-        console.log(
-          "// Add middlewares in moleculer.config.js",
-          serviceGatewayPath
-        );
 
         writeFile(join(serviceGatewayPath, "index.js"), finalCode);
         // Add middlewares in moleculer.config.js
 
-        let moleculerConfigPath = join(
-          process.cwd(),
-          instancePath,
-          "moleculer.config.js"
-        );
+        let moleculerConfigPath = join(instancePath, "moleculer.config.js");
         let moleculerConfig = await readfile(moleculerConfigPath);
         moleculerConfig = moleculerConfig.replace(
           "/* User Custom Middleware Imports */",
@@ -178,7 +171,6 @@ module.exports.${instance.getName()}Middlewares = {
         );
 
         let res = await writeFile(moleculerConfigPath, moleculerConfig);
-        console.log("/* User Custom Middleware */", moleculerConfigPath);
 
         // writeFile(join(instancePath, "index.js"), "");
       });
