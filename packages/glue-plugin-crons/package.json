@@ -1,5 +1,5 @@
 {
-  "name": "@gluestack-v2/glue-plugin-cron",
+  "name": "@gluestack-v2/glue-plugin-crons",
   "version": "0.0.1",
   "description": "Gluestack V2 Cron Plugin",
   "main": "build/index.js",

@@ -13,7 +13,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import { reWriteFile } from "./helpers/rewrite-file";
+import { readfile } from "./helpers/readfile";
 
 import { join } from "path";
 import {
@@ -30,7 +30,7 @@ import copyFolder from "./helpers/copy-folder";
 import { spawnSync } from "child_process";
 import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
-import { readfile } from "./helpers/readfile";
+import writeCronService from "./helpers/write-cron-service";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -245,5 +245,45 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       await writeFile(moleculerConfigPath, moleculerConfig);
     }
+  }
+  async generateCrons(cronInstancePath: string, cronInstanceName: string) {
+
+    const instances = this.getInstances();
+    if (
+      instances.length <= 0
+    ) {
+      console.log("> No functions plugin found, skipping build");
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
+      if (await fileExists(targetPkgJson)) {
+        let data: any = await readfile(targetPkgJson);
+        data = JSON.parse(data);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        data.devDependencies["moleculer-cron"] = "latest";
+        let stringData = JSON.stringify(data, null, 2);
+        await fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added moleculer-cron to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-cron to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+
+      writeCronService(
+        cronInstancePath,
+        instance._destinationPath,
+        cronInstanceName
+      );
+    });
   }
 }

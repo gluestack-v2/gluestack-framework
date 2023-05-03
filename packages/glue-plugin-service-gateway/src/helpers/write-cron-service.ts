@@ -44,7 +44,7 @@ const writeCronService = (
     moleculerCronWebhookServiceTemplateFunc.http();
   const moleculerCronInternalServiceTemplate =
     moleculerCronWebhookServiceTemplateFunc.internal();
-  const cronPath = path.join(process.cwd(), installationPath);
+  const cronPath = installationPath;
   // const moleculerFunctionsPath = path.join(installationPath, "functions");
   const moleculerCronServiceTemplatePath = path.join(
     generatedServiceGatewayPath,
