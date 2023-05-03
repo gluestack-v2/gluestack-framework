@@ -207,6 +207,18 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         });
         return next;
       },
+      remoteAction: (next, action) => {
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
     };
     `
       );
