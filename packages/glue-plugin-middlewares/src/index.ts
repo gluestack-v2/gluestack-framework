@@ -17,6 +17,7 @@ import { PluginInstance } from "./PluginInstance";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { rmdir } from "fs/promises";
 import copyFolder from "./helpers/copy-folder";
+import { readfile } from "./helpers/readfile";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 
 // Do not edit the name of this class
@@ -82,4 +83,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
+
+
+
+
 }

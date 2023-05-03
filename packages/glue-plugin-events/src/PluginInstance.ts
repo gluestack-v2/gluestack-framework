@@ -9,7 +9,7 @@ import fs, { unlinkSync } from "fs";
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 import { eventsTemplate } from "./helpers/template";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
@@ -44,28 +44,24 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-
   getDockerfile(): string {
     return `${this._destinationPath}/Dockerfile`;
   }
-
 
   getSealServicefile(): string {
     return `${this._destinationPath}/seal.service.yaml`;
   }
 
-
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
   }
 
-
   async watch(callback?: any) {
     this.app.watch(this._sourcePath, this._destinationPath, (events, path) => {
       if (callback) {
-        callback(events, path)
+        callback(events, path);
       }
-    })
+    });
   }
 
   getGatewayInstanceInfo() {
@@ -74,13 +70,17 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
 
     if (!plugin) {
-      console.error(`Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`);
+      console.error(
+        `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
+      );
       return "";
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
     if (!instances || instances.length <= 0) {
-      console.error(`No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`);
+      console.error(
+        `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
+      );
       return "";
     }
 
@@ -99,6 +99,4 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       this.getName()
     );
   }
-
-
 }

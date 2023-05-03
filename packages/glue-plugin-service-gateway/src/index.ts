@@ -30,6 +30,7 @@ import copyFolder from "./helpers/copy-folder";
 import { spawnSync } from "child_process";
 import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
+import { readfile } from "./helpers/readfile";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -117,7 +118,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     instanceName: string,
     ignoredPaths: string[]
   ) {
-
     const instances = this.getInstances();
     if (this.instances.length === 0) {
       return;
@@ -130,8 +130,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         rm(path.join(installationPath, instancePath));
       }
 
-      console.log('>> functions:', functionsPath);
-
       if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
@@ -142,7 +140,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async generateQueuesService(queueInstanceName: string) {
-
     if (this.instances.length === 0) {
       return;
     }
@@ -172,8 +169,81 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       }
       writeQueuesService(instance._destinationPath, queueInstanceName);
-
     }
   }
 
+  async generateMiddlewares(instancePath: string, instanceName: string) {
+    const instances: Array<IInstance> = this.getInstances();
+
+    if (instances.length <= 0) {
+      console.log("> No events plugin found, skipping build...");
+      return;
+    }
+
+    let finalCode = ``;
+    for await (const instance of instances) {
+      // create a file index.js
+
+      finalCode = finalCode.concat(
+        `
+    const userCustomMiddlewares = require("./middleware");\n
+    const ServerSDK = require("../serverSDK");
+
+    function createNext(serverSDK, next) {
+      return next.bind(serverSDK._ctx)
+    }
+
+    module.exports.${instanceName}Middlewares = {
+      // Wrap local action handlers (legacy middleware handler)
+      localAction: (next, action) => {
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
+      remoteAction: (next, action) => {
+        Object.keys(userCustomMiddlewares).forEach((key) => {
+          if (action.name === key) {
+            return function (ctx) {
+              const serverSDK = new ServerSDK(ctx);
+              const customNext = createNext(serverSDK, next);
+              return userCustomMiddlewares[key](customNext, serverSDK);
+            };
+          }
+        });
+        return next;
+      },
+    };
+    `
+      );
+
+      let middlewareFolderPath = join(instance._destinationPath, instanceName);
+
+      writeFile(join(middlewareFolderPath, "index.js"), finalCode);
+      // Add middlewares in moleculer.config.js
+
+      let moleculerConfigPath = join(
+        instance._destinationPath,
+        "moleculer.config.js"
+      );
+      let moleculerConfig = await readfile(moleculerConfigPath);
+      moleculerConfig = moleculerConfig.replace(
+        "/* User Custom Middleware Imports */",
+        `const { ${instanceName}Middlewares } = require("./middlewares");`
+      );
+
+      moleculerConfig = moleculerConfig.replace(
+        "/* User Custom Middleware */",
+        `${instanceName}Middlewares, /* User Custom Middleware */`
+      );
+
+      await writeFile(moleculerConfigPath, moleculerConfig);
+    }
+  }
 }

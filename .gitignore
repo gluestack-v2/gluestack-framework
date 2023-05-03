@@ -18,8 +18,9 @@ build/
 # Internal testing files
 test.js
 openai
-website
+web
 components
 functions
 events
 web
+middlewares
