@@ -281,7 +281,7 @@ export default class AppCLI {
 				await updatePackageInService(servicePath);
 			}
 		} else {
-			console.log('No services found');
+			// console.log('No services found');
 		}
 	}
 
