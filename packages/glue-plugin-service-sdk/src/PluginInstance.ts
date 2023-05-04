@@ -64,7 +64,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateDestinationPackageJSON();
-    await this.updateRootPackageJSON();
+    await this.updateRootPackageJSONWithDestinationPath();
     await this.app.updateServices();
   }
 
