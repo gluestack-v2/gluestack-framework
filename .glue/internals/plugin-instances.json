@@ -61,19 +61,5 @@
       "directory": "./events",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-database": [
-    {
-      "instance": "postgres",
-      "directory": "./postgres",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-graphql": [
-    {
-      "instance": "graphql",
-      "directory": "./graphql",
-      "container_store": {}
-    }
   ]
 }
