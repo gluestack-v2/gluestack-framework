@@ -22,8 +22,8 @@
     "watch:database": "npm run watch --workspace @gluestack-v2/glue-plugin-database",
     "watch:graphql": "npm run watch --workspace @gluestack-v2/glue-plugin-graphql",
     "watch:queues": "npm run watch --workspace @gluestack-v2/glue-plugin-queues",
-    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares  && node glue add @gluestack-v2/glue-plugin-queues queues && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-graphql graphql",
-    "watch:all": "npm run watch:cli & npm run watch:database & npm run watch:graphql & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares",
+    "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares  && node glue add @gluestack-v2/glue-plugin-queues queues && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events",
+    "watch:all": "npm run watch:cli  & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares",
     "clean": "echo 'hello'"
   },
   "repository": {
@@ -48,7 +48,5 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.2"
-  }
+  "dependencies": {}
 }
