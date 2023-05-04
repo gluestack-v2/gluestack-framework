@@ -1,11 +1,13 @@
 import IInstance from './IInstance';
 import IGlueStorePlugin from '../../store/interface/IGluePluginStore';
 
+export type RunningPlatform = 'local' | 'docker';
+export type RunningPlatforms = Array<RunningPlatform>;
 export default interface IPlugin {
 	gluePluginStore: IGlueStorePlugin;
 	type: 'stateless' | 'stateful' | 'devonly';
 	instances: IInstance[];
-
+	runningPlatforms: RunningPlatforms;
 	// lifecycle
 	init(): any;
 	destroy(): any;

@@ -27,6 +27,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
+    this.runningPlatforms = [];
   }
 
   init() {
@@ -93,6 +94,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-		return `./.glue/internals/${target}`;
-	}
+    return `./.glue/internals/${target}`;
+  }
 }

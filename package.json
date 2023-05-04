@@ -47,7 +47,14 @@
   },
   "workspaces": [
     "packages/*",
-    ".glue/__generated__/packages"
+    ".glue/__generated__/packages",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/web",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/web/src/web",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/functions",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/node_modules/@gluestack-v2/glue-plugin-service-gateway/template",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/seal/services/gateway/src/gateway",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/node_modules/@gluestack-v2/glue-plugin-service-sdk/template",
+    "/Users/suraj/Sites/projects/gluestack-v2/framework-cli/.glue/__generated__/packages/sdk"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-crons": "^0.0.1",
