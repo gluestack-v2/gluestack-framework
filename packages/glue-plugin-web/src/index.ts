@@ -55,7 +55,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
     await instance.updateSourcePackageJSON();
-    await instance.updateRootPackageJSON();
+    await instance.updateRootPackageJSONWithSourcePath();
   }
 
   createInstance(

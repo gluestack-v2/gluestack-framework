@@ -68,13 +68,15 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
-    // update package.json'S name index with the new instance name
-    const pluginPackage = `${instance._sourcePath}/package.json`;
-    await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
+    instance.updateSourcePackageJSON();
+    instance.updateRootPackageJSONWithSourcePath();
+    // // update package.json'S name index with the new instance name
+    // const pluginPackage = `${instance._sourcePath}/package.json`;
+    // await reWriteFile(pluginPackage, instanceName, "INSTANCENAME");
 
-    // update root package.json's workspaces with the new instance name
-    const rootPackage = `${process.cwd()}/package.json`;
-    await Workspaces.append(rootPackage, instance._sourcePath);
+    // // update root package.json's workspaces with the new instance name
+    // const rootPackage = `${process.cwd()}/package.json`;
+    // await Workspaces.append(rootPackage, instance._sourcePath);
   }
 
   // generateFunctionsInServiceSdk(ignoredPaths: string[]) {

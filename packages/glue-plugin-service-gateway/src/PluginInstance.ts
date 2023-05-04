@@ -72,7 +72,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateDestinationPackageJSON();
-    await this.updateRootPackageJSON();
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
   }
@@ -95,5 +94,4 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getSealServicefile(): string {
     return `${this._destinationPath}/seal.service.yaml`;
   }
-
 }
