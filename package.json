@@ -23,7 +23,7 @@
     "watch:graphql": "npm run watch --workspace @gluestack-v2/glue-plugin-graphql",
     "watch:queues": "npm run watch --workspace @gluestack-v2/glue-plugin-queues",
     "add:necessory": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares  && node glue add @gluestack-v2/glue-plugin-queues queues && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events",
-    "watch:all": "npm run watch:cli  & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares",
+    "watch:all": "npm run watch:cli  & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares & npm run watch:components",
     "clean": "echo 'hello'"
   },
   "repository": {
@@ -47,19 +47,17 @@
   },
   "workspaces": [
     "packages/*",
-    ".glue/__generated__/packages",
     "components",
     "web",
-    "functions"
+    "functions",
+    ".glue/__generated__/packages",
+    ".glue/__generated__/packages/sdk"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-components": "^0.0.2",
-    "@gluestack-v2/glue-plugin-crons": "^0.0.1",
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
     "@gluestack-v2/glue-plugin-events": "^0.0.2",
     "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-middlewares": "^0.0.2",
-    "@gluestack-v2/glue-plugin-queues": "^0.0.1",
     "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
     "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
     "@gluestack-v2/glue-plugin-web": "^0.0.2"

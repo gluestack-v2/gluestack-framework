@@ -12,9 +12,10 @@ class Context {
 	}
 
 	events = {
-		emit: (eventName, params, data) => {
+		emit: (eventName, params) => {
 			return this._molecularCtx.call("events.emit", {
-				data: { eventName: eventName, params: params, data: data },
+				eventName: eventName,
+				params: params,
 			});
 		},
 	};
