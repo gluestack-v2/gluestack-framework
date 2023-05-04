@@ -1,21 +1,21 @@
-class Ctx {
-	_ctx;
+class Context {
+	_molecularCtx;
 	params;
 	call;
 	mcall;
 
 	constructor(ctx) {
-		this._ctx = ctx;
+		this._molecularCtx = ctx;
 		this.params = ctx.params;
 		this.call = ctx.call;
 		this.mcall = ctx.mcall;
 	}
 
 	events = {
-		emit: (eventName, params, data) => {
-			console.log(eventName, params, data);
-			return this._ctx.call("events.emit", {
-				data: { eventName: eventName, params: params, data: data },
+		emit: (eventName, params) => {
+			return this._molecularCtx.call("events.emit", {
+				eventName: eventName,
+				params: params,
 			});
 		},
 	};
@@ -28,11 +28,11 @@ class Ctx {
 				params: params,
 			});
 
-			return this._ctx.call("queues.push", {
+			return this._molecularCtx.call("queues.push", {
 				data: { functionName: functionName, params: params },
 			});
 		},
 	};
 }
 
-module.exports = Ctx;
+module.exports = Context;

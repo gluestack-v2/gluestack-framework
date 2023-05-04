@@ -7,7 +7,7 @@ export const eventsTemplate = () => {
  /** @type {ServiceSchema} */
  
  const eventListeners = require("../events/listeners");
- const Ctx = require("../serverSdk");
+ const Ctx = require("../Context");
  
  module.exports = {
    name: "events",

@@ -319,7 +319,7 @@ function createService(
     "// **---Add Imports Here---**",
     moleculerImportStatements.actionImportPath +
       moleculerImportStatements.eventImportPath +
-      `const Ctx = require("../serverSdk");`
+      `const Ctx = require("../Context");`
   );
   writeFile(path, finalString);
 }
