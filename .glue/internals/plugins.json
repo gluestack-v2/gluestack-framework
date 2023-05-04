@@ -1,35 +1,5 @@
 {
   "@gluestack-v2/glue-plugin-develop": {
     "package": "@gluestack-v2/glue-plugin-develop"
-  },
-  "@gluestack-v2/glue-plugin-web": {
-    "package": "@gluestack-v2/glue-plugin-web"
-  },
-  "@gluestack-v2/glue-plugin-service-sdk": {
-    "package": "@gluestack-v2/glue-plugin-service-sdk"
-  },
-  "@gluestack-v2/glue-plugin-service-gateway": {
-    "package": "@gluestack-v2/glue-plugin-service-gateway"
-  },
-  "@gluestack-v2/glue-plugin-functions": {
-    "package": "@gluestack-v2/glue-plugin-functions"
-  },
-  "@gluestack-v2/glue-plugin-middlewares": {
-    "package": "@gluestack-v2/glue-plugin-middlewares"
-  },
-  "@gluestack-v2/glue-plugin-queues": {
-    "package": "@gluestack-v2/glue-plugin-queues"
-  },
-  "@gluestack-v2/glue-plugin-crons": {
-    "package": "@gluestack-v2/glue-plugin-crons"
-  },
-  "@gluestack-v2/glue-plugin-events": {
-    "package": "@gluestack-v2/glue-plugin-events"
-  },
-  "@gluestack-v2/glue-plugin-database": {
-    "package": "@gluestack-v2/glue-plugin-database"
-  },
-  "@gluestack-v2/glue-plugin-graphql": {
-    "package": "@gluestack-v2/glue-plugin-graphql"
   }
 }
