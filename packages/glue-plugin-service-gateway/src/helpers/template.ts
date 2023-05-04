@@ -7,7 +7,7 @@ export const eventsTemplate = () => {
  /** @type {ServiceSchema} */
  
  const eventListeners = require("../events/listeners");
- const Ctx = require("../Context");
+ const Context = require("../Context");
  
  module.exports = {
    name: "events",
@@ -52,7 +52,7 @@ export const eventsTemplate = () => {
          const eventName = Object.keys(listener)[0];
          const currentListeners = listener[eventName];
          currentListeners.map((ctxCallPath) => {
-           const serverSdk = new Ctx(ctx);
+           const serverSdk = new Context(ctx);
            const finalPath = ctxCallPath.split("/").join(".");
  
            if (eventName == data.eventName) {
