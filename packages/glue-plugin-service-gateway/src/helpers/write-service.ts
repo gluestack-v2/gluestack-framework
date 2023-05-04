@@ -179,7 +179,7 @@ function getActions(
       path: removeExtension(finalPathArr.functionPath),
     };
 
-    action.handler = `(ctx) => {const serverSDK = new Ctx(ctx); return ${
+    action.handler = `(ctx) => {const serverSDK = new Context(ctx); return ${
       removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
     }(serverSDK);},`;
 
@@ -218,7 +218,7 @@ const getPrivateActions = (
       path: finalPathArr.functionPath,
     };
 
-    action.handler = `(ctx) => {const serverSDK = new Ctx(ctx); return ${
+    action.handler = `(ctx) => {const serverSDK = new Context(ctx); return ${
       removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
     }(serverSDK);},`;
     if (!filePath.includes("/events/"))
@@ -319,7 +319,7 @@ function createService(
     "// **---Add Imports Here---**",
     moleculerImportStatements.actionImportPath +
       moleculerImportStatements.eventImportPath +
-      `const Ctx = require("../Context");`
+      `const Context = require("../Context");`
   );
   writeFile(path, finalString);
 }
