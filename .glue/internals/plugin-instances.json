@@ -5,5 +5,68 @@
       "directory": "./develop",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-web": [
+    {
+      "instance": "web",
+      "directory": "./web",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-sdk": [
+    {
+      "instance": "sdk",
+      "directory": "./sdk",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-gateway": [
+    {
+      "instance": "gateway",
+      "directory": "./gateway",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-functions": [
+    {
+      "instance": "functions",
+      "directory": "./functions",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-middlewares": [
+    {
+      "instance": "middlewares",
+      "directory": "./middlewares",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-crons": [
+    {
+      "instance": "crons",
+      "directory": "./crons",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-events": [
+    {
+      "instance": "events",
+      "directory": "./events",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-database": [
+    {
+      "instance": "postgres",
+      "directory": "./postgres",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-graphql": [
+    {
+      "instance": "graphql",
+      "directory": "./graphql",
+      "container_store": {}
+    }
   ]
 }

@@ -1,27 +1,10 @@
 import {
-  success,
-  warning,
-  error,
+  success
 } from "@gluestack-v2/framework-cli/build/helpers/print";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import { exec, spawn } from "child_process";
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
-import { RunningPlatforms, RunningPlatform } from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 
-export const execute = (
-  command: string,
-  args: string[],
-  options: any
-) =>
-  new Promise((resolve, reject) => {
-    const child = spawn(command, args, options);
-
-    child.on('exit', () => resolve('done'));
-
-    child.on('close',
-      (code) => (code === 0)
-        ? resolve('done') : reject('failed'));
-  });
+import { execute } from "../../helpers/execute";
 
 const downSealService = async (serviceName: string) => {
   await execute("sh", [

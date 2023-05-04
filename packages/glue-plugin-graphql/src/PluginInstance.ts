@@ -49,13 +49,28 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._sourcePath}/seal.service.yaml`;
   }
 
-
-
   async build(): Promise<void> {
-
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
     this.updateWorkspacePackageJSON();
+    this.app.updateServices(this._workspacePath);
     this.sealInit();
+  }
+
+  async watch(): Promise<void> {
+    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+
+    if (!(await fileExists(this._destinationPath))) {
+      try {
+        await this.build();
+      } catch (error) {
+        console.log(">> Instance does not exits:", this.getName());
+        return;
+      }
+    }
+
+    await this.app.watch(this._sourcePath, this._destinationPath, () => {
+
+    });
   }
 }

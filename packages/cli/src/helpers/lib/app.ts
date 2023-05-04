@@ -239,6 +239,8 @@ export default class AppCLI {
 		this.commander.destroy();
 		// save changes made into all stores
 		this.gluePluginStoreFactory.saveAllStores();
+
+		this.updateServices();
 	}
 
 	// @API: init
@@ -257,30 +259,44 @@ export default class AppCLI {
 		}
 	}
 
-	async updateServices() {
+	async updateServices(instanceWorkspacePath: string = '') {
 		const packagesPath = join(
 			process.cwd(),
 			GLUE_GENERATED_PACKAGES_PATH
 		);
+
+		const updatePackageInService = async (servicePath: string) => {
+			if (await fileExists(servicePath)) {
+				rm(join(servicePath, 'packages'));
+				await copyFolder(packagesPath, servicePath + "/packages");
+			}
+		}
+		const servicesPath = this.getAllServicePaths();
+
+		if (instanceWorkspacePath) {
+			await updatePackageInService(instanceWorkspacePath);
+		} else if (servicesPath.length > 0) {
+			for await (const path of servicesPath) {
+				let servicePath = join(path, '/src');
+				await updatePackageInService(servicePath);
+			}
+		} else {
+			console.log('No services found');
+		}
+	}
+
+	getAllServicePaths() {
 		const servicesPath = join(
 			process.cwd(),
 			GLUE_GENERATED_SEAL_SERVICES_PATH
 		);
 
-		if (fs.existsSync(servicesPath)) {
-			const paths = fs.readdirSync(servicesPath);
-			if (paths.length > 0)
-				for await (const path of paths) {
-					let servicePath = join(servicesPath, path, '/src');
-					if (await fileExists(servicePath)) {
-						if (await fileExists(servicePath)) {
-							rm(join(servicePath, 'packages'));
-						}
-						await copyFolder(packagesPath, servicePath + "/packages");
-					}
-				}
-		} else {
-			console.log('No services found');
+		if (!fs.existsSync(servicesPath)) {
+			return [];
 		}
+
+		return fs.readdirSync(servicesPath, { withFileTypes: true })
+			.filter(dirent => dirent.isDirectory())
+			.map((dirent) => join(servicesPath, dirent.name))
 	}
 }
