@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, relative } from 'path';
 
 import AppCLI from '../helpers/lib/app';
 import IPlugin from './plugin/interface/IPlugin';
@@ -12,7 +12,8 @@ import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance {
+	implements IInstance
+{
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;
@@ -107,8 +108,14 @@ export default abstract class BaseGluestackPluginInstance
 	async updateRootPackageJSON() {
 		// update root package.json's workspaces with the new instance name
 		const rootPackage: string = `${process.cwd()}/package.json`;
-		await Workspaces.append(rootPackage, this._sourcePath);
-		await Workspaces.append(rootPackage, this._destinationPath);
+		await Workspaces.append(
+			rootPackage,
+			relative(process.cwd(), this._sourcePath)
+		);
+		await Workspaces.append(
+			rootPackage,
+			relative(process.cwd(), this._destinationPath)
+		);
 	}
 
 	async updateWorkspacePackageJSON() {
@@ -147,8 +154,8 @@ export default abstract class BaseGluestackPluginInstance
 		console.log(sealInit.stdout.toString());
 		console.error(sealInit.stderr.toString());
 
-		const sealAddService = spawnSync("sh", [
-			"-c",
+		const sealAddService = spawnSync('sh', [
+			'-c',
 			`cd ${SEAL_SERVICES_PATH} && seal service:add ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
 		]);
 
