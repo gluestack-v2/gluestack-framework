@@ -4,23 +4,40 @@ import {
   error,
 } from "@gluestack-v2/framework-cli/build/helpers/print";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import { spawn } from "child_process";
+import { exec, spawn } from "child_process";
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 import { RunningPlatforms, RunningPlatform } from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 
-const downSealService = (serviceName: string) => {
-  const sealUp = spawn("sh", [
+export const execute = (
+  command: string,
+  args: string[],
+  options: any
+) =>
+  new Promise((resolve, reject) => {
+    const child = spawn(command, args, options);
+
+    child.on('exit', () => resolve('done'));
+
+    child.on('close',
+      (code) => (code === 0)
+        ? resolve('done') : reject('failed'));
+  });
+
+const downSealService = async (serviceName: string) => {
+  await execute("sh", [
     "-c",
     `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && seal service:down ${serviceName}`,
-  ]);
-
-  sealUp.stdout.on("data", (data) => {
-    success(`${data}`);
+  ], {
+    stdio: 'inherit'
   });
+};
 
-  sealUp.stderr.on("data", (data) => {
-    error(`${data}`);
-  });
+const dockerVolumeCleanup = async () => {
+  await execute("docker", [
+    "volume",
+    "prune",
+    "-f"
+  ], { stdio: 'inherit' });
 };
 
 export default async (app: AppCLI): Promise<void> => {
@@ -32,8 +49,10 @@ export default async (app: AppCLI): Promise<void> => {
       if (plugin.runningPlatforms.length <= 0) {
         continue;
       } else {
-        downSealService(instance.getName());
+        await downSealService(instance.getName());
       }
     }
   }
+
+  await dockerVolumeCleanup();
 };
