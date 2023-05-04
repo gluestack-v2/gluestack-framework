@@ -28,6 +28,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
+    this.runningPlatforms = [];
   }
 
   init() {

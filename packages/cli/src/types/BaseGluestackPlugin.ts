@@ -1,6 +1,6 @@
 import AppCLI from '../helpers/lib/app';
 
-import IPlugin from './plugin/interface/IPlugin';
+import IPlugin, { RunningPlatforms } from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGluePluginStore from './store/interface/IGluePluginStore';
 
@@ -9,6 +9,7 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	instances: IInstance[];
 	type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
 	gluePluginStore: IGluePluginStore;
+	runningPlatforms: RunningPlatforms = ['local', 'docker'];
 
 	constructor(app: AppCLI, gluePluginStore: IGluePluginStore) {
 		this.app = app;
@@ -45,24 +46,24 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	}
 
 	async build(): Promise<void> {
-    const instances: Array<IInstance> = this.getInstances();
+		const instances: Array<IInstance> = this.getInstances();
 
-    for await (const instance of instances) {
-      await instance.build();
-    }
-  }
+		for await (const instance of instances) {
+			await instance.build();
+		}
+	}
 
-  async watch (callback: Function): Promise<void> {
-    const instances: Array<IInstance> = this.getInstances();
-    for await (const instance of instances) {
-      if (instance.watch) {
-        await instance.watch((event: string, path: string) => {
-          // use this for debuggin
-          if (callback) {
-            callback(event, path);
-          }
-        });
-      }
-    }
-  }
+	async watch(callback: Function): Promise<void> {
+		const instances: Array<IInstance> = this.getInstances();
+		for await (const instance of instances) {
+			if (instance.watch) {
+				await instance.watch((event: string, path: string) => {
+					// use this for debuggin
+					if (callback) {
+						callback(event, path);
+					}
+				});
+			}
+		}
+	}
 }
