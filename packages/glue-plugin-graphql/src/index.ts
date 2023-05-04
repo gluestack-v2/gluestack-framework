@@ -92,13 +92,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         name: "HASURA_GRAPHQL_ADMIN_SECRET",
         type: "text",
         message: `Admin Secret for GraphQL instance "${instanceName}"`,
-        validate: value => value.length < 32 ? 'JWT Secret should be at least 32 characters' : true
+        validate: (value: string) => value !== "",
       },
       {
         name: "HASURA_GRAPHQL_JWT_SECRET",
         type: "text",
         message: `JWT Secret for GraphQL instance "${instanceName}"`,
-        validate: (value: string) => value !== "",
+        validate: value => value.length < 32 ? 'JWT Secret should be at least 32 characters' : true
       }
     ];
 
