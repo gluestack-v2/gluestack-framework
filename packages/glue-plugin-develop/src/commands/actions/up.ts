@@ -39,7 +39,17 @@ const upAllServices = () => {
   sealUp.stderr.on("data", (data) => {
     error(`${data}`);
   });
-}
+};
+
 export default async (app: AppCLI, opts: any): Promise<void> => {
-  upAllServices();
+  // upAllServices();
+  for await (const plugin of app.plugins) {
+    let instances = plugin.getInstances();
+    for (let instance of instances) {
+      // @ts-ignore
+      success("Seal service plugin found!");
+      upSealService(instance.getName(), opts);
+      warning(plugin.getName(), "NAME");
+    }
+  }
 };
