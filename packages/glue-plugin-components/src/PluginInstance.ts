@@ -4,7 +4,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import chokidar from "chokidar";
-import path1 from "path";
+import path1, { join } from "path";
 import fs, { unlinkSync } from "fs";
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
@@ -64,4 +64,28 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getSealServicefile(): string {
     return `${this._workspacePath}/seal.service.yaml`;
   }
+
+  async build(): Promise<void> {
+    this.app.write(this._sourcePath, this._destinationPath);
+    this.app.updateServices();
+  }
+
+  getDestinationPath(): string {
+    return join(
+      process.cwd(),
+      ".glue",
+      "__generated__",
+      "packages",
+      this.getName()
+    );
+  }
+
+  async watch(): Promise<void> {
+    this.app.watch(this._sourcePath, this._destinationPath, () => {
+      //
+      // this.app.updateServices();
+    });
+  }
+
+
 }

@@ -107,6 +107,7 @@ export default abstract class BaseGluestackPluginInstance
 	async updateRootPackageJSON() {
 		// update root package.json's workspaces with the new instance name
 		const rootPackage: string = `${process.cwd()}/package.json`;
+		await Workspaces.append(rootPackage, this._sourcePath);
 		await Workspaces.append(rootPackage, this._destinationPath);
 	}
 

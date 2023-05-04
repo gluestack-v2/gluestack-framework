@@ -56,4 +56,17 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.sealInit();
     await this.app.updateServices();
   }
+
+
+  async watch(callback: any) {
+    await this.app.watch(
+      this._sourcePath,
+      this._destinationPath,
+      (events, path) => {
+        if (callback) {
+          callback(events, path);
+        }
+      }
+    );
+  }
 }
