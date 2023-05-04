@@ -64,7 +64,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
     await instance.updateSourcePackageJSON();
-    // await instance.updateRootPackageJSON();
+    await instance.updateRootPackageJSONWithSourcePath();
 
     // // update package.json'S name index with the new instance name
     // const pluginPackage = `${instance._sourcePath}/package.json`;

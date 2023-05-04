@@ -46,7 +46,22 @@
     "@types/node": "^18.15.5"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    ".glue/__generated__/packages",
+    "components",
+    "web",
+    "functions"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@gluestack-v2/glue-plugin-components": "^0.0.2",
+    "@gluestack-v2/glue-plugin-crons": "^0.0.1",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.2",
+    "@gluestack-v2/glue-plugin-events": "^0.0.2",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
+    "@gluestack-v2/glue-plugin-middlewares": "^0.0.2",
+    "@gluestack-v2/glue-plugin-queues": "^0.0.1",
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
+    "@gluestack-v2/glue-plugin-web": "^0.0.2"
+  }
 }
