@@ -48,6 +48,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._sourcePath}/Dockerfile`;
   }
 
+  getDestinationPath(): string {
+    return "";
+  }
+
   getSealServicefile(): string {
     return `${this._sourcePath}/seal.service.yaml`;
   }
