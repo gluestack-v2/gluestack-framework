@@ -179,9 +179,9 @@ function getActions(
       path: removeExtension(finalPathArr.functionPath),
     };
 
-    action.handler = `(ctx) => {const serverSDK = new Context(ctx); return ${
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
       removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
-    }(serverSDK);},`;
+    }(context);},`;
 
     serviceAction[removeExtension(finalPathArr.funcPath.join("."))] = action;
 
@@ -218,9 +218,9 @@ const getPrivateActions = (
       path: finalPathArr.functionPath,
     };
 
-    action.handler = `(ctx) => {const serverSDK = new Context(ctx); return ${
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
       removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
-    }(serverSDK);},`;
+    }(context);},`;
     if (!filePath.includes("/events/"))
       obj[removeExtension(finalPathArr.funcPath.join("."))] = action;
     // if (filePath.includes("/events/")) {
