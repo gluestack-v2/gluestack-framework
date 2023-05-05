@@ -20,9 +20,6 @@
   "@gluestack-v2/glue-plugin-middlewares": {
     "package": "@gluestack-v2/glue-plugin-middlewares"
   },
-  "@gluestack-v2/glue-plugin-queues": {
-    "package": "@gluestack-v2/glue-plugin-queues"
-  },
   "@gluestack-v2/glue-plugin-crons": {
     "package": "@gluestack-v2/glue-plugin-crons"
   },
