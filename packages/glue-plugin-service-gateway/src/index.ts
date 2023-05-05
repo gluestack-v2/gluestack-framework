@@ -267,6 +267,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         data.devDependencies["moleculer-cron"] = "latest";
+        data.devDependencies["axios"] = "latest";
         let stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(

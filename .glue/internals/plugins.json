@@ -25,5 +25,14 @@
   },
   "@gluestack-v2/glue-plugin-events": {
     "package": "@gluestack-v2/glue-plugin-events"
+  },
+  "@gluestack-v2/glue-plugin-database": {
+    "package": "@gluestack-v2/glue-plugin-database"
+  },
+  "@gluestack-v2/glue-plugin-graphql": {
+    "package": "@gluestack-v2/glue-plugin-graphql"
+  },
+  "@gluestack-v2/glue-plugin-queues": {
+    "package": "@gluestack-v2/glue-plugin-queues"
   }
 }
