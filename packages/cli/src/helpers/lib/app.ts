@@ -26,6 +26,9 @@ import {
 } from '../../constants/gluestack.v2';
 import IInstance from '../../types/plugin/interface/IInstance';
 
+const sourceMap = require('source-map');
+
+
 type PluginConstructor = new (
 	app: AppCLI,
 	gluePluginStore?: IGluePluginStore
@@ -134,7 +137,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => {}
+		callback = (...args: any) => { }
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -197,12 +200,48 @@ export default class AppCLI {
 		watcher.watch(cwd, pattern, callback);
 	}
 
+
+	generateSourceMap(sourcePath: string,
+		destinationPath: string,
+	): void {
+		const generator = new sourceMap.SourceMapGenerator({
+			file: sourcePath,
+			sourceRoot: ""
+		});
+		// Add mapping
+		const source = fs.readFileSync(sourcePath, 'utf8');
+		const lines = source.split('\n');
+		for (let i = 0; i < lines.length; i++) {
+			const columns = lines[i].split('');
+			for (let j = 0; j < columns.length; j++) {
+				generator.addMapping({
+					source: sourcePath,
+					original: { line: i + 1, column: j },
+					generated: { line: i + 1, column: j }
+				});
+			}
+		}
+
+		const sourceMapString = generator.toString();
+		fs.writeFileSync(destinationPath + '.map', sourceMapString);
+		fs.appendFileSync(destinationPath, `\n//# sourceMappingURL=${destinationPath}.map`);
+	}
+
+	removeSourceMap(
+		destinationPath: string,
+	): void {
+		fs.rmSync(destinationPath + '.map');
+	}
+
 	watch(
 		source: string,
 		destination: string,
 		callback: IWatchCallback
 	): void {
 		this.listen(source, ['./'], (event: string, path: string) => {
+
+			console.log('>> listen');
+
 			const sourcePath = join(source, path);
 			const destinationPath = join(destination, path);
 
@@ -210,18 +249,22 @@ export default class AppCLI {
 				switch (event) {
 					case 'add':
 						fs.copyFileSync(sourcePath, destinationPath);
+						this.generateSourceMap(sourcePath, destinationPath)
 						break;
 					case 'addDir':
 						fs.mkdirSync(destinationPath, { recursive: true });
 						break;
 					case 'change':
 						fs.copyFileSync(sourcePath, destinationPath);
+						this.generateSourceMap(sourcePath, destinationPath)
 						break;
 					case 'unlinkDir':
 						fs.rmSync(destinationPath, { recursive: true });
 						break;
 					case 'unlink':
 						fs.rmSync(destinationPath);
+						this.removeSourceMap(destinationPath)
+
 						break;
 				}
 			}

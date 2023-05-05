@@ -43,7 +43,8 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.15.5"
+    "@types/node": "^18.15.5",
+    "source-map": "^0.7.4"
   },
   "workspaces": [
     "packages/*",
@@ -53,16 +54,9 @@
     ".glue/__generated__/packages/sdk"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-crons": "^0.0.1",
-    "@gluestack-v2/glue-plugin-database": "^0.0.1",
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-events": "^0.0.2",
     "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-graphql": "^0.0.1",
-    "@gluestack-v2/glue-plugin-middlewares": "^0.0.2",
-    "@gluestack-v2/glue-plugin-queues": "^0.0.1",
     "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
-    "@gluestack-v2/glue-plugin-web": "^0.0.2"
+    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2"
   }
 }
