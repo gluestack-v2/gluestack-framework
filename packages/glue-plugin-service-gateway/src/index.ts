@@ -123,37 +123,26 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (this.instances.length === 0) {
       return;
     }
-    for await (const instance of instances) {
-      const functionsPath = path.resolve(process.cwd(), instancePath);
 
-      const installationPath = instance._destinationPath;
-      if (await fileExists(path.join(installationPath, instancePath))) {
-        rm(path.join(installationPath, instancePath));
-      }
+    for await (const instance of instances) {
+      const functionsPath = path.resolve(process.cwd(), instancePath); // /functions
+
+      // const installationPath = instance._destinationPath; // services/gateway/src/gateway
+
+      // if (await fileExists(path.join(installationPath, instancePath))) { // checks services/gateway/src/gateway/functions
+      //   rm(path.join(installationPath, instancePath));
+      // }
 
       if (!(await fileExists(functionsPath))) {
         console.log("> No functions plugin found, create instance first");
       } else {
-        await copyFolder(functionsPath, installationPath, 3);
-
-        if (
-          fs.existsSync(
-            path.join(
-              installationPath,
-              "services",
-              `${instanceName}.service.js`
-            )
-          )
-        ) {
-          await fs.unlinkSync(
-            path.join(
-              installationPath,
-              "services",
-              `${instanceName}.service.js`
-            )
-          );
-        }
-        writeService(installationPath, instanceName, ignoredPaths);
+        // await copyFolder(functionsPath, installationPath, 3);
+        writeService(
+          instance._destinationPath,
+          instancePath,
+          instanceName,
+          ignoredPaths
+        );
       }
     }
   }

@@ -174,6 +174,7 @@ export default abstract class BaseGluestackPluginInstance
 	}
 
 	async watch(callback?: Function): Promise<void> {
+
 		if (!(await fileExists(this._destinationPath))) {
 			try {
 				await this.build();
@@ -197,7 +198,7 @@ export default abstract class BaseGluestackPluginInstance
 		return this._destinationPath.includes('packages')
 			? 'package'
 			: this._destinationPath.includes('services')
-			? 'service'
-			: 'none';
+				? 'service'
+				: 'none';
 	}
 }
