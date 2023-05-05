@@ -97,6 +97,9 @@ const writeService = (
       return;
     }
 
+    if (filePath.endsWith('.map') || filePath === 'package.json') {
+      return;
+    }
     // Get Private Actions, events, importd
     if (filePath.includes("/private/")) {
       privateMoleculerActions = {

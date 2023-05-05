@@ -80,7 +80,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       }
     }
 
-    console.log('>> SDK Watch');
 
     // COPY THIS SECTION of code for any other plugin instace watch
 

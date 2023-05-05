@@ -174,8 +174,6 @@ export default abstract class BaseGluestackPluginInstance
 
 	async watch(callback?: Function): Promise<void> {
 
-		console.log('>> base Watch', this.getName());
-
 		if (!(await fileExists(this._destinationPath))) {
 			try {
 				await this.build();
@@ -188,7 +186,6 @@ export default abstract class BaseGluestackPluginInstance
 			this._sourcePath,
 			'',
 			async (event: string, path: string) => {
-				console.log('>> base callback', event, path);
 				if (callback) {
 					callback(event, path);
 				}

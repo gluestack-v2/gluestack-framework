@@ -19,7 +19,7 @@ import { IWatchCallback } from '../../types/app/interface/IWatcher';
 import IGluePluginStore from '../../types/store/interface/IGluePluginStore';
 import IProgramCallback from '../../types/helpers/interface/ICommandCallback';
 import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStoreFactory';
-import { join } from 'path';
+import { extname, join } from 'path';
 import {
 	GLUE_GENERATED_PACKAGES_PATH,
 	GLUE_GENERATED_SEAL_SERVICES_PATH,
@@ -204,10 +204,17 @@ export default class AppCLI {
 	generateSourceMap(sourcePath: string,
 		destinationPath: string,
 	): void {
+		const filePathExtension: string = extname(sourcePath);
+
+		if (!['.ts', '.js', '.tsx', '.jsx'].includes(filePathExtension)) {
+			return;
+		}
+
 		const generator = new sourceMap.SourceMapGenerator({
 			file: sourcePath,
 			sourceRoot: ""
 		});
+
 		// Add mapping
 		const source = fs.readFileSync(sourcePath, 'utf8');
 		const lines = source.split('\n');
@@ -240,7 +247,6 @@ export default class AppCLI {
 	): void {
 		this.listen(source, ['./'], (event: string, path: string) => {
 
-			console.log('>> listen');
 
 			const sourcePath = join(source, path);
 			const destinationPath = join(destination, path);
