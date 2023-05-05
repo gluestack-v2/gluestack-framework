@@ -41,6 +41,20 @@
       "container_store": {}
     }
   ],
+  "@gluestack-v2/glue-plugin-middlewares": [
+    {
+      "instance": "middlewares",
+      "directory": "./middlewares",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-crons": [
+    {
+      "instance": "crons",
+      "directory": "./crons",
+      "container_store": {}
+    }
+  ],
   "@gluestack-v2/glue-plugin-events": [
     {
       "instance": "events",

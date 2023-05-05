@@ -89,10 +89,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const answers = await prompts(questions);
 
     // Create the .env file content
-    const envContent = `POSTGRES_USER=${answers.POSTGRES_USER}
-    POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
-    POSTGRES_DB=${answers.POSTGRES_DB}
-    DATABASE_URL=postgres://${answers.POSTGRES_USER}:${answers.POSTGRES_PASSWORD}@db:5432/${answers.POSTGRES_DB}`;
+    const envContent = `
+POSTGRES_USER=${answers.POSTGRES_USER}
+POSTGRES_PASSWORD=${answers.POSTGRES_PASSWORD}
+POSTGRES_DB=${answers.POSTGRES_DB}
+`;
+
     // Write the .env file at database root
     fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
 

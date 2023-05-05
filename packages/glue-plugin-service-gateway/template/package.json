@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "My Moleculer-based microservices project",
   "scripts": {
-    "dev": "moleculer-runner --hot services services/**/*.service.js",
+    "dev": "moleculer-runner --repl --hot services services/**/*.service.js",
     "start": "moleculer-runner",
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "moleculer-web": "^0.10.4",
+    "moleculer-web": "0.10.5",
     "nats": "^2.7.1",
-    "moleculer": "^0.14.26"
+    "moleculer": "0.14.29"
   },
   "engines": {
     "node": ">= 16.x.x"

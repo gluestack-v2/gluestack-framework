@@ -26,6 +26,7 @@
     "@gluestack-v2/glue-plugin-develop": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
+    "dotenv": "^16.0.3",
     "prompts": "^2.4.2",
     "typescript": "^4.9.5"
   },
@@ -33,7 +34,9 @@
     "watch": "tsc --watch",
     "build": "tsc"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/prompts": "^2.4.4"
+  },
   "peerDependencies": {
     "@gluestack-v2/glue-plugin-database": "^0.0.x"
   }
