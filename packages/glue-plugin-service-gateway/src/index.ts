@@ -135,6 +135,24 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         console.log("> No functions plugin found, create instance first");
       } else {
         await copyFolder(functionsPath, installationPath, 3);
+
+        if (
+          fs.existsSync(
+            path.join(
+              installationPath,
+              "services",
+              `${instanceName}.service.js`
+            )
+          )
+        ) {
+          await fs.unlinkSync(
+            path.join(
+              installationPath,
+              "services",
+              `${instanceName}.service.js`
+            )
+          );
+        }
         writeService(installationPath, instanceName, ignoredPaths);
       }
     }

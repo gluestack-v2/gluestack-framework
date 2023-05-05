@@ -12,7 +12,8 @@ import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance {
+	implements IInstance
+{
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;

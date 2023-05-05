@@ -80,7 +80,7 @@ let privateMolecularEvents = ``;
 
 let eventsImportPaths = ``;
 
-const writeService = (
+const writeService = async (
   installationPath: string,
   instanceName: string,
   ignoredPaths: string[]
@@ -186,9 +186,11 @@ function getActions(
     serviceAction[removeExtension(finalPathArr.funcPath.join("."))] = action;
 
     // Create Import Statement
+
     functionImportStatement = `const ${removeExtension(
       camelCaseArray(finalPathArr.funcPath)
     )}Handler = require("..${finalPathArr.functionPath}");`;
+
     functionImportStatement += "\n";
   }
 
@@ -298,7 +300,7 @@ function updateApiGateway(installationPath: string, instanceName: string) {
   }
 }
 
-function createService(
+async function createService(
   moleculerActions: any,
   moleculerFunctionsServiceTemplate: any,
   moleculerImportStatements: any,
@@ -314,14 +316,24 @@ function createService(
     "// **---Add Events Here---**",
     eventsData + "// **---Add Events Here---**"
   );
+  const uniqueStrings: any = [];
+  moleculerImportStatements.actionImportPath
+    .split("\n")
+    .forEach((line: any) => {
+      if (!uniqueStrings.includes(line)) {
+        uniqueStrings.push(line);
+      }
+    });
+
+  const outputString = uniqueStrings.join("\n");
 
   finalString = finalString.replace(
     "// **---Add Imports Here---**",
-    moleculerImportStatements.actionImportPath +
+    outputString +
       moleculerImportStatements.eventImportPath +
       `const Context = require("../Context");`
   );
-  writeFile(path, finalString);
+  await writeFile(path, finalString);
 }
 
 function getPrivatePath(filePath: string, installationPath: string) {
