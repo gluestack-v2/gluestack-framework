@@ -12,8 +12,7 @@ import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance
-{
+	implements IInstance {
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;
@@ -133,7 +132,7 @@ export default abstract class BaseGluestackPluginInstance
 			private: true,
 			workspaces: [this.getName(), 'packages/**'],
 			scripts: {
-				'install-all': 'npm install --workspaces --if-present',
+				'install:all': 'npm install --workspaces --if-present',
 				dev: 'npm run dev --workspace @project/' + this.getName(),
 			},
 		};

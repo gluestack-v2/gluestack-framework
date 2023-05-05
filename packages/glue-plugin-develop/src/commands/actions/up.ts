@@ -36,7 +36,7 @@ const installNPMDependencies = async (app: AppCLI) => {
     await execute(
       "sh", [
       "-c",
-      `cd ${join(service, "src")} && npm install --force --workspaces --if-present `,
+      `cd ${join(service, "src")} && npm run install:all`,
     ], { stdio: 'inherit' });
     console.log();
   }

@@ -94,4 +94,27 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getSealServicefile(): string {
     return `${this._destinationPath}/seal.service.yaml`;
   }
+  //override updateWorkspacePackageJSON
+  async updateWorkspacePackageJSON() {
+    // // add package.json with workspaces
+    const packageFile: string = join(
+      this._workspacePath,
+      'package.json'
+    );
+    const packageContent: any = {
+      name: this.getName(),
+      private: true,
+      workspaces: [this.getName(), 'packages/**'],
+      scripts: {
+        'install:all': 'npm install --workspaces --if-present --legacy-peer-deps',
+        dev: 'npm run dev --workspace @project/' + this.getName(),
+      },
+    };
+
+    await writeFile(
+      packageFile,
+      JSON.stringify(packageContent, null, 2)
+    );
+  }
+
 }

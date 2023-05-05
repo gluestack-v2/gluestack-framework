@@ -9,7 +9,7 @@ import {
 import { FOLDER_STRUCTURE } from "../../constants/folder-structure";
 import createFoldersFromJson from "../../helpers/create-folders-from-json";
 import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
-import { join } from 'path';
+import path, { join } from 'path';
 
 export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
   // creates folders from FOLDER_STRUCTURE constant
@@ -17,7 +17,7 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
 
   // add __generated__/packages into workspaces
   await Workspaces.append(
-    `${process.cwd()}/package.json`,
+    path.join(process.cwd(), "package.json"),
     GLUE_GENERATED_PACKAGES_PATH
   );
 
