@@ -42,7 +42,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
+    this.runningPlatforms = ["local", "docker"];
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;

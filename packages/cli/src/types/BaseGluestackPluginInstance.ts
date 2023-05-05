@@ -181,9 +181,22 @@ export default abstract class BaseGluestackPluginInstance
 				return;
 			}
 		}
+		this.app.watch(
+			this._sourcePath,
+			'',
+			async (event: string, path: string) => {
+				if (callback) {
+					callback(event, path);
+				}
+			}
+		);
+	}
 
-		if (callback) {
-			callback();
-		}
+	public get _instanceType(): any {
+		return this._destinationPath.includes('packages')
+			? 'package'
+			: this._destinationPath.includes('services')
+			? 'service'
+			: 'none';
 	}
 }

@@ -24,6 +24,7 @@ import {
 	GLUE_GENERATED_PACKAGES_PATH,
 	GLUE_GENERATED_SEAL_SERVICES_PATH,
 } from '../../constants/gluestack.v2';
+import IInstance from '../../types/plugin/interface/IInstance';
 
 type PluginConstructor = new (
 	app: AppCLI,
@@ -293,14 +294,23 @@ export default class AppCLI {
 			process.cwd(),
 			GLUE_GENERATED_SEAL_SERVICES_PATH
 		);
-
 		if (!fs.existsSync(servicesPath)) {
 			return [];
 		}
-
 		return fs
 			.readdirSync(servicesPath, { withFileTypes: true })
 			.filter((dirent) => dirent.isDirectory())
 			.map((dirent) => join(servicesPath, dirent.name));
+	}
+
+	getAllServiceInstances() {
+		let plugins = this.getPlugins();
+		let allInstances: Array<IInstance> = [];
+		for (const plugin of plugins) {
+			allInstances.push(...plugin.getInstances());
+		}
+		return allInstances.filter(
+			(instance) => instance._instanceType === 'service'
+		);
 	}
 }

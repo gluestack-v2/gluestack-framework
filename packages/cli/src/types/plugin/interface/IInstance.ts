@@ -12,6 +12,7 @@ export default interface IInstance {
 	_destinationPath: string;
 	_sourcePath: string;
 	_workspacePath: string;
+	_instanceType: 'service' | 'package' | 'none';
 
 	init(): any;
 	destroy(): any;

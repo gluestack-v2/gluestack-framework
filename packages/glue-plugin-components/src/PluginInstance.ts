@@ -84,11 +84,24 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.watch(
       this._sourcePath,
       this._destinationPath,
-      (events, path) => {
+      (event, path) => {
         if (callback) {
-          callback(events, path);
+          callback(event, path);
         }
       }
     );
+    let serviceInstances = this.app.getAllServiceInstances();
+
+    serviceInstances.forEach(async (serviceInstance) => {
+      await this.app.watch(
+        this._sourcePath,
+        join(serviceInstance._workspacePath, "packages", this.getName()),
+        (event, path) => {
+          if (callback) {
+            callback(event, path);
+          }
+        }
+      );
+    });
   }
 }
