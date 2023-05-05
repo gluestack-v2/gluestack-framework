@@ -1,9 +1,9 @@
-- name: DB_NAME_TEMPLATE_STRING
+- name: HASURA_GRAPHQL_DB_NAME
   kind: postgres
   configuration:
     connection_info:
       database_url:
-        from_env: DATABASE_URL
+        from_env: HASURA_GRAPHQL_DATABASE_URL
       pool_settings:
         idle_timeout: 180
         max_connections: 50
