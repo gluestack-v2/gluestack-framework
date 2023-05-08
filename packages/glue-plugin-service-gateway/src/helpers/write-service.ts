@@ -80,13 +80,13 @@ let privateMolecularEvents = ``;
 
 let eventsImportPaths = ``;
 
-const writeService = (
+const writeService = async (
   installationPath: string,
-  instanceName: string,
+  functionPath: string,
+  functionInstanceName: string,
   ignoredPaths: string[]
 ) => {
-  const functionsPath = path.join(installationPath, instanceName);
-  const files = getNestedFilePaths(functionsPath);
+  const files = getNestedFilePaths(functionPath);
 
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
@@ -97,16 +97,21 @@ const writeService = (
       return;
     }
 
+    if (filePath.endsWith(".map") || filePath === "package.json") {
+      return;
+    }
     // Get Private Actions, events, importd
     if (filePath.includes("/private/")) {
       privateMoleculerActions = {
         ...privateMoleculerActions,
-        ...getPrivateActions(installationPath, instanceName, filePath).actions,
+        ...getPrivateActions(installationPath, functionInstanceName, filePath)
+          .actions,
       };
 
       privateMoleculerImportStatements =
         privateMoleculerImportStatements +
-        getPrivateActions(installationPath, instanceName, filePath).importPaths;
+        getPrivateActions(installationPath, functionInstanceName, filePath)
+          .importPaths;
       if (filePath.includes("/private/events/")) {
         let privateMolecularData = getEvents(
           getPrivatePath(filePath, installationPath)
@@ -127,22 +132,26 @@ const writeService = (
     // Get Actions
     moleculerActions = {
       ...moleculerActions,
-      ...getActions(installationPath, instanceName, filePath).actions,
+      ...getActions(installationPath, functionInstanceName, filePath).actions,
     };
     moleculerImportPaths =
       moleculerImportPaths +
-      getActions(installationPath, instanceName, filePath).importPaths;
+      getActions(installationPath, functionInstanceName, filePath).importPaths;
   });
 
   // Writing Molecular Actions and events for instance
   createService(
     moleculerActions,
-    moleculerFunctionsServiceTemplateFunc(instanceName),
+    moleculerFunctionsServiceTemplateFunc(functionInstanceName),
     {
       actionImportPath: moleculerImportPaths,
       eventImportPath: eventsImportPaths,
     },
-    path.join(installationPath, "services", `${instanceName}.service.js`),
+    path.join(
+      installationPath,
+      "services",
+      `${functionInstanceName}.service.js`
+    ),
     molecularEvents
   );
 
@@ -155,7 +164,7 @@ const writeService = (
     privateMolecularEvents
   );
 
-  updateApiGateway(installationPath, instanceName);
+  updateApiGateway(installationPath, functionInstanceName);
 };
 
 function removeExtension(filename: string) {
@@ -186,9 +195,11 @@ function getActions(
     serviceAction[removeExtension(finalPathArr.funcPath.join("."))] = action;
 
     // Create Import Statement
+
     functionImportStatement = `const ${removeExtension(
       camelCaseArray(finalPathArr.funcPath)
     )}Handler = require("..${finalPathArr.functionPath}");`;
+
     functionImportStatement += "\n";
   }
 
@@ -298,7 +309,7 @@ function updateApiGateway(installationPath: string, instanceName: string) {
   }
 }
 
-function createService(
+async function createService(
   moleculerActions: any,
   moleculerFunctionsServiceTemplate: any,
   moleculerImportStatements: any,
@@ -314,14 +325,24 @@ function createService(
     "// **---Add Events Here---**",
     eventsData + "// **---Add Events Here---**"
   );
+  const uniqueStrings: any = [];
+  moleculerImportStatements.actionImportPath
+    .split("\n")
+    .forEach((line: any) => {
+      if (!uniqueStrings.includes(line)) {
+        uniqueStrings.push(line);
+      }
+    });
+
+  const outputString = uniqueStrings.join("\n");
 
   finalString = finalString.replace(
     "// **---Add Imports Here---**",
-    moleculerImportStatements.actionImportPath +
+    outputString +
       moleculerImportStatements.eventImportPath +
       `const Context = require("../Context");`
   );
-  writeFile(path, finalString);
+  await writeFile(path, finalString);
 }
 
 function getPrivatePath(filePath: string, installationPath: string) {

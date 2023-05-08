@@ -70,8 +70,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       this._destinationPath,
       async (event, path) => {
         // TODO: OPTIMIZE UPDATES
+
         this.generateFunctionsInServiceGateway();
         this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
+
 
         if (callback) {
           callback(event, path);
@@ -82,12 +84,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   generateFunctionsInServiceGateway() {
     const name = this.getName();
-    const installationPath = this._sourcePath;
+    const installationPath = this._destinationPath;
 
     const plugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     ) as IPlugin;
-
     // @ts-ignore
     plugin.generateService(installationPath, name);
   }
@@ -108,7 +109,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     // @ts-ignore
     this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
-
   }
 
   getGatewayInstanceInfo() {
