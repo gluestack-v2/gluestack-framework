@@ -341,7 +341,7 @@ async function createService(
     "// **---Add Imports Here---**",
     outputString +
       moleculerImportStatements.eventImportPath +
-      `const Context = require("../Context");`
+      `const Context = require("../Context.ts");`
   );
   await writeFile(path, finalString);
 }

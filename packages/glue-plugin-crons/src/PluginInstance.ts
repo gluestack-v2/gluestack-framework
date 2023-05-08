@@ -70,7 +70,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // }
     // const serviceGatewayInstances: Array<IInstance> =
     //   serviceGatewayPlugin.getInstances();
-
     // for await (const serviceGatewayInstance of serviceGatewayInstances) {
     //   const targetPkgJson: string = join(
     //     process.cwd(),
@@ -104,35 +103,33 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     }
   }
 
-
   async watch(callback?: Function): Promise<void> {
-
     let serviceGatewayPlugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
 
-
-    if (!await fileExists(this._destinationPath)) {
+    if (!(await fileExists(this._destinationPath))) {
       try {
         await this.build();
       } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
+        console.log(">> Instance does not exits:", this.getName());
         return;
       }
     }
 
-    this.app.watch(this._sourcePath, '', async (events, path) => {
-
+    this.app.watch(this._sourcePath, "", async (events, path) => {
       if (serviceGatewayPlugin) {
         //@ts-ignore
         serviceGatewayPlugin.generateCrons(this._sourcePath, this.getName());
       }
       if (callback) {
-        callback(events, path)
+        callback(events, path);
       }
-    })
+    });
+  }
 
-
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
   }
 
   getGatewayInstanceInfo() {
@@ -141,13 +138,17 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
 
     if (!plugin) {
-      console.error(`Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`);
+      console.error(
+        `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
+      );
       return "";
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
     if (!instances || instances.length <= 0) {
-      console.error(`No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`);
+      console.error(
+        `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
+      );
       return "";
     }
 
@@ -163,9 +164,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       gatewayInstanceName,
       "src",
       gatewayInstanceName,
-      'services',
+      "services",
       this.getName() + ".service.js"
     );
   }
-
 }

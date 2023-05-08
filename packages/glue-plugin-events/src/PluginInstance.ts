@@ -63,16 +63,23 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     // @ts-ignore
     plugin.generateEventsService();
-
   }
 
   async watch(callback?: any) {
-    this.app.watch(this._sourcePath, this._destinationPath, async (events, path) => {
-      if (callback) {
-        await this.writeEventsService();
-        callback(events, path);
+    this.app.watch(
+      this._sourcePath,
+      this._destinationPath,
+      async (events, path) => {
+        if (callback) {
+          await this.writeEventsService();
+          callback(events, path);
+        }
       }
-    });
+    );
+  }
+
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
   }
 
   getGatewayInstanceInfo() {

@@ -65,6 +65,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     instance.updateSourcePackageJSON();
   }
 
+  getInstallationPath(target: string): string {
+    return `./server/${target}`;
+  }
+
   createInstance(
     key: string,
     gluePluginStore: IGlueStorePlugin,

@@ -57,12 +57,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.type;
   }
 
+  getInstallationPath(target: string): string {
+    return `./server/${target}`;
+  }
+
   // @ts-ignore
   getTemplateFolderPath(): string {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
-
-
 
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
@@ -96,5 +98,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
-
 }

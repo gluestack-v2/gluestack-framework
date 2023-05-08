@@ -195,7 +195,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       finalCode = finalCode.concat(
         `
     const userCustomMiddlewares = require("./middleware");\n
-    const ServerSDK = require("../Context");
+    const ServerSDK = require("../Context.ts");
 
     function createNext(serverSDK, next) {
       return next.bind(serverSDK._ctx)

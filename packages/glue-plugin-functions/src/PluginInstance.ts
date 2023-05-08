@@ -74,12 +74,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         this.generateFunctionsInServiceGateway();
         this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
-
         if (callback) {
           callback(event, path);
         }
       }
     );
+  }
+
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
   }
 
   generateFunctionsInServiceGateway() {

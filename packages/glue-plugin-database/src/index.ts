@@ -33,7 +33,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
-    this.runningPlatforms = ['docker'];
+    this.runningPlatforms = ["docker"];
   }
 
   init() {
@@ -82,7 +82,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         type: "text",
         message: "Database name:",
         validate: (value: string) => value !== "",
-      }
+      },
     ];
 
     // Prompt the user for input values
@@ -97,7 +97,10 @@ POSTGRES_DB=${answers.POSTGRES_DB}
 
     // Write the .env file at database root
     fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
+  }
 
+  getInstallationPath(target: string): string {
+    return `./server/${target}`;
   }
 
   createInstance(
@@ -123,5 +126,4 @@ POSTGRES_DB=${answers.POSTGRES_DB}
   getInstances(): IInstance[] {
     return this.instances;
   }
-
 }

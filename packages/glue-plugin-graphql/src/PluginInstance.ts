@@ -49,6 +49,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._sourcePath}/seal.service.yaml`;
   }
 
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
+  }
+
   async build(): Promise<void> {
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
@@ -69,8 +73,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       }
     }
 
-    await this.app.watch(this._sourcePath, this._destinationPath, () => {
-
-    });
+    await this.app.watch(this._sourcePath, this._destinationPath, () => {});
   }
 }
