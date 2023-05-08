@@ -49,6 +49,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@gluestack-v2/framework-cli": "^0.0.*",
     "@gluestack-v2/glue-plugin-develop": "^0.0.*"
   }
 }
