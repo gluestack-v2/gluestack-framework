@@ -238,6 +238,7 @@ const getPrivateActions = (
     //   privateEvents = getEvents(filePath, installationPath).events;
     // }
     // Create Import Statement
+
     functionImportStatement = `const ${removeExtension(
       camelCaseArray(
         finalPathArr.funcPath.map((str) => removeDashAndCamelCase(str))
