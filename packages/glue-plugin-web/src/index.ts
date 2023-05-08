@@ -6,7 +6,7 @@ import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGlu
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import { join } from "path";
+import { join, relative } from "path";
 import { spawnSync } from "child_process";
 import { Workspaces } from "@gluestack/helpers";
 
@@ -56,6 +56,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
     await instance.updateSourcePackageJSON();
     await instance.updateRootPackageJSONWithSourcePath();
+
   }
 
   createInstance(

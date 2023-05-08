@@ -9,6 +9,7 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/b
 
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
+import { reWriteFile } from "./helpers/rewrite-file";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -55,6 +56,16 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
     await this.app.updateServices();
+
+    // update next.config.js context for error mapping
+    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOUCEPATH');
+    //@ts-ignore
+    // delete require.cache(require.resolve(nextConfigPath));
+
+    // const nextConfig = require(nextConfigPath);
+    // nextConfig.transpilePackages = [...nextConfig.transpilePackages, this._sourcePath];
+    // fs.writeFileSync(nextConfigPath, )
+
   }
 
 
