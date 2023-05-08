@@ -89,7 +89,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     const plugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     ) as IPlugin;
-
     // @ts-ignore
     plugin.generateService(installationPath, name);
   }
@@ -110,7 +109,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     // @ts-ignore
     this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
-
   }
 
   getGatewayInstanceInfo() {

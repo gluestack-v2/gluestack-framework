@@ -80,7 +80,7 @@ let privateMolecularEvents = ``;
 
 let eventsImportPaths = ``;
 
-const writeService = (
+const writeService = async (
   installationPath: string,
   functionPath: string,
   functionInstanceName: string,
@@ -97,19 +97,21 @@ const writeService = (
       return;
     }
 
-    if (filePath.endsWith('.map') || filePath === 'package.json') {
+    if (filePath.endsWith(".map") || filePath === "package.json") {
       return;
     }
     // Get Private Actions, events, importd
     if (filePath.includes("/private/")) {
       privateMoleculerActions = {
         ...privateMoleculerActions,
-        ...getPrivateActions(installationPath, functionInstanceName, filePath).actions,
+        ...getPrivateActions(installationPath, functionInstanceName, filePath)
+          .actions,
       };
 
       privateMoleculerImportStatements =
         privateMoleculerImportStatements +
-        getPrivateActions(installationPath, functionInstanceName, filePath).importPaths;
+        getPrivateActions(installationPath, functionInstanceName, filePath)
+          .importPaths;
       if (filePath.includes("/private/events/")) {
         let privateMolecularData = getEvents(
           getPrivatePath(filePath, installationPath)
@@ -145,7 +147,11 @@ const writeService = (
       actionImportPath: moleculerImportPaths,
       eventImportPath: eventsImportPaths,
     },
-    path.join(installationPath, "services", `${functionInstanceName}.service.js`),
+    path.join(
+      installationPath,
+      "services",
+      `${functionInstanceName}.service.js`
+    ),
     molecularEvents
   );
 
@@ -182,15 +188,18 @@ function getActions(
       path: removeExtension(finalPathArr.functionPath),
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
-      }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
+    }(context);},`;
 
     serviceAction[removeExtension(finalPathArr.funcPath.join("."))] = action;
 
     // Create Import Statement
+
     functionImportStatement = `const ${removeExtension(
       camelCaseArray(finalPathArr.funcPath)
     )}Handler = require("..${finalPathArr.functionPath}");`;
+
     functionImportStatement += "\n";
   }
 
@@ -220,8 +229,9 @@ const getPrivateActions = (
       path: finalPathArr.functionPath,
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
-      }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
+    }(context);},`;
     if (!filePath.includes("/events/"))
       obj[removeExtension(finalPathArr.funcPath.join("."))] = action;
     // if (filePath.includes("/events/")) {
@@ -299,7 +309,7 @@ function updateApiGateway(installationPath: string, instanceName: string) {
   }
 }
 
-function createService(
+async function createService(
   moleculerActions: any,
   moleculerFunctionsServiceTemplate: any,
   moleculerImportStatements: any,
@@ -315,14 +325,24 @@ function createService(
     "// **---Add Events Here---**",
     eventsData + "// **---Add Events Here---**"
   );
+  const uniqueStrings: any = [];
+  moleculerImportStatements.actionImportPath
+    .split("\n")
+    .forEach((line: any) => {
+      if (!uniqueStrings.includes(line)) {
+        uniqueStrings.push(line);
+      }
+    });
+
+  const outputString = uniqueStrings.join("\n");
 
   finalString = finalString.replace(
     "// **---Add Imports Here---**",
-    moleculerImportStatements.actionImportPath +
-    moleculerImportStatements.eventImportPath +
-    `const Context = require("../Context");`
+    outputString +
+      moleculerImportStatements.eventImportPath +
+      `const Context = require("../Context");`
   );
-  writeFile(path, finalString);
+  await writeFile(path, finalString);
 }
 
 function getPrivatePath(filePath: string, installationPath: string) {
