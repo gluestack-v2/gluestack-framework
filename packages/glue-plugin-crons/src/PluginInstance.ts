@@ -108,14 +108,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       "@gluestack-v2/glue-plugin-service-gateway"
     );
 
-    if (!(await fileExists(this._destinationPath))) {
-      try {
-        await this.build();
-      } catch (error) {
-        console.log(">> Instance does not exits:", this.getName());
-        return;
-      }
-    }
+    await this.buildBeforeWatch();
 
     this.app.watch(this._sourcePath, "", async (events, path) => {
       if (serviceGatewayPlugin) {

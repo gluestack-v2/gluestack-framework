@@ -66,6 +66,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(callback?: any) {
+    await this.buildBeforeWatch();
+
     this.app.watch(
       this._sourcePath,
       this._destinationPath,

@@ -60,15 +60,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(): Promise<void> {
-    if (!(await fileExists(this._destinationPath))) {
-      try {
-        await this.build();
-      } catch (error) {
-        console.log(">> Instance does not exits:", this.getName());
-        return;
-      }
-    }
+    await this.buildBeforeWatch();
 
-    await this.app.watch(this._sourcePath, this._destinationPath, () => {});
+    await this.app.watch(this._sourcePath, this._destinationPath, () => { });
   }
 }

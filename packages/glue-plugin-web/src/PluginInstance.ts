@@ -51,6 +51,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._sourcePath}/seal.service.yaml`;
   }
 
+  async updateNextConfig() {
+    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOURCEPATH');
+
+  }
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateWorkspacePackageJSON();
@@ -58,22 +62,25 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.updateServices();
 
     // update next.config.js context for error mapping
-    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOUCEPATH');
-    //@ts-ignore
-    // delete require.cache(require.resolve(nextConfigPath));
-
-    // const nextConfig = require(nextConfigPath);
-    // nextConfig.transpilePackages = [...nextConfig.transpilePackages, this._sourcePath];
-    // fs.writeFileSync(nextConfigPath, )
+    await this.updateNextConfig();
 
   }
 
 
   async watch(callback: any) {
+
+    await this.buildBeforeWatch();
+
     await this.app.watch(
       this._sourcePath,
       this._destinationPath,
-      (events, path) => {
+      async (events, path) => {
+
+        if (path === 'next.config.js') {
+          // update next.config.js context for error mapping
+          await this.updateNextConfig();
+        }
+
         if (callback) {
           callback(events, path);
         }
