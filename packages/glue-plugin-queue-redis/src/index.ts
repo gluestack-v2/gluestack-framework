@@ -52,12 +52,16 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
+  getTemplateFolderPath(): string {
+    return `${process.cwd()}/node_modules/${this.getName()}/template`;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
-      this.getTemplateFolderPath(),
-      target
+      this.getTemplateFolderPath()
+      // target
     );
 
     if (!instance) {
