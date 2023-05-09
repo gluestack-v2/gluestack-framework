@@ -206,7 +206,7 @@ export default class AppCLI {
 	): void {
 		const filePathExtension: string = extname(sourcePath);
 
-		if (!['.ts', '.js', '.tsx', '.jsx'].includes(filePathExtension)) {
+		if (!['.ts', '.js'].includes(filePathExtension)) {
 			return;
 		}
 

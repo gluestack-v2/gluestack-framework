@@ -18,9 +18,9 @@ function getPlugin(
 			app,
 			injectPluginStore(app, pluginName)
 		);
-	} catch (e) {
+	} catch (e: any) {
 		if (throwErrorAndExit) {
-			error('Plugin not initialized');
+			error('Plugin not initialized\n', e);
 			process.exit(0);
 		}
 	}

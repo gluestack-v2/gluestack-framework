@@ -53,7 +53,6 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
       if (plugin.runningPlatforms.length <= 0) {
         continue;
       } else {
-
         if (plugin.getName() === '@gluestack-v2/glue-plugin-graphql') {
           setTimeout(async () => {
             await upSealService(app, instance, plugin.runningPlatforms, opts.p);

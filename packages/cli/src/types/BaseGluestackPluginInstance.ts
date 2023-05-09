@@ -12,8 +12,7 @@ import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance
-{
+	implements IInstance {
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;
@@ -173,8 +172,7 @@ export default abstract class BaseGluestackPluginInstance
 		console.error(sealAddService.stderr.toString());
 	}
 
-	async watch(callback?: Function): Promise<void> {
-
+	async buildBeforeWatch() {
 		if (!(await fileExists(this._destinationPath))) {
 			try {
 				await this.build();
@@ -183,6 +181,11 @@ export default abstract class BaseGluestackPluginInstance
 				return;
 			}
 		}
+	}
+
+	async watch(callback?: Function): Promise<void> {
+
+		await this.buildBeforeWatch();
 		this.app.watch(
 			this._sourcePath,
 			'',

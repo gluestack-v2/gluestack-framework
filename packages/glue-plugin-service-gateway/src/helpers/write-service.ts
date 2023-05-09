@@ -238,6 +238,7 @@ const getPrivateActions = (
     //   privateEvents = getEvents(filePath, installationPath).events;
     // }
     // Create Import Statement
+
     functionImportStatement = `const ${removeExtension(
       camelCaseArray(
         finalPathArr.funcPath.map((str) => removeDashAndCamelCase(str))
@@ -340,7 +341,7 @@ async function createService(
     "// **---Add Imports Here---**",
     outputString +
       moleculerImportStatements.eventImportPath +
-      `const Context = require("../Context");`
+      `const Context = require("../Context.ts");`
   );
   await writeFile(path, finalString);
 }

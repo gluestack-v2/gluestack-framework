@@ -10,6 +10,7 @@ import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/inte
 
 import { PluginInstance } from "./PluginInstance";
 import { reWriteFile } from "./helpers/rewrite-file";
+import path from "path";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -53,7 +54,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./${target}`;
+    return `./server/${target}`;
   }
 
   async runPostInstall(instanceName: string, target: string) {

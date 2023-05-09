@@ -1,12 +1,12 @@
 {
-  "name": "@gluestack-v2/glue-plugin-queues",
+  "name": "@gluestack-v2/glue-plugin-queue-redis",
   "version": "0.0.1",
-  "description": "Gluestack V2 Queues Plugin",
+  "description": "Gluestack V2 Database Plugin",
   "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gluestack-v2/framework-cli",
-    "directory": "packages/glue-plugin-queues"
+    "directory": "packages/glue-plugin-database"
   },
   "keywords": [
     "gluestack",
@@ -18,12 +18,12 @@
     "web",
     "storybook",
     "shared-components",
-    "queues"
+    "database"
   ],
   "license": "MIT",
   "dependencies": {
     "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "prompts": "^2.4.2",
@@ -35,7 +35,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
-    "@gluestack-v2/glue-plugin-queue-redis": "^0.0.x"
+    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
   }
 }

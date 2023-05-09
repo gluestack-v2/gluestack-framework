@@ -8,7 +8,7 @@ import path1, { join } from "path";
 import fs, { unlinkSync } from "fs";
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -105,26 +105,32 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._destinationPath}/seal.service.yaml`;
   }
 
-
   getGatewayInstanceInfo() {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
 
     if (!plugin) {
-      console.error(`Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`);
+      console.error(
+        `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
+      );
       return "";
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
     if (!instances || instances.length <= 0) {
-      console.error(`No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`);
+      console.error(
+        `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
+      );
       return "";
     }
 
     return instances[0].getName();
   }
 
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
+  }
 
   // Override getDestinationPath
   getDestinationPath() {
@@ -140,9 +146,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
   }
 
-
   async build(): Promise<void> {
-
     await this.app.write(this._sourcePath, this._destinationPath);
 
     const plugin: IPlugin | null = this.app.getPluginByName(
@@ -153,24 +157,25 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       //@ts-ignore
       plugin.generateMiddlewares(this._sourcePath, this.getName());
     }
-
   }
 
   async watch(): Promise<void> {
+
+    await this.buildBeforeWatch();
 
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
 
-    await this.app.watch(this._sourcePath, this._destinationPath, (events, path) => {
-      if (plugin) {
-        //@ts-ignore
-        plugin.generateMiddlewares(this._sourcePath, this.getName());
+    await this.app.watch(
+      this._sourcePath,
+      this._destinationPath,
+      (events, path) => {
+        if (plugin) {
+          //@ts-ignore
+          plugin.generateMiddlewares(this._sourcePath, this.getName());
+        }
       }
-
-    });
-
-
-
+    );
   }
 }

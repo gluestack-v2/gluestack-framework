@@ -45,6 +45,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `${this._destinationPath}/seal.service.yaml`;
   }
 
+  getSourcePath(): string {
+    return `${process.cwd()}/server/${this.getName()}`;
+  }
+
   getGatewayInstanceInfo() {
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
