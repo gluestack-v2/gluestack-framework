@@ -42,13 +42,13 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.15.5",
-    "source-map": "^0.7.4"
+    "@types/node": "^18.15.5"
   },
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*",
+    "@gluestack-v2/glue-plugin-web": "^0.0.2"
   }
 }
