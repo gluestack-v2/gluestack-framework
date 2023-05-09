@@ -1,9 +1,7 @@
 const template = () => ` 
 **--- Action CallMethod ---**: {
   handler(ctx) {
-    ctx.call("**--- Service Method ---**", **--- Action Data ---**).then((res) =>
-      console.log("Result: ", res)
-    );
+    return ctx.call("**--- Service Method ---**", **--- Action Data ---**).then((res) => res);
   },
 },
 
