@@ -1,14 +1,19 @@
+// @ts-nocheck
+const ServerSdk = require("./ServerSdk.ts");
+
 class Context {
 	_molecularCtx;
 	params;
 	call;
 	mcall;
+	sdk;
 
 	constructor(ctx) {
 		this._molecularCtx = ctx;
 		this.params = ctx.params;
 		this.call = ctx.call;
 		this.mcall = ctx.mcall;
+		this.sdk = ServerSdk.getInstance();
 	}
 
 	events = {

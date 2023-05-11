@@ -1,5 +1,14 @@
 {
   "@gluestack-v2/glue-plugin-develop": {
     "package": "@gluestack-v2/glue-plugin-develop"
+  },
+  "@gluestack-v2/glue-plugin-storage": {
+    "package": "@gluestack-v2/glue-plugin-storage"
+  },
+  "@gluestack-v2/glue-plugin-database": {
+    "package": "@gluestack-v2/glue-plugin-database"
+  },
+  "@gluestack-v2/glue-plugin-graphql": {
+    "package": "@gluestack-v2/glue-plugin-graphql"
   }
 }

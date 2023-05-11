@@ -16,6 +16,7 @@ yarn.lock
 build/
 
 # Internal testing files
+server/*
 test.js
 openai
 web

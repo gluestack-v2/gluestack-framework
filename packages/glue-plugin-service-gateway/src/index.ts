@@ -32,6 +32,7 @@ import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
 import writeCronService from "./helpers/write-cron-service";
 import { eventsTemplate } from "./helpers/template";
+import { writeMinioStorageService } from "./helpers/writeMinioStorageService";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -310,5 +311,41 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       );
       writeFile(destination, eventsTemplate());
     });
+  }
+
+  async generateStorageClientService(storageClientInstanceName: string) {
+    if (this.instances.length === 0) {
+      return;
+    }
+    console.log(storageClientInstanceName);
+    const instances = this.getInstances();
+    for await (const instance of instances) {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
+
+      if (await fileExists(targetPkgJson)) {
+        const data = await require(targetPkgJson);
+        if (!data.devDependencies) {
+          data.devDependencies = {};
+        }
+        // hard-coded the version here
+        data.devDependencies["minio"] = "latest";
+        let stringData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added minio to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+      writeMinioStorageService(
+        instance._destinationPath,
+        storageClientInstanceName
+      );
+    }
   }
 }

@@ -21,9 +21,10 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "minio": "^7.1.0",
+    "moleculer": "0.14.29",
     "moleculer-web": "0.10.5",
-    "nats": "^2.7.1",
-    "moleculer": "0.14.29"
+    "nats": "^2.7.1"
   },
   "engines": {
     "node": ">= 16.x.x"
