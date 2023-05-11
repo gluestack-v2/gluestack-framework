@@ -23,6 +23,8 @@
     "watch:graphql": "npm run watch --workspace @gluestack-v2/glue-plugin-graphql",
     "watch:db-client": "npm run watch --workspace @gluestack-v2/glue-plugin-database-client",
     "watch:queues": "npm run watch --workspace @gluestack-v2/glue-plugin-queues",
+    "watch:storage": "npm run watch --workspace @gluestack-v2/glue-plugin-storage",
+    "watch:storage-client": "npm run watch --workspace @gluestack-v2/glue-plugin-storage-client",
     "watch:deploy": "npm run watch --workspace @gluestack-v2/glue-plugin-deploy",
     "add:necessary": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-graphql graphql && node glue add @gluestack-v2/glue-plugin-database-client db-client",
     "add:db": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-database-client db-client",
@@ -50,9 +52,13 @@
     "source-map": "^0.7.4"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    ".glue/__generated__/packages"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
+    "@gluestack-v2/glue-plugin-database": "^0.0.1",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*",
+    "@gluestack-v2/glue-plugin-graphql": "^0.0.1",
+    "@gluestack-v2/glue-plugin-storage": "^0.0.1"
   }
 }
