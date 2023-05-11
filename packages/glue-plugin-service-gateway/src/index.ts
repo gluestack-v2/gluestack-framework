@@ -31,6 +31,7 @@ import { spawnSync } from "child_process";
 import writeMoleculerConfig from "./helpers/write-moleculer-config";
 import writeQueuesService from "./helpers/write-queues-service";
 import writeCronService from "./helpers/write-cron-service";
+import writeDbClientService from "./helpers/write-db-client-service";
 import { eventsTemplate } from "./helpers/template";
 
 // Do not edit the name of this class
@@ -309,6 +310,42 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         "events.service.js"
       );
       writeFile(destination, eventsTemplate());
+    });
+  }
+
+  async generateDbClientService(cronInstanceName: string) {
+    const instances = this.getInstances();
+    if (instances.length <= 0) {
+      console.log("> No service gateway plugin found, skipping...");
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        "package.json"
+      );
+      if (await fileExists(targetPkgJson)) {
+        let data: any = await readfile(targetPkgJson);
+
+        data = JSON.parse(data);
+        if (!data.dependencies) {
+          data.dependencies = {};
+        }
+        data.dependencies["prisma"] = "latest";
+        data.dependencies["@prisma/client"] = "latest";
+        let stringData = JSON.stringify(data, null, 2);
+        await fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added prisma & @prisma/client to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          "We could not find the package.json for service-gateway instance\n Please add prisma & @prisma/client to your service-gateway package.json\n and restart your service-gateway instance \n"
+        );
+      }
+
+      await writeDbClientService(instance._destinationPath, cronInstanceName);
     });
   }
 }
