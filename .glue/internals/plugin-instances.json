@@ -5,26 +5,5 @@
       "directory": "./develop",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-storage": [
-    {
-      "instance": "storageserver",
-      "directory": "./server/storageserver",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-database": [
-    {
-      "instance": "database",
-      "directory": "./server/database",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-graphql": [
-    {
-      "instance": "graphql",
-      "directory": "./server/graphql",
-      "container_store": {}
-    }
   ]
 }

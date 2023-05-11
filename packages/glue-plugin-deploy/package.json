@@ -1,12 +1,12 @@
 {
-  "name": "@gluestack-v2/glue-plugin-web",
-  "version": "0.0.2",
-  "description": "Gluestack V2 Web Plugin",
+  "name": "@gluestack-v2/glue-plugin-deploy",
+  "version": "0.0.1",
+  "description": "Gluestack V2 Deploy Plugin",
   "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gluestack-v2/framework-cli",
-    "directory": "packages/glue-plugin-web"
+    "directory": "packages/glue-plugin-deploy"
   },
   "keywords": [
     "gluestack",
@@ -21,11 +21,13 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@gluestack-seal/cli": "^0.0.16",
     "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
-    "js-yaml": "^4.1.0",
+    "@types/prettier": "^2.7.2",
+    "chokidar": "^3.5.3",
+    "prettier": "^2.8.7",
     "prompts": "^2.4.2",
     "typescript": "^4.9.5"
   },
@@ -34,6 +36,6 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
+    "@gluestack-v2/framework-cli": "^0.0.x"
   }
 }

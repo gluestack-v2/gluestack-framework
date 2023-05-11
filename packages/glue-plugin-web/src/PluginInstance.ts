@@ -10,6 +10,9 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/b
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
 import { reWriteFile } from "./helpers/rewrite-file";
+const yaml = require('js-yaml');
+const fs = require("fs");
+
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -48,32 +51,55 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSealServicefile(): string {
-    return `${this._sourcePath}/seal.service.yaml`;
+    return join(this._destinationPath, 'seal.service.yaml');
   }
 
+  updateContextInSealService() {
+
+    const sealService = this.getSealServicefile();
+
+    const yamlFile = fs.readFileSync(sealService, 'utf8');
+    const data = yaml.load(yamlFile);
+
+    // update content
+    data.platforms.local.context = this._sourcePath;
+    const updatedYaml = yaml.dump(data);
+
+    fs.writeFileSync(sealService, updatedYaml);
+
+  }
+  async updateNextConfig() {
+    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOURCEPATH');
+
+  }
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
     await this.app.updateServices();
 
-    // update next.config.js context for error mapping
-    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOUCEPATH');
-    //@ts-ignore
-    // delete require.cache(require.resolve(nextConfigPath));
+    // // update next.config.js context for error mapping
+    // await this.updateNextConfig();
 
-    // const nextConfig = require(nextConfigPath);
-    // nextConfig.transpilePackages = [...nextConfig.transpilePackages, this._sourcePath];
-    // fs.writeFileSync(nextConfigPath, )
+    await this.updateContextInSealService();
 
   }
 
 
   async watch(callback: any) {
+
+    await this.buildBeforeWatch();
+
     await this.app.watch(
       this._sourcePath,
       this._destinationPath,
-      (events, path) => {
+      async (events, path) => {
+
+        if (path === 'next.config.js') {
+          // update next.config.js context for error mapping
+          await this.updateNextConfig();
+        }
+
         if (callback) {
           callback(events, path);
         }

@@ -160,6 +160,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(): Promise<void> {
+
+    await this.buildBeforeWatch();
+
     const plugin: IPlugin | null = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-gateway"
     );
