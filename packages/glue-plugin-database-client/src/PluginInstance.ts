@@ -5,7 +5,7 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import { join } from "path";
+import { join, relative } from "path";
 import fileExists from "./helpers/file-exists";
 import writeFile from "./helpers/write-file";
 import { readfile } from "./helpers/read-file";
@@ -73,8 +73,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       join(gatewayInstance._destinationPath, this.getName())
     );
 
-    spawn("npm", ["i"], {
-      cwd: gatewayInstance._destinationPath,
+    console.log(
+      "this._sourcePath",
+      relative(gatewayInstance._destinationPath, "..")
+    );
+
+    spawn("npm", ["run", "install:all"], {
+      cwd: relative(gatewayInstance._destinationPath, ".."),
     })
       .on("close", () => {
         console.log("npm installed");

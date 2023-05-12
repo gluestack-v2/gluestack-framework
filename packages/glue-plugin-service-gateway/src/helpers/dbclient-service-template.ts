@@ -7,6 +7,7 @@ const template = () =>
  /** @type {ServiceSchema} */
 
  const { PrismaClient } = require('@prisma/client');
+ const ServerSDK = require("../ServerSdk.ts");
 
  module.exports = {
    name: "dbclient",
