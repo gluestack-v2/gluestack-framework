@@ -2,23 +2,22 @@
 import packageJSON from "../package.json";
 import { PluginInstance } from "./PluginInstance";
 
+import dotenv from "dotenv";
 import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
 import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
 
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-
-import path, { join } from "path";
 import fs from "fs";
-import { removeSpecialChars } from "@gluestack/helpers";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
-import { spawnSync } from "child_process";
-// @ts-ignore
+import { join } from "path";
 import prompts from "prompts";
+import fileExists from "./helpers/file-exists";
+import writeFile from "./helpers/write-file";
+import { reWriteFile } from "./helpers/rewrite-file";
+import { readfile } from "./helpers/read-file";
+import rm from "./helpers/rm";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -52,6 +51,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
+  getInstallationPath(target: string): string {
+    return `./server/${target}`;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
@@ -64,23 +67,35 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
+    const databasePlugin: IPlugin = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-database"
+    ) as IPlugin;
+    if (!databasePlugin) {
+      return;
+    }
+
+    const databaseInstances: IInstance[] = databasePlugin.instances;
+    if (!databaseInstances || databaseInstances.length === 0) {
+      return;
+    }
+
+    const choices = databaseInstances.map((databaseInstance: IInstance) => {
+      return {
+        title: databaseInstance.getName(),
+        description: `Select a database instance for your database client instance ${instanceName}`,
+        value: {
+          name: databaseInstance.getName(),
+          path: databaseInstance._sourcePath,
+        },
+      };
+    });
+
     const questions: prompts.PromptObject[] = [
       {
-        name: "DATABASE_USER",
-        type: "text",
-        message: "Database user:",
-        validate: (value: string) => value !== "",
-      },
-      {
-        name: "DATABASE_PASSWORD",
-        type: "password",
-        message: "Database password:",
-        validate: (value: string) => value !== "",
-      },
-      {
-        name: "DATABASE_NAME",
-        type: "text",
-        message: "Database name:",
+        type: "select",
+        name: "DATABASE_INSTANCE_NAME",
+        message: "Select a database instance",
+        choices: choices,
         validate: (value: string) => value !== "",
       },
     ];
@@ -88,20 +103,17 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // Prompt the user for input values
     const answers = await prompts(questions);
 
-    // Create the .env file content
-    const envContent = `
-DATABASE_USER=${answers.DATABASE_USER}
-DATABASE_PASSWORD=${answers.DATABASE_PASSWORD}
-DATABASE_NAME=${answers.DATABASE_NAME}
-DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@db:5432/${answers.DATABASE_NAME}
-`;
+    // Update the instance .env-local file
+    const envPath = join(instance._sourcePath, ".env");
 
-    // Write the .env file at database root
-    fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
-  }
+    dotenv.config({
+      path: join(answers.DATABASE_INSTANCE_NAME.path, ".env"),
+    });
 
-  getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    const { DATABASE_URL } = process.env;
+
+    let localEnvData = `DATABASE_URL=${DATABASE_URL}`;
+    await writeFile(envPath, localEnvData);
   }
 
   createInstance(
