@@ -48,7 +48,6 @@ module.exports = {
 		 */
 		createMinioClient() {
 			return new Minio.Client(
-        // Add Minio Client Info here
 				${envData}
       );
 		},
