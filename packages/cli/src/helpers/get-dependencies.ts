@@ -9,7 +9,8 @@ const getDependencies = async (app: AppCLI, pluginName: string) => {
 
 	const packageJSON = path.join(pluginName, 'package.json');
 
-	const peerDependencies = require(packageJSON).peerDependencies;
+	const peerDependencies =
+		require(packageJSON).peerDependencies || {};
 
 	for (const dependency of Object.keys(peerDependencies)) {
 		try {
