@@ -397,7 +397,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     if (this.instances.length === 0) {
       return;
     }
-    console.log(storageClientInstanceName);
+    const plugin = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-storage"
+    ) as IPlugin;
+
+    const storageInstances = plugin.getInstances();
     const instances = this.getInstances();
     for await (const instance of instances) {
       const targetPkgJson: string = join(
@@ -418,12 +422,14 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       } else {
         warning(
-          'We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n'
+          "We could not find the package.json for service-gateway instance\n Please add minio to your service-gateway package.json\n and restart your service-gateway instance \n"
         );
       }
+
       writeMinioStorageService(
         instance._destinationPath,
-        storageClientInstanceName
+        storageClientInstanceName,
+        storageInstances[0]
       );
     }
   }

@@ -150,17 +150,69 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return `./server/${this.getName()}`;
   }
 
-  async build(): Promise<void> {
-    console.log("in build");
-    console.log(this._sourcePath, this._destinationPath, "hihihi");
+  async editSealAndDockerFile(): Promise<void> {
+    try {
+      let runDockerfileTemplate = `
+FROM quay.io/minio/minio
 
+# Set the working directory
+WORKDIR /data
+
+# Expose the required ports
+EXPOSE 9000
+EXPOSE 9001
+
+# Set the default environment variables
+# ENV MINIO_ACCESS_KEY gluestack
+# ENV MINIO_SECRET_KEY password
+
+# Start the Minio server
+CMD ["server", "/data", "--console-address", ":9001"]
+`;
+
+      let sealServiceTemplate = `container_name: storageserver
+stateless: true
+platforms:
+  local:
+    envfile: .env
+    build: npm run install --workspaces --if-present && npm run dev
+  docker:
+    envfile: .env
+    build: ./run.Dockerfile
+    ports:
+      - 10310:9000
+      - 9160:9001
+
+`;
+
+      writeFile(
+        join(this._destinationPath, "seal.service.yaml"),
+        sealServiceTemplate
+      );
+
+      writeFile(
+        join(this._destinationPath, "run.Dockerfile"),
+        runDockerfileTemplate
+      );
+
+      writeFile(
+        join(this._destinationPath, "build.Dockerfile"),
+        runDockerfileTemplate
+      );
+    } catch (error) {
+      console.log("Error occured: ", error);
+      return;
+    }
+  }
+
+  async build(): Promise<void> {
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
     // this.getEnv();
     // await this.getPortNumber();
     // await this.getConsolePortNumber();
     this.sealInit();
-
+    this.editSealAndDockerFile();
     // this.setStatus("up");
 
     // create buckets
