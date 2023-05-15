@@ -10,13 +10,6 @@ export const writeMinioStorageService = (
   instanceName: any,
   storageInstance: IInstance
 ) => {
-  console.log(
-    generatedServiceGatewayPath,
-    instanceName,
-    "In gateway",
-    storageInstance.getName(),
-    storageInstance._sourcePath
-  );
   const envPath = path.join(storageInstance._sourcePath, ".env");
   dotenv.config({
     path: envPath,
@@ -24,14 +17,15 @@ export const writeMinioStorageService = (
 
   const envData = {
     endPoint: process.env.MINIO_CDN_END_POINT,
-    port: process.env.MINIO_PORT,
-    useSSL: process.env.MINIO_USE_SSL,
+    port: Number(process.env?.MINIO_PORT),
+    useSSL: process.env.MINIO_USE_SSL == "true" ? true : false,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
     // region: this.settings.region,
     // transport: this.settings.transport,
     // sessionToken: this.settings.sessionToken,
   };
+
   const moleculerStorageServiceTemplate = minioTemplate(
     JSON.stringify(envData)
   );

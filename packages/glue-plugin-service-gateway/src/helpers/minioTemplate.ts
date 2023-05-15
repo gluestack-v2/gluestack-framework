@@ -2,7 +2,6 @@ export default (envData: string) => {
   return `
  const Minio = require("minio");
 const { MinioPingError, MinioInitializationError } = require("./errors");
-const { isString, isUndefined } = require("ramda-adjunct");
 const Context = require("../Context.ts");
 const ServierSDK = require("../ServerSdk.ts");
 
