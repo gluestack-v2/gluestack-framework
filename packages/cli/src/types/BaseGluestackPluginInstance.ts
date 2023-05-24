@@ -94,14 +94,12 @@ export default abstract class BaseGluestackPluginInstance
 
 	async updateSourcePackageJSON() {
 		// update package.json'S name index with the new instance name
-		const pluginPackage = `${this._sourcePath}/package.json`;
-		await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
+		this.app.updateNameInPackageJSON(this._sourcePath, this.getName());
 	}
 
 	async updateDestinationPackageJSON() {
 		// update package.json'S name index with the new instance name
-		const pluginPackage = `${this._destinationPath}/package.json`;
-		await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
+		this.app.updateNameInPackageJSON(this._destinationPath, this.getName());
 	}
 
 	async updateRootPackageJSONWithSourcePath() {

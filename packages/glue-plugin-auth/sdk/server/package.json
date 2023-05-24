@@ -1,0 +1,23 @@
+{
+    "name": "@gluestack-v2/glue-plugin-auth-sdk",
+    "version": "0.0.1",
+    "description": "Gluestack V2 Cron Plugin",
+    "main": "build/index.js",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/gluestack-v2/framework-cli",
+      "directory": "packages/glue-plugin-web"
+    },
+    
+    "license": "MIT",
+    "dependencies": {
+     
+    },
+    "scripts": {
+      "watch": "tsc --watch",
+      "build": "tsc"
+    },
+    "peerDependencies": {
+    }
+  }
+  

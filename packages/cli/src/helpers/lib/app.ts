@@ -1,7 +1,7 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
-import { copyFolder, fileExists, rm } from '../file';
+import { copyFolder, fileExists, rewriteFile, rm } from '../file';
 import fs from 'fs';
 import { injectPluginStore } from '../getStorePath';
 import {
@@ -362,4 +362,75 @@ export default class AppCLI {
 			(instance) => instance._instanceType === 'service'
 		);
 	}
+
+
+
+	async updateNameInPackageJSON(packagePath: string, packageName: string) {
+		const packageJSONPath = join(packagePath, 'package.json');
+		await rewriteFile(packageJSONPath, packageName, 'INSTANCENAME');
+	}
+
+	// async updateDestinationPackageJSON() {
+	// 	// update package.json'S name index with the new instance name
+	// 	const pluginPackage = `${this._destinationPath}/package.json`;
+	// 	await rewriteFile(pluginPackage, this.getName(), 'INSTANCENAME');
+	// }
+
+	// async updateRootPackageJSONWithSourcePath() {
+	// 	// update root package.json's workspaces with the new instance name
+	// 	const rootPackage: string = `${process.cwd()}/package.json`;
+	// 	await Workspaces.append(
+	// 		rootPackage,
+	// 		relative(process.cwd(), this._sourcePath)
+	// 	);
+	// }
+
+	// async updateRootPackageJSONWithDestinationPath() {
+	// 	const rootPackage: string = `${process.cwd()}/package.json`;
+	// 	await Workspaces.append(
+	// 		rootPackage,
+	// 		relative(process.cwd(), this._destinationPath)
+	// 	);
+	// }
+
+
+
+	async createPackage(packageName: string) {
+
+		const packageTemplatePath = join(process.cwd(), 'node_modules', '@gluestack-v2/framework-cli', 'src', 'helpers', 'templates', 'package');
+		const packagePath = join(
+			process.cwd(),
+			GLUE_GENERATED_PACKAGES_PATH,
+			packageName
+		);
+
+		await this.write(packageTemplatePath, packagePath);
+		await this.updateNameInPackageJSON(packagePath, packageName);
+
+		// this.updateDestinationPackageJSON();
+		// await this.updateRootPackageJSONWithDestinationPath();
+		// await this.app.updateServices();
+	}
+
+
+	// async generateSDK(
+	// 	sourcePath: string,
+	// 	instanceName: string,
+	// 	ignoredPaths: any
+	// ) {
+	// 	const instances = this.getInstances();
+	// 	if (this.instances.length === 0) {
+	// 		return;
+	// 	}
+
+	// 	for await (const instance of instances) {
+	// 		if (!existsSync(sourcePath)) {
+	// 			console.log("> No functions plugin found, create instance first");
+	// 		} else {
+	// 			await writeSDK(sourcePath, instance._destinationPath, ignoredPaths);
+	// 		}
+	// 	}
+	// 	this.app.updateServices();
+
+	// }
 }

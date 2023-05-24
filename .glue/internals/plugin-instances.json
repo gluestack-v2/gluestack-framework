@@ -5,5 +5,33 @@
       "directory": "./develop",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-web": [
+    {
+      "instance": "web",
+      "directory": "./web",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-sdk": [
+    {
+      "instance": "sdk",
+      "directory": "./sdk",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-gateway": [
+    {
+      "instance": "gateway",
+      "directory": "./gateway",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-functions": [
+    {
+      "instance": "functions",
+      "directory": "./server/functions",
+      "container_store": {}
+    }
   ]
 }

@@ -3,13 +3,15 @@ import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
+import { GLUE_GENERATED_PACKAGES_PATH, GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
 
-import { join } from "path";
+import path, { join } from "path";
 import fs, { unlinkSync } from "fs";
 import writeFile from "./helpers/write-file";
 import fileExists from "./helpers/file-exists";
 import { removeSpecialChars } from "@gluestack/helpers";
+import writeSDK from "./helpers/write-sdk";
+import copyFile from "./helpers/copy-file";
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -65,7 +67,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         // TODO: OPTIMIZE UPDATES
 
         this.generateFunctionsInServiceGateway();
-        this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
+        // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
         if (callback) {
           callback(event, path);
@@ -89,6 +91,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateService(installationPath, name);
   }
 
+
   generateFunctionsInServiceSdk(ignoredPaths: any) {
     const plugin = this.app.getPluginByName(
       "@gluestack-v2/glue-plugin-service-sdk"
@@ -98,13 +101,19 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateSDK(this._sourcePath, this.getName(), ignoredPaths);
   }
 
+  async createSDKPackage() {
+    await this.app.createPackage('sdk');
+    const packagePath = join(GLUE_GENERATED_PACKAGES_PATH, 'sdk')
+    await writeSDK(packagePath, this._sourcePath, []);
+  }
+
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     // @ts-ignore
     this.generateFunctionsInServiceGateway();
+    this.createSDKPackage();
 
-    // @ts-ignore
-    this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
+    // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
   }
 
   getGatewayInstanceInfo() {
