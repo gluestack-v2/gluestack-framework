@@ -15,7 +15,7 @@ import copyFolder from "./helpers/copy-folder";
 import rm from "./helpers/rm";
 
 import { existsSync } from "fs";
-import writeSDK from "./helpers/write-sdk";
+import { writeSDK, writeClientSDK } from "./helpers/write-sdk";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -118,7 +118,27 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       }
     }
     this.app.updateServices();
+  }
 
+  async generateClientSDK(sourcePath: string, ignoredPaths: any) {
+    const instances = this.getInstances();
+    if (this.instances.length === 0) {
+      console.log("> No sdk plugin instance found");
+      return;
+    }
+
+    for await (const instance of instances) {
+      if (!existsSync(sourcePath)) {
+        console.log("> No functions plugin found, create instance first");
+      } else {
+        await writeClientSDK(
+          sourcePath,
+          instance._destinationPath,
+          ignoredPaths
+        );
+      }
+    }
+    this.app.updateServices();
   }
 
   getInstances(): IInstance[] {
