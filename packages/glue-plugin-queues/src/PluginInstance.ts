@@ -1,9 +1,9 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -46,19 +46,29 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/server/${this.getName()}`;
+    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
   }
 
+  getPluginEnvironment() {
+    const cronsPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-crons'
+    );
+    if (!cronsPlugin) {
+      return;
+    }
+    // @ts-ignore
+    return cronsPlugin.getPluginEnvironment();
+  }
   getGatewayInstanceInfo() {
     const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-gateway"
+      '@gluestack-v2/glue-plugin-service-gateway'
     );
 
     if (!plugin) {
       console.error(
         `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
       );
-      return "";
+      return '';
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
@@ -66,7 +76,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       console.error(
         `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
       );
-      return "";
+      return '';
     }
 
     return instances[0].getName();
@@ -74,7 +84,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   generateQueuesInServiceGateway() {
     const plugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-gateway"
+      '@gluestack-v2/glue-plugin-service-gateway'
     ) as IPlugin;
 
     if (!plugin) {

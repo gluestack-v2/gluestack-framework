@@ -6,20 +6,6 @@
       "container_store": {}
     }
   ],
-  "@gluestack-v2/glue-plugin-web": [
-    {
-      "instance": "web",
-      "directory": "./web",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-service-sdk": [
-    {
-      "instance": "sdk",
-      "directory": "./sdk",
-      "container_store": {}
-    }
-  ],
   "@gluestack-v2/glue-plugin-service-gateway": [
     {
       "instance": "gateway",
@@ -27,10 +13,10 @@
       "container_store": {}
     }
   ],
-  "@gluestack-v2/glue-plugin-functions": [
+  "@gluestack-v2/glue-plugin-crons": [
     {
-      "instance": "functions",
-      "directory": "./server/functions",
+      "instance": "crons",
+      "directory": "./client/crons",
       "container_store": {}
     }
   ]

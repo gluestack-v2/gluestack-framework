@@ -1,28 +1,29 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import dotenv from "dotenv";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import dotenv from 'dotenv';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import fs from "fs";
-import { join } from "path";
-import prompts from "prompts";
-import fileExists from "./helpers/file-exists";
-import writeFile from "./helpers/write-file";
-import { reWriteFile } from "./helpers/rewrite-file";
+import fs from 'fs';
+import { join } from 'path';
+import prompts from 'prompts';
+import fileExists from './helpers/file-exists';
+import writeFile from './helpers/write-file';
+import { reWriteFile } from './helpers/rewrite-file';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
@@ -30,7 +31,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
-    this.runningPlatforms = ["docker"];
+    this.runningPlatforms = ['docker'];
   }
 
   init() {
@@ -50,7 +51,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return `./${this.pluginEnvironment}/${target}`;
+  }
+
+  getPluginEnvironment(): 'server' | 'client' {
+    return this.pluginEnvironment;
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -66,7 +71,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const databasePlugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-database"
+      '@gluestack-v2/glue-plugin-database'
     ) as IPlugin;
     if (!databasePlugin) {
       return;
@@ -87,25 +92,25 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const questions: prompts.PromptObject[] = [
       {
-        type: "select",
-        name: "DB_INSTANCE_NAME",
-        message: "Select a database instance",
+        type: 'select',
+        name: 'DB_INSTANCE_NAME',
+        message: 'Select a database instance',
         choices: choices,
-        validate: (value: string) => value !== "",
+        validate: (value: string) => value !== '',
       },
       {
-        name: "HASURA_GRAPHQL_ADMIN_SECRET",
-        type: "text",
+        name: 'HASURA_GRAPHQL_ADMIN_SECRET',
+        type: 'text',
         message: `Admin Secret for GraphQL instance "${instanceName}"`,
-        validate: (value: string) => value !== "",
+        validate: (value: string) => value !== '',
       },
       {
-        name: "HASURA_GRAPHQL_JWT_SECRET",
-        type: "text",
+        name: 'HASURA_GRAPHQL_JWT_SECRET',
+        type: 'text',
         message: `JWT Secret for GraphQL instance "${instanceName}"`,
         validate: (value) =>
           value.length < 32
-            ? "JWT Secret should be at least 32 characters"
+            ? 'JWT Secret should be at least 32 characters'
             : true,
       },
     ];
@@ -113,17 +118,17 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // Prompt the user for input values
     const answers = await prompts(questions);
 
-    const dbEnv: string = join(answers.DB_INSTANCE_NAME, ".env");
+    const dbEnv: string = join(answers.DB_INSTANCE_NAME, '.env');
     if (await fileExists(dbEnv)) {
       dotenv.config({ path: dbEnv });
     }
 
     const databaseURL: string =
-      "postgres://" +
+      'postgres://' +
       process.env.POSTGRES_USER +
-      ":" +
+      ':' +
       process.env.POSTGRES_PASSWORD +
-      "@host.docker.internal:5432/" +
+      '@host.docker.internal:5432/' +
       process.env.POSTGRES_DB;
 
     const envContent = `
@@ -146,20 +151,20 @@ HASURA_GRAPHQL_DATABASE_URL="${databaseURL}"
 `;
 
     // Write the .env file at graphql root
-    await writeFile(join(instance._sourcePath, ".env"), envContent);
+    await writeFile(join(instance._sourcePath, '.env'), envContent);
 
     // rewrite config.yaml file in installed instance
     await reWriteFile(
-      join(instance._sourcePath, "config.yaml"),
+      join(instance._sourcePath, 'config.yaml'),
       answers.HASURA_GRAPHQL_ADMIN_SECRET,
-      "HASURA_GRAPHQL_ADMIN_SECRET"
+      'HASURA_GRAPHQL_ADMIN_SECRET'
     );
 
     // rewrite databases.yaml file in installed instance
     await reWriteFile(
-      join(instance._sourcePath, "metadata", "databases", "databases.yaml"),
-      process.env.POSTGRES_DB || "",
-      "HASURA_GRAPHQL_DB_NAME"
+      join(instance._sourcePath, 'metadata', 'databases', 'databases.yaml'),
+      process.env.POSTGRES_DB || '',
+      'HASURA_GRAPHQL_DB_NAME'
     );
 
     instance.updateSourcePackageJSON();
@@ -182,7 +187,7 @@ HASURA_GRAPHQL_DATABASE_URL="${databaseURL}"
   }
 
   testFunction() {
-    console.log("test");
+    console.log('test');
   }
 
   getInstances(): IInstance[] {

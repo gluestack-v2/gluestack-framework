@@ -1,33 +1,34 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
-import chokidar from "chokidar";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import { success, warning } from "./helpers/print";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import copyFolder from "./helpers/copy-folder";
-import fileExists from "./helpers/file-exists";
-import { readfile } from "./helpers/read-file";
-import rm from "./helpers/rm";
-import { join } from "path";
-import fs from "fs";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback";
-import addCommand from "./commands/add";
-import listCommand from "./commands/list";
-import removeCommand from "./commands/remove";
-import prompts from "prompts";
-import writeFile from "./helpers/write-file";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
+import chokidar from 'chokidar';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import { success, warning } from './helpers/print';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import { reWriteFile } from './helpers/rewrite-file';
+import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
+import copyFolder from './helpers/copy-folder';
+import fileExists from './helpers/file-exists';
+import { readfile } from './helpers/read-file';
+import rm from './helpers/rm';
+import { join } from 'path';
+import fs from 'fs';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
+import addCommand from './commands/add';
+import listCommand from './commands/list';
+import removeCommand from './commands/remove';
+import prompts from 'prompts';
+import writeFile from './helpers/write-file';
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
@@ -58,17 +59,21 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return `./${this.pluginEnvironment}/${target}`;
   }
 
   // @ts-ignore
   getTemplateFolderPath(): string {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
+  }
+
+  getPluginEnvironment(): 'server' | 'client' {
+    return this.pluginEnvironment;
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -105,15 +110,15 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async addCronJob(cronJobResponses: prompts.Answers<string>) {
-    const cronJobName = cronJobResponses["Cron Job Name"];
-    const cronJobSchedule = cronJobResponses["Cron Job Schedule"];
-    const cronJobPath = cronJobResponses["Cron Job Path"];
+    const cronJobName = cronJobResponses['Cron Job Name'];
+    const cronJobSchedule = cronJobResponses['Cron Job Schedule'];
+    const cronJobPath = cronJobResponses['Cron Job Path'];
     const instanceIntallationPath =
-      this.getInstances()[0].installationPath ?? "";
+      this.getInstances()[0].installationPath ?? '';
     const cronJson = require(join(
       process.cwd(),
       instanceIntallationPath,
-      "index.json"
+      'index.json'
     ));
     cronJson.push({
       name: cronJobName,
@@ -122,36 +127,36 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     });
 
     await writeFile(
-      join(process.cwd(), instanceIntallationPath, "index.json"),
+      join(process.cwd(), instanceIntallationPath, 'index.json'),
       JSON.stringify(cronJson, null, 2)
     );
   }
 
   async removeCronJob(cronJobName: string) {
     const instanceIntallationPath =
-      this.getInstances()[0].installationPath ?? "";
+      this.getInstances()[0].installationPath ?? '';
     const cronJson = require(join(
       process.cwd(),
       instanceIntallationPath,
-      "index.json"
+      'index.json'
     ));
     const cronJobIndex = cronJson.findIndex(
       (cronJob: { name: string }) => cronJob.name === cronJobName
     );
     cronJson.splice(cronJobIndex, 1);
     await writeFile(
-      join(process.cwd(), instanceIntallationPath, "index.json"),
+      join(process.cwd(), instanceIntallationPath, 'index.json'),
       JSON.stringify(cronJson, null, 2)
     );
   }
 
   async listCronJobs() {
     const instanceIntallationPath =
-      this.getInstances()[0].installationPath ?? "";
+      this.getInstances()[0].installationPath ?? '';
     const cronJson = require(join(
       process.cwd(),
       instanceIntallationPath,
-      "index.json"
+      'index.json'
     ));
     console.log(cronJson);
   }

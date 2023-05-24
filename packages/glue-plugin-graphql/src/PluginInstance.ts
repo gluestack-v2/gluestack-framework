@@ -1,13 +1,13 @@
-import fs, { unlinkSync } from "fs";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import fs, { unlinkSync } from 'fs';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import { join } from "path";
-import fileExists from "./helpers/file-exists";
-import writeFile from "./helpers/write-file";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { join } from 'path';
+import fileExists from './helpers/file-exists';
+import writeFile from './helpers/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -48,9 +48,19 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getSealServicefile(): string {
     return `${this._sourcePath}/seal.service.yaml`;
   }
-
   getSourcePath(): string {
-    return `${process.cwd()}/server/${this.getName()}`;
+    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+  }
+
+  getPluginEnvironment() {
+    const cronsPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-crons'
+    );
+    if (!cronsPlugin) {
+      return;
+    }
+    // @ts-ignore
+    return cronsPlugin.getPluginEnvironment();
   }
 
   async build(): Promise<void> {
@@ -62,7 +72,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(): Promise<void> {
-
     await this.buildBeforeWatch();
 
     this.app.watch(this._sourcePath, this._destinationPath, () => {

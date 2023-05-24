@@ -1,23 +1,24 @@
 // @ts-ignore
-import packageJSON from "../package.json";
+import packageJSON from '../package.json';
 
-import { Workspaces } from "@gluestack/helpers";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import { Workspaces } from '@gluestack/helpers';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { PluginInstance } from "./PluginInstance";
-import { reWriteFile } from "./helpers/rewrite-file";
-import path from "path";
+import { PluginInstance } from './PluginInstance';
+import { reWriteFile } from './helpers/rewrite-file';
+import path from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
@@ -44,7 +45,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
@@ -54,7 +55,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return `./${this.pluginEnvironment}/${target}`;
+  }
+
+  getPluginEnvironment(): 'server' | 'client' {
+    return this.pluginEnvironment;
   }
 
   async runPostInstall(instanceName: string, target: string) {

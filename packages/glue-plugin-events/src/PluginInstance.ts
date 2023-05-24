@@ -1,15 +1,15 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import chokidar from "chokidar";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import path1, { join } from "path";
-import fs, { unlinkSync } from "fs";
-import writeFile from "./helpers/write-file";
-import fileExists from "./helpers/file-exists";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import chokidar from 'chokidar';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import path1, { join } from 'path';
+import fs, { unlinkSync } from 'fs';
+import writeFile from './helpers/write-file';
+import fileExists from './helpers/file-exists';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -58,7 +58,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async writeEventsService() {
     const plugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-gateway"
+      '@gluestack-v2/glue-plugin-service-gateway'
     ) as IPlugin;
 
     // @ts-ignore
@@ -81,19 +81,30 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/server/${this.getName()}`;
+    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+  }
+
+  getPluginEnvironment() {
+    const cronsPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-crons'
+    );
+    if (!cronsPlugin) {
+      return;
+    }
+    // @ts-ignore
+    return cronsPlugin.getPluginEnvironment();
   }
 
   getGatewayInstanceInfo() {
     const plugin: IPlugin | null = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-service-gateway"
+      '@gluestack-v2/glue-plugin-service-gateway'
     );
 
     if (!plugin) {
       console.error(
         `Plugin "@gluestack-v2/glue-plugin-service-gateway" not found.`
       );
-      return "";
+      return '';
     }
 
     const instances: Array<IInstance> | undefined = plugin.instances;
@@ -101,7 +112,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       console.error(
         `No instance with "@gluestack-v2/glue-plugin-service-gateway" found.`
       );
-      return "";
+      return '';
     }
 
     return instances[0].getName();
@@ -114,7 +125,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       process.cwd(),
       GLUE_GENERATED_SEAL_SERVICES_PATH,
       gatewayInstanceName,
-      "src",
+      'src',
       gatewayInstanceName,
       this.getName()
     );

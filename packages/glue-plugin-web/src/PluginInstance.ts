@@ -1,18 +1,17 @@
-import { join } from "path";
-import { removeSpecialChars } from "@gluestack/helpers";
+import { join } from 'path';
+import { removeSpecialChars } from '@gluestack/helpers';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
-import writeFile from "./helpers/write-file";
-import fileExists from "./helpers/file-exists";
-import { reWriteFile } from "./helpers/rewrite-file";
+import writeFile from './helpers/write-file';
+import fileExists from './helpers/file-exists';
+import { reWriteFile } from './helpers/rewrite-file';
 const yaml = require('js-yaml');
-const fs = require("fs");
-
+const fs = require('fs');
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -55,7 +54,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   updateContextInSealService() {
-
     const sealService = this.getSealServicefile();
 
     const yamlFile = fs.readFileSync(sealService, 'utf8');
@@ -66,11 +64,29 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     const updatedYaml = yaml.dump(data);
 
     fs.writeFileSync(sealService, updatedYaml);
-
   }
-  async updateNextConfig() {
-    await reWriteFile(join(this._destinationPath, 'next.config.js'), this._sourcePath, 'SOURCEPATH');
 
+  getSourcePath(): string {
+    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+  }
+
+  getPluginEnvironment() {
+    const cronsPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-crons'
+    );
+    if (!cronsPlugin) {
+      return;
+    }
+    // @ts-ignore
+    return cronsPlugin.getPluginEnvironment();
+  }
+
+  async updateNextConfig() {
+    await reWriteFile(
+      join(this._destinationPath, 'next.config.js'),
+      this._sourcePath,
+      'SOURCEPATH'
+    );
   }
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
@@ -82,19 +98,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // await this.updateNextConfig();
 
     await this.updateContextInSealService();
-
   }
 
-
   async watch(callback: any) {
-
     await this.buildBeforeWatch();
 
     await this.app.watch(
       this._sourcePath,
       this._destinationPath,
       async (events, path) => {
-
         if (path === 'next.config.js') {
           // update next.config.js context for error mapping
           await this.updateNextConfig();

@@ -1,28 +1,29 @@
 // @ts-ignore
-import packageJSON from "../package.json";
+import packageJSON from '../package.json';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { join, relative } from "path";
-import { spawnSync } from "child_process";
-import { Workspaces } from "@gluestack/helpers";
+import { join, relative } from 'path';
+import { spawnSync } from 'child_process';
+import { Workspaces } from '@gluestack/helpers';
 
-import { PluginInstance } from "./PluginInstance";
-import { reWriteFile } from "./helpers/rewrite-file";
+import { PluginInstance } from './PluginInstance';
+import { reWriteFile } from './helpers/rewrite-file';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'client';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-    this.runningPlatforms = ["local", "docker"];
+    this.runningPlatforms = ['local', 'docker'];
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
@@ -44,6 +45,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
+  getInstallationPath(target: string): string {
+    return `./${this.pluginEnvironment}/${target}`;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
@@ -56,7 +61,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
     await instance.updateSourcePackageJSON();
     await instance.updateRootPackageJSONWithSourcePath();
-
   }
 
   createInstance(

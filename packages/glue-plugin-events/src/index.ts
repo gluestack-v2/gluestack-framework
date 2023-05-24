@@ -1,29 +1,30 @@
 // @ts-ignore
-import packageJSON from "../package.json";
+import packageJSON from '../package.json';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import { join } from "path";
-import { spawnSync } from "child_process";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import { join } from 'path';
+import { spawnSync } from 'child_process';
+import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
 
-import rm from "./helpers/rm";
-import writeFile from "./helpers/write-file";
-import fileExists from "./helpers/file-exists";
-import { PluginInstance } from "./PluginInstance";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { rmdir } from "fs/promises";
-import copyFolder from "./helpers/copy-folder";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import rm from './helpers/rm';
+import writeFile from './helpers/write-file';
+import fileExists from './helpers/file-exists';
+import { PluginInstance } from './PluginInstance';
+import { reWriteFile } from './helpers/rewrite-file';
+import { rmdir } from 'fs/promises';
+import copyFolder from './helpers/copy-folder';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
@@ -50,6 +51,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
+  getPluginEnvironment(): 'server' | 'client' {
+    return this.pluginEnvironment;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
@@ -66,7 +71,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return `./${this.pluginEnvironment}/${target}`;
   }
 
   createInstance(

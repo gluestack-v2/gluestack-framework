@@ -1,31 +1,32 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 
-import path, { join } from "path";
-import fs from "fs";
-import { removeSpecialChars } from "@gluestack/helpers";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
-import { spawnSync } from "child_process";
+import path, { join } from 'path';
+import fs from 'fs';
+import { removeSpecialChars } from '@gluestack/helpers';
+import fileExists from './helpers/file-exists';
+import rm from './helpers/rm';
+import copyFolder from './helpers/copy-folder';
+import { spawnSync } from 'child_process';
 // @ts-ignore
-import prompts from "prompts";
+import prompts from 'prompts';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
+  pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
@@ -33,7 +34,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
-    this.runningPlatforms = ["docker"];
+    this.runningPlatforms = ['docker'];
   }
 
   init() {
@@ -52,6 +53,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
+  getPluginEnvironment(): 'server' | 'client' {
+    return this.pluginEnvironment;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
@@ -66,22 +71,22 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const questions: prompts.PromptObject[] = [
       {
-        name: "DATABASE_USER",
-        type: "text",
-        message: "Database user:",
-        validate: (value: string) => value !== "",
+        name: 'DATABASE_USER',
+        type: 'text',
+        message: 'Database user:',
+        validate: (value: string) => value !== '',
       },
       {
-        name: "DATABASE_PASSWORD",
-        type: "password",
-        message: "Database password:",
-        validate: (value: string) => value !== "",
+        name: 'DATABASE_PASSWORD',
+        type: 'password',
+        message: 'Database password:',
+        validate: (value: string) => value !== '',
       },
       {
-        name: "DATABASE_NAME",
-        type: "text",
-        message: "Database name:",
-        validate: (value: string) => value !== "",
+        name: 'DATABASE_NAME',
+        type: 'text',
+        message: 'Database name:',
+        validate: (value: string) => value !== '',
       },
     ];
 
@@ -97,11 +102,11 @@ DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@db
 `;
 
     // Write the .env file at database root
-    fs.writeFileSync(join(instance._sourcePath, ".env"), envContent);
+    fs.writeFileSync(join(instance._sourcePath, '.env'), envContent);
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return `./${this.pluginEnvironment}/${target}`;
   }
 
   createInstance(
@@ -121,7 +126,7 @@ DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@db
   }
 
   testFunction() {
-    console.log("test");
+    console.log('test');
   }
 
   getInstances(): IInstance[] {
