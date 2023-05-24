@@ -1,12 +1,12 @@
-const template = () =>
+const template = (instanceName: string) =>
   `
-import axios from "axios";
+  import axios from "axios";
 
-export class SDK {
-  constructor() {}
-
-  // **---Functions will be added after this---**
-}
+  const ${instanceName} = {
+    // **---Functions will be added after this---**
+  };
+  export default ${instanceName};
+  
 `;
 
 export default template;

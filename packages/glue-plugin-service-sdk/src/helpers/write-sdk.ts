@@ -70,22 +70,67 @@ const deepMerge = (obj1: any, obj2: any) => {
   return output;
 };
 
+function indexFileTemplate() {
+  return `
+/*** Add Imports Here ***/
+
+export class SDK {
+  constructor() {}
+  /*** Add Functions Here ***/
+}
+
+`;
+}
+
+async function writeIndexFile(
+  sdkSrcIndex: string,
+  instanceName: string,
+  storageClientExists: boolean
+) {
+  let templateString = indexFileTemplate();
+  let imports = `import ${instanceName} from "./${instanceName}"`;
+  // const sdkSrcIndexPath = path.join(sdkPath, `${instanceName}.ts`);
+  if (storageClientExists) {
+    imports = imports + "\n" + `import storageClient from "./storage"`;
+  }
+
+  templateString = templateString.replace(
+    "/*** Add Imports Here ***/",
+    imports
+  );
+  templateString = templateString.replace(
+    "/*** Add Functions Here ***/",
+    `${instanceName}=${instanceName}` + "\n" + "/*** Add Functions Here ***/"
+  );
+  if (storageClientExists) {
+    templateString = templateString.replace(
+      "/*** Add Functions Here ***/",
+      `storage=storageClient` + "\n" + "/*** Add Functions Here ***/"
+    );
+  }
+
+  await writeFile(sdkSrcIndex, templateString);
+}
+
 const writeSDK = async (
   sourcePath: string,
   installationPath: string,
-  ignoredPaths: string[]
+  ignoredPaths: string[],
+  instanceName: string,
+  storageClientExists: boolean
 ) => {
   let obj = {};
-  const sdkIndexTemplate = sdkIndexTemplateFunc();
-  const functionsPath = sourcePath;
+  const sdkIndexTemplate = sdkIndexTemplateFunc(instanceName);
+  let functionsPath = sourcePath;
   const sdkPath = installationPath;
-  const sdkSrcIndex = path.join(sdkPath, "index.ts");
-
+  const sdkSrcIndex = path.join(sdkPath, `index.ts`);
 
   const files = getNestedFilePaths(functionsPath);
 
   let sdkFunctions = ``;
   let finalString = ``;
+  writeIndexFile(sdkSrcIndex, instanceName, storageClientExists);
+
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
 
@@ -96,6 +141,9 @@ const writeSDK = async (
       return;
     }
 
+    if (functionFile.includes("server/")) {
+      functionFile = functionFile.replace("server/", "");
+    }
     for (let i = 0; i < ignoredPaths.length; i++) {
       if (filePath.includes("/" + ignoredPaths[i] + "/")) {
         return;
@@ -121,13 +169,23 @@ const writeSDK = async (
       );
     }
     // console.log(ign);
+
     let sdkFunction = writeSDKFunction(functionName, params, functionPath);
+
     obj = {
       ...obj,
-      ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
+      ...deepMerge(
+        obj,
+        createFunctionFromPath(
+          // HACK: Removing server and function instance name
+          functionPath.replace("server/" + instanceName + "/", ""),
+          {},
+          sdkFunction
+        )
+      ),
     };
 
-    finalString = JSON.stringify(obj).replace(":", "=");
+    finalString = JSON.stringify(obj);
     finalString = finalString.substring(1, finalString.length - 1);
 
     Object.keys(functionsMap).map((key: any) => {
@@ -138,12 +196,15 @@ const writeSDK = async (
   });
 
   // Create SDK index file with all the functions
-  await writeFile(
-    sdkSrcIndex,
-    sdkIndexTemplate.replace(
-      "// **---Functions will be added after this---**",
-      finalString
-    )
-  );
+  if (storageClientExists) {
+    await writeFile(
+      path.join(sdkPath, `${instanceName}.ts`),
+      sdkIndexTemplate.replace(
+        "// **---Functions will be added after this---**",
+        finalString
+      )
+    );
+  }
 };
+
 export default writeSDK;

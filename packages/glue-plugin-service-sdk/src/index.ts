@@ -16,6 +16,7 @@ import rm from "./helpers/rm";
 
 import { existsSync } from "fs";
 import writeSDK from "./helpers/write-sdk";
+import { writeStorageClient } from "./helpers/write-storage-client";
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -110,15 +111,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       return;
     }
 
+    const plugin = this.app.getPluginByName(
+      "@gluestack-v2/glue-plugin-storage-client"
+    ) as IPlugin;
+
     for await (const instance of instances) {
       if (!existsSync(sourcePath)) {
         console.log("> No functions plugin found, create instance first");
       } else {
-        await writeSDK(sourcePath, instance._destinationPath, ignoredPaths);
+        await writeSDK(
+          sourcePath,
+          instance._destinationPath,
+          ignoredPaths,
+          instanceName,
+          plugin ? true : false
+        );
       }
     }
     this.app.updateServices();
+  }
 
+  async generateStorageClient(storageClientInstanceName: any) {
+    const instances = this.getInstances();
+    if (this.instances.length === 0) {
+      return;
+    }
+
+    for await (const instance of instances) {
+      await writeStorageClient(
+        storageClientInstanceName,
+        instance._destinationPath
+      );
+    }
+    // this.app.updateServices();
   }
 
   getInstances(): IInstance[] {
