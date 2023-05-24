@@ -395,21 +395,21 @@ export default class AppCLI {
 
 
 
-	async createPackage(packageName: string) {
+	async createPackage(packageName: string, packageSourcePath?: string) {
 
-		const packageTemplatePath = join(process.cwd(), 'node_modules', '@gluestack-v2/framework-cli', 'src', 'helpers', 'templates', 'package');
 		const packagePath = join(
 			process.cwd(),
 			GLUE_GENERATED_PACKAGES_PATH,
 			packageName
 		);
-
-		await this.write(packageTemplatePath, packagePath);
+		if (packageSourcePath) {
+			await this.write(packageSourcePath, packagePath);
+		} else {
+			const packageTemplatePath = join(process.cwd(), 'node_modules', '@gluestack-v2/framework-cli', 'src', 'helpers', 'templates', 'package');
+			await this.write(packageTemplatePath, packagePath);
+		}
 		await this.updateNameInPackageJSON(packagePath, packageName);
 
-		// this.updateDestinationPackageJSON();
-		// await this.updateRootPackageJSONWithDestinationPath();
-		// await this.app.updateServices();
 	}
 
 

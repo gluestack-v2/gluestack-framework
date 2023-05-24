@@ -18,6 +18,7 @@ export default interface IPlugin {
 	getType(): 'stateless' | 'stateful' | 'devonly';
 	runPostInstall(instanceName: string, target: string): any;
 	getTemplateFolderPath(): string;
+	getPackagePath(): string;
 
 	// manages instances
 	createInstance(

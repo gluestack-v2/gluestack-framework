@@ -6,7 +6,7 @@ export const config = {
 
 
     "providers": {
-        // "auth": AuthSDK
+        "auth": AuthSDK
     },
     "name": env('NAME', "my-app"),
 

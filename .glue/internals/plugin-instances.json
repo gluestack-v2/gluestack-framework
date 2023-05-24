@@ -19,5 +19,12 @@
       "directory": "./client/crons",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-sdk": [
+    {
+      "instance": "sdk2",
+      "directory": "./sdk2",
+      "container_store": {}
+    }
   ]
 }

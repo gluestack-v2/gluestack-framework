@@ -10,7 +10,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 
 import { PluginInstance } from './PluginInstance';
 import { reWriteFile } from './helpers/rewrite-file';
-import path from 'path';
+import path, { join } from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -51,7 +51,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   // @ts-ignore
   getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
+    return join(process.cwd(), 'node_modules', this.getName(), 'template');
   }
 
   getInstallationPath(target: string): string {
