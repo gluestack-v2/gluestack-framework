@@ -8,16 +8,8 @@ import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGlu
 import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
 import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-
 import path, { join } from "path";
 import fs from "fs";
-import { removeSpecialChars } from "@gluestack/helpers";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
-import { spawnSync } from "child_process";
-// @ts-ignore
 import prompts from "prompts";
 
 // Do not edit the name of this class
@@ -90,10 +82,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     // Create the .env file content
     const envContent = `
-DATABASE_USER=${answers.DATABASE_USER}
-DATABASE_PASSWORD=${answers.DATABASE_PASSWORD}
-DATABASE_NAME=${answers.DATABASE_NAME}
-DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@db:5432/${answers.DATABASE_NAME}
+POSTGRES_USER=${answers.DATABASE_USER}
+POSTGRES_PASSWORD=${answers.DATABASE_PASSWORD}
+POSTGRES_DB=${answers.DATABASE_NAME}
+DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@localhost:5433/${answers.DATABASE_NAME}
 `;
 
     // Write the .env file at database root
