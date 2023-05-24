@@ -5,7 +5,7 @@ import { env } from "@gluestack/core";
 export const config = {
 
     "providers": {
-        // "auth": AuthSDK
+        "auth": AuthSDK
     },
     "name": env('NAME', "my-app"),
 

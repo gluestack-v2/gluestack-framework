@@ -1,5 +1,5 @@
 {
-	"name": "@gluestack-v2/sdk",
+	"name": "@gluestack-v2/core",
 	"version": "0.0.10",
 	"description": "Gluestack V2 SDK",
 	"main": "build/index.js",

@@ -1,0 +1,38 @@
+{
+  "name": "@gluestack-v2/glue-plugin-sdk",
+  "version": "0.0.2",
+  "description": "Gluestack V2 Service SDK Plugin",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gluestack-v2/service-sdk",
+    "directory": "packages/glue-plugin-service-sdk"
+  },
+  "keywords": [
+    "gluestack",
+    "v2",
+    "fullstack",
+    "framework",
+    "cli",
+    "mobile",
+    "web",
+    "storybook",
+    "shared-components"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack/helpers": "^0.0.x",
+    "@types/node": "^18.11.17",
+    "prompts": "^2.4.2",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
+  }
+}

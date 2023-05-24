@@ -1,7 +1,7 @@
 {
-	"name": "@gluestack-v2/framework-config",
-	"version": "0.1.0",
-	"description": "Gluestack V2 Framework Config",
+	"name": "@project/INSTANCENAME",
+	"version": "0.0.10",
+	"description": "Gluestack V2 SDK",
 	"main": "build/index.js",
 	"scripts": {
 		"build": "tsc",

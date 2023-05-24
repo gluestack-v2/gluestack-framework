@@ -3,6 +3,7 @@ import AppCLI from '../helpers/lib/app';
 import IPlugin, { RunningPlatforms } from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGluePluginStore from './store/interface/IGluePluginStore';
+import { join } from 'path';
 
 export default abstract class BaseGluestackPlugin implements IPlugin {
 	app: AppCLI;
@@ -34,7 +35,11 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	}
 
 	getTemplateFolderPath(): string {
-		return `${process.cwd()}/node_modules/${this.getName()}/template`;
+		return join(process.cwd(), 'node_modules', this.getName(), 'template');
+	}
+
+	getPackagePath(): string {
+		return join(process.cwd(), 'node_modules', this.getName());
 	}
 
 	getInstallationPath(target: string): string {
