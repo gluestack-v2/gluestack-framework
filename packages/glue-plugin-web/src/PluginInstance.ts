@@ -71,12 +71,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getPluginEnvironment() {
-    const webPlugin = this.app.getPluginByName('@gluestack-v2/glue-plugin-web');
-    if (!webPlugin) {
-      return;
-    }
     // @ts-ignore
-    return webPlugin.getPluginEnvironment();
+    return this.callerPlugin.getPluginEnvironment();
   }
 
   async updateNextConfig() {
