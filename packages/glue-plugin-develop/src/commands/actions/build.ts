@@ -93,6 +93,15 @@ function deepMerge(obj1, obj2) {
   return merged;
 }
 
+// export const config = (configPath: string) => {
+// 	const configPathArray = configPath.split('.');
+// 	configPathArray.forEach((path) => {
+// 		// @ts-ignore
+// 		GeneratedConfig = GeneratedConfig[path];
+// 	});
+// 	return GeneratedConfig;
+// };
+
 export const config = () => {
   const mergedServerConfig = deepMerge(ServerConfig, GlobalConfig);
   const mergedClientConfig = deepMerge(ClientConfig, GlobalConfig);

@@ -26,8 +26,8 @@
     "watch:storage": "npm run watch --workspace @gluestack-v2/glue-plugin-storage",
     "watch:storage-client": "npm run watch --workspace @gluestack-v2/glue-plugin-storage-client",
     "watch:deploy": "npm run watch --workspace @gluestack-v2/glue-plugin-deploy",
+    "add:sdk": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-service-sdk service-sdk && node glue add @gluestack-v2/glue-plugin-functions functions",
     "add:necessary": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-graphql graphql && node glue add @gluestack-v2/glue-plugin-database-client db-client",
-    "add:db": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-database-client db-client",
     "watch:all": "npm run watch:cli & npm run watch:database & npm run watch:graphql & npm run watch:db-client & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:components & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares & npm run watch:queues & npm run watch:deploy & npm run watch:storage & npm run watch:storage-client & npm run watch:sdk",
     "prepare": "husky install",
     "lint": "eslint packages/**/**/src --ext .ts,.tsx --config .eslintrc"
@@ -62,26 +62,10 @@
     "source-map": "^0.7.4"
   },
   "workspaces": [
-    "packages/*",
-    "config",
-    "web",
-    ".glue/__generated__/packages",
-    ".glue/__generated__/packages/sdk",
-    ".glue/__generated__/packages/client-sdk",
-    ".glue/__generated__/packages/server-sdk",
-    ".glue/__generated__/packages/config",
-    "server/functions",
-    ".glue/__generated__/packages/sdk2",
-    "client/website"
+    "packages/*"
   ],
   "dependencies": {
-    "@gluestack-v2/core": "^0.0.*",
-    "@gluestack-v2/framework-cli": "^0.0.*",
     "@gluestack-v2/glue-plugin-develop": "^0.0.2",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.1",
-    "@gluestack-v2/glue-plugin-sdk": "^0.0.2",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.2",
     "@gluestack-v2/glue-plugin-web": "^0.0.2"
   }
 }
