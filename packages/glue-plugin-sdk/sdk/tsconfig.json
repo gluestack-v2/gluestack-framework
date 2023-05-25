@@ -7,7 +7,7 @@
 		"strict": true,
 		"types": ["node"],
 		"esModuleInterop": true,
-		"module": "UMD",
+		"module": "CommonJS",
 		"moduleResolution": "node",
 		"allowJs": true
 	}

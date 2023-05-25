@@ -1,12 +1,12 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { join } from "path";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
-import writeFile from "./helpers/write-file";
-import { fileExists } from "@gluestack/helpers";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import { join } from 'path';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import writeFile from './helpers/write-file';
+import { fileExists } from '@gluestack/helpers';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -60,7 +60,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return join(
       GLUE_GENERATED_SEAL_SERVICES_PATH,
       this.getName(),
-      "src",
+      'src',
       this.getName()
     );
   }
@@ -86,24 +86,19 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   //override updateWorkspacePackageJSON
   async updateWorkspacePackageJSON() {
     // // add package.json with workspaces
-    const packageFile: string = join(
-      this._workspacePath,
-      'package.json'
-    );
+    const packageFile: string = join(this._workspacePath, 'package.json');
     const packageContent: any = {
       name: this.getName(),
       private: true,
       workspaces: [this.getName(), 'packages/**'],
       scripts: {
-        'install:all': 'npm install --workspaces --if-present --legacy-peer-deps',
-        dev: 'npm run dev --workspace @project/' + this.getName(),
+        'install:all':
+          'npm install --workspaces --if-present --legacy-peer-deps',
+        'build': 'npm run build --workspaces --if-present --legacy-peer-deps',
+        'dev': 'npm run dev --workspace @project/' + this.getName(),
       },
     };
 
-    await writeFile(
-      packageFile,
-      JSON.stringify(packageContent, null, 2)
-    );
+    await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
   }
-
 }

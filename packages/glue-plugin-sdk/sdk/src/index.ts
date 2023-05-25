@@ -1,14 +1,11 @@
 import SDK from './helpers/lib/sdk';
-import { config } from "@project/config";
+import { config } from '@project/config';
 
-const sdk = async () => {
+export const SDKINSTANCE = async () => {
 	const app = SDK.getInstance();
 	// await app.init();
-	const providers = config('providers');
-	app.init(providers)
-	return app;
+	const providers = config();
+	return providers;
+	// app.init(providers)
+	// return app;
 };
-const app = SDK.getInstance();
-
-module.exports = sdk;
-

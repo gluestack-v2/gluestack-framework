@@ -12,7 +12,8 @@ import { writeFile, rewriteFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-	implements IInstance {
+	implements IInstance
+{
 	app: AppCLI;
 	name: string;
 	callerPlugin: IPlugin;
@@ -94,12 +95,18 @@ export default abstract class BaseGluestackPluginInstance
 
 	async updateSourcePackageJSON() {
 		// update package.json'S name index with the new instance name
-		this.app.updateNameInPackageJSON(this._sourcePath, this.getName());
+		this.app.updateNameInPackageJSON(
+			this._sourcePath,
+			this.getName()
+		);
 	}
 
 	async updateDestinationPackageJSON() {
 		// update package.json'S name index with the new instance name
-		this.app.updateNameInPackageJSON(this._destinationPath, this.getName());
+		this.app.updateNameInPackageJSON(
+			this._destinationPath,
+			this.getName()
+		);
 	}
 
 	async updateRootPackageJSONWithSourcePath() {
@@ -131,6 +138,7 @@ export default abstract class BaseGluestackPluginInstance
 			workspaces: [this.getName(), 'packages/**'],
 			scripts: {
 				'install:all': 'npm install --workspaces --if-present',
+				build: 'npm run build --workspaces --if-present',
 				dev: 'npm run dev --workspace @project/' + this.getName(),
 			},
 		};
@@ -182,7 +190,6 @@ export default abstract class BaseGluestackPluginInstance
 	}
 
 	async watch(callback?: Function): Promise<void> {
-
 		await this.buildBeforeWatch();
 		this.app.watch(
 			this._sourcePath,
@@ -199,7 +206,7 @@ export default abstract class BaseGluestackPluginInstance
 		return this._destinationPath.includes('packages')
 			? 'package'
 			: this._destinationPath.includes('services')
-				? 'service'
-				: 'none';
+			? 'service'
+			: 'none';
 	}
 }

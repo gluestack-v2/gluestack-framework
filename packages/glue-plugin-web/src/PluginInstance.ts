@@ -71,14 +71,12 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getPluginEnvironment() {
-    const cronsPlugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-crons'
-    );
-    if (!cronsPlugin) {
+    const webPlugin = this.app.getPluginByName('@gluestack-v2/glue-plugin-web');
+    if (!webPlugin) {
       return;
     }
     // @ts-ignore
-    return cronsPlugin.getPluginEnvironment();
+    return webPlugin.getPluginEnvironment();
   }
 
   async updateNextConfig() {

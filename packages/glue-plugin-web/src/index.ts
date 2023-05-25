@@ -49,6 +49,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `./${this.pluginEnvironment}/${target}`;
   }
 
+  getPluginEnvironment() {
+    return this.pluginEnvironment;
+  }
+
   async runPostInstall(instanceName: string, target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,

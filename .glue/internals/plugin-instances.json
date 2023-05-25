@@ -6,24 +6,24 @@
       "container_store": {}
     }
   ],
+  "@gluestack-v2/glue-plugin-sdk": [
+    {
+      "instance": "sdk",
+      "directory": "./sdk",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-web": [
+    {
+      "instance": "website",
+      "directory": "./client/website",
+      "container_store": {}
+    }
+  ],
   "@gluestack-v2/glue-plugin-service-gateway": [
     {
       "instance": "gateway",
       "directory": "./gateway",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-crons": [
-    {
-      "instance": "crons",
-      "directory": "./client/crons",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-sdk": [
-    {
-      "instance": "sdk2",
-      "directory": "./sdk2",
       "container_store": {}
     }
   ]
