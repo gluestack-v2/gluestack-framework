@@ -10,8 +10,9 @@ import { FOLDER_STRUCTURE } from '../../constants/folder-structure';
 import createFoldersFromJson from '../../helpers/create-folders-from-json';
 import { GLUE_GENERATED_PACKAGES_PATH } from '../../constants/glue-generated-packages';
 import { join } from 'path';
-import copyFolder from '../../helpers/copy-folder';
 import writeFile from '../../helpers/write-file';
+import copyFile from '../../helpers/copy-file';
+import createFolder from '../../helpers/create-folder';
 
 export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
   // creates folders from FOLDER_STRUCTURE constant
@@ -23,12 +24,8 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
     GLUE_GENERATED_PACKAGES_PATH
   );
 
-  const configPath = join(process.cwd(), 'config');
-  const generatedPath = join(GLUE_GENERATED_PACKAGES_PATH, 'config');
-  copyFolder(configPath, generatedPath, 8);
-  writeFile(join(generatedPath, 'package.json'), packageJsonTemplate);
-  writeFile(join(generatedPath, 'index.ts'), indexTemplate);
-  writeFile(join(generatedPath, 'tsconfig.json'), tsConfigTemplate);
+  createPackage('server');
+  createPackage('client');
 
   // builds plugins
   for await (const plugin of app.plugins) {
@@ -47,11 +44,36 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
     try {
       await plugin.build();
     } catch (e) {
-      console.log('>>>>', e);
+      console.error('>>>>', e);
       error(plugin.getName(), 'build failed');
     }
   }
 };
+
+const createPackage = async (packageName: string) => {
+  const configPath = join(process.cwd(), 'config');
+  const generatedPath = join(
+    process.cwd(),
+    GLUE_GENERATED_PACKAGES_PATH,
+    `${packageName}-config`
+  );
+  console.log(packageName, 'NAMEEE', configPath, generatedPath);
+
+  await createFolder(join(generatedPath, `${packageName}-config`));
+  copyFile(
+    join(configPath, 'index.ts'),
+    join(join(generatedPath, `${packageName}-config`), 'index.ts')
+  );
+  copyFile(
+    join(configPath, `${packageName}.ts`),
+    join(join(generatedPath, `${packageName}-config`), `${packageName}.ts`)
+  );
+
+  writeFile(join(generatedPath, 'package.json'), packageJsonTemplate('server'));
+  writeFile(join(generatedPath, 'index.ts'), indexTemplate(packageName));
+  writeFile(join(generatedPath, 'tsconfig.json'), tsConfigTemplate);
+};
+
 const tsConfigTemplate = `
 {
 	"compilerOptions": {
@@ -68,10 +90,10 @@ const tsConfigTemplate = `
 	}
 }
 `;
-const indexTemplate = `
-import { config as ServerConfig } from './config/server';
-import { config as ClientConfig } from './config/client';
-import { config as GlobalConfig } from './config/index';
+const indexTemplate = (packageName: string) => {
+  return `
+import { config as ${packageName}Config } from './${packageName}-config/${packageName}';
+import { config as GlobalConfig } from './${packageName}-config/index';
 
 function deepMerge(obj1, obj2) {
   const merged = { ...obj1 };
@@ -103,19 +125,16 @@ function deepMerge(obj1, obj2) {
 // };
 
 export const config = () => {
-  const mergedServerConfig = deepMerge(ServerConfig, GlobalConfig);
-  const mergedClientConfig = deepMerge(ClientConfig, GlobalConfig);
-  if (typeof window !== "undefined") {
-    return mergedClientConfig;
-  } else {
-    return mergedServerConfig;
-  }
+  const mergedConfig = deepMerge(${packageName}Config, GlobalConfig);
+  return mergedConfig;
 };
 
 `;
+};
 
-const packageJsonTemplate = `{
-	"name": "@project/config",
+const packageJsonTemplate = (packageName: string) => {
+  return `{
+	"name": "@project/${packageName}-config",
 	"version": "0.0.10",
 	"description": "Gluestack V2 SDK",
 	"main": "build/index.js",
@@ -155,3 +174,4 @@ const packageJsonTemplate = `{
 	}
 }
 `;
+};
