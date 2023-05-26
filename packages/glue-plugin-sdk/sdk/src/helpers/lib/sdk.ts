@@ -1,20 +1,18 @@
+type AnyClass<T = any> = new (...args: any[]) => T;
 
-import IProvider from '../../types/provider/interface/IProvider';
-type ProviderConstructor = new (
-	app: SDK,
-) => IProvider;
-
+type ClassMap = {
+	[key: string]: AnyClass;
+};
 
 // @ts-nocheck
 export default class SDK {
-	providers: Record<string, IProvider>;
+	providers: { [key: string]: InstanceType<AnyClass> };
 	static #instance: SDK;
 
 	constructor() {
 		// Initialization code goes here
-		console.log("ServerSDK instance initialized");
+		console.log('ServerSDK instance initialized');
 		this.providers = {};
-
 	}
 
 	static getInstance() {
@@ -29,7 +27,6 @@ export default class SDK {
 		// ServerSDK methods
 	}
 
-
 	async destroyPlugins() {
 		// await this.destroyPluginInstances();
 		// for (const plugin of this.plugins) {
@@ -37,22 +34,27 @@ export default class SDK {
 		// }
 	}
 
-
-	async populateProviders(localProviders: any) {
+	async populateProviders<T extends ClassMap>(
+		localProviders: T
+	): Promise<{ providers: { [K in keyof T]: InstanceType<T[K]> } }> {
+		const providers: { [K in keyof T]: InstanceType<T[K]> } =
+			{} as any;
 
 		for (const key in localProviders) {
 			const provider = new localProviders[key]();
-			this.providers[key] = provider;
+			providers[key] = provider;
 		}
+		return { providers };
 	}
 
-	async initProviders(localProviders?: any) {
-		await this.populateProviders(localProviders);
+	async initProviders<T extends ClassMap>(localProviders: T) {
+		let { providers } = await this.populateProviders(localProviders);
 
-		for (const key in this.providers) {
-			const provider = this.providers[key];
+		for (const key in providers) {
+			const provider = providers[key];
 			provider.init();
 		}
+		return providers;
 	}
 
 	async destroyProviders() {
@@ -64,7 +66,7 @@ export default class SDK {
 
 	// @API: getPluginByName
 	getProviderByName(providerName: string) {
-		// return 
+		// return
 		// for (const provider of this.providers) {
 		// 	if (provider.getName() === providerName) {
 		// 		return provider;
@@ -86,7 +88,6 @@ export default class SDK {
 		// this.commander.destroy();
 		// // save changes made into all stores
 		// this.gluePluginStoreFactory.saveAllStores();
-
 		// this.updateServices();
 	}
 
@@ -96,5 +97,4 @@ export default class SDK {
 		console.log('>> init');
 		await this.initProviders(localProviders);
 	}
-
 }
