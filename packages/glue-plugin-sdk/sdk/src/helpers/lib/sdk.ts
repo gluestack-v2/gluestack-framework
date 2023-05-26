@@ -34,9 +34,9 @@ export default class SDK {
 		// }
 	}
 
-	async populateProviders<T extends ClassMap>(
+	populateProviders<T extends ClassMap>(
 		localProviders: T
-	): Promise<{ providers: { [K in keyof T]: InstanceType<T[K]> } }> {
+	): { providers: { [K in keyof T]: InstanceType<T[K]> } } {
 		const providers: { [K in keyof T]: InstanceType<T[K]> } =
 			{} as any;
 
@@ -47,8 +47,8 @@ export default class SDK {
 		return { providers };
 	}
 
-	async initProviders<T extends ClassMap>(localProviders: T) {
-		let { providers } = await this.populateProviders(localProviders);
+	initProviders<T extends ClassMap>(localProviders: T) {
+		let { providers } = this.populateProviders(localProviders);
 
 		for (const key in providers) {
 			const provider = providers[key];

@@ -97,24 +97,29 @@ const indexTemplate = (packageName: string) => {
 import { config as ${packageName}Config } from './${packageName}-config/${packageName}';
 import { config as GlobalConfig } from './${packageName}-config/index';
 
-function deepMerge(obj1, obj2) {
-  const merged = { ...obj1 };
+function deepMerge<T extends object, U extends object>(
+  target: T,
+  source: U
+): T & U {
+  const merged = { ...target };
 
-  for (let key in obj2) {
-    if (obj2.hasOwnProperty(key)) {
-      if (
-        obj2[key] instanceof Object &&
-        key in obj1 &&
-        obj1[key] instanceof Object
-      ) {
-        merged[key] = deepMerge(obj1[key], obj2[key]);
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      const sourceValue = source[key];
+      // @ts-ignore
+      const targetValue = merged[key as keyof (T & U)];
+
+      if (sourceValue instanceof Object && targetValue instanceof Object) {
+        // @ts-ignore
+        merged[key as keyof (T & U)] = deepMerge(targetValue, sourceValue);
       } else {
-        merged[key] = obj2[key];
+        // @ts-ignore
+        merged[key as keyof (T & U)] = sourceValue;
       }
     }
   }
 
-  return merged;
+  return merged as T & U;
 }
 
 // export const config = (configPath: string) => {

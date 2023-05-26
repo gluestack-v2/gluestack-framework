@@ -1,15 +1,13 @@
-// import { env } from "@gluestack/core";
-
+class Auth {
+  constructor() {
+    this.login();
+  }
+  login() {
+    console.log('login');
+  }
+}
 export const config = {
   providers: {
-    functions: () => {
-      console.log('Global sdk');
-    },
+    auth: Auth,
   },
-  // "name": env('NAME', "my-app"),
 };
-
-// config('config.providers.functions')
-// config('config.')
-
-// clientSDK.providers.functions.add();
