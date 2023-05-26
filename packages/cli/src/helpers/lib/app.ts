@@ -28,7 +28,6 @@ import IInstance from '../../types/plugin/interface/IInstance';
 
 const sourceMap = require('source-map');
 
-
 type PluginConstructor = new (
 	app: AppCLI,
 	gluePluginStore?: IGluePluginStore
@@ -137,7 +136,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => { }
+		callback = (...args: any) => {}
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -200,9 +199,9 @@ export default class AppCLI {
 		watcher.watch(cwd, pattern, callback);
 	}
 
-
-	generateSourceMap(sourcePath: string,
-		destinationPath: string,
+	generateSourceMap(
+		sourcePath: string,
+		destinationPath: string
 	): void {
 		const filePathExtension: string = extname(sourcePath);
 
@@ -212,7 +211,7 @@ export default class AppCLI {
 
 		const generator = new sourceMap.SourceMapGenerator({
 			file: sourcePath,
-			sourceRoot: ""
+			sourceRoot: '',
 		});
 
 		// Add mapping
@@ -224,19 +223,20 @@ export default class AppCLI {
 				generator.addMapping({
 					source: sourcePath,
 					original: { line: i + 1, column: j },
-					generated: { line: i + 1, column: j }
+					generated: { line: i + 1, column: j },
 				});
 			}
 		}
 
 		const sourceMapString = generator.toString();
 		fs.writeFileSync(destinationPath + '.map', sourceMapString);
-		fs.appendFileSync(destinationPath, `\n//# sourceMappingURL=${destinationPath}.map`);
+		fs.appendFileSync(
+			destinationPath,
+			`\n//# sourceMappingURL=${destinationPath}.map`
+		);
 	}
 
-	removeSourceMap(
-		destinationPath: string,
-	): void {
+	removeSourceMap(destinationPath: string): void {
 		fs.rmSync(destinationPath + '.map');
 	}
 
@@ -246,8 +246,6 @@ export default class AppCLI {
 		callback: IWatchCallback
 	): void {
 		this.listen(source, ['./'], (event: string, path: string) => {
-
-
 			const sourcePath = join(source, path);
 			const destinationPath = join(destination, path);
 
@@ -255,21 +253,21 @@ export default class AppCLI {
 				switch (event) {
 					case 'add':
 						fs.copyFileSync(sourcePath, destinationPath);
-						this.generateSourceMap(sourcePath, destinationPath)
+						this.generateSourceMap(sourcePath, destinationPath);
 						break;
 					case 'addDir':
 						fs.mkdirSync(destinationPath, { recursive: true });
 						break;
 					case 'change':
 						fs.copyFileSync(sourcePath, destinationPath);
-						this.generateSourceMap(sourcePath, destinationPath)
+						this.generateSourceMap(sourcePath, destinationPath);
 						break;
 					case 'unlinkDir':
 						fs.rmSync(destinationPath, { recursive: true });
 						break;
 					case 'unlink':
 						fs.rmSync(destinationPath);
-						this.removeSourceMap(destinationPath)
+						this.removeSourceMap(destinationPath);
 
 						break;
 				}
@@ -363,9 +361,10 @@ export default class AppCLI {
 		);
 	}
 
-
-
-	async updateNameInPackageJSON(packagePath: string, packageName: string) {
+	async updateNameInPackageJSON(
+		packagePath: string,
+		packageName: string
+	) {
 		const packageJSONPath = join(packagePath, 'package.json');
 		await rewriteFile(packageJSONPath, packageName, 'INSTANCENAME');
 	}
@@ -393,10 +392,10 @@ export default class AppCLI {
 	// 	);
 	// }
 
-
-
-	async createPackage(packageName: string, packageSourcePath?: string) {
-
+	async createPackage(
+		packageName: string,
+		packageSourcePath?: string
+	) {
 		const packagePath = join(
 			process.cwd(),
 			GLUE_GENERATED_PACKAGES_PATH,
@@ -405,13 +404,19 @@ export default class AppCLI {
 		if (packageSourcePath) {
 			await this.write(packageSourcePath, packagePath);
 		} else {
-			const packageTemplatePath = join(process.cwd(), 'node_modules', '@gluestack-v2/framework-cli', 'src', 'helpers', 'templates', 'package');
+			const packageTemplatePath = join(
+				process.cwd(),
+				'node_modules',
+				'@gluestack-v2/framework-cli',
+				'src',
+				'helpers',
+				'templates',
+				'package'
+			);
 			await this.write(packageTemplatePath, packagePath);
 		}
 		await this.updateNameInPackageJSON(packagePath, packageName);
-
 	}
-
 
 	// async generateSDK(
 	// 	sourcePath: string,

@@ -5,13 +5,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
-import { join, relative } from 'path';
-import { spawnSync } from 'child_process';
-import { Workspaces } from '@gluestack/helpers';
-
 import { PluginInstance } from './PluginInstance';
-import { reWriteFile } from './helpers/rewrite-file';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {

@@ -93,9 +93,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
     let data = fs.readFileSync(indexPath, { encoding: 'utf-8' });
     data = data.replace('SDKINSTANCE', 'clientSDK');
+    data = data.replace('UPDATECONFIGTYPE', 'client-config');
     fs.writeFileSync(indexPath, data);
     data = fs.readFileSync(serverIndexPath, { encoding: 'utf-8' });
     data = data.replace('SDKINSTANCE', 'serverSDK');
+    data = data.replace('UPDATECONFIGTYPE', 'server-config');
     fs.writeFileSync(serverIndexPath, data);
     // await this.app.write(this._sourcePath, this._destinationPath);
     // await this.updateDestinationPackageJSON();

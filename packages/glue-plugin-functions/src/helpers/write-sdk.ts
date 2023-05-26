@@ -1,12 +1,12 @@
-import path from "path";
-import fs, { readFileSync } from "fs";
-import { readFile, writeFile } from "@gluestack/helpers";
-import writeSDKFunction from "./write-sdk-function";
-import getFileNameWithoutExtension from "./get-file-name-without-ext";
+import path, { join } from 'path';
+import fs, { readFileSync } from 'fs';
+import { writeFile } from '@gluestack/helpers';
+import writeSDKFunction from './write-sdk-function';
+import getFileNameWithoutExtension from './get-file-name-without-ext';
 function filePathExtension(filePath: string) {
-  return filePath.split(".").pop() ?? "";
+  return filePath.split('.').pop() ?? '';
 }
-let functionsMap: any = {};
+const functionsMap: any = {};
 
 function getNestedFilePaths(dirPath: any, fileList: any = []) {
   const files = fs.readdirSync(dirPath);
@@ -29,12 +29,12 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
 }
 
 const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
-  const pathArr = path.split("/");
+  const pathArr = path.split('/');
   // console.log(sdkFunction);
-  let obj = {};
+  const obj = {};
   let current: any = obj;
   for (let i = 0; i < pathArr.length - 1; i++) {
-    if (pathArr[i] !== "") {
+    if (pathArr[i] !== '') {
       // if (i == pathArr.length - 1) {
       //   console.log(i, "in if");
       //   current[pathArr[i]] = sdkFunction;
@@ -45,8 +45,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
-  current[pathArr[pathArr.length - 1]] = "****" + path + "****";
-  functionsMap["****" + path + "****"] = sdkFunction;
+  current[pathArr[pathArr.length - 1]] = '****' + path + '****';
+  functionsMap['****' + path + '****'] = sdkFunction;
 
   return obj;
 };
@@ -56,9 +56,9 @@ const deepMerge = (obj1: any, obj2: any) => {
   for (let key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       if (
-        typeof obj2[key] === "object" &&
+        typeof obj2[key] === 'object' &&
         obj1.hasOwnProperty(key) &&
-        typeof obj1[key] === "object"
+        typeof obj1[key] === 'object'
       ) {
         output[key] = deepMerge(obj1[key], obj2[key]);
       } else {
@@ -75,36 +75,34 @@ const writeSDK = async (
   ignoredPaths: string[]
 ) => {
   let obj = {};
-  const sdkSrcIndex = path.join(packagePath, "index.ts");
+  const sdkSrcIndex = path.join(packagePath, 'index.ts');
   const files = getNestedFilePaths(installationPath);
 
-  let sdkFunctions = ``;
   let finalString = ``;
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
 
     if (
-      ["json"].includes(filePathExtension(filePath)) ||
-      filePath.includes("node_modules")
+      ['json'].includes(filePathExtension(filePath)) ||
+      filePath.includes('node_modules')
     ) {
       return;
     }
 
     for (let i = 0; i < ignoredPaths.length; i++) {
-      if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+      if (filePath.includes('/' + ignoredPaths[i] + '/')) {
         return;
       }
     }
 
     const functionName = getFileNameWithoutExtension(filePath);
+    // HACK: This is a hack to get the function path
+    let functionPath = filePath.replace(join(process.cwd(), 'server'), '');
+    // let functionPath = filePath.replace(installationPath, '');
 
+    functionPath = functionPath.split('.').slice(0, -1).join('.');
 
-    let functionPath = filePath.replace(installationPath, "");
-
-    functionPath = functionPath.split(".").slice(0, -1).join(".");
-
-    const functionCodeString = fs.readFileSync(filePath, "utf8");
-
+    const functionCodeString = fs.readFileSync(filePath, 'utf8');
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
@@ -113,8 +111,8 @@ const writeSDK = async (
       params = matches[1].split(/\s*,\s*/);
     } else {
       params = [];
-      console.log(
-        "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
+      console.error(
+        'NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION ' + functionName
       );
     }
     // console.log(ign);
@@ -124,26 +122,25 @@ const writeSDK = async (
       ...obj,
       ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
     };
-
-
-    finalString = JSON.stringify(obj).replace(":", "=");
+    finalString = JSON.stringify(obj).replace(':', '=');
     finalString = finalString.substring(1, finalString.length - 1);
 
     Object.keys(functionsMap).map((key: any) => {
       finalString = finalString.replace(`"${key}"`, functionsMap[key]);
     });
 
-    sdkFunctions += sdkFunction + "\n";
+    sdkFunction += sdkFunction + '\n';
   });
 
+  const sdkFileContent = readFileSync(
+    path.join(__dirname, '..', '..', 'sdk', 'index.ts')
+  ).toString();
 
-  const sdkFileContent = readFileSync(path.join(__dirname, '..', '..', 'sdk', 'index.ts')).toString();
-  console.log(sdkFileContent.toString(), "hello here")
   // Create SDK index file with all the functions
   await writeFile(
     sdkSrcIndex,
     sdkFileContent.replace(
-      "// **---Functions will be added after this---**",
+      '// **---Functions will be added after this---**',
       finalString
     )
   );
