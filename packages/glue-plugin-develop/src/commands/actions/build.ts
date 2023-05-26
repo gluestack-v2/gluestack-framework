@@ -57,7 +57,6 @@ const createPackage = async (packageName: string) => {
     GLUE_GENERATED_PACKAGES_PATH,
     `${packageName}-config`
   );
-  console.log(packageName, 'NAMEEE', configPath, generatedPath);
 
   await createFolder(join(generatedPath, `${packageName}-config`));
   copyFile(
@@ -69,7 +68,10 @@ const createPackage = async (packageName: string) => {
     join(join(generatedPath, `${packageName}-config`), `${packageName}.ts`)
   );
 
-  writeFile(join(generatedPath, 'package.json'), packageJsonTemplate('server'));
+  writeFile(
+    join(generatedPath, 'package.json'),
+    packageJsonTemplate(packageName)
+  );
   writeFile(join(generatedPath, 'index.ts'), indexTemplate(packageName));
   writeFile(join(generatedPath, 'tsconfig.json'), tsConfigTemplate);
 };

@@ -8,13 +8,8 @@ import {
   GLUE_GENERATED_SEAL_SERVICES_PATH,
 } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
-import path, { join } from 'path';
-import fs, { unlinkSync } from 'fs';
-import writeFile from './helpers/write-file';
-import fileExists from './helpers/file-exists';
-import { removeSpecialChars } from '@gluestack/helpers';
+import { join } from 'path';
 import writeSDK from './helpers/write-sdk';
-import copyFile from './helpers/copy-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -84,14 +79,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getPluginEnvironment() {
-    const cronsPlugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-crons'
-    );
-    if (!cronsPlugin) {
-      return;
-    }
     // @ts-ignore
-    return cronsPlugin.getPluginEnvironment();
+    return this.callerPlugin.getPluginEnvironment();
   }
 
   generateFunctionsInServiceGateway() {
@@ -115,11 +104,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async createSDKPackage() {
-    await this.app.createPackage('sdk');
-    const packagePath = join(GLUE_GENERATED_PACKAGES_PATH, 'sdk');
+    // await this.app.createPackage('functions_sdk');
+    const packagePath = join(GLUE_GENERATED_PACKAGES_PATH, 'functions_sdk');
 
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage('sdk', sdkPath);
+    await this.app.createPackage('functions_sdk', sdkPath);
 
     await writeSDK(packagePath, this._sourcePath, []);
   }

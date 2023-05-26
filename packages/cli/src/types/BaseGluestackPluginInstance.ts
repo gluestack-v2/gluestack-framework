@@ -8,7 +8,7 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 import { SEAL_SERVICES_PATH } from '../constants/seal';
 
 import { Workspaces } from '@gluestack/helpers';
-import { writeFile, rewriteFile, fileExists } from '../helpers/file';
+import { writeFile, fileExists } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance

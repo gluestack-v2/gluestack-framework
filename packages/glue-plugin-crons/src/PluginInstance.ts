@@ -126,14 +126,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getPluginEnvironment() {
-    const cronsPlugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-crons'
-    );
-    if (!cronsPlugin) {
-      return;
-    }
     // @ts-ignore
-    return cronsPlugin.getPluginEnvironment();
+    return this.callerPlugin.getPluginEnvironment();
   }
 
   getGatewayInstanceInfo() {
