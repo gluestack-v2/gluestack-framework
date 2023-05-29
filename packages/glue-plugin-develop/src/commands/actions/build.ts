@@ -122,15 +122,6 @@ function deepMerge<T extends object, U extends object>(
   return merged as T & U;
 }
 
-// export const config = (configPath: string) => {
-// 	const configPathArray = configPath.split('.');
-// 	configPathArray.forEach((path) => {
-// 		// @ts-ignore
-// 		GeneratedConfig = GeneratedConfig[path];
-// 	});
-// 	return GeneratedConfig;
-// };
-
 export const config = () => {
   const mergedConfig = deepMerge(${packageName}Config, GlobalConfig);
   return mergedConfig;
