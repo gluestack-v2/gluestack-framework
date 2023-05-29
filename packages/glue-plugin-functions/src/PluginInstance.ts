@@ -105,10 +105,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async createSDKPackage() {
     // await this.app.createPackage('functions_sdk');
-    const packagePath = join(GLUE_GENERATED_PACKAGES_PATH, 'functions_sdk');
+    const packagePath = join(
+      GLUE_GENERATED_PACKAGES_PATH,
+      `${this.getName()}_sdk`
+    );
 
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage('functions_sdk', sdkPath);
+    await this.app.createPackage(`${this.getName()}_sdk`, sdkPath);
 
     await writeSDK(packagePath, this._sourcePath, []);
   }
