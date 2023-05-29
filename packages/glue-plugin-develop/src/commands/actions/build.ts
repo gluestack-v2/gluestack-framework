@@ -21,7 +21,7 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
   // add __generated__/packages into workspaces
   await Workspaces.append(
     `${process.cwd()}/package.json`,
-    GLUE_GENERATED_PACKAGES_PATH
+    GLUE_GENERATED_PACKAGES_PATH + '/**'
   );
 
   createPackage('server');

@@ -117,11 +117,13 @@ const writeSDK = async (
     }
     // console.log(ign);
     let sdkFunction = writeSDKFunction(functionName, params, functionPath);
-
+    console.log(obj, 'before');
     obj = {
       ...obj,
       ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
     };
+    console.log(obj, 'after');
+
     finalString = JSON.stringify(obj).replace(':', '=');
     finalString = finalString.substring(1, finalString.length - 1);
 
@@ -135,6 +137,7 @@ const writeSDK = async (
   const sdkFileContent = readFileSync(
     path.join(__dirname, '..', '..', 'sdk', 'index.ts')
   ).toString();
+  console.log(finalString);
 
   // Create SDK index file with all the functions
   await writeFile(

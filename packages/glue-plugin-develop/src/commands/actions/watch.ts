@@ -1,14 +1,14 @@
 import chokidar from 'chokidar';
-import { Workspaces } from "@gluestack/helpers";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import { Workspaces } from '@gluestack/helpers';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import {
   success,
   warning,
-} from "@gluestack-v2/framework-cli/build/helpers/print";
+} from '@gluestack-v2/framework-cli/build/helpers/print';
 
-import { FOLDER_STRUCTURE } from "../../constants/folder-structure";
-import createFoldersFromJson from "../../helpers/create-folders-from-json";
-import { GLUE_GENERATED_PACKAGES_PATH } from "../../constants/glue-generated-packages";
+import { FOLDER_STRUCTURE } from '../../constants/folder-structure';
+import createFoldersFromJson from '../../helpers/create-folders-from-json';
+import { GLUE_GENERATED_PACKAGES_PATH } from '../../constants/glue-generated-packages';
 import path, { join } from 'path';
 
 export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
@@ -17,32 +17,31 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
 
   // add __generated__/packages into workspaces
   await Workspaces.append(
-    path.join(process.cwd(), "package.json"),
-    GLUE_GENERATED_PACKAGES_PATH
+    path.join(process.cwd(), 'package.json'),
+    GLUE_GENERATED_PACKAGES_PATH + '/**'
   );
 
   // await restart(app);
   await watchInstances(app, pluginName);
 };
 
-
-const watchInstances = async (app: AppCLI, pluginName: string = ''): Promise<void> => {
+const watchInstances = async (
+  app: AppCLI,
+  pluginName: string = ''
+): Promise<void> => {
   for await (const plugin of app.plugins) {
     if (pluginName !== '' && plugin.getName() !== pluginName) {
       continue;
     }
 
-    success("Found plugin", plugin.getName());
+    success('Found plugin', plugin.getName());
 
     if (!plugin.watch) {
-      warning(
-        `${plugin.getName()}`,
-        "contains no watch method"
-      );
+      warning(`${plugin.getName()}`, 'contains no watch method');
       continue;
     }
 
-    warning(plugin.getName(), "running watch method...");
+    warning(plugin.getName(), 'running watch method...');
 
     await plugin.watch();
   }
