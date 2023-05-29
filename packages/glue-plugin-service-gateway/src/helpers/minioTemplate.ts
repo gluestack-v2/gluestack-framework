@@ -3,7 +3,7 @@ export default (envData: string) => {
  const Minio = require("minio");
 const { MinioPingError, MinioInitializationError } = require("./errors");
 const Context = require("../Context.ts");
-const ServierSDK = require("../ServerSdk.ts");
+const ServiceSDK = require("../ServerSdk.ts");
 
 /**
  * Service mixin for managing files in a Minio S3 backend
@@ -13,7 +13,7 @@ const ServierSDK = require("../ServerSdk.ts");
  */
 module.exports = {
 	// Service name
-	name: "minio",
+	name: "storage",
 
 	// Default settings
 	settings: {
@@ -66,7 +66,18 @@ module.exports = {
 		},
 	},
 
-	actions: {},
+	actions: {
+		"client": {
+			rest: {
+				method: "POST",
+			},
+			handler: (ctx) => {
+				const sdk = ServiceSDK.getInstance();
+				const operation = ctx.params.operation;
+				return sdk.minioClient[operation](...ctx.params.params);
+			},
+		},
+	},
 
 	/**
 	 * Service created lifecycle event handler.
@@ -74,7 +85,7 @@ module.exports = {
 	 */
 	created() {
 		this.client = this.createMinioClient();
-		const sdk = ServierSDK.getInstance();
+		const sdk = ServiceSDK.getInstance();
 		sdk.minioClient = this.client;
 		// const ctx = new Context(this.broker);
 		// ctx.setMinioClient(this.client);

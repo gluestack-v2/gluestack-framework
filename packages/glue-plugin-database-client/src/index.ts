@@ -18,7 +18,10 @@ import writeFile from "./helpers/write-file";
 import { reWriteFile } from "./helpers/rewrite-file";
 import { readfile } from "./helpers/read-file";
 import rm from "./helpers/rm";
-
+import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback";
+import migrateCommand from "./commands/migrate";
+import generateCommand from "./commands/generate";
+import dbCommand from "./commands/db";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
@@ -36,7 +39,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    //
+    this.app.addCommand((program: ICommand) =>
+      migrateCommand(program, this.app)
+    );
+    this.app.addCommand((program: ICommand) =>
+      generateCommand(program, this.app)
+    );
+    this.app.addCommand((program: ICommand) => dbCommand(program, this.app));
   }
 
   destroy() {

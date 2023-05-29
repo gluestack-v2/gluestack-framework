@@ -80,6 +80,20 @@ let privateMolecularEvents = ``;
 
 let eventsImportPaths = ``;
 
+const handlerTemplate = () => {
+  return ` (ctx) => {
+  const sdk = ServiceSDK.getInstance();
+  const operation = ctx.params.operation;
+  sdk.minioClient[operation](ctx.params.params, function (err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log("Operation Completed successfully");
+  });
+},`;
+};
+
 const writeService = async (
   installationPath: string,
   functionPath: string,
@@ -134,6 +148,8 @@ const writeService = async (
       ...moleculerActions,
       ...getActions(installationPath, functionInstanceName, filePath).actions,
     };
+    // moleculerActions = { ...moleculerActions, ...storageRoute };
+
     moleculerImportPaths =
       moleculerImportPaths +
       getActions(installationPath, functionInstanceName, filePath).importPaths;
@@ -317,10 +333,12 @@ async function createService(
   path: string,
   eventsData: string
 ) {
-  let finalString = moleculerFunctionsServiceTemplate.replace(
-    "// **---Add Actions Here---**",
-    replaceHandlerNames(JSON.stringify(moleculerActions, null, 2))
-  );
+  let finalString = moleculerFunctionsServiceTemplate
+    .replace(
+      "// **---Add Actions Here---**",
+      replaceHandlerNames(JSON.stringify(moleculerActions, null, 2))
+    )
+    .replace("/** Add handler here **/", handlerTemplate());
 
   finalString = finalString.replace(
     "// **---Add Events Here---**",

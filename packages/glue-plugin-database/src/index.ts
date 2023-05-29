@@ -18,6 +18,7 @@ import rm from './helpers/rm';
 import copyFolder from './helpers/copy-folder';
 import { spawnSync } from 'child_process';
 // @ts-ignore
+
 import prompts from 'prompts';
 
 // Do not edit the name of this class
@@ -95,10 +96,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     // Create the .env file content
     const envContent = `
-DATABASE_USER=${answers.DATABASE_USER}
-DATABASE_PASSWORD=${answers.DATABASE_PASSWORD}
-DATABASE_NAME=${answers.DATABASE_NAME}
-DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@db:5432/${answers.DATABASE_NAME}
+POSTGRES_USER=${answers.DATABASE_USER}
+POSTGRES_PASSWORD=${answers.DATABASE_PASSWORD}
+POSTGRES_DB=${answers.DATABASE_NAME}
+DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@localhost:5433/${answers.DATABASE_NAME}
 `;
 
     // Write the .env file at database root
