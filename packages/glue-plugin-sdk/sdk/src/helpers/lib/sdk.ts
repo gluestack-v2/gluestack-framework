@@ -40,9 +40,18 @@ export default class SDK {
 		const providers: { [K in keyof T]: InstanceType<T[K]> } =
 			{} as any;
 
-		for (const key in localProviders) {
-			const provider = new localProviders[key]();
-			providers[key] = provider;
+		for (let key in localProviders) {
+			let provider;
+			// @ts-ignore
+			if (typeof localProviders[key].then === 'function') {
+				// @ts-ignore
+				localProviders[key].then((val) => (provider = val));
+			} else {
+				provider = localProviders[key];
+			}
+			// @ts-ignore
+			const providerInstance = new provider(this);
+			providers[key] = providerInstance;
 		}
 		return { providers };
 	}
