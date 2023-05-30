@@ -1,7 +1,13 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
-import { copyFolder, fileExists, rewriteFile, rm } from '../file';
+import {
+	copyFolder,
+	fileExists,
+	readFile,
+	rewriteFile,
+	rm,
+} from '../file';
 import fs from 'fs';
 import { injectPluginStore } from '../getStorePath';
 import {
@@ -334,6 +340,12 @@ export default class AppCLI {
 		} else {
 			// console.log('No services found');
 		}
+	}
+
+	async updateImportsName(path: string, key: string, value: string) {
+		let data = fs.readFileSync(path, { encoding: 'utf-8' });
+		data = data.replace(key, value);
+		fs.writeFileSync(path, data);
 	}
 
 	getAllServicePaths() {

@@ -6,7 +6,9 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import fileExists from './helpers/file-exists';
+
 import fs from 'fs';
+import { GLUE_GENERATED_PACKAGES_PATH } from './helpers/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -63,42 +65,39 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async build() {
-    // console.log("helllll")
     await this.app.createPackage(
       'client-sdk',
       join(this.callerPlugin.getPackagePath(), 'sdk')
     );
+
     await this.app.createPackage(
       'server-sdk',
       join(this.callerPlugin.getPackagePath(), 'sdk')
     );
 
-    console.log(
-      join(this.callerPlugin.getPackagePath(), 'sdk'),
-      join(process.cwd(), '.glue/__generated__/packages')
-    );
-    const indexPath = join(
-      process.cwd(),
-      '.glue/__generated__/packages',
+    const clientSDKPath = join(
+      GLUE_GENERATED_PACKAGES_PATH,
       'client-sdk',
       'src',
       'index.ts'
     );
-    const serverIndexPath = join(
-      process.cwd(),
-      '.glue/__generated__/packages',
+    const serverSDKPath = join(
+      GLUE_GENERATED_PACKAGES_PATH,
       'server-sdk',
       'src',
       'index.ts'
     );
-    let data = fs.readFileSync(indexPath, { encoding: 'utf-8' });
-    data = data.replace('SDKINSTANCE', 'clientSDK');
-    data = data.replace('UPDATECONFIGTYPE', 'client-config');
-    fs.writeFileSync(indexPath, data);
-    data = fs.readFileSync(serverIndexPath, { encoding: 'utf-8' });
-    data = data.replace('SDKINSTANCE', 'serverSDK');
-    data = data.replace('UPDATECONFIGTYPE', 'server-config');
-    fs.writeFileSync(serverIndexPath, data);
+    this.app.updateImportsName(
+      clientSDKPath,
+      'UPDATECONFIGTYPE',
+      'client-config'
+    );
+    this.app.updateImportsName(
+      serverSDKPath,
+      'UPDATECONFIGTYPE',
+      'server-config'
+    );
+
     // await this.app.write(this._sourcePath, this._destinationPath);
     // await this.updateDestinationPackageJSON();
     // await this.updateRootPackageJSONWithDestinationPath();
