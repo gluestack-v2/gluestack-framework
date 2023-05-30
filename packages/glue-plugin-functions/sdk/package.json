@@ -1,5 +1,5 @@
 {
-  "name": "@project/functions-sdk",
+  "name": "@project/sdk-functions",
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",

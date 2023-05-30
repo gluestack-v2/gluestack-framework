@@ -1,4 +1,4 @@
-import FunctionsSDK from '@project/functions-sdk';
+import FunctionsSDK from '@project/sdk-functions';
 
 export const config = {
   providers: {

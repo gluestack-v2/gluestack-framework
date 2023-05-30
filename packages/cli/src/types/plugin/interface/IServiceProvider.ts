@@ -4,5 +4,4 @@ export default interface IServiceProvider {
 	app: AppCLI;
 	init(): any;
 	destroy(): any;
-
 }

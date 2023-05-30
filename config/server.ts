@@ -5,6 +5,9 @@ class Test {
   constructor() {
     this.login();
   }
+  init() {
+    console.log('Test init');
+  }
 }
 
 export const config = {
