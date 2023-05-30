@@ -1,14 +1,14 @@
-import fs, { unlinkSync } from "fs";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import fs, { unlinkSync } from 'fs';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import { join } from "path";
-import fileExists from "./helpers/file-exists";
-import writeFile from "./helpers/write-file";
-import { defaultConfig } from "./commands/minioConfig";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { join } from 'path';
+import fileExists from './helpers/file-exists';
+import writeFile from './helpers/write-file';
+import { defaultConfig } from './commands/minioConfig';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -17,13 +17,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   isOfTypeInstance: boolean = false;
   gluePluginStore: IGlueStorePlugin;
   installationPath: string;
-  status: "up" | "down" = "down";
+  status: 'up' | 'down' = 'down';
 
   // TODO: Fix typings
   portNumber: any;
   consolePortNumber: any;
-  publicBucketName: string = "public";
-  privateBucketName: string = "private";
+  publicBucketName: string = 'public';
+  privateBucketName: string = 'private';
 
   constructor(
     app: AppCLI,
@@ -142,7 +142,12 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/server/${this.getName()}`;
+    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+  }
+
+  getPluginEnvironment() {
+    // @ts-ignore
+    return this.callerPlugin.getPluginEnvironment();
   }
 
   // TODO: Move to index.ts
@@ -186,21 +191,21 @@ platforms:
 `;
 
       writeFile(
-        join(this._destinationPath, "seal.service.yaml"),
+        join(this._destinationPath, 'seal.service.yaml'),
         sealServiceTemplate
       );
 
       writeFile(
-        join(this._destinationPath, "run.Dockerfile"),
+        join(this._destinationPath, 'run.Dockerfile'),
         runDockerfileTemplate
       );
 
       writeFile(
-        join(this._destinationPath, "build.Dockerfile"),
+        join(this._destinationPath, 'build.Dockerfile'),
         runDockerfileTemplate
       );
     } catch (error) {
-      console.log("Error occured: ", error);
+      console.log('Error occured: ', error);
       return;
     }
   }
@@ -239,7 +244,7 @@ platforms:
       try {
         await this.build();
       } catch (error) {
-        console.log(">> Instance does not exits:", this.getName());
+        console.log('>> Instance does not exits:', this.getName());
         return;
       }
     }

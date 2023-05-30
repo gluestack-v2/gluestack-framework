@@ -135,9 +135,8 @@ const writeSDK = async (
   });
 
   const sdkFileContent = readFileSync(
-    path.join(__dirname, '..', '..', 'sdk', 'index.ts')
+    path.join(__dirname, '..', '..', 'sdk', 'src', 'index.ts')
   ).toString();
-  console.log(finalString);
 
   // Create SDK index file with all the functions
   await writeFile(
