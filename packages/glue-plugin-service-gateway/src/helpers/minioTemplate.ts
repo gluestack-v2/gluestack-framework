@@ -46,7 +46,9 @@ export default (envData: string) => {
 			 *
 			 * @returns {Client}
 			 */
-	
+			createMinioClient() {
+				return new Minio.Client(${envData});
+			},
 			/**
 			 * Pings the configured minio backend
 			 *
@@ -68,7 +70,11 @@ export default (envData: string) => {
 				rest: {
 					method: 'POST',
 				},
-				handler: (ctx) => {},
+				handler: (ctx) => {
+					const sdk = ServerSDK.providers.get(StorageSDK);
+					const operation = ctx.params.operation;
+					return sdk.minioClient[operation](...ctx.params.params);
+				},
 			},
 		},
 	
@@ -77,15 +83,17 @@ export default (envData: string) => {
 		 * Constructs a new minio client entity
 		 */
 		created() {
-			console.log(
-				ServerSDK.providers.get(StorageSDK),
-				ServerSDK.providers,
-				// ServerSDK.getProviderInstance(StorageSDK),
-				// ServerSDK,
-				// StorageSDK.default,
-				'aksgfkjagksjhjklashjklh iusakgfkjsaghkj'
-			);
+			this.client = this.createMinioClient();
+			ServerSDK.providers.get(StorageSDK).setStorageclient(this.client);
 	
+			// console.log(
+			//   ServerSDK.providers.get(StorageSDK),
+			//   ServerSDK.providers,
+			//   // ServerSDK.getProviderInstance(StorageSDK),
+			//   // ServerSDK,
+			//   // StorageSDK.default,
+			//   'aksgfkjagksjhjklashjklh iusakgfkjsaghkj'
+			// );
 			// console.log(ServerSDK.getProviderInstance(StorageSDK));
 			// this.client = this.createMinioClient();
 			// ServerSDK.default.storageClient.setStorageclient(this.client);
@@ -130,7 +138,5 @@ export default (envData: string) => {
 			// this.healthCheckInterval && clearInterval(this.healthCheckInterval);
 		},
 	};
-	
-
- `;
+	`;
 };

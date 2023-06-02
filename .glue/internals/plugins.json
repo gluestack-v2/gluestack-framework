@@ -16,5 +16,8 @@
   },
   "@gluestack-v2/glue-plugin-web": {
     "package": "@gluestack-v2/glue-plugin-web"
+  },
+  "@gluestack-v2/glue-plugin-functions": {
+    "package": "@gluestack-v2/glue-plugin-functions"
   }
 }

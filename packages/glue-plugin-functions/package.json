@@ -35,7 +35,6 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x",
-    "@gluestack-v2/glue-plugin-service-sdk": "^0.0.x"
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.x"
   }
 }
