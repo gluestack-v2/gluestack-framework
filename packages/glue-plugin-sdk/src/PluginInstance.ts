@@ -4,11 +4,8 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import fileExists from './helpers/file-exists';
-
-import fs from 'fs';
 import { GLUE_GENERATED_PACKAGES_PATH } from './helpers/constants/gluestack.v2';
+const dotEnvPath = join(process.cwd(), '.env');
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -87,14 +84,35 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       'src',
       'index.ts'
     );
-    this.app.updateImportsName(
+
+    this.app.replaceTemplateValues(
       clientSDKPath,
       'UPDATECONFIGTYPE',
       'client-config'
     );
-    this.app.updateImportsName(
+    this.app.replaceTemplateValues(
       serverSDKPath,
       'UPDATECONFIGTYPE',
+      'server-config'
+    );
+    this.app.replaceTemplateValues(
+      clientSDKPath,
+      '/*** UPDATE_ENV_BASED_ON_ENVIRONMENT ***/',
+      `= ${JSON.stringify(await this.filterEnvData(dotEnvPath, 'client'))}`
+    );
+    this.app.replaceTemplateValues(
+      serverSDKPath,
+      '// Add imports here',
+      `import dotenv from 'dotenv'; \nimport findWorkspaceRoot from 'find-yarn-workspace-root'; \nimport { join } from 'path'; \n// Add imports here\n\nconst workspaceRoot = findWorkspaceRoot(__dirname); \ndotenv.config({\tpath: join(workspaceRoot, '.env')\n\t});\n`
+    );
+    this.app.replaceTemplateValues(
+      serverSDKPath,
+      '/*** UPDATE_ENV_BASED_ON_ENVIRONMENT ***/',
+      `= process.env`
+    );
+    this.app.replaceTemplateValues(
+      serverSDKPath,
+      'PROJECT_PATH_ENV',
       'server-config'
     );
 

@@ -6,7 +6,6 @@ import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types
 import { join } from 'path';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import writeFile from './helpers/write-file';
-import { fileExists } from '@gluestack/helpers';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -74,6 +73,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.updateDestinationPackageJSON();
     await this.updateWorkspacePackageJSON();
     await this.sealInit();
+    await this.generateEnvFiles();
   }
 
   getDockerfile(): string {
