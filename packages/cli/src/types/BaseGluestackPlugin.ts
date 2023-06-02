@@ -14,6 +14,7 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
 	gluePluginStore: IGluePluginStore;
 	runningPlatforms: RunningPlatforms = ['local', 'docker'];
+	pluginEnvironment: 'server' | 'client' = 'server';
 
 	constructor(app: AppCLI, gluePluginStore: IGluePluginStore) {
 		this.app = app;

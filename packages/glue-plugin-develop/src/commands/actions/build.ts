@@ -52,28 +52,31 @@ export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
 
 const createPackage = async (packageName: string) => {
   const configPath = join(process.cwd(), 'config');
-  const generatedPath = join(
+  const generatedConfigPath = join(
     process.cwd(),
     GLUE_GENERATED_PACKAGES_PATH,
     `${packageName}-config`
   );
 
-  await createFolder(join(generatedPath, `${packageName}-config`));
+  await createFolder(join(generatedConfigPath, `${packageName}-config`));
   copyFile(
     join(configPath, 'index.ts'),
-    join(join(generatedPath, `${packageName}-config`), 'index.ts')
+    join(join(generatedConfigPath, `${packageName}-config`), 'index.ts')
   );
   copyFile(
     join(configPath, `${packageName}.ts`),
-    join(join(generatedPath, `${packageName}-config`), `${packageName}.ts`)
+    join(
+      join(generatedConfigPath, `${packageName}-config`),
+      `${packageName}.ts`
+    )
   );
 
   writeFile(
-    join(generatedPath, 'package.json'),
+    join(generatedConfigPath, 'package.json'),
     packageJsonTemplate(packageName)
   );
-  writeFile(join(generatedPath, 'index.ts'), indexTemplate(packageName));
-  writeFile(join(generatedPath, 'tsconfig.json'), tsConfigTemplate);
+  writeFile(join(generatedConfigPath, 'index.ts'), indexTemplate(packageName));
+  writeFile(join(generatedConfigPath, 'tsconfig.json'), tsConfigTemplate);
 };
 
 const tsConfigTemplate = `
@@ -122,11 +125,24 @@ function deepMerge<T extends object, U extends object>(
   return merged as T & U;
 }
 
-export const config = () => {
-  const mergedConfig = deepMerge(${packageName}Config, GlobalConfig);
-  return mergedConfig;
+type configValueType = {
+  [key in keyof (typeof ${packageName}Config &
+    typeof GlobalConfig)]: (typeof ${packageName}Config)[key] &
+    (typeof GlobalConfig)[key];
 };
 
+function config(): typeof ${packageName}Config & typeof GlobalConfig;
+function config(
+  key: keyof (typeof ${packageName}Config & typeof GlobalConfig)
+): configValueType;
+function config(key?: keyof (typeof ${packageName}Config & typeof GlobalConfig)) {
+  const mergedConfig = deepMerge(${packageName}Config, GlobalConfig);
+  if (typeof key !== 'undefined') {
+    return mergedConfig[key];
+  }
+  return mergedConfig;
+}
+export { config };
 `;
 };
 
@@ -136,7 +152,7 @@ const packageJsonTemplate = (packageName: string) => {
 	"version": "0.0.10",
 	"description": "Gluestack V2 SDK",
 	"main": "build/index.js",
-	"scripts": {
+	"scripts": { 
 		"build": "tsc",
 		"watch": "tsc --watch",
 		"lint": "prettier --write ."

@@ -342,10 +342,14 @@ export default class AppCLI {
 		}
 	}
 
-	async updateImportsName(path: string, key: string, value: string) {
-		let data = fs.readFileSync(path, { encoding: 'utf-8' });
-		data = data.replace(key, value);
-		fs.writeFileSync(path, data);
+	async replaceTemplateValues(
+		filePath: string,
+		template: string,
+		value: string
+	) {
+		let data = fs.readFileSync(filePath, { encoding: 'utf-8' });
+		data = data.replace(template, value);
+		fs.writeFileSync(filePath, data);
 	}
 
 	getAllServicePaths() {
