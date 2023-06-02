@@ -6,13 +6,18 @@ type ClassMap = {
 
 // @ts-nocheck
 export default class SDK {
-	providers: { [key: string]: InstanceType<AnyClass> };
+	// providers: { [key: string]: InstanceType<AnyClass> };
+	providers: Map<
+		string | InstanceType<AnyClass>,
+		InstanceType<AnyClass>
+	>;
+
 	static #instance: SDK;
 
 	constructor() {
 		// Initialization code goes here
 		console.log('ServerSDK instance initialized');
-		this.providers = {};
+		this.providers = new Map();
 	}
 
 	static getInstance() {
@@ -34,9 +39,19 @@ export default class SDK {
 		// }
 	}
 
+	getProviderInstance(providerClass: AnyClass) {
+		// console.log(this.providers, providerClass, 'in functionnn');
+		// for (let provider in this.providers) {
+		// 	if (this.providers[provider] instanceof providerClass) {
+		// 		return this.providers[provider];
+		// 	}
+		// }
+		// return 'No instance found';
+	}
+
 	populateProviders<T extends ClassMap>(
 		localProviders: T
-	): { providers: { [K in keyof T]: InstanceType<T[K]> } } {
+	): { providers: any } {
 		const providers: { [K in keyof T]: InstanceType<T[K]> } =
 			{} as any;
 
@@ -51,18 +66,25 @@ export default class SDK {
 			}
 			// @ts-ignore
 			const providerInstance = new provider(this);
-			providers[key] = providerInstance;
+			// set for alias
+			this.providers.set(key, providerInstance);
+
+			// set class
+			this.providers.set(provider, providerInstance);
 		}
-		return { providers };
+
+		// this.providers = providers;
+		return { providers: this.providers };
 	}
 
 	initProviders<T extends ClassMap>(localProviders: T) {
 		let { providers } = this.populateProviders(localProviders);
 
-		for (const key in providers) {
-			const provider = providers[key];
-			provider.init();
-		}
+		// for (const key in providers) {
+		// 	const provider = providers[key];
+		// 	provider.init();
+		// }
+
 		return providers;
 	}
 

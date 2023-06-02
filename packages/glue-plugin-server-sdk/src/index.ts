@@ -1,27 +1,27 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import { join, resolve } from "path";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import { join, resolve } from 'path';
+import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { reWriteFile } from "./helpers/rewrite-file";
-import copyFolder from "./helpers/copy-folder";
-import rm from "./helpers/rm";
+import { reWriteFile } from './helpers/rewrite-file';
+import copyFolder from './helpers/copy-folder';
+import rm from './helpers/rm';
 
-import { existsSync } from "fs";
-import writeSDK from "./helpers/write-sdk";
+import { existsSync } from 'fs';
+import writeSDK from './helpers/write-sdk';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -49,7 +49,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
@@ -85,12 +85,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       this,
       key,
       gluePluginStore,
-      installationPath ?? ""
+      installationPath ?? ''
     );
     this.instances.push(instance);
     return instance;
   }
-
 
   getInstances(): IInstance[] {
     return this.instances;

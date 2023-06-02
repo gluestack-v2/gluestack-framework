@@ -1,43 +1,43 @@
 // @ts-nocheck
-const ServerSdk = require("./ServerSdk.ts");
+const ServerSDK = require('@project/server-sdk');
 
 class Context {
-	_molecularCtx;
-	params;
-	call;
-	mcall;
-	sdk;
+  _molecularCtx;
+  params;
+  call;
+  mcall;
+  sdk;
 
-	constructor(ctx) {
-		this._molecularCtx = ctx;
-		this.params = ctx.params;
-		this.call = ctx.call;
-		this.mcall = ctx.mcall;
-		this.sdk = ServerSdk.getInstance();
-	}
+  constructor(ctx) {
+    this._molecularCtx = ctx;
+    this.params = ctx.params;
+    this.call = ctx.call;
+    this.mcall = ctx.mcall;
+    this.sdk = ServerSDK.default.storageClient.getStorageclient();
+  }
 
-	events = {
-		emit: (eventName, params) => {
-			return this._molecularCtx.call("events.emit", {
-				eventName: eventName,
-				params: params,
-			});
-		},
-	};
+  events = {
+    emit: (eventName, params) => {
+      return this._molecularCtx.call('events.emit', {
+        eventName: eventName,
+        params: params,
+      });
+    },
+  };
 
-	queues = {
-		push: (functionName, params) => {
-			//Console to debug
-			console.log("Queues Data", {
-				functionName: functionName,
-				params: params,
-			});
+  queues = {
+    push: (functionName, params) => {
+      //Console to debug
+      console.log('Queues Data', {
+        functionName: functionName,
+        params: params,
+      });
 
-			return this._molecularCtx.call("queues.push", {
-				data: { functionName: functionName, params: params },
-			});
-		},
-	};
+      return this._molecularCtx.call('queues.push', {
+        data: { functionName: functionName, params: params },
+      });
+    },
+  };
 }
 
 module.exports = Context;

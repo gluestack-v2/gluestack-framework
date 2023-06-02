@@ -1,6 +1,6 @@
 import path from 'path';
-import fs from 'fs';
 import { writeFile } from '@gluestack/helpers';
+import fs from 'fs';
 
 const minioMap = [
   'makeBucket',
@@ -57,11 +57,10 @@ const minioMap = [
   'getBucketReplication',
   'removeBucketReplication',
 ];
-const map: any = {};
 
-const operationTemplate = (operationName: string) => {
+const operationTemplate = (operationName: string, instanceName: string) => {
   return `
-  (params:any) => {
+  ${operationName} (params:any)  {
     return new Promise(async (resolve: any, reject: any) => {
       // Your async function code here
       try {
@@ -77,37 +76,38 @@ const operationTemplate = (operationName: string) => {
         console.log(response.data);
         resolve(response.data);
       } catch (error: any) {
-        reject(error.message);
       }
     });
   }`;
 };
 
-function createObjectFromMap() {
-  let obj: any = {};
+function createObjectFromMap(instanceName: string) {
+  let finalString: string = ``;
+
   minioMap.map((key) => {
-    obj[key] = '/*** ' + key + ' ***/';
-    const value = operationTemplate(key);
-    map['/*** ' + key + ' ***/'] = value;
+    // obj[key] = '/*** ' + key + ' ***/';
+    finalString = finalString + operationTemplate(key, instanceName);
+    // map['/*** ' + key + ' ***/'] = value;
   });
-  return obj;
+  return finalString;
 }
 
 export async function writeStorageClient(
   storageClientInstanceName: any,
   destinationPath: any
 ) {
-  console.log(storageClientInstanceName, destinationPath);
   const sdkPath = destinationPath;
-  let finalString = JSON.stringify(createObjectFromMap());
+  const finalString = createObjectFromMap(storageClientInstanceName);
+
   // console.log(finalString, map);
-  Object.keys(map).map((key) => {
-    finalString = finalString.replace(`"${key}"`, map[key]);
-  });
+
+  const sdkFileContent = fs
+    .readFileSync(path.join(__dirname, '..', '..', 'sdk', 'src', 'index.ts'))
+    .toString();
 
   await writeFile(
-    path.join(sdkPath, `storage.ts`),
-    storageClientTemplate(storageClientInstanceName).replace(
+    path.join(sdkPath, 'src', 'index.ts'),
+    sdkFileContent.replace(
       '// **---Functions will be added after this---**',
       finalString
     )
@@ -121,15 +121,3 @@ export async function writeStorageClient(
   //   )
   // );
 }
-
-const storageClientTemplate = (storageClientInstanceName: string) => {
-  return `
-  import axios from "axios";
-
-  const storageClient =  
-    /*** Add Minio map here ***/
-
-  export default storageClient;
-
-  `;
-};

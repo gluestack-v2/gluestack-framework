@@ -5,5 +5,5 @@ export default (() => {
 	const app = SDK.getInstance();
 	const configOutput = config();
 	let abc = app.initProviders(configOutput.providers);
-	return abc;
+	return app;
 })();

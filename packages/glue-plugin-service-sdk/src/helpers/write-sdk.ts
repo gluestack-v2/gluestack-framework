@@ -1,11 +1,11 @@
-import path from "path";
-import fs from "fs";
-import { writeFile } from "@gluestack/helpers";
-import writeSDKFunction from "./write-sdk-function";
-import getFileNameWithoutExtension from "./get-file-name-without-ext";
-import sdkIndexTemplateFunc from "./sdk-template";
+import path from 'path';
+import fs from 'fs';
+import { writeFile } from '@gluestack/helpers';
+import writeSDKFunction from './write-sdk-function';
+import getFileNameWithoutExtension from './get-file-name-without-ext';
+import sdkIndexTemplateFunc from './sdk-template';
 function filePathExtension(filePath: string) {
-  return filePath.split(".").pop() ?? "";
+  return filePath.split('.').pop() ?? '';
 }
 let functionsMap: any = {};
 
@@ -30,12 +30,12 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
 }
 
 const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
-  const pathArr = path.split("/");
+  const pathArr = path.split('/');
   // console.log(sdkFunction);
   let obj = {};
   let current: any = obj;
   for (let i = 0; i < pathArr.length - 1; i++) {
-    if (pathArr[i] !== "") {
+    if (pathArr[i] !== '') {
       // if (i == pathArr.length - 1) {
       //   console.log(i, "in if");
       //   current[pathArr[i]] = sdkFunction;
@@ -46,8 +46,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
-  current[pathArr[pathArr.length - 1]] = "****" + path + "****";
-  functionsMap["****" + path + "****"] = sdkFunction;
+  current[pathArr[pathArr.length - 1]] = '****' + path + '****';
+  functionsMap['****' + path + '****'] = sdkFunction;
 
   return obj;
 };
@@ -57,9 +57,9 @@ const deepMerge = (obj1: any, obj2: any) => {
   for (let key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       if (
-        typeof obj2[key] === "object" &&
+        typeof obj2[key] === 'object' &&
         obj1.hasOwnProperty(key) &&
-        typeof obj1[key] === "object"
+        typeof obj1[key] === 'object'
       ) {
         output[key] = deepMerge(obj1[key], obj2[key]);
       } else {
@@ -91,21 +91,21 @@ async function writeIndexFile(
   let imports = `import ${instanceName} from "./${instanceName}"`;
   // const sdkSrcIndexPath = path.join(sdkPath, `${instanceName}.ts`);
   if (storageClientExists) {
-    imports = imports + "\n" + `import storageClient from "./storage"`;
+    imports = imports + '\n' + `import storageClient from "./storage"`;
   }
 
   templateString = templateString.replace(
-    "/*** Add Imports Here ***/",
+    '/*** Add Imports Here ***/',
     imports
   );
   templateString = templateString.replace(
-    "/*** Add Functions Here ***/",
-    `${instanceName}=${instanceName}` + "\n" + "/*** Add Functions Here ***/"
+    '/*** Add Functions Here ***/',
+    `${instanceName}=${instanceName}` + '\n' + '/*** Add Functions Here ***/'
   );
   if (storageClientExists) {
     templateString = templateString.replace(
-      "/*** Add Functions Here ***/",
-      `storage=storageClient` + "\n" + "/*** Add Functions Here ***/"
+      '/*** Add Functions Here ***/',
+      `storage=storageClient` + '\n' + '/*** Add Functions Here ***/'
     );
   }
 
@@ -135,27 +135,27 @@ const writeSDK = async (
     const filePath = functionFile;
 
     if (
-      ["json"].includes(filePathExtension(filePath)) ||
-      filePath.includes("node_modules")
+      ['json'].includes(filePathExtension(filePath)) ||
+      filePath.includes('node_modules')
     ) {
       return;
     }
 
-    if (functionFile.includes("server/")) {
-      functionFile = functionFile.replace("server/", "");
+    if (functionFile.includes('server/')) {
+      functionFile = functionFile.replace('server/', '');
     }
     for (let i = 0; i < ignoredPaths.length; i++) {
-      if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+      if (filePath.includes('/' + ignoredPaths[i] + '/')) {
         return;
       }
     }
 
     const functionName = getFileNameWithoutExtension(filePath);
 
-    let functionPath = filePath.replace(process.cwd(), "");
-    functionPath = functionPath.split(".").slice(0, -1).join(".");
+    let functionPath = filePath.replace(process.cwd(), '');
+    functionPath = functionPath.split('.').slice(0, -1).join('.');
 
-    const functionCodeString = fs.readFileSync(filePath, "utf8");
+    const functionCodeString = fs.readFileSync(filePath, 'utf8');
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
@@ -165,7 +165,7 @@ const writeSDK = async (
     } else {
       params = [];
       console.log(
-        "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
+        'NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION ' + functionName
       );
     }
     // console.log(ign);
@@ -178,7 +178,7 @@ const writeSDK = async (
         obj,
         createFunctionFromPath(
           // HACK: Removing server and function instance name
-          functionPath.replace("server/" + instanceName + "/", ""),
+          functionPath.replace('server/' + instanceName + '/', ''),
           {},
           sdkFunction
         )
@@ -192,11 +192,11 @@ const writeSDK = async (
       finalString = finalString.replace(`"${key}"`, functionsMap[key]);
     });
 
-    sdkFunctions += sdkFunction + "\n";
+    sdkFunctions += sdkFunction + '\n';
   });
 
   sdkIndexTemplate = sdkIndexTemplate.replace(
-    "// **---Functions will be added after this---**",
+    '// **---Functions will be added after this---**',
     finalString
   );
 
@@ -204,7 +204,7 @@ const writeSDK = async (
     await writeFile(
       path.join(sdkPath, `${instanceName}.ts`),
       sdkIndexTemplate.replace(
-        "// **---Functions will be added after this---**",
+        '// **---Functions will be added after this---**',
         finalString
       )
     );
@@ -224,7 +224,7 @@ const writeClientSDK = async (
   let sdkIndexTemplate = sdkIndexTemplateFunc(instanceName);
   const functionsPath = sourcePath;
   const sdkPath = installationPath;
-  const sdkSrcIndex = path.join(sdkPath, "index.ts");
+  const sdkSrcIndex = path.join(sdkPath, 'index.ts');
 
   const files = getNestedFilePaths(functionsPath);
 
@@ -234,24 +234,24 @@ const writeClientSDK = async (
     const filePath = functionFile;
 
     if (
-      ["json"].includes(filePathExtension(filePath)) ||
-      filePath.includes("node_modules")
+      ['json'].includes(filePathExtension(filePath)) ||
+      filePath.includes('node_modules')
     ) {
       return;
     }
 
     for (let i = 0; i < ignoredPaths.length; i++) {
-      if (filePath.includes("/" + ignoredPaths[i] + "/")) {
+      if (filePath.includes('/' + ignoredPaths[i] + '/')) {
         return;
       }
     }
 
     const functionName = getFileNameWithoutExtension(filePath);
 
-    let functionPath = filePath.replace(process.cwd(), "");
-    functionPath = functionPath.split(".").slice(0, -1).join(".");
+    let functionPath = filePath.replace(process.cwd(), '');
+    functionPath = functionPath.split('.').slice(0, -1).join('.');
 
-    const functionCodeString = fs.readFileSync(filePath, "utf8");
+    const functionCodeString = fs.readFileSync(filePath, 'utf8');
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
     const matches = functionCodeString.match(regex);
@@ -261,7 +261,7 @@ const writeClientSDK = async (
     } else {
       params = [];
       console.log(
-        "NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION " + functionName
+        'NO MATCHES FOR PARMAS IN THE PROVIDED FUNCTION ' + functionName
       );
     }
     // console.log(ign);
@@ -271,14 +271,14 @@ const writeClientSDK = async (
       ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
     };
 
-    finalString = JSON.stringify(obj).replace(":", "=");
+    finalString = JSON.stringify(obj).replace(':', '=');
     finalString = finalString.substring(1, finalString.length - 1);
 
     Object.keys(functionsMap).map((key: any) => {
       finalString = finalString.replace(`"${key}"`, functionsMap[key]);
     });
 
-    sdkFunctions += sdkFunction + "\n";
+    sdkFunctions += sdkFunction + '\n';
   });
 
   let clientSdk = `
@@ -345,14 +345,14 @@ const writeClientSDK = async (
 `;
 
   sdkIndexTemplate = sdkIndexTemplate
-    .replace("// **---Frontend SDK will be added before this---**", clientSdk)
-    .replace("// **---Import will be added before this---**", clientSdkImports)
+    .replace('// **---Frontend SDK will be added before this---**', clientSdk)
+    .replace('// **---Import will be added before this---**', clientSdkImports)
     .replace(
-      "// **---Constructor will be added before this---**",
-      "SDK.propChain = []"
+      '// **---Constructor will be added before this---**',
+      'SDK.propChain = []'
     );
   sdkIndexTemplate = sdkIndexTemplate.replace(
-    "// **---Functions will be added after this---**",
+    '// **---Functions will be added after this---**',
     finalString
   );
 
@@ -378,7 +378,7 @@ const writeClientSDK = async (
   };
   `;
 
-  const dbTsPath = path.join(sourcePath, "db.ts");
+  const dbTsPath = path.join(sourcePath, 'db.ts');
   await writeFile(dbTsPath, dbTs);
 };
 

@@ -1,29 +1,29 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import { join, resolve } from "path";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import { join, resolve } from 'path';
+import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { reWriteFile } from "./helpers/rewrite-file";
-import copyFolder from "./helpers/copy-folder";
-import rm from "./helpers/rm";
+import { reWriteFile } from './helpers/rewrite-file';
+import copyFolder from './helpers/copy-folder';
+import rm from './helpers/rm';
 
-import { existsSync } from "fs";
-import writeSDK from "./helpers/write-sdk";
-import { writeStorageClient } from "./helpers/write-storage-client";
-import { writeSDK, writeClientSDK } from "./helpers/write-sdk";
+import { existsSync } from 'fs';
+import writeSDK from './helpers/write-sdk';
+import { writeStorageClient } from './helpers/write-storage-client';
+import { writeSDK, writeClientSDK } from './helpers/write-sdk';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -36,11 +36,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    this.app.addEventListener("booting.web", (...args: any[]): void => {
-      console.log({ message: "booting web event listener", args });
-      console.log(this.gluePluginStore.get("message"));
-      this.gluePluginStore.set("message", "Hello from function plugin");
-      console.log(this.gluePluginStore.get("message"));
+    this.app.addEventListener('booting.web', (...args: any[]): void => {
+      console.log({ message: 'booting web event listener', args });
+      console.log(this.gluePluginStore.get('message'));
+      this.gluePluginStore.set('message', 'Hello from function plugin');
+      console.log(this.gluePluginStore.get('message'));
     });
   }
 
@@ -56,7 +56,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
@@ -96,7 +96,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       this,
       key,
       gluePluginStore,
-      installationPath ?? ""
+      installationPath ?? ''
     );
     this.instances.push(instance);
     return instance;
@@ -113,12 +113,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const plugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-storage-client"
+      '@gluestack-v2/glue-plugin-storage-client'
     ) as IPlugin;
 
     for await (const instance of instances) {
       if (!existsSync(sourcePath)) {
-        console.log("> No functions plugin found, create instance first");
+        console.log('> No functions plugin found, create instance first');
       } else {
         await writeSDK(
           sourcePath,
@@ -135,12 +135,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   async generateClientSDK(sourcePath: string, ignoredPaths: any) {
     const instances = this.getInstances();
     if (this.instances.length === 0) {
-      console.log("> No sdk plugin instance found");
+      console.log('> No sdk plugin instance found');
       return;
     }
     for await (const instance of instances) {
       if (!existsSync(sourcePath)) {
-        console.log("> No functions plugin found, create instance first");
+        console.log('> No functions plugin found, create instance first');
       } else {
         await writeClientSDK(
           sourcePath,
@@ -154,7 +154,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateStorageClient(storageClientInstanceName: any) {
     const instances = this.getInstances();
-    if (this.instances.length === 0) {
+    if (this.instances.length !== 0) {
       for await (const instance of instances) {
         await writeStorageClient(
           storageClientInstanceName,
