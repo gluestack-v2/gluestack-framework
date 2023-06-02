@@ -1,6 +1,5 @@
 // @ts-nocheck
-const ServerSDK = require('@project/server-sdk');
-
+const { default: ServerSDK } = require('@project/server-sdk');
 class Context {
   _molecularCtx;
   params;
@@ -13,7 +12,7 @@ class Context {
     this.params = ctx.params;
     this.call = ctx.call;
     this.mcall = ctx.mcall;
-    this.sdk = ServerSDK.default.storageClient.getStorageclient();
+    this.sdk = ServerSDK;
   }
 
   events = {
@@ -28,6 +27,7 @@ class Context {
   queues = {
     push: (functionName, params) => {
       //Console to debug
+      // eslint-disable-next-line no-console
       console.log('Queues Data', {
         functionName: functionName,
         params: params,
