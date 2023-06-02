@@ -47,5 +47,19 @@
       "directory": "./server/functions",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-database": [
+    {
+      "instance": "database",
+      "directory": "./server/database",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-database-client": [
+    {
+      "instance": "dbclient",
+      "directory": "./server/dbclient",
+      "container_store": {}
+    }
   ]
 }

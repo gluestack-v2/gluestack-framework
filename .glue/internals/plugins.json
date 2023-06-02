@@ -19,5 +19,11 @@
   },
   "@gluestack-v2/glue-plugin-functions": {
     "package": "@gluestack-v2/glue-plugin-functions"
+  },
+  "@gluestack-v2/glue-plugin-database": {
+    "package": "@gluestack-v2/glue-plugin-database"
+  },
+  "@gluestack-v2/glue-plugin-database-client": {
+    "package": "@gluestack-v2/glue-plugin-database-client"
   }
 }

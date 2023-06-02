@@ -69,6 +69,8 @@
     "server/functions"
   ],
   "dependencies": {
+    "@gluestack-v2/glue-plugin-database": "^0.0.1",
+    "@gluestack-v2/glue-plugin-database-client": "^0.0.1",
     "@gluestack-v2/glue-plugin-develop": "^0.0.*",
     "@gluestack-v2/glue-plugin-functions": "^0.0.1",
     "@gluestack-v2/glue-plugin-sdk": "^0.0.2",
