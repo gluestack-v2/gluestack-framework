@@ -1,27 +1,28 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import upCommand from "./commands/up";
-import cleanCommand from "./commands/clean";
-import downCommand from "./commands/down";
-import buildCommand from "./commands/build";
-import watchCommand from "./commands/watch";
-import removeCommand from "./commands/remove";
+import upCommand from './commands/up';
+import cleanCommand from './commands/clean';
+import downCommand from './commands/down';
+import buildCommand from './commands/build';
+import watchCommand from './commands/watch';
+import removeCommand from './commands/remove';
+import prepareCommand from './commands/prepare';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -42,6 +43,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app.addCommand((program: ICommand) => upCommand(program, this.app));
     this.app.addCommand((program: ICommand) => downCommand(program, this.app));
     this.app.addCommand((program: ICommand) => cleanCommand(program, this.app));
+    this.app.addCommand((program: ICommand) =>
+      prepareCommand(program, this.app)
+    );
   }
 
   destroy() {
@@ -58,7 +62,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async runPostInstall(_instanceName: string, _target: string) {
     const plugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-develop"
+      '@gluestack-v2/glue-plugin-develop'
     ) as IPlugin;
 
     // Validation

@@ -1,9 +1,11 @@
 // import FunctionsSDK from '@project/sdk-functions';
-import DbClientSDK from '@project/dbclient-client-sdk';
+// import StorageSDK from '@project/storageclient-client-sdk';
+// import DbClientSDK from '@project/dbclient-client-sdk';
 
 export const config = {
   providers: {
     // functionsTest: FunctionsSDK,
-    dbClientSdk: DbClientSDK,
+    // StorageSDK: StorageSDK,
+    // dbClientSdk: DbClientSDK,
   },
 };

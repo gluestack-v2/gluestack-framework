@@ -73,7 +73,7 @@ export default (envData: string) => {
 				handler: (ctx) => {
 					const sdk = ServerSDK.providers.get(StorageSDK);
 					const operation = ctx.params.operation;
-					return sdk.minioClient[operation](...ctx.params.params);
+					return await sdk.minioClient[operation](...ctx.params.params.params);
 				},
 			},
 		},
