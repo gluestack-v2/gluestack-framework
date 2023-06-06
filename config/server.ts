@@ -1,4 +1,4 @@
-import DBSDK from '@project/dbclient-server-sdk';
+// import DBSDK from '@project/dbclient-server-sdk';
 class Test {
   login() {
     console.log('login');
@@ -14,6 +14,6 @@ class Test {
 export const config = {
   providers: {
     test: Test,
-    DbServerSDK: DBSDK,
+    // DbServerSDK: DBSDK,
   },
 };
