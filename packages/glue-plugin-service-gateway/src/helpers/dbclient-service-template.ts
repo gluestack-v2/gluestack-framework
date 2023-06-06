@@ -7,7 +7,8 @@ const template = () =>
  /** @type {ServiceSchema} */
 
  const { PrismaClient } = require('@prisma/client');
- const ServerSDK = require("../ServerSdk.ts");
+ const { default: ServerSDK } = require('@project/server-sdk');
+ const { default: DbServerSDK } = require('@project/db-client-server-sdk');
 
  module.exports = {
    name: "dbclient",
@@ -42,8 +43,7 @@ const template = () =>
     * Service created lifecycle event handler
     */
    created() {
-    const sdk = ServerSDK.getInstance();
-    sdk.prismaClient = new PrismaClient();
+    ServerSDK.providers.get(DbServerSDK).setDbClient(new PrismaClient());
    },
  
    /**

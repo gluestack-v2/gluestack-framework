@@ -27,6 +27,7 @@ class Context {
   queues = {
     push: (functionName, params) => {
       //Console to debug
+      // eslint-disable-next-line no-console
       console.log('Queues Data', {
         functionName: functionName,
         params: params,
