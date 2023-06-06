@@ -1,5 +1,5 @@
 // import FunctionsSDK from '@project/sdk-functions';
-import StorageSDK from '@project/storage-client-sdk';
+import StorageSDK from '@project/storageclient-client-sdk';
 
 export const config = {
   providers: {
