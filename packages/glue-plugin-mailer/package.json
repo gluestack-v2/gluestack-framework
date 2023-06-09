@@ -1,0 +1,40 @@
+{
+  "name": "@gluestack-v2/glue-plugin-mailer",
+  "version": "0.0.1",
+  "description": "Gluestack V2 Mailer Plugin",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gluestack-v2/framework-cli",
+    "directory": "packages/glue-plugin-mailer"
+  },
+  "keywords": [
+    "gluestack",
+    "v2",
+    "fullstack",
+    "framework",
+    "cli",
+    "mobile",
+    "web",
+    "storybook",
+    "shared-components",
+    "mail"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack-v2/glue-plugin-functions": "^0.0.x",
+    "@gluestack/helpers": "^0.0.x",
+    "@types/node": "^18.11.17",
+    "dotenv": "^16.0.3",
+    "prompts": "^2.4.2",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.4"
+  }
+}

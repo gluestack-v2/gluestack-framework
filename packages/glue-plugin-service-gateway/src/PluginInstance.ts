@@ -1,12 +1,14 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { join } from "path";
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from "@gluestack-v2/framework-cli/build/constants/gluestack.v2";
-import writeFile from "./helpers/write-file";
-import { fileExists } from "@gluestack/helpers";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import { join } from 'path';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import writeFile from './helpers/write-file';
+import { fileExists } from '@gluestack/helpers';
+import fs from 'fs';
+import path from 'path';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -60,13 +62,74 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return join(
       GLUE_GENERATED_SEAL_SERVICES_PATH,
       this.getName(),
-      "src",
+      'src',
       this.getName()
     );
   }
 
   getDestinationPath(): string {
     return join(process.cwd(), this.getGeneratedPath());
+  }
+
+  mergeEnv(existingEnv: string, newEnv: string) {
+    const existingEnvLines = existingEnv.split('\n');
+    const newEnvLines = newEnv.split('\n');
+
+    const mergedEnvLines = [...existingEnvLines];
+
+    for (const newEnvLine of newEnvLines) {
+      const newEnvParts = newEnvLine.split('=');
+      const newEnvKey = newEnvParts[0].trim();
+
+      if (newEnvKey) {
+        const existingLineIndex = mergedEnvLines.findIndex((line) => {
+          const existingParts = line.split('=');
+          const existingKey = existingParts[0].trim();
+          return existingKey === newEnvKey;
+        });
+
+        if (existingLineIndex !== -1) {
+          // If conflicting environment variable exists, throw an error
+          // throw new Error(`Conflicting environment variable: ${newEnvKey}`);
+          mergedEnvLines[existingLineIndex] = newEnvLine;
+        } else {
+          mergedEnvLines.push(newEnvLine);
+        }
+      }
+    }
+
+    return mergedEnvLines.join('\n');
+  }
+
+  updateEnv(envRootPath: string) {
+    // check .env in this._destinationPath
+    // if not exist, create .env,
+    //read .env from envRootPath
+    // merge and update .env
+    // is conflicting env, throw error
+
+    const rootPath = path.join(envRootPath, '.env');
+    const destinationPath = path.join(this._destinationPath, '.env');
+    // console.log(destinationPath, 'Hello');
+
+    // Check if .env exists in the destination path
+    if (!fs.existsSync(destinationPath)) {
+      // If it doesn't exist, create a new .env file
+      fs.writeFileSync(destinationPath, '');
+    }
+
+    // Read the existing .env file
+    const existingEnv = fs.readFileSync(destinationPath, 'utf8');
+
+    // Read the .env from envRootPath
+
+    const newEnv = fs.readFileSync(rootPath, 'utf8');
+
+    // Merge and update the .env files
+    const mergedEnv = this.mergeEnv(existingEnv, newEnv);
+
+    // Write the merged environment variables to the destination .env file
+    fs.writeFileSync(destinationPath, mergedEnv);
   }
 
   async build() {
@@ -86,24 +149,18 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   //override updateWorkspacePackageJSON
   async updateWorkspacePackageJSON() {
     // // add package.json with workspaces
-    const packageFile: string = join(
-      this._workspacePath,
-      'package.json'
-    );
+    const packageFile: string = join(this._workspacePath, 'package.json');
     const packageContent: any = {
       name: this.getName(),
       private: true,
       workspaces: [this.getName(), 'packages/**'],
       scripts: {
-        'install:all': 'npm install --workspaces --if-present --legacy-peer-deps',
+        'install:all':
+          'npm install --workspaces --if-present --legacy-peer-deps',
         dev: 'npm run dev --workspace @project/' + this.getName(),
       },
     };
 
-    await writeFile(
-      packageFile,
-      JSON.stringify(packageContent, null, 2)
-    );
+    await writeFile(packageFile, JSON.stringify(packageContent, null, 2));
   }
-
 }

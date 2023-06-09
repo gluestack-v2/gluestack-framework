@@ -1,61 +1,62 @@
 import {
   warning,
   success,
-} from "@gluestack-v2/framework-cli/build/helpers/print";
-import fs from "fs";
+} from '@gluestack-v2/framework-cli/build/helpers/print';
+import fs from 'fs';
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { readfile } from "./helpers/readfile";
+import { readfile } from './helpers/readfile';
 
-import { join } from "path";
+import { join } from 'path';
 import {
   fileExists,
   removeSpecialChars,
   Workspaces,
   writeFile,
-} from "@gluestack/helpers";
+} from '@gluestack/helpers';
 
-import path from "path";
-import writeService from "./helpers/write-service";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
-import { spawnSync } from "child_process";
-import writeMoleculerConfig from "./helpers/write-moleculer-config";
-import writeQueuesService from "./helpers/write-queues-service";
-import writeCronService from "./helpers/write-cron-service";
-import writeDbClientService from "./helpers/write-db-client-service";
-import { eventsTemplate } from "./helpers/template";
-import { writeMinioStorageService } from "./helpers/writeMinioStorageService";
+import path from 'path';
+import writeService from './helpers/write-service';
+import rm from './helpers/rm';
+import copyFolder from './helpers/copy-folder';
+import { spawnSync } from 'child_process';
+import writeMoleculerConfig from './helpers/write-moleculer-config';
+import writeQueuesService from './helpers/write-queues-service';
+import writeCronService from './helpers/write-cron-service';
+import writeMailerService from './helpers/write-mailer-service';
+import writeDbClientService from './helpers/write-db-client-service';
+import { eventsTemplate } from './helpers/template';
+import { writeMinioStorageService } from './helpers/writeMinioStorageService';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-    this.runningPlatforms = ["local", "docker"];
+    this.runningPlatforms = ['local', 'docker'];
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
   }
 
   init() {
-    this.app.addEventListener("booting.web", (...args: any[]): void => {
-      console.log({ message: "booting web event listener", args });
-      console.log(this.gluePluginStore.get("message"));
-      this.gluePluginStore.set("message", "Hello from function plugin");
-      console.log(this.gluePluginStore.get("message"));
+    this.app.addEventListener('booting.web', (...args: any[]): void => {
+      console.log({ message: 'booting web event listener', args });
+      console.log(this.gluePluginStore.get('message'));
+      this.gluePluginStore.set('message', 'Hello from function plugin');
+      console.log(this.gluePluginStore.get('message'));
     });
   }
 
@@ -71,7 +72,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
@@ -106,7 +107,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       this,
       key,
       gluePluginStore,
-      installationPath ?? ""
+      installationPath ?? ''
     );
     this.instances.push(instance);
     return instance;
@@ -136,7 +137,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       // }
 
       if (!(await fileExists(functionsPath))) {
-        console.log("> No functions plugin found, create instance first");
+        console.log('> No functions plugin found, create instance first');
       } else {
         // await copyFolder(functionsPath, installationPath, 3);
         writeService(
@@ -158,7 +159,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     for await (const instance of instances) {
       const targetPkgJson: string = join(
         instance._destinationPath,
-        "package.json"
+        'package.json'
       );
 
       if (await fileExists(targetPkgJson)) {
@@ -167,7 +168,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         // hard-coded the version here
-        data.devDependencies["moleculer-bee-queue"] = "^0.1.10";
+        data.devDependencies['moleculer-bee-queue'] = '^0.1.10';
         let stringData = JSON.stringify(data, null, 2);
         fs.writeFileSync(targetPkgJson, stringData);
         success(
@@ -175,7 +176,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       } else {
         warning(
-          "We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n"
+          'We could not find the package.json for service-gateway instance\n Please add moleculer-bee-queue to your service-gateway package.json\n and restart your service-gateway instance \n'
         );
       }
       writeQueuesService(instance._destinationPath, queueInstanceName);
@@ -186,7 +187,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const instances: Array<IInstance> = this.getInstances();
 
     if (instances.length <= 0) {
-      console.log("> No events plugin found, skipping build...");
+      console.log('> No events plugin found, skipping build...');
       return;
     }
 
@@ -235,38 +236,39 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
       let middlewareFolderPath = join(instance._destinationPath, instanceName);
 
-      writeFile(join(middlewareFolderPath, "index.js"), finalCode);
+      writeFile(join(middlewareFolderPath, 'index.js'), finalCode);
       // Add middlewares in moleculer.config.js
 
       let moleculerConfigPath = join(
         instance._destinationPath,
-        "moleculer.config.js"
+        'moleculer.config.js'
       );
       let moleculerConfig = await readfile(moleculerConfigPath);
       moleculerConfig = moleculerConfig.replace(
-        "/* User Custom Middleware Imports */",
+        '/* User Custom Middleware Imports */',
         `const { ${instanceName}Middlewares } = require("./middlewares");`
       );
 
       moleculerConfig = moleculerConfig.replace(
-        "/* User Custom Middleware */",
+        '/* User Custom Middleware */',
         `${instanceName}Middlewares, /* User Custom Middleware */`
       );
 
       await writeFile(moleculerConfigPath, moleculerConfig);
     }
   }
+
   async generateCrons(cronInstancePath: string, cronInstanceName: string) {
     const instances = this.getInstances();
     if (instances.length <= 0) {
-      console.log("> No functions plugin found, skipping build");
+      console.log('> No functions plugin found, skipping build');
       return;
     }
 
     instances.forEach(async (instance) => {
       const targetPkgJson: string = join(
         instance._destinationPath,
-        "package.json"
+        'package.json'
       );
       if (await fileExists(targetPkgJson)) {
         let data: any = await readfile(targetPkgJson);
@@ -275,8 +277,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         if (!data.devDependencies) {
           data.devDependencies = {};
         }
-        data.devDependencies["moleculer-cron"] = "latest";
-        data.devDependencies["axios"] = "latest";
+        data.devDependencies['moleculer-cron'] = 'latest';
+        data.devDependencies['axios'] = 'latest';
         let stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
@@ -284,7 +286,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       } else {
         warning(
-          "We could not find the package.json for service-gateway instance\n Please add moleculer-cron to your service-gateway package.json\n and restart your service-gateway instance \n"
+          'We could not find the package.json for service-gateway instance\n Please add moleculer-cron to your service-gateway package.json\n and restart your service-gateway instance \n'
         );
       }
 
@@ -296,35 +298,23 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     });
   }
 
-  async generateEventsService() {
+  async generateMailerService(
+    mailerInstancePath: string,
+    mailerInstanceName: string
+  ) {
     const instances = this.getInstances();
-
     if (instances.length <= 0) {
-      console.log("> No functions plugin found, skipping build");
+      console.log('> No functions plugin found, skipping build');
       return;
     }
 
     instances.forEach(async (instance) => {
-      const destination = join(
-        instance._destinationPath,
-        "services",
-        "events.service.js"
-      );
-      writeFile(destination, eventsTemplate());
-    });
-  }
+      // @ts-ignore
+      instance.updateEnv(mailerInstancePath);
 
-  async generateDbClientService(cronInstanceName: string) {
-    const instances = this.getInstances();
-    if (instances.length <= 0) {
-      console.log("> No service gateway plugin found, skipping...");
-      return;
-    }
-
-    instances.forEach(async (instance) => {
       const targetPkgJson: string = join(
         instance._destinationPath,
-        "package.json"
+        'package.json'
       );
       if (await fileExists(targetPkgJson)) {
         let data: any = await readfile(targetPkgJson);
@@ -333,8 +323,61 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         if (!data.dependencies) {
           data.dependencies = {};
         }
-        data.dependencies["prisma"] = "latest";
-        data.dependencies["@prisma/client"] = "latest";
+        data.dependencies['nodemailer'] = 'latest';
+        let stringData = JSON.stringify(data, null, 2);
+        await fs.writeFileSync(targetPkgJson, stringData);
+        success(
+          "We have added nodemailer to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
+        );
+      } else {
+        warning(
+          'We could not find the package.json for service-gateway instance\n Please add nodemailer to your service-gateway package.json\n and restart your service-gateway instance \n'
+        );
+      }
+
+      await writeMailerService(instance._destinationPath, mailerInstanceName);
+    });
+  }
+
+  async generateEventsService() {
+    const instances = this.getInstances();
+
+    if (instances.length <= 0) {
+      console.log('> No functions plugin found, skipping build');
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const destination = join(
+        instance._destinationPath,
+        'services',
+        'events.service.js'
+      );
+      writeFile(destination, eventsTemplate());
+    });
+  }
+
+  async generateDbClientService(cronInstanceName: string) {
+    const instances = this.getInstances();
+    if (instances.length <= 0) {
+      console.log('> No service gateway plugin found, skipping...');
+      return;
+    }
+
+    instances.forEach(async (instance) => {
+      const targetPkgJson: string = join(
+        instance._destinationPath,
+        'package.json'
+      );
+      if (await fileExists(targetPkgJson)) {
+        let data: any = await readfile(targetPkgJson);
+
+        data = JSON.parse(data);
+        if (!data.dependencies) {
+          data.dependencies = {};
+        }
+        data.dependencies['prisma'] = 'latest';
+        data.dependencies['@prisma/client'] = 'latest';
         let stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
@@ -342,7 +385,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         );
       } else {
         warning(
-          "We could not find the package.json for service-gateway instance\n Please add prisma & @prisma/client to your service-gateway package.json\n and restart your service-gateway instance \n"
+          'We could not find the package.json for service-gateway instance\n Please add prisma & @prisma/client to your service-gateway package.json\n and restart your service-gateway instance \n'
         );
       }
 
@@ -363,7 +406,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     for await (const instance of instances) {
       const targetPkgJson: string = join(
         instance._destinationPath,
-        "package.json"
+        'package.json'
       );
       if (await fileExists(targetPkgJson)) {
         const data = await require(targetPkgJson);
@@ -371,7 +414,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         // hard-coded the version here
-        data.devDependencies["minio"] = "latest";
+        data.devDependencies['minio'] = 'latest';
         let stringData = JSON.stringify(data, null, 2);
         fs.writeFileSync(targetPkgJson, stringData);
         success(
