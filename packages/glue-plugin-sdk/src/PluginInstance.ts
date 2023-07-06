@@ -115,16 +115,50 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       'PROJECT_PATH_ENV',
       'server-config'
     );
-
-    // await this.app.write(this._sourcePath, this._destinationPath);
-    // await this.updateDestinationPackageJSON();
-    // await this.updateRootPackageJSONWithDestinationPath();
-    // await this.app.updateServices();
   }
 
-  async watch() {
+  async watch(callback?: Function) {
     // NO NEED TO WATCH
+    let developPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-develop'
+    );
     await this.buildBeforeWatch();
+    // @ts-ignore
+    this.app.watch(developPlugin.getConfigPath(), '', async (events, path) => {
+      if (developPlugin) {
+        // Watching for changes in config
+        // @ts-ignore
+        await developPlugin.createConfigPackage(
+          'server',
+          // @ts-ignore
+          developPlugin.getConfigPath(),
+          // @ts-ignore
+          developPlugin.getGeneratedConfigPath('server')
+        );
+        // @ts-ignore
+        await developPlugin.createConfigPackage(
+          'client',
+          // @ts-ignore
+          developPlugin.getConfigPath(),
+          // @ts-ignore
+          developPlugin.getGeneratedConfigPath('client')
+        );
+      }
+      if (callback) {
+        callback(events, path);
+      }
+      await this.app.updateServices();
+    });
+
+    this.app.watch(dotEnvPath, '', async (events, path) => {
+      if (this) {
+        await this.build();
+      }
+      if (callback) {
+        callback(events, path);
+      }
+      await this.app.updateServices();
+    });
 
     // COPY THIS SECTION of code for any other plugin instace watch
 

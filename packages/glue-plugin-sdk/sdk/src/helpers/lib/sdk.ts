@@ -20,6 +20,23 @@ export default class SDK {
 		this.providers = new Map();
 	}
 
+	get() {
+		return (() => {
+			var obj: Object = {
+				providers: this.providers,
+			};
+			obj = new Proxy(obj, {
+				get: (_target, prop) => {
+					if (typeof prop === 'string') {
+						return this.providers.get(prop);
+					}
+				},
+			});
+
+			return obj;
+		})();
+	}
+
 	static getInstance() {
 		if (!SDK.#instance) {
 			//@ts-ignore
