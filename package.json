@@ -68,8 +68,6 @@
     ".glue/__generated__/packages/**"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*",
-    "@gluestack-v2/glue-plugin-sdk": "^0.0.2",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.0.1"
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
   }
 }
