@@ -5,5 +5,26 @@
       "directory": "./develop",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-sdk": [
+    {
+      "instance": "sdk",
+      "directory": "./sdk",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-service-gateway": [
+    {
+      "instance": "gateway",
+      "directory": "./gateway",
+      "container_store": {}
+    }
+  ],
+  "@gluestack-v2/glue-plugin-auth": [
+    {
+      "instance": "auth",
+      "directory": "./server/auth",
+      "container_store": {}
+    }
   ]
 }

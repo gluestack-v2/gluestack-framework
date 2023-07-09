@@ -28,3 +28,5 @@ middlewares
 crons
 database
 graphql
+client
+server
