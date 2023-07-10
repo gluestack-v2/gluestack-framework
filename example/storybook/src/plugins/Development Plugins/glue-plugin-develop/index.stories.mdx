@@ -1,11 +1,13 @@
 ---
 title: glue-plugin-develop | gluestack-framework
 
-description: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+description: glue-plugin-develop is the process manager for the gluestack project.
+This plugin helps you in managing all the installed **plugin instances** which you have created in your **Gluestack App**, and in order to do that it comes with various commands detailed in the **CLI Reference** section.
 
 pageTitle: glue-plugin-develop
 
-pageDescription: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+pageDescription: glue-plugin-develop is the process manager for the gluestack project.
+This plugin helps you in managing all the installed **plugin instances** which you have created in your **Gluestack App**, and in order to do that it comes with various commands detailed in the **CLI Reference** section.
 
 showHeader: true
 ---
@@ -13,12 +15,6 @@ showHeader: true
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
 <Meta title="Plugins/Development Plugins/glue-plugin-develop" />
-
-Glue Plugin Engine is the process manager for the gluestack project.
-
-This plugin helps you in managing all the installed **plugin instances** which you
-have created in your **Gluestack App**, and in order to do that it comes with various commands
-detailed in the **CLI Reference** section.
 
 ## Installation
 
@@ -33,25 +29,25 @@ npx create-gluestack-v2-app@latest
 
 ## CLI
 
-### node glue develop:up
+### node glue up
 
 This command runs all the installed **plugin instances** in **Docker**. You can use
 the below command to run your gluestack project:
 
 ```sh
-$ node glue develop:up
+$ node glue up
 ```
 
-### node glue develop:down
+### node glue down
 
 This command stops all the installed **plugin instances** running in **Docker**. You
 can use the below command to stop your gluestack project:
 
 ```sh
-$ node glue develop:down
+$ node glue down
 ```
 
-### node glue develop:list
+### node glue list
 
 This command lists all the installed **plugin instances** running in **Docker**.
 
@@ -59,24 +55,24 @@ You can use the below command to list your installed plugin instances in your gl
 project:
 
 ```sh
-$ node glue develop:list
+$ node glue list
 ```
 
 This command comes up with an option to filter the list of plugin instances which
 helps in looking up for a specific plugin's instances.
 
 ```sh
-$ node glue develop:list --filter <your-search-string-goes-here>
+$ node glue list --filter <your-search-string-goes-here>
 ```
 
 To obtain information about the **Glue Plugin Postgres** that has been successfully installed in our application under the instance name "postgres," you
 can execute the appropriate command:
 
 ```sh
-$ node glue develop:list --filter postgres
+$ node glue list --filter postgres
 ```
 
-### node glue develop:watch
+### node glue watch
 
 This command runs your gluestack project in **watch** mode. Each plugin's container controller comes with a **watch** method which holds the list of directories
 and file paths which are watched for changes.
@@ -89,7 +85,7 @@ path** upon which your application will run on watch mode.
 Here's how you can run watch command:
 
 ```sh
-$ node glue develop:watch
+$ node glue watch
 ```
 
 ### node glue build
