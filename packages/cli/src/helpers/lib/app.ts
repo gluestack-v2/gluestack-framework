@@ -296,8 +296,6 @@ export default class AppCLI {
 		this.commander.destroy();
 		// save changes made into all stores
 		this.gluePluginStoreFactory.saveAllStores();
-
-		this.updateServices();
 	}
 
 	// @API: init
