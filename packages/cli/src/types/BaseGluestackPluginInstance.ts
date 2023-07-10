@@ -114,7 +114,8 @@ export default abstract class BaseGluestackPluginInstance
     pluginEnv: 'server' | 'client'
   ) {
     let envData: string = await readEnvFile(envPath);
-    let envDataArray = envData.split('\n');
+
+    let envDataArray = envData ? envData.split('\n') : [];
     let envObjectsArray = envDataArray.map((envDataItem: string) => {
       if (!envDataItem) return;
       return envDataItem.split('=');

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "My Moleculer-based microservices project",
   "scripts": {
-    "dev": "NODE_OPTIONS=--enable-source-maps moleculer-runner --repl --hot services services/**/*.service.js",
+    "dev": "NODE_OPTIONS=--enable-source-maps moleculer-runner --hot services services/**/*.service.js",
     "start": "moleculer-runner",
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
