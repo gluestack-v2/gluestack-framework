@@ -1,20 +1,14 @@
-import {
-  success,
-  warning,
-  error,
-  info,
-} from '@gluestack-v2/framework-cli/build/helpers/print';
+import { success } from '@gluestack-v2/framework-cli/build/helpers/print';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import { exec, spawn } from 'child_process';
+
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import {
   RunningPlatforms,
   RunningPlatform,
 } from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import { execute } from '../../helpers/execute';
+
 import { executeMultipleTerminals } from '../../helpers/execute-multiple-terminals';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import { join, relative } from 'path';
 
 const upSealService = async (
   app: AppCLI,
@@ -30,7 +24,6 @@ const upSealService = async (
     // run in any platform in case option provided in not available in plugin's runningPlatforms
     servicePlatform = runningPlatforms[0];
   }
-
   executeMultipleTerminals(
     'sh',
     [

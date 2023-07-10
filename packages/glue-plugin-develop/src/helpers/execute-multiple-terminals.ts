@@ -1,4 +1,4 @@
-const { spawn } = require("child_process");
+const { spawn } = require('child_process');
 
 // Custom batcher to batch logs
 class LogBatcher {
@@ -21,7 +21,6 @@ class LogBatcher {
   }
 
   flush() {
-    console.log(this.logs.join("\n"));
     this.logs = [];
     this.timer = null;
   }
@@ -33,17 +32,17 @@ export const executeMultipleTerminals = (
   options: any
 ) => {
   const batcher = new LogBatcher(2000);
-  const child = spawn(command, args, options)
-    .on("exit", (data: any) => {
+  spawn(command, args, options)
+    .on('exit', (data: any) => {
       batcher.log(`exit: ${data}`);
     })
-    .on("close", (data: any) => {
+    .on('close', (data: any) => {
       batcher.log(`close: ${data}`);
     })
-    .on("error", (err: any) => {
+    .on('error', (err: any) => {
       batcher.log(`error: ${err}`);
     })
-    .on("message", (message: any) => {
+    .on('message', (message: any) => {
       batcher.log(`message: ${message}`);
     });
 

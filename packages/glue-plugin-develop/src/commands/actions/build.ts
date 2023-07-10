@@ -58,17 +58,14 @@ const createPackage = async (packageName: string) => {
     `${packageName}-config`
   );
 
-  await createFolder(join(generatedConfigPath, `${packageName}-config`));
+  await createFolder(join(generatedConfigPath, `src`));
   copyFile(
     join(configPath, 'index.ts'),
-    join(join(generatedConfigPath, `${packageName}-config`), 'index.ts')
+    join(join(generatedConfigPath, `src`), 'index.ts')
   );
   copyFile(
     join(configPath, `${packageName}.ts`),
-    join(
-      join(generatedConfigPath, `${packageName}-config`),
-      `${packageName}.ts`
-    )
+    join(join(generatedConfigPath, `src`), `${packageName}.ts`)
   );
 
   writeFile(
