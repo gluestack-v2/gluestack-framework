@@ -1,6 +1,6 @@
 {
 	"name": "@gluestack-v2/core",
-	"version": "0.0.10",
+	"version": "0.1.0",
 	"description": "Gluestack V2 SDK",
 	"main": "build/index.js",
 	"scripts": {

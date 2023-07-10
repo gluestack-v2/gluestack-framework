@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-graphql",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Gluestack V2 Database Plugin",
   "main": "build/index.js",
   "repository": {
@@ -22,8 +22,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
+    "@gluestack-v2/framework-cli": "^0.1.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "dotenv": "^16.0.3",
@@ -38,6 +38,6 @@
     "@types/prompts": "^2.4.4"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-database": "^0.0.x"
+    "@gluestack-v2/glue-plugin-database": "^0.1.x"
   }
 }
