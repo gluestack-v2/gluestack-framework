@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-events",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Gluestack V2 events Plugin",
   "main": "build/index.js",
   "repository": {
@@ -21,8 +21,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
+    "@gluestack-v2/framework-cli": "^0.1.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "prompts": "^2.4.2",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
-    "@gluestack-v2/glue-plugin-functions": "^0.0.x"
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x",
+    "@gluestack-v2/glue-plugin-functions": "^0.1.x"
   }
 }

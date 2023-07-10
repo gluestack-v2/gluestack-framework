@@ -18,6 +18,11 @@
       "instance": "web",
       "directory": "./client/web",
       "container_store": {}
+    },
+    {
+      "instance": "website",
+      "directory": "./client/website",
+      "container_store": {}
     }
   ]
 }

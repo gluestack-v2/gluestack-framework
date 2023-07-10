@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-router-nginx",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Gluestack V2 Router Nginx Plugin",
   "main": "build/index.js",
   "repository": {
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack-v2/framework-cli": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "js-yaml": "^4.1.0",
@@ -36,6 +36,6 @@
     "@types/js-yaml": "^4.0.5"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x"
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x"
   }
 }

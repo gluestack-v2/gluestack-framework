@@ -1,6 +1,6 @@
 {
 	"name": "@gluestack-v2/framework-cli",
-	"version": "0.0.10",
+	"version": "0.1.1",
 	"description": "Gluestack V2 Framework CLI",
 	"main": "build/glue.js",
 	"bin": {
@@ -27,8 +27,8 @@
 		"colors": "^1.4.0",
 		"commander": "^10.0.0",
 		"lodash": "^4.17.21",
-		"typescript": "^5.0.2",
-		"source-map": "^0.7.4"
+		"source-map": "^0.7.4",
+		"typescript": "^5.0.2"
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.192",

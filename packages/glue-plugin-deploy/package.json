@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-deploy",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Gluestack V2 Deploy Plugin",
   "main": "build/index.js",
   "repository": {
@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "@gluestack-seal/cli": "^0.0.16",
-    "@gluestack-v2/framework-cli": "^0.0.x",
+    "@gluestack-v2/framework-cli": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "@types/prettier": "^2.7.2",
@@ -36,6 +36,6 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x"
+    "@gluestack-v2/framework-cli": "^0.1.x"
   }
 }
