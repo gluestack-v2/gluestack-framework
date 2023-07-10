@@ -15,3 +15,25 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 <Meta title="Getting Started/Installation" />
 
 ## Quick Start
+
+If you are starting with a new project, you can use `npx` to create a new `gluestack` project.
+
+```bash
+npx create-gluestack-v2-app@latest
+```
+
+The above command will create a new `gluestack` project.
+
+The directory structure will look like this:
+
+```bash
+ /.glue
+ /config
+ .env.example
+ .gitignore
+ glue
+```
+
+The .glue folder contains an internals folder which contains the core files of the framework. The files present in internals folder contains information related to installed plugins and instances for each plugins. It is not recommended to modify these files.
+
+The config folder contains the configuration files for the framework. You can modify the Providers array to change the configuration of the framework.
