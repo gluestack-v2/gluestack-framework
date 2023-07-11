@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { join, relative } from 'path';
 
 import AppCLI from '../helpers/lib/app';
@@ -239,6 +240,21 @@ export default abstract class BaseGluestackPluginInstance
 		console.error(sealAddService.stderr.toString());
 	}
 
+	async boltUp(servicePlatform: string) {
+		// seal init and seal service add in the services folder
+		const sealInit = spawnSync('sh', [
+			'-c',
+			`cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${this.getName()} --service-runner ${servicePlatform}`,
+		]);
+
+		if (sealInit.status !== 0) {
+			console.error(`Command failed with code ${sealInit.status}`);
+		}
+		// eslint-disable-next-line no-console
+		console.log(sealInit.stdout.toString());
+		console.error(sealInit.stderr.toString());
+	}
+
 	async buildBeforeWatch() {
 		if (!(await fileExists(this._destinationPath))) {
 			try {
@@ -250,7 +266,6 @@ export default abstract class BaseGluestackPluginInstance
 			}
 		}
 	}
-
 	async watch(callback?: Function): Promise<void> {
 		await this.buildBeforeWatch();
 		this.app.watch(
