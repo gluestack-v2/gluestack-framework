@@ -37,7 +37,8 @@
     "source-map": "^0.7.4"
   },
   "workspaces": [
-    ".glue/__generated__/packages/**"
+    ".glue/__generated__/packages/**",
+    "client/web"
   ],
   "dependencies": {
     "@gluestack-v2/framework-cli": "^0.1.1",
