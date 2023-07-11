@@ -200,11 +200,11 @@ export default abstract class BaseGluestackPluginInstance
     );
   }
 
-  async sealInit() {
+  async boltInit() {
     // seal init and seal service add in the services folder
     const sealInit = spawnSync('sh', [
       '-c',
-      `cd ${SEAL_SERVICES_PATH} && seal init`,
+      `cd ${SEAL_SERVICES_PATH} && bolt init`,
     ]);
 
     if (sealInit.status !== 0) {
@@ -216,7 +216,7 @@ export default abstract class BaseGluestackPluginInstance
 
     const sealAddService = spawnSync('sh', [
       '-c',
-      `cd ${SEAL_SERVICES_PATH} && seal service:add ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
+      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
     ]);
 
     if (sealAddService.status !== 0) {

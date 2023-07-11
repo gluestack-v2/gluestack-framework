@@ -1,12 +1,10 @@
-import fs, { unlinkSync } from "fs";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import { join } from "path";
-import fileExists from "./helpers/file-exists";
-import writeFile from "./helpers/write-file";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import { join } from 'path';
+import writeFile from './helpers/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -56,7 +54,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
 
-    this.sealInit();
+    this.boltInit();
     this.editSealAndDockerFile();
   }
 
@@ -87,21 +85,21 @@ platforms:
 `;
 
       writeFile(
-        join(this._destinationPath, "seal.service.yaml"),
+        join(this._destinationPath, 'seal.service.yaml'),
         sealServiceTemplate
       );
 
       writeFile(
-        join(this._destinationPath, "run.Dockerfile"),
+        join(this._destinationPath, 'run.Dockerfile'),
         runDockerfileTemplate
       );
 
       writeFile(
-        join(this._destinationPath, "build.Dockerfile"),
+        join(this._destinationPath, 'build.Dockerfile'),
         runDockerfileTemplate
       );
     } catch (error) {
-      console.log("Error occured: ", error);
+      console.error('Error occured: ', error);
       return;
     }
   }
@@ -109,6 +107,6 @@ platforms:
   async watch(): Promise<void> {
     await this.buildBeforeWatch();
 
-    await this.app.watch(this._sourcePath, this._destinationPath, () => { });
+    await this.app.watch(this._sourcePath, this._destinationPath, () => {});
   }
 }

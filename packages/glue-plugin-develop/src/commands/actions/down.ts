@@ -9,7 +9,7 @@ const downSealService = async (serviceName: string) => {
     'sh',
     [
       '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && seal service:down ${serviceName}`,
+      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:down ${serviceName}`,
     ],
     {
       stdio: 'inherit',
