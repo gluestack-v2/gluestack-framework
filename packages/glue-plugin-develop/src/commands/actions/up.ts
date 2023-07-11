@@ -28,7 +28,7 @@ const upSealService = async (
     'sh',
     [
       '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && seal service:up -p ${servicePlatform} ${serviceName}`,
+      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
     ],
     { stdio: 'inherit' }
   );
