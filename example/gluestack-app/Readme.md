@@ -13,24 +13,6 @@
 $ npm run install:all;
 ```
 
-## Create plugin builds (in production mode)
-
-```bash
-# Run this command from your project's root directory
-$ npm run build:plugins;
-```
-
-## Create plugin builds (in development mode)
-
-```bash
-#
-# You need to run below mentioned commands separately from your CLI
-#
-$ npm run watch:cli;
-$ npm run watch:develop;
-$ npm run watch:web;
-```
-
 ## Access Glue
 
 ```bash
@@ -79,9 +61,5 @@ $ node build/index run:service website --platform local
 ```
 
 npm run install:all
-npm run build:plugins
 node glue add @gluestack-v2/glue-plugin-develop develop
 node glue add @gluestack-v2/glue-plugin-web web
-node glue add @gluestack-v2/glue-plugin-service-sdk sdk
-node glue add @gluestack-v2/glue-plugin-service-gateway gateway
-node glue add @gluestack-v2/glue-plugin-functions functions
