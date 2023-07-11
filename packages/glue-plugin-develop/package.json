@@ -1,7 +1,7 @@
 {
   "name": "@gluestack-v2/glue-plugin-develop",
   "version": "0.1.0",
-  "description": "Gluestack V2 Develop Plugin",
+  "description": "glue-plugin-develop is the process manager for the gluestack project. This plugin helps you in managing all the installed **plugin instances** which you have created in your **Gluestack App**, and in order to do that it comes with various commands detailed in the **CLI Reference** section.",
   "main": "build/index.js",
   "repository": {
     "type": "git",
