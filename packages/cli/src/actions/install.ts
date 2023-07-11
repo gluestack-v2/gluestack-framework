@@ -110,8 +110,7 @@ const checkForDependencies = async (
 		for await (const plugin of missing) {
 			let arr = plugin.getName().split('-');
 			console.log(
-				`Install dependency: \`node glue add ${plugin.getName()} ${
-					arr[arr.length - 1]
+				`Install dependency: \`node glue add ${plugin.getName()} ${arr[arr.length - 1]
 				}\``
 			);
 
@@ -154,14 +153,16 @@ export default async (
 		process.exit(0);
 	}
 
+
 	await checkForDependencies(app, packageName);
 
 	try {
+
 		await plugin.runPostInstall(folderName, folderPath);
+
 	} catch (e: any) {
 		error(
-			`${pluginName} installed failed: ${
-				e.message || 'Something went wrong'
+			`${pluginName} installed failed: ${e.message || 'Something went wrong'
 			}`
 		);
 		newline();

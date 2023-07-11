@@ -51,12 +51,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
-
-  // @ts-ignore
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
-
   getInstallationPath(target: string): string {
     return `./${this.pluginEnvironment}/${target}`;
   }

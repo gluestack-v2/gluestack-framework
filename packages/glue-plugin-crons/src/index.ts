@@ -68,9 +68,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   // @ts-ignore
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
+  // getTemplateFolderPath(): string {
+  //   return `${process.cwd()}/node_modules/${this.getName()}/template`;
+  // }
 
   getPluginEnvironment(): 'server' | 'client' {
     return this.pluginEnvironment;

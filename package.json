@@ -65,9 +65,7 @@
   },
   "workspaces": [
     "packages/*",
-    ".glue/__generated__/packages/**",
-    "client/web",
-    "client/website"
+    "example/gluestack-app"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.*",

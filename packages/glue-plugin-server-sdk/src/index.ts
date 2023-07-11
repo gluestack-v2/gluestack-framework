@@ -2,7 +2,7 @@
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
-import { join, resolve } from 'path';
+import path, { join, resolve } from 'path';
 import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
@@ -53,13 +53,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.type;
   }
 
-  // @ts-ignore
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
 
   getInternalFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/internal`;
+    return path.join(this.getPackagePath(), "internal");
   }
 
   async runPostInstall(instanceName: string, target: string) {

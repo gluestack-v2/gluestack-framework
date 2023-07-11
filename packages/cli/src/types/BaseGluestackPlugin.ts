@@ -6,7 +6,7 @@ import IPlugin, {
 } from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGluePluginStore from './store/interface/IGluePluginStore';
-import { join } from 'path';
+import path, { join } from 'path';
 
 export default abstract class BaseGluestackPlugin implements IPlugin {
 	app: AppCLI;
@@ -39,16 +39,19 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	}
 
 	getTemplateFolderPath(): string {
+
 		return join(
-			process.cwd(),
-			'node_modules',
-			this.getName(),
+			this.getPackagePath(),
 			'template'
 		);
 	}
 
 	getPackagePath(): string {
-		return join(process.cwd(), 'node_modules', this.getName());
+
+		const packageJSONPath = require.resolve(path.join(this.getName(), 'package.json'))
+		const packagePath = path.dirname(packageJSONPath);
+
+		return packagePath;
 	}
 
 	getInstallationPath(target: string): string {
