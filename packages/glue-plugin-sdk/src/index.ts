@@ -1,27 +1,27 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import { join, resolve } from "path";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
+import { join, resolve } from 'path';
+import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { reWriteFile } from "./helpers/rewrite-file";
-import copyFolder from "./helpers/copy-folder";
-import rm from "./helpers/rm";
+import { reWriteFile } from './helpers/rewrite-file';
+import copyFolder from './helpers/copy-folder';
+import rm from './helpers/rm';
 
-import { existsSync } from "fs";
-import writeSDK from "./helpers/write-sdk";
+import { existsSync } from 'fs';
+import writeSDK from './helpers/write-sdk';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -34,11 +34,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    this.app.addEventListener("booting.web", (...args: any[]): void => {
-      console.log({ message: "booting web event listener", args });
-      console.log(this.gluePluginStore.get("message"));
-      this.gluePluginStore.set("message", "Hello from function plugin");
-      console.log(this.gluePluginStore.get("message"));
+    this.app.addEventListener('booting.web', (...args: any[]): void => {
+      console.log({ message: 'booting web event listener', args });
+      console.log(this.gluePluginStore.get('message'));
+      this.gluePluginStore.set('message', 'Hello from function plugin');
+      console.log(this.gluePluginStore.get('message'));
     });
   }
 
@@ -54,10 +54,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
-
 
   // getInstallationPath(target: string): string {
   //   return `./.glue/__generated__/packages/${target}/src/${target}`;
@@ -90,7 +89,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       this,
       key,
       gluePluginStore,
-      installationPath ?? ""
+      installationPath ?? ''
     );
     this.instances.push(instance);
     return instance;
@@ -108,13 +107,12 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     for await (const instance of instances) {
       if (!existsSync(sourcePath)) {
-        console.log("> No functions plugin found, create instance first");
+        console.log('> No functions plugin found, create instance first');
       } else {
         await writeSDK(sourcePath, instance._destinationPath, ignoredPaths);
       }
     }
     this.app.updateServices();
-
   }
 
   getInstances(): IInstance[] {
@@ -126,6 +124,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getSealServicefile(): string {
-    return `${this.getInternalFolderPath()}/seal.service.yaml`;
+    return `${this.getInternalFolderPath()}/bolt.service.yaml`;
   }
 }

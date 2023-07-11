@@ -39,15 +39,13 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	}
 
 	getTemplateFolderPath(): string {
-		return join(
-			this.getPackagePath(),
-			'template'
-		);
+		return join(this.getPackagePath(), 'template');
 	}
 
 	getPackagePath(): string {
-
-		const packageJSONPath = require.resolve(path.join(this.getName(), 'package.json'))
+		const packageJSONPath = require.resolve(
+			path.join(this.getName(), 'package.json')
+		);
 		const packagePath = path.dirname(packageJSONPath);
 		return packagePath;
 	}

@@ -52,7 +52,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   // }
 
   getSourcePath(): string {
-    return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
+    return join(this.callerPlugin.getPackagePath(), 'template');
   }
 
   getGeneratedPath() {
@@ -69,6 +69,14 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async build() {
+    console.log(
+      '......\n',
+      this._destinationPath,
+      '......\n',
+      this._sourcePath,
+      'hello'
+    );
+
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateDestinationPackageJSON();
     await this.updateWorkspacePackageJSON();
@@ -81,7 +89,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSealServicefile(): string {
-    return `${this._destinationPath}/seal.service.yaml`;
+    return `${this._destinationPath}/bolt.service.yaml`;
   }
   //override updateWorkspacePackageJSON
   async updateWorkspacePackageJSON() {

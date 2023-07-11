@@ -44,7 +44,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSealServicefile(): string {
-    return `${this._destinationPath}/seal.service.yaml`;
+    return `${this._destinationPath}/bolt.service.yaml`;
   }
 
   getSourcePath(): string {

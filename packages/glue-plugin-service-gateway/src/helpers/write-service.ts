@@ -1,12 +1,12 @@
-import path from "path";
-import fs from "fs";
-import writeFile from "./write-file";
-import replaceHandlerNames from "./replace-handler-names";
-import getFileNameWithoutExtension from "./get-file-name-without-ext";
-import moleculerFunctionsServiceTemplateFunc from "./functions-service-template";
+import path from 'path';
+import fs from 'fs';
+import writeFile from './write-file';
+import replaceHandlerNames from './replace-handler-names';
+import getFileNameWithoutExtension from './get-file-name-without-ext';
+import moleculerFunctionsServiceTemplateFunc from './functions-service-template';
 
 function filePathExtension(filePath: string) {
-  return filePath.split(".").pop() ?? "";
+  return filePath.split('.').pop() ?? '';
 }
 
 const eventsTemplate = (eventName: any, eventHandler: any) => {
@@ -20,29 +20,29 @@ const eventsTemplate = (eventName: any, eventHandler: any) => {
 function camelCaseArray(arr: any) {
   // Join array elements with a space
 
-  const joinedString = arr.join(" ");
+  const joinedString = arr.join(' ');
 
   // Split joinedString by space and capitalize each word except the first
-  const words = joinedString.split(" ");
+  const words = joinedString.split(' ');
   for (let i = 1; i < words.length; i++) {
     words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
   }
 
   // Concatenate capitalized words
-  const camelCaseString = words.join("");
+  const camelCaseString = words.join('');
 
   return camelCaseString;
 }
 
 const removeDashAndCamelCase = (str: any) => {
-  const words = str.split("-");
+  const words = str.split('-');
   const camelCaseStr = words.reduce((acc: any, word: any, index: any) => {
     if (index === 0) {
       return word;
     }
     const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
     return acc + capitalizedWord;
-  }, "");
+  }, '');
   return camelCaseStr;
 };
 
@@ -105,17 +105,17 @@ const writeService = async (
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
     if (
-      ["json"].includes(filePathExtension(filePath)) ||
-      filePath.includes("node_modules")
+      ['json'].includes(filePathExtension(filePath)) ||
+      filePath.includes('node_modules')
     ) {
       return;
     }
 
-    if (filePath.endsWith(".map") || filePath === "package.json") {
+    if (filePath.endsWith('.map') || filePath === 'package.json') {
       return;
     }
     // Get Private Actions, events, importd
-    if (filePath.includes("/private/")) {
+    if (filePath.includes('/private/')) {
       privateMoleculerActions = {
         ...privateMoleculerActions,
         ...getPrivateActions(installationPath, functionInstanceName, filePath)
@@ -126,7 +126,7 @@ const writeService = async (
         privateMoleculerImportStatements +
         getPrivateActions(installationPath, functionInstanceName, filePath)
           .importPaths;
-      if (filePath.includes("/private/events/")) {
+      if (filePath.includes('/private/events/')) {
         let privateMolecularData = getEvents(
           getPrivatePath(filePath, installationPath)
         );
@@ -165,7 +165,7 @@ const writeService = async (
     },
     path.join(
       installationPath,
-      "services",
+      'services',
       `${functionInstanceName}.service.js`
     ),
     molecularEvents
@@ -174,17 +174,19 @@ const writeService = async (
   // Writing Molecular Actions and events for private service
   createService(
     privateMoleculerActions,
-    moleculerFunctionsServiceTemplateFunc("private"),
-    { actionImportPath: privateMoleculerImportStatements, eventImportPath: "" },
-    path.join(installationPath, "services", `private.service.js`),
+    moleculerFunctionsServiceTemplateFunc('private'),
+    { actionImportPath: privateMoleculerImportStatements, eventImportPath: '' },
+    path.join(installationPath, 'services', `private.service.js`),
     privateMolecularEvents
   );
+
+  console.log('Updating API Gateway', installationPath, functionInstanceName);
 
   updateApiGateway(installationPath, functionInstanceName);
 };
 
 function removeExtension(filename: string) {
-  return filename.substring(0, filename.lastIndexOf(".")) || filename;
+  return filename.substring(0, filename.lastIndexOf('.')) || filename;
 }
 
 function getActions(
@@ -200,15 +202,15 @@ function getActions(
     // Create actions object
     let action: any = {};
     action.rest = {
-      method: "POST",
+      method: 'POST',
       path: removeExtension(finalPathArr.functionPath),
     };
 
     action.handler = `(ctx) => {const context = new Context(ctx); return ${
-      removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
     }(context);},`;
 
-    serviceAction[removeExtension(finalPathArr.funcPath.join("."))] = action;
+    serviceAction[removeExtension(finalPathArr.funcPath.join('.'))] = action;
 
     // Create Import Statement
 
@@ -216,7 +218,7 @@ function getActions(
       camelCaseArray(finalPathArr.funcPath)
     )}Handler = require("..${finalPathArr.functionPath}");`;
 
-    functionImportStatement += "\n";
+    functionImportStatement += '\n';
   }
 
   return {
@@ -241,15 +243,15 @@ const getPrivateActions = (
     // Create actions object
     let action: any = {};
     action.rest = {
-      method: "POST",
+      method: 'POST',
       path: finalPathArr.functionPath,
     };
 
     action.handler = `(ctx) => {const context = new Context(ctx); return ${
-      removeExtension(camelCaseArray(finalPathArr.funcPath)) + "Handler"
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
     }(context);},`;
-    if (!filePath.includes("/events/"))
-      obj[removeExtension(finalPathArr.funcPath.join("."))] = action;
+    if (!filePath.includes('/events/'))
+      obj[removeExtension(finalPathArr.funcPath.join('.'))] = action;
     // if (filePath.includes("/events/")) {
     //   privateEvents = getEvents(filePath, installationPath).events;
     // }
@@ -260,7 +262,7 @@ const getPrivateActions = (
         finalPathArr.funcPath.map((str) => removeDashAndCamelCase(str))
       )
     )}Handler = require("..${finalPathArr.functionPath}");`;
-    functionImportStatement += "\n";
+    functionImportStatement += '\n';
   }
   return {
     actions: obj,
@@ -272,7 +274,7 @@ function getEvents(filePathData: any) {
   // let eventsPath = funcPath.filter((str) => str !== "events");
   // let res = getPaths(filePath, installationPath);
   let events = ``;
-  const eventsIndex = filePathData.funcPath.indexOf("events");
+  const eventsIndex = filePathData.funcPath.indexOf('events');
   let eventNameIndex = filePathData.funcPath[1];
   // Check if the separator is present in the array
   if (eventsIndex !== -1) {
@@ -282,13 +284,13 @@ function getEvents(filePathData: any) {
   functionImportStatement = `const ${camelCaseArray(
     filePathData.funcPath
   )}Handler = require("..${filePathData.functionPath}");`;
-  functionImportStatement += "\n";
+  functionImportStatement += '\n';
 
   events = eventsTemplate(
     eventNameIndex,
     camelCaseArray(
       filePathData.funcPath.map((str: any) => removeDashAndCamelCase(str))
-    ) + "Handler"
+    ) + 'Handler'
   );
 
   return { events, importPaths: functionImportStatement };
@@ -297,18 +299,18 @@ function getEvents(filePathData: any) {
 function updateApiGateway(installationPath: string, instanceName: string) {
   const apiGatewayPath = path.join(
     installationPath,
-    "services",
-    "api.service.js"
+    'services',
+    'api.service.js'
   );
   const whitelistedArr = [`${instanceName}.**`];
   const data = fs.readFileSync(apiGatewayPath, {
-    encoding: "utf-8",
+    encoding: 'utf-8',
   });
   let writeData = ``;
   let whitelist: any = {};
-  if (data.includes("// ***Update Whitlisted services here***")) {
+  if (data.includes('// ***Update Whitlisted services here***')) {
     writeData = data.replace(
-      "// ***Update Whitlisted services here***",
+      '// ***Update Whitlisted services here***',
       `whitelist: ${JSON.stringify(whitelistedArr)},`
     );
     fs.writeFileSync(apiGatewayPath, writeData);
@@ -335,28 +337,28 @@ async function createService(
 ) {
   let finalString = moleculerFunctionsServiceTemplate
     .replace(
-      "// **---Add Actions Here---**",
+      '// **---Add Actions Here---**',
       replaceHandlerNames(JSON.stringify(moleculerActions, null, 2))
     )
-    .replace("/** Add handler here **/", handlerTemplate());
+    .replace('/** Add handler here **/', handlerTemplate());
 
   finalString = finalString.replace(
-    "// **---Add Events Here---**",
-    eventsData + "// **---Add Events Here---**"
+    '// **---Add Events Here---**',
+    eventsData + '// **---Add Events Here---**'
   );
   const uniqueStrings: any = [];
   moleculerImportStatements.actionImportPath
-    .split("\n")
+    .split('\n')
     .forEach((line: any) => {
       if (!uniqueStrings.includes(line)) {
         uniqueStrings.push(line);
       }
     });
 
-  const outputString = uniqueStrings.join("\n");
+  const outputString = uniqueStrings.join('\n');
 
   finalString = finalString.replace(
-    "// **---Add Imports Here---**",
+    '// **---Add Imports Here---**',
     outputString +
       moleculerImportStatements.eventImportPath +
       `const Context = require("../Context.ts");`
@@ -365,20 +367,20 @@ async function createService(
 }
 
 function getPrivatePath(filePath: string, installationPath: string) {
-  let functionPath = filePath.replace(installationPath, "");
+  let functionPath = filePath.replace(installationPath, '');
   // functionPath = functionPath.split(".").slice(0, -1).join(".");
-  let funcPath = functionPath.split("/");
+  let funcPath = functionPath.split('/');
   funcPath.splice(0, 2);
-  funcPath = funcPath.filter((str) => str !== "private");
+  funcPath = funcPath.filter((str) => str !== 'private');
   return { funcPath, functionPath };
 }
 
 function getPaths(filePath: string, installationPath: string) {
   // Dynamic route of a given action
-  let functionPath = filePath.replace(installationPath, "");
+  let functionPath = filePath.replace(installationPath, '');
   // functionPath = functionPath.split(".").slice(0, -1).join(".");
   // An Array of actions name for nested routes
-  const funcPath = functionPath.split("/");
+  const funcPath = functionPath.split('/');
   funcPath.splice(0, 2);
   return { funcPath, functionPath };
 }

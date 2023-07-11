@@ -12,254 +12,263 @@ import { writeFile, fileExists, readEnvFile } from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
-  implements IInstance
+	implements IInstance
 {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
+	app: AppCLI;
+	name: string;
+	callerPlugin: IPlugin;
+	isOfTypeInstance: boolean = false;
+	gluePluginStore: IGlueStorePlugin;
+	installationPath: string;
 
-  constructor(
-    app: AppCLI,
-    callerPlugin: IPlugin,
-    name: string,
-    gluePluginStore: IGlueStorePlugin,
-    installationPath: string
-  ) {
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
-  }
+	constructor(
+		app: AppCLI,
+		callerPlugin: IPlugin,
+		name: string,
+		gluePluginStore: IGlueStorePlugin,
+		installationPath: string
+	) {
+		this.app = app;
+		this.name = name;
+		this.callerPlugin = callerPlugin;
+		this.gluePluginStore = gluePluginStore;
+		this.installationPath = installationPath;
+	}
 
-  abstract init(): void;
-  abstract destroy(): void;
+	abstract init(): void;
+	abstract destroy(): void;
 
-  async build(): Promise<void> {
-    //
-  }
+	async build(): Promise<void> {
+		//
+	}
 
-  getName(): string {
-    return this.name;
-  }
+	getName(): string {
+		return this.name;
+	}
 
-  getCallerPlugin(): IPlugin {
-    return this.callerPlugin;
-  }
+	getCallerPlugin(): IPlugin {
+		return this.callerPlugin;
+	}
 
-  getDockerfile(): string {
-    return `${this._workspacePath}/Dockerfile`;
-  }
+	getDockerfile(): string {
+		return `${this._workspacePath}/Dockerfile`;
+	}
 
-  getSealServicefile(): string {
-    return `${this._workspacePath}/seal.service.yaml`;
-  }
+	getSealServicefile(): string {
+		return `${this._workspacePath}/seal.service.yaml`;
+	}
 
-  getDestinationPath(): string {
-    return join(
-      process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
-      this.getName(),
-      'src',
-      this.getName()
-    );
-  }
+	getDestinationPath(): string {
+		return join(
+			process.cwd(),
+			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			this.getName(),
+			'src',
+			this.getName()
+		);
+	}
 
-  getSourcePath(): string {
-    return join(process.cwd(), this.getName());
-  }
+	getPluginEnvironment() {
+		// @ts-ignore
+		return this.callerPlugin.getPluginEnvironment();
+	}
 
-  getWorkspacePath(): string {
-    return join(
-      process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
-      this.getName(),
-      'src'
-    );
-  }
+	getSourcePath(): string {
+		return join(
+			process.cwd(),
+			this.getPluginEnvironment(),
+			this.getName()
+		);
+	}
 
-  public get _workspacePath(): string {
-    return this.getWorkspacePath();
-  }
+	getWorkspacePath(): string {
+		return join(
+			process.cwd(),
+			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			this.getName(),
+			'src'
+		);
+	}
 
-  public get _sourcePath(): string {
-    return this.getSourcePath();
-  }
+	public get _workspacePath(): string {
+		return this.getWorkspacePath();
+	}
 
-  public get _destinationPath(): string {
-    return this.getDestinationPath();
-  }
+	public get _sourcePath(): string {
+		return this.getSourcePath();
+	}
 
-  async updateSourcePackageJSON() {
-    // update package.json'S name index with the new instance name
-    this.app.updateNameInPackageJSON(
-      this._sourcePath,
-      this.getName()
-    );
-  }
+	public get _destinationPath(): string {
+		return this.getDestinationPath();
+	}
 
-  async updateDestinationPackageJSON() {
-    // update package.json'S name index with the new instance name
-    this.app.updateNameInPackageJSON(
-      this._destinationPath,
-      this.getName()
-    );
-  }
+	async updateSourcePackageJSON() {
+		// update package.json'S name index with the new instance name
+		this.app.updateNameInPackageJSON(
+			this._sourcePath,
+			this.getName()
+		);
+	}
 
-  async filterEnvData(
-    envPath: string,
-    pluginEnv: 'server' | 'client'
-  ) {
-    let envData: string = await readEnvFile(envPath);
+	async updateDestinationPackageJSON() {
+		// update package.json'S name index with the new instance name
+		this.app.updateNameInPackageJSON(
+			this._destinationPath,
+			this.getName()
+		);
+	}
 
-    let envDataArray = envData ? envData.split('\n') : [];
-    let envObjectsArray = envDataArray.map((envDataItem: string) => {
-      if (!envDataItem) return;
-      return envDataItem.split('=');
-    });
+	async filterEnvData(
+		envPath: string,
+		pluginEnv: 'server' | 'client'
+	) {
+		let envData: string = await readEnvFile(envPath);
 
-    let envDataFiltered: any = envObjectsArray.filter(
-      (envDataItem: string[] | undefined) => {
-        if (envDataItem) {
-          if (pluginEnv === 'client') {
-            return !envDataItem[0].startsWith('SERVER_');
-          } else {
-            return !envDataItem[0].startsWith('CLIENT_');
-          }
-        }
-      }
-    );
-    let filteredObject = Object.fromEntries(envDataFiltered);
-    return filteredObject;
-  }
+		let envDataArray = envData ? envData.split('\n') : [];
+		let envObjectsArray = envDataArray.map((envDataItem: string) => {
+			if (!envDataItem) return;
+			return envDataItem.split('=');
+		});
 
-  generateEnvDataFromObject(envObject: any) {
-    let envDataArray = Object.entries(envObject);
-    let envDataString = envDataArray
-      .map((envDataItem) => {
-        return `${envDataItem[0]}=${envDataItem[1]}`;
-      })
-      .join('\n');
-    return envDataString;
-  }
+		let envDataFiltered: any = envObjectsArray.filter(
+			(envDataItem: string[] | undefined) => {
+				if (envDataItem) {
+					if (pluginEnv === 'client') {
+						return !envDataItem[0].startsWith('SERVER_');
+					} else {
+						return !envDataItem[0].startsWith('CLIENT_');
+					}
+				}
+			}
+		);
+		let filteredObject = Object.fromEntries(envDataFiltered);
+		return filteredObject;
+	}
 
-  async generateEnvFiles() {
-    const rootEnvPath = join(process.cwd(), '.env');
-    //@ts-ignore
-    let pluginEnv = this.callerPlugin.pluginEnvironment;
-    let filteredEnv = await this.filterEnvData(
-      rootEnvPath,
-      pluginEnv
-    );
-    await writeFile(
-      join(this._workspacePath, '.env'),
-      this.generateEnvDataFromObject(filteredEnv)
-    );
-  }
+	generateEnvDataFromObject(envObject: any) {
+		let envDataArray = Object.entries(envObject);
+		let envDataString = envDataArray
+			.map((envDataItem) => {
+				return `${envDataItem[0]}=${envDataItem[1]}`;
+			})
+			.join('\n');
+		return envDataString;
+	}
 
-  async updateRootPackageJSONWithSourcePath() {
-    // update root package.json's workspaces with the new instance name
-    const rootPackage: string = `${process.cwd()}/package.json`;
-    await Workspaces.append(
-      rootPackage,
-      relative(process.cwd(), this._sourcePath)
-    );
-  }
+	async generateEnvFiles() {
+		const rootEnvPath = join(process.cwd(), '.env');
+		//@ts-ignore
+		let pluginEnv = this.callerPlugin.pluginEnvironment;
+		let filteredEnv = await this.filterEnvData(
+			rootEnvPath,
+			pluginEnv
+		);
+		await writeFile(
+			join(this._workspacePath, '.env'),
+			this.generateEnvDataFromObject(filteredEnv)
+		);
+	}
 
-  async updateRootPackageJSONWithDestinationPath() {
-    const rootPackage: string = `${process.cwd()}/package.json`;
-    await Workspaces.append(
-      rootPackage,
-      relative(process.cwd(), this._destinationPath)
-    );
-  }
+	async updateRootPackageJSONWithSourcePath() {
+		// update root package.json's workspaces with the new instance name
+		const rootPackage: string = `${process.cwd()}/package.json`;
+		await Workspaces.append(
+			rootPackage,
+			relative(process.cwd(), this._sourcePath)
+		);
+	}
 
-  async updateWorkspacePackageJSON() {
-    // // add package.json with workspaces
-    const packageFile: string = join(
-      this._workspacePath,
-      'package.json'
-    );
-    const packageContent: any = {
-      name: this.getName(),
-      private: true,
-      workspaces: [this.getName(), 'packages/**'],
-      scripts: {
-        'install:all': 'npm install --workspaces --if-present',
-        build: 'npm run build --workspaces --if-present',
-        dev: 'npm run dev --workspace @project/' + this.getName(),
-      },
-    };
+	async updateRootPackageJSONWithDestinationPath() {
+		const rootPackage: string = `${process.cwd()}/package.json`;
+		await Workspaces.append(
+			rootPackage,
+			relative(process.cwd(), this._destinationPath)
+		);
+	}
 
-    await writeFile(
-      packageFile,
-      JSON.stringify(packageContent, null, 2)
-    );
-  }
+	async updateWorkspacePackageJSON() {
+		// // add package.json with workspaces
+		const packageFile: string = join(
+			this._workspacePath,
+			'package.json'
+		);
+		const packageContent: any = {
+			name: this.getName(),
+			private: true,
+			workspaces: [this.getName(), 'packages/**'],
+			scripts: {
+				'install:all': 'npm install --workspaces --if-present',
+				build: 'npm run build --workspaces --if-present',
+				dev: 'npm run dev --workspace @project/' + this.getName(),
+			},
+		};
 
-  async boltInit() {
-    // seal init and seal service add in the services folder
-    const sealInit = spawnSync('sh', [
-      '-c',
-      `cd ${SEAL_SERVICES_PATH} && bolt init`,
-    ]);
+		await writeFile(
+			packageFile,
+			JSON.stringify(packageContent, null, 2)
+		);
+	}
 
-    if (sealInit.status !== 0) {
-      console.error(`Command failed with code ${sealInit.status}`);
-    }
-    // eslint-disable-next-line no-console
-    console.log(sealInit.stdout.toString());
-    console.error(sealInit.stderr.toString());
+	async boltInit() {
+		// seal init and seal service add in the services folder
+		const sealInit = spawnSync('sh', [
+			'-c',
+			`cd ${SEAL_SERVICES_PATH} && bolt init`,
+		]);
 
-    const sealAddService = spawnSync('sh', [
-      '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
-    ]);
+		if (sealInit.status !== 0) {
+			console.error(`Command failed with code ${sealInit.status}`);
+		}
+		// eslint-disable-next-line no-console
+		console.log(sealInit.stdout.toString());
+		console.error(sealInit.stderr.toString());
 
-    if (sealAddService.status !== 0) {
-      console.error(
-        `Command failed with code ${sealAddService.status}`
-      );
-    }
+		const sealAddService = spawnSync('sh', [
+			'-c',
+			`cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
+		]);
 
-    // eslint-disable-next-line no-console
-    console.log(sealAddService.stdout.toString());
-    console.error(sealAddService.stderr.toString());
-  }
+		if (sealAddService.status !== 0) {
+			console.error(
+				`Command failed with code ${sealAddService.status}`
+			);
+		}
 
-  async buildBeforeWatch() {
-    if (!(await fileExists(this._destinationPath))) {
-      try {
-        await this.build();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log('>> Instance does not exits:', this.getName());
-        return;
-      }
-    }
-  }
+		// eslint-disable-next-line no-console
+		console.log(sealAddService.stdout.toString());
+		console.error(sealAddService.stderr.toString());
+	}
 
-  async watch(callback?: Function): Promise<void> {
-    await this.buildBeforeWatch();
-    this.app.watch(
-      this._sourcePath,
-      '',
-      async (event: string, path: string) => {
-        if (callback) {
-          callback(event, path);
-        }
-      }
-    );
-  }
+	async buildBeforeWatch() {
+		if (!(await fileExists(this._destinationPath))) {
+			try {
+				await this.build();
+			} catch (error) {
+				// eslint-disable-next-line no-console
+				console.log('>> Instance does not exits:', this.getName());
+				return;
+			}
+		}
+	}
 
-  public get _instanceType(): any {
-    return this._destinationPath.includes('packages')
-      ? 'package'
-      : this._destinationPath.includes('services')
-      ? 'service'
-      : 'none';
-  }
+	async watch(callback?: Function): Promise<void> {
+		await this.buildBeforeWatch();
+		this.app.watch(
+			this._sourcePath,
+			'',
+			async (event: string, path: string) => {
+				if (callback) {
+					callback(event, path);
+				}
+			}
+		);
+	}
+
+	public get _instanceType(): any {
+		return this._destinationPath.includes('packages')
+			? 'package'
+			: this._destinationPath.includes('services')
+			? 'service'
+			: 'none';
+	}
 }

@@ -43,10 +43,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   init() {
     this.app.addEventListener('booting.web', (...args: any[]): void => {
-      console.log({ message: 'booting web event listener', args });
-      console.log(this.gluePluginStore.get('message'));
+      console.info({ message: 'booting web event listener', args });
+      console.info(this.gluePluginStore.get('message'));
       this.gluePluginStore.set('message', 'Hello from function plugin');
-      console.log(this.gluePluginStore.get('message'));
+      console.info(this.gluePluginStore.get('message'));
     });
   }
 
@@ -66,15 +66,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.type;
   }
 
-  getTemplateFolderPath(): string {
-    return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  }
-
   // getInstallationPath(target: string): string {
   //   return `./.glue/__generated__/seal/services/${target}/src/${target}`;
   // }
 
   async runPostInstall(instanceName: string) {
+    console.log('runPostInstall', this.getTemplateFolderPath());
+
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,

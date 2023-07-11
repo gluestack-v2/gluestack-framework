@@ -39,14 +39,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  getDockerfile(): string {
-    return `${this._sourcePath}/Dockerfile`;
-  }
-
-  getSealServicefile(): string {
-    return join(this._destinationPath, 'seal.service.yaml');
-  }
-
   updateContextInSealService() {
     const sealService = this.getSealServicefile();
 
@@ -58,15 +50,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     const updatedYaml = yaml.dump(data);
 
     fs.writeFileSync(sealService, updatedYaml);
-  }
-
-  getSourcePath(): string {
-    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
-  }
-
-  getPluginEnvironment() {
-    // @ts-ignore
-    return this.callerPlugin.getPluginEnvironment();
   }
 
   async updateNextConfig() {

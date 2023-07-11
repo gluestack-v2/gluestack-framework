@@ -6,7 +6,7 @@ import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
 import { PluginInstance } from './PluginInstance';
-import { join } from 'path';
+import path, { join } from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -51,7 +51,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   // }
 
   getInstallationPath(target: string): string {
-    return `./${this.pluginEnvironment}/${target}`;
+    return path.join(this.pluginEnvironment, target);
   }
 
   getPluginEnvironment(): 'server' | 'client' {
