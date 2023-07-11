@@ -1,10 +1,8 @@
-import fs, { unlinkSync } from 'fs';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { join } from 'path';
 import fileExists from './helpers/file-exists';
 import writeFile from './helpers/write-file';
@@ -94,12 +92,12 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     };
   }
 
-  async getPortNumber(returnDefault?: boolean) {
-    return new Promise((resolve, reject) => {
+  async getPortNumber() {
+    return new Promise((resolve) => {
       if (this.portNumber) {
         return resolve(this.portNumber);
       }
-      let ports = [10310];
+      // let ports = [10310];
       this.setPortNumber(10310);
 
       //   this.callerInstance.callerPlugin.gluePluginStore.get("ports") || [];
@@ -116,12 +114,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     });
   }
 
-  async getConsolePortNumber(returnDefault?: boolean) {
-    return new Promise((resolve, reject) => {
+  async getConsolePortNumber() {
+    // returnDefault?: boolean
+    return new Promise((resolve) => {
       if (this.consolePortNumber) {
         return resolve(this.consolePortNumber);
       }
-      let ports = [9160];
+      // let ports = [9160];
       this.setConsolePortNumber(9160);
       //   this.callerInstance.callerPlugin.gluePluginStore.get("console_ports") ||
       //   [];
@@ -205,7 +204,7 @@ platforms:
         runDockerfileTemplate
       );
     } catch (error) {
-      console.log('Error occured: ', error);
+      console.error('Error occured: ', error);
       return;
     }
   }
@@ -216,7 +215,7 @@ platforms:
     // this.getEnv();
     // await this.getPortNumber();
     // await this.getConsolePortNumber();
-    this.sealInit();
+    this.boltInit();
     this.editSealAndDockerFile();
     // this.setStatus("up");
 
@@ -244,7 +243,7 @@ platforms:
       try {
         await this.build();
       } catch (error) {
-        console.log('>> Instance does not exits:', this.getName());
+        console.error('>> Instance does not exits:', this.getName());
         return;
       }
     }
