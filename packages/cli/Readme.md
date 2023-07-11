@@ -1,0 +1,33 @@
+---
+title: glue-plugin-cli | gluestack-framework
+
+description: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+
+pageTitle: glue-plugin-cli
+
+pageDescription: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+
+showHeader: true
+---
+
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Plugins/Development Plugins/glue-plugin-cli" />
+
+## glue-plugin-cli
+
+The glue cli plugin is used to maintain information related to installed plugins and its instances. It is the process manager for your gluestack plugins and it manages all the instances of plugins. It is used internally by the develop plugin.
+
+## Installation
+
+The glue-plugin-develop has a dependency on `@gluestack-v2/framework-cli` plugin and is required to run a gluestack project, you can run the following command in project's root directory:
+
+```sh
+$  node glue add @gluestack-v2/framework-cli
+```
+
+- Commands
+
+```bash
+ node glue add @gluestack-v2/framework-cli
+```
