@@ -64,7 +64,7 @@ export default async (app: AppCLI, instanceName: any): Promise<void> => {
     }
   }
   const rootPackagePath: string = `${process.cwd()}/package.json`;
-  const ROOT_PACKAGE_JSON_WORKSPACES = ["packages/*"];
+  const ROOT_PACKAGE_JSON_WORKSPACES = ["../../packages/*"];
   const ROOT_PACKAGE_JSON_DEV_DEPS = {
     "@gluestack-v2/glue-plugin-develop": "^0.0.*",
   };
