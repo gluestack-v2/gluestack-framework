@@ -1,13 +1,14 @@
-import { readFileSync, writeFileSync, existsSync, rmSync } from "fs";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import { error } from "@gluestack-v2/framework-cli/build/helpers/print";
-import { fileExists } from "@gluestack/helpers";
+import { readFileSync, writeFileSync, existsSync, rmSync } from 'fs';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import { error } from '@gluestack-v2/framework-cli/build/helpers/print';
+import { fileExists } from '@gluestack/helpers';
+import path from 'path';
 
 const updateInternalsFile = async () => {
   // adding the installed plugins
   const pluginInstancesFilePath =
-    process.cwd() + "/.glue/internals/plugin-instances.json";
-  const pluginListFilePath = process.cwd() + "/.glue/internals/plugins.json";
+    process.cwd() + '/.glue/internals/plugin-instances.json';
+  const pluginListFilePath = process.cwd() + '/.glue/internals/plugins.json';
 
   writeFileSync(
     pluginInstancesFilePath,
@@ -22,7 +23,7 @@ const updateInternalsFile = async () => {
       ]
     }    
     `,
-    "utf8"
+    'utf8'
   );
   writeFileSync(
     pluginListFilePath,
@@ -33,7 +34,7 @@ const updateInternalsFile = async () => {
       }
     }    
     `,
-    "utf8"
+    'utf8'
   );
 
   if (!fileExists(pluginInstancesFilePath)) {
@@ -57,19 +58,36 @@ export default async (app: AppCLI, instanceName: any): Promise<void> => {
             error(`${err}`);
           }
         }
+
         await updateInternalsFile();
+
         // update root package json to remove sourcepath workspaces and destination path workspaces
         // await instance.runPostUninstall?.();
       }
     }
   }
-  const rootPackagePath: string = `${process.cwd()}/package.json`;
-  const ROOT_PACKAGE_JSON_WORKSPACES = ["../../packages/*"];
+  const rootPackagePath: string = path.join(process.cwd(), 'package.json');
+  const ROOT_PACKAGE_JSON_WORKSPACES = ['../../packages/*'];
   const ROOT_PACKAGE_JSON_DEV_DEPS = {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*",
+    '@gluestack-v2/glue-plugin-develop': '^0.0.*',
   };
   let pkgJson = require(rootPackagePath);
   pkgJson.workspaces = ROOT_PACKAGE_JSON_WORKSPACES;
   pkgJson.dependencies = ROOT_PACKAGE_JSON_DEV_DEPS;
   writeFileSync(rootPackagePath, JSON.stringify(pkgJson, null, 2));
+
+  removeFolder(path.join(process.cwd(), '.glue', '__generated__'));
+  removeFolder(path.join(process.cwd(), 'client'));
+  removeFolder(path.join(process.cwd(), 'server'));
+  console.log(`Clean successful!`);
+};
+
+const removeFolder = (absolutePath) => {
+  try {
+    rmSync(absolutePath, {
+      recursive: true,
+    });
+  } catch (error) {
+    console.log(`${absolutePath} not found!`);
+  }
 };

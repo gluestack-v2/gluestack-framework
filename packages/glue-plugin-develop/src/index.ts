@@ -13,6 +13,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import upCommand from './commands/up';
 import cleanCommand from './commands/clean';
 import restartCommand from './commands/restart';
+import startCommand from './commands/start';
 import downCommand from './commands/down';
 import buildCommand from './commands/build';
 import watchCommand from './commands/watch';
@@ -54,7 +55,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app.addCommand((program: ICommand) =>
       restartCommand(program, this.app)
     );
-
+    this.app.addCommand((program: ICommand) => startCommand(program, this.app));
   }
 
   destroy() {

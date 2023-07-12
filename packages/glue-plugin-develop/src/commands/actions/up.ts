@@ -38,7 +38,6 @@ const upSealService = async (
     { stdio: 'inherit' }
   );
 
-
   // bolt up all services
 
   executeMultipleTerminals(
@@ -72,7 +71,6 @@ const upSealService = async (
       { stdio: 'inherit' }
     );
   }
-
 };
 
 export default async (app: AppCLI, opts: any): Promise<void> => {

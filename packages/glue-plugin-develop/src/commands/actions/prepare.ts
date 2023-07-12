@@ -28,17 +28,10 @@ const installNPMDependencies = async (app: AppCLI) => {
       relative('.', join(gluePackage, 'src'))
     );
 
-    await execute(
-      'sh',
-      [
-        '-c',
-        `cd ${gluePackage} && npm i && npm run build`,
-      ],
-      { stdio: 'inherit' }
-    );
+    await execute('sh', ['-c', `cd ${gluePackage} && npm i && npm run build`], {
+      stdio: 'inherit',
+    });
   }
-
-
 };
 
 export default async (app: AppCLI): Promise<void> => {
