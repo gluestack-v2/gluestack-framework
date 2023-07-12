@@ -1,4 +1,4 @@
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 
 export const execute = (command: string, args: string[], options: any) =>
   new Promise((resolve, reject) => {
@@ -10,3 +10,7 @@ export const execute = (command: string, args: string[], options: any) =>
       code === 0 ? resolve('done') : reject('failed')
     );
   });
+
+export const executeSync = (command: string, args: string[], options: any) => {
+  spawnSync(command, args, options);
+};

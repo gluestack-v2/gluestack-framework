@@ -9,21 +9,25 @@ import {
 
 import { executeMultipleTerminals } from '../../helpers/execute-multiple-terminals';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import { execute } from '../../helpers/execute';
+import { execute, executeSync } from '../../helpers/execute';
 
 export default async (app: AppCLI, opts: any): Promise<void> => {
-  execute('sh', ['-c', `node glue build`], {
+  executeSync('sh', ['-c', `node glue build`], {
     stdio: 'inherit',
   });
   // console.log('Watch');
 
-  // execute('sh', ['-c', `node glue prepare`], {
-  //   stdio: 'inherit',
-  // });
+  executeSync('sh', ['-c', `node glue prepare`], {
+    stdio: 'inherit',
+  });
   // console.log('Prepare');
 
   execute('sh', ['-c', `node glue up --verbose`], {
     stdio: 'inherit',
   });
-  console.log('up');
+
+  execute('sh', ['-c', `node glue watch`], {
+    stdio: 'inherit',
+  });
+  console.log('watch');
 };
