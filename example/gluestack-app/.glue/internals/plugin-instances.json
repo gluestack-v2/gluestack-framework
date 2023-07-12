@@ -19,12 +19,5 @@
       "directory": "./sdk",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-service-gateway": [
-    {
-      "instance": "gateway",
-      "directory": "./gateway",
-      "container_store": {}
-    }
   ]
 }

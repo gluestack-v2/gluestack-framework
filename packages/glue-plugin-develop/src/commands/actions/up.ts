@@ -9,12 +9,14 @@ import {
 
 import { executeMultipleTerminals } from '../../helpers/execute-multiple-terminals';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { execute } from '../../helpers/execute';
 
 const upSealService = async (
   app: AppCLI,
   instance: IInstance,
   runningPlatforms: RunningPlatforms,
-  platform: RunningPlatform
+  platform: RunningPlatform,
+  verbose: boolean = false
 ) => {
   const serviceName: string = instance.getName();
 
@@ -32,6 +34,31 @@ const upSealService = async (
     ],
     { stdio: 'inherit' }
   );
+
+
+  //TODO: remove later
+  // for continuous logging output
+  if (verbose) {
+    execute(
+      'sh',
+      [
+        '-c',
+        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
+      ],
+      { stdio: 'inherit' }
+    );
+
+    // for continuous error logging output
+    execute(
+      'sh',
+      [
+        '-c',
+        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log`,
+      ],
+      { stdio: 'inherit' }
+    );
+  }
+
 };
 
 export default async (app: AppCLI, opts: any): Promise<void> => {
@@ -47,10 +74,10 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
       } else {
         if (plugin.getName() === '@gluestack-v2/glue-plugin-graphql') {
           setTimeout(async () => {
-            await upSealService(app, instance, plugin.runningPlatforms, opts.p);
+            await upSealService(app, instance, plugin.runningPlatforms, opts.p, opts.verbose);
           }, 60 * 1000);
         } else {
-          await upSealService(app, instance, plugin.runningPlatforms, opts.p);
+          await upSealService(app, instance, plugin.runningPlatforms, opts.p, opts.verbose);
         }
       }
     }

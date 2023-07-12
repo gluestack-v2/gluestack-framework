@@ -58,6 +58,10 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 		return this.instances;
 	}
 
+	getPluginEnvironment() {
+		return this.pluginEnvironment;
+	}
+
 	async build(): Promise<void> {
 		const instances: Array<IInstance> = this.getInstances();
 

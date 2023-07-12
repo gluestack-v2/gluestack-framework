@@ -61,8 +61,7 @@
     "source-map": "^0.7.4"
   },
   "workspaces": [
-    "packages/*",
-    "example/gluestack-app"
+    "packages/*"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.1.0",
