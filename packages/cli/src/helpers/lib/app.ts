@@ -142,7 +142,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => {}
+		callback = (...args: any) => { }
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -363,6 +363,21 @@ export default class AppCLI {
 			.filter((dirent) => dirent.isDirectory())
 			.map((dirent) => join(servicesPath, dirent.name));
 	}
+
+	getAllPackagePaths() {
+		const packagesPath = join(
+			process.cwd(),
+			GLUE_GENERATED_PACKAGES_PATH
+		);
+		if (!fs.existsSync(packagesPath)) {
+			return [];
+		}
+		return fs
+			.readdirSync(packagesPath, { withFileTypes: true })
+			.filter((dirent) => dirent.isDirectory())
+			.map((dirent) => join(packagesPath, dirent.name));
+	}
+
 
 	getAllServiceInstances() {
 		let plugins = this.getPlugins();

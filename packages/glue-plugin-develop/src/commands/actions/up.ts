@@ -26,6 +26,9 @@ const upSealService = async (
     // run in any platform in case option provided in not available in plugin's runningPlatforms
     servicePlatform = runningPlatforms[0];
   }
+
+  // build all packages
+
   executeMultipleTerminals(
     'sh',
     [
@@ -35,6 +38,17 @@ const upSealService = async (
     { stdio: 'inherit' }
   );
 
+
+  // bolt up all services
+
+  executeMultipleTerminals(
+    'sh',
+    [
+      '-c',
+      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+    ],
+    { stdio: 'inherit' }
+  );
 
   //TODO: remove later
   // for continuous logging output
@@ -74,10 +88,22 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
       } else {
         if (plugin.getName() === '@gluestack-v2/glue-plugin-graphql') {
           setTimeout(async () => {
-            await upSealService(app, instance, plugin.runningPlatforms, opts.p, opts.verbose);
+            await upSealService(
+              app,
+              instance,
+              plugin.runningPlatforms,
+              opts.p,
+              opts.verbose
+            );
           }, 60 * 1000);
         } else {
-          await upSealService(app, instance, plugin.runningPlatforms, opts.p, opts.verbose);
+          await upSealService(
+            app,
+            instance,
+            plugin.runningPlatforms,
+            opts.p,
+            opts.verbose
+          );
         }
       }
     }
