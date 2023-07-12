@@ -12,15 +12,17 @@ import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/
 import { execute, executeSync } from '../../helpers/execute';
 
 export default async (app: AppCLI, opts: any): Promise<void> => {
+  executeSync('sh', ['-c', `node glue down`], {
+    stdio: 'inherit',
+  });
+
   executeSync('sh', ['-c', `node glue build`], {
     stdio: 'inherit',
   });
-  // console.log('Watch');
 
   executeSync('sh', ['-c', `node glue prepare`], {
     stdio: 'inherit',
   });
-  // console.log('Prepare');
 
   execute('sh', ['-c', `node glue up --verbose`], {
     stdio: 'inherit',
@@ -29,5 +31,4 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
   execute('sh', ['-c', `node glue watch`], {
     stdio: 'inherit',
   });
-  console.log('watch');
 };
