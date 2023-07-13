@@ -43,10 +43,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   init() {
     this.app.addEventListener('booting.web', (...args: any[]): void => {
-      console.info({ message: 'booting web event listener', args });
-      console.info(this.gluePluginStore.get('message'));
+      // eslint-disable-next-line no-console
+      console.log({ message: 'booting web event listener', args });
+      // eslint-disable-next-line no-console
+      console.log(this.gluePluginStore.get('message'));
       this.gluePluginStore.set('message', 'Hello from function plugin');
-      console.info(this.gluePluginStore.get('message'));
+      // eslint-disable-next-line no-console
+      console.log(this.gluePluginStore.get('message'));
     });
   }
 
@@ -71,8 +74,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   // }
 
   async runPostInstall(instanceName: string) {
-    console.log('runPostInstall', this.getTemplateFolderPath());
-
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
@@ -116,18 +117,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     for await (const instance of instances) {
-      const functionsPath = path.resolve(process.cwd(), instancePath); // /functions
-
-      // const installationPath = instance._destinationPath; // services/gateway/src/gateway
-
-      // if (await fileExists(path.join(installationPath, instancePath))) { // checks services/gateway/src/gateway/functions
-      //   rm(path.join(installationPath, instancePath));
-      // }
+      const functionsPath = path.resolve(process.cwd(), instancePath);
 
       if (!(await fileExists(functionsPath))) {
         console.error('> No functions plugin found, create instance first');
       } else {
-        // await copyFolder(functionsPath, installationPath, 3);
         writeService(
           instance._destinationPath,
           instancePath,

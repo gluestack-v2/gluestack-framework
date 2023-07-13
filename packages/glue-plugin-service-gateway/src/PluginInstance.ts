@@ -77,11 +77,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getDockerfile(): string {
-    return `${this._destinationPath}/Dockerfile`;
+    return join(this._destinationPath, 'Dockerfile');
   }
 
   getSealServicefile(): string {
-    return `${this._destinationPath}/bolt.service.yaml`;
+    return join(this._destinationPath, 'bolt.service.yaml');
   }
   //override updateWorkspacePackageJSON
   async updateWorkspacePackageJSON() {
