@@ -1,17 +1,19 @@
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import { join, resolve } from 'path';
+import { spawn } from 'child_process';
 
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { join, resolve } from 'path';
-import { spawn } from 'child_process';
 import {
   GLUE_GENERATED_PACKAGES_PATH,
   GLUE_GENERATED_SEAL_SERVICES_PATH,
 } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+
 import { writeDbClientSdk } from './helpers/write-db-client-sdk';
 import { writeDbServerSdk } from './helpers/write-db-server-sdk';
+
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
   name: string;
@@ -45,15 +47,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getDockerfile(): string {
-    return `${this._sourcePath}/Dockerfile`;
+    return join(this._sourcePath, 'Dockerfile');
   }
 
   getSealServicefile(): string {
-    return `${this._sourcePath}/seal.service.yaml`;
+    return join(this._sourcePath, 'bolt.service.yaml');
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/server/${this.getName()}`;
+    return join(process.cwd(), 'server', this.getName());
   }
 
   getGatewayInstanceInfo() {
@@ -95,7 +97,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     instanceDestinationPath: string,
     subCommand: any
   ): Promise<void> {
-    let allOptions = subCommand.opts.slice(2);
+    const allOptions = subCommand.opts.slice(2);
+
+    // eslint-disable-next-line no-console
     console.log(
       [
         'prisma',
@@ -108,6 +112,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       cwd: resolve(instanceDestinationPath, '..'),
     })
       .on('close', () => {
+        // eslint-disable-next-line no-console
         console.log('npm installed');
         spawn(
           'npx',
@@ -123,25 +128,32 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           }
         )
           .on('close', () => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate generated');
           })
           .on('error', (err) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate error', err);
           })
           .on('exit', (code) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate exit', code);
           })
           .on('message', (message) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate message', message);
           });
       })
       .on('error', (err) => {
+        // eslint-disable-next-line no-console
         console.log('npm install error', err);
       })
       .on('exit', (code) => {
+        // eslint-disable-next-line no-console
         console.log('npm install exit', code);
       })
       .on('message', (message) => {
+        // eslint-disable-next-line no-console
         console.log('npm install message', message);
       });
   }
@@ -150,7 +162,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     instanceDestinationPath: string,
     subCommand: any
   ): Promise<void> {
-    let allOptions = subCommand.opts.slice(2);
+    const allOptions = subCommand.opts.slice(2);
+    // eslint-disable-next-line no-console
     console.log(
       [
         'prisma',
@@ -164,6 +177,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       cwd: resolve(instanceDestinationPath, '..'),
     })
       .on('close', () => {
+        // eslint-disable-next-line no-console
         console.log('npm installed');
         spawn(
           'npx',
@@ -180,25 +194,32 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           }
         )
           .on('close', () => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate generated');
           })
           .on('error', (err) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate error', err);
           })
           .on('exit', (code) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate exit', code);
           })
           .on('message', (message) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma migrate message', message);
           });
       })
       .on('error', (err) => {
+        // eslint-disable-next-line no-console
         console.log('npm install error', err);
       })
       .on('exit', (code) => {
+        // eslint-disable-next-line no-console
         console.log('npm install exit', code);
       })
       .on('message', (message) => {
+        // eslint-disable-next-line no-console
         console.log('npm install message', message);
       });
   }
@@ -210,6 +231,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       cwd: resolve(instanceDestinationPath, '..'),
     })
       .on('close', () => {
+        // eslint-disable-next-line no-console
         console.log('npm installed');
         spawn(
           'npx',
@@ -224,6 +246,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           }
         )
           .on('close', () => {
+            // eslint-disable-next-line no-console
             console.log('Prisma generated');
             const sdkPlugin = this.app.getPluginByName(
               '@gluestack-v2/glue-plugin-service-sdk'
@@ -238,22 +261,28 @@ export class PluginInstance extends BaseGluestackPluginInstance {
             });
           })
           .on('error', (err) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma generate error', err);
           })
           .on('exit', (code) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma generate exit', code);
           })
           .on('message', (message) => {
+            // eslint-disable-next-line no-console
             console.log('Prisma generate message', message);
           });
       })
       .on('error', (err) => {
+        // eslint-disable-next-line no-console
         console.log('npm install error', err);
       })
       .on('exit', (code) => {
+        // eslint-disable-next-line no-console
         console.log('npm install exit', code);
       })
       .on('message', (message) => {
+        // eslint-disable-next-line no-console
         console.log('npm install message', message);
       });
   }

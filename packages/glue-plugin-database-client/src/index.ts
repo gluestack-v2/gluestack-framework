@@ -1,32 +1,26 @@
+import dotenv from 'dotenv';
+import { join } from 'path';
+import prompts from 'prompts';
+
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
-
-import dotenv from "dotenv";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
-
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-
-import fs from "fs";
-import { join } from "path";
-import prompts from "prompts";
-import fileExists from "./helpers/file-exists";
-import writeFile from "./helpers/write-file";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { readfile } from "./helpers/read-file";
-import rm from "./helpers/rm";
-import { ICommand } from "@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback";
-import migrateCommand from "./commands/migrate";
-import generateCommand from "./commands/generate";
-import dbCommand from "./commands/db";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
+import writeFile from './helpers/write-file';
+import migrateCommand from './commands/migrate';
+import generateCommand from './commands/generate';
+import dbCommand from './commands/db';
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -35,7 +29,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
-    this.runningPlatforms = ["docker"];
+    this.runningPlatforms = ['docker'];
   }
 
   init() {
@@ -61,7 +55,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./server/${target}`;
+    return join('server', target);
   }
 
   async runPostInstall(instanceName: string, target: string) {
@@ -77,7 +71,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     const databasePlugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-database"
+      '@gluestack-v2/glue-plugin-database'
     ) as IPlugin;
     if (!databasePlugin) {
       return;
@@ -101,11 +95,11 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const questions: prompts.PromptObject[] = [
       {
-        type: "select",
-        name: "DATABASE_INSTANCE_NAME",
-        message: "Select a database instance",
+        type: 'select',
+        name: 'DATABASE_INSTANCE_NAME',
+        message: 'Select a database instance',
         choices: choices,
-        validate: (value: string) => value !== "",
+        validate: (value: string) => value !== '',
       },
     ];
 
@@ -113,10 +107,10 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     const answers = await prompts(questions);
 
     // Update the instance .env-local file
-    const envPath = join(instance._sourcePath, ".env");
+    const envPath = join(instance._sourcePath, '.env');
 
     dotenv.config({
-      path: join(answers.DATABASE_INSTANCE_NAME.path, ".env"),
+      path: join(answers.DATABASE_INSTANCE_NAME.path, '.env'),
     });
 
     const { DATABASE_URL } = process.env;
@@ -139,10 +133,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     );
     this.instances.push(instance);
     return instance;
-  }
-
-  testFunction() {
-    console.log("test");
   }
 
   getInstances(): IInstance[] {
