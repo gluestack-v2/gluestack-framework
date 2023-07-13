@@ -1,24 +1,12 @@
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
-
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-
-import path, { join } from 'path';
+import { join } from 'path';
 import fs from 'fs';
-import { removeSpecialChars } from '@gluestack/helpers';
-import fileExists from './helpers/file-exists';
-import rm from './helpers/rm';
-import copyFolder from './helpers/copy-folder';
-import { spawnSync } from 'child_process';
-// @ts-ignore
-
 import prompts from 'prompts';
 
 // Do not edit the name of this class
@@ -107,7 +95,7 @@ DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@lo
   }
 
   getInstallationPath(target: string): string {
-    return `./${this.pluginEnvironment}/${target}`;
+    return join(this.pluginEnvironment, target);
   }
 
   createInstance(
@@ -124,10 +112,6 @@ DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@lo
     );
     this.instances.push(instance);
     return instance;
-  }
-
-  testFunction() {
-    console.log('test');
   }
 
   getInstances(): IInstance[] {

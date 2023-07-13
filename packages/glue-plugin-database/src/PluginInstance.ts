@@ -1,12 +1,8 @@
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-// import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-// import { join } from 'path';
-// import fileExists from './helpers/file-exists';
-// import writeFile from './helpers/write-file';
+import { join } from 'path';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -41,15 +37,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getDockerfile(): string {
-    return `${this._sourcePath}/Dockerfile`;
+    return join(this._sourcePath, 'Dockerfile');
   }
 
   getSealServicefile(): string {
-    return `${this._sourcePath}/seal.service.yaml`;
+    return join(this._sourcePath, 'bolt.service.yaml');
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+    return join(process.cwd(), this.getPluginEnvironment(), this.getName());
   }
 
   getPluginEnvironment() {
