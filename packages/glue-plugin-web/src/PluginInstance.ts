@@ -88,6 +88,5 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         }
       }
     );
-    await this.boltUp('local');
   }
 }

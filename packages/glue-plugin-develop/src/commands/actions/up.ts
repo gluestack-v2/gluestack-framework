@@ -52,21 +52,21 @@ const upSealService = async (
   //TODO: remove later
   // for continuous logging output
   if (verbose) {
-    execute(
-      'sh',
-      [
-        '-c',
-        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
-      ],
-      { stdio: 'inherit' }
-    );
+    // execute(
+    //   'sh',
+    //   [
+    //     '-c',
+    //     `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
+    //   ],
+    //   { stdio: 'inherit' }
+    // );
 
     // for continuous error logging output
     execute(
       'sh',
       [
         '-c',
-        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log`,
+        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log && .logs/${serviceName}/out.log`,
       ],
       { stdio: 'inherit' }
     );
