@@ -51,7 +51,7 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 	}
 
 	getInstallationPath(target: string): string {
-		return `./${target}`;
+		return join(target);
 	}
 
 	getInstances(): IInstance[] {
