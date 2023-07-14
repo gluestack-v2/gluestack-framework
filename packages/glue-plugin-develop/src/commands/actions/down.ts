@@ -7,19 +7,18 @@ import { execute } from '../../helpers/execute';
 const downSealService = async (serviceName: string) => {
   await execute(
     'sh',
-    [
-      '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:down ${serviceName}`,
-    ],
+    ['-c', `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt down`],
     {
       stdio: 'inherit',
     }
   );
 };
 
-const dockerVolumeCleanup = async () => {
-  await execute('docker', ['volume', 'prune', '-f'], { stdio: 'inherit' });
-};
+// const dockerVolumeCleanup = async () => {
+//   console.log('heree');
+//   await execute('docker', ['volume', 'prune', '-f'], { stdio: 'inherit' });
+//   console.log('still heree');
+// };
 
 export default async (app: AppCLI): Promise<void> => {
   for await (const plugin of app.plugins) {
@@ -37,5 +36,5 @@ export default async (app: AppCLI): Promise<void> => {
     }
   }
 
-  await dockerVolumeCleanup();
+  // await dockerVolumeCleanup();
 };

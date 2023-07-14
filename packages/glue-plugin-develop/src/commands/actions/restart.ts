@@ -11,15 +11,8 @@ import { executeMultipleTerminals } from '../../helpers/execute-multiple-termina
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { execute } from '../../helpers/execute';
 
-
-
 export default async (app: AppCLI, opts: any): Promise<void> => {
-  execute(
-    'sh',
-    [
-      '-c',
-      `node glue down && node glue up --verbose`,
-    ],
-    { stdio: 'inherit' }
-  );
+  execute('sh', ['-c', `node glue down && node glue up --verbose`], {
+    stdio: 'inherit',
+  });
 };

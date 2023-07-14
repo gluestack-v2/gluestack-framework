@@ -28,7 +28,7 @@ const upSealService = async (
   }
 
   // build all packages
-
+  console.log(serviceName, servicePlatform);
   executeMultipleTerminals(
     'sh',
     [
@@ -40,14 +40,14 @@ const upSealService = async (
 
   // bolt up all services
 
-  executeMultipleTerminals(
-    'sh',
-    [
-      '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
-    ],
-    { stdio: 'inherit' }
-  );
+  // executeMultipleTerminals(
+  //   'sh',
+  //   [
+  //     '-c',
+  //     `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+  //   ],
+  //   { stdio: 'inherit' }
+  // );
 
   //TODO: remove later
   // for continuous logging output
