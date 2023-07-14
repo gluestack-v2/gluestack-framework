@@ -9,7 +9,11 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
 import { SEAL_SERVICES_PATH } from '../constants/seal';
 
 import { Workspaces } from '@gluestack/helpers';
-import { writeFile, fileExists, readEnvFile } from '../helpers/file';
+import {
+	writeFile,
+	fileExistsSync,
+	readEnvFile,
+} from '../helpers/file';
 import { spawnSync } from 'child_process';
 
 export default abstract class BaseGluestackPluginInstance
@@ -212,17 +216,19 @@ export default abstract class BaseGluestackPluginInstance
 
 	async boltInit() {
 		// seal init and seal service add in the services folder
-		const sealInit = spawnSync('sh', [
-			'-c',
-			`cd ${SEAL_SERVICES_PATH} && bolt init`,
-		]);
+		if (!fileExistsSync(join(SEAL_SERVICES_PATH, 'bolt.yaml'))) {
+			const sealInit = spawnSync('sh', [
+				'-c',
+				`cd ${SEAL_SERVICES_PATH} && bolt init`,
+			]);
 
-		if (sealInit.status !== 0) {
-			console.error(`Command failed with code ${sealInit.status}`);
+			if (sealInit.status !== 0) {
+				console.error(`Command failed with code ${sealInit.status}`);
+			}
+			// eslint-disable-next-line no-console
+			console.log(sealInit.stdout.toString());
+			console.error(sealInit.stderr.toString());
 		}
-		// eslint-disable-next-line no-console
-		console.log(sealInit.stdout.toString());
-		console.error(sealInit.stderr.toString());
 
 		const sealAddService = spawnSync('sh', [
 			'-c',
