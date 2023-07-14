@@ -262,7 +262,7 @@ export default abstract class BaseGluestackPluginInstance
 	}
 
 	async buildBeforeWatch() {
-		if (!(await fileExists(this._destinationPath))) {
+		if (!(await fileExistsSync(this._destinationPath))) {
 			try {
 				await this.build();
 			} catch (error) {
