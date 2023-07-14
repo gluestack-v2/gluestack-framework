@@ -2,19 +2,12 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import chokidar from 'chokidar';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import path1, { join } from 'path';
-import fs, { unlinkSync } from 'fs';
-import writeFile from './helpers/write-file';
-import fileExists from './helpers/file-exists';
+import { join } from 'path';
+
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import { writeStorageClient } from './helpers/write-storage-client';
-import {
-  GLUE_GENERATED_PACKAGES_PATH,
-  GLUE_GENERATED_SEAL_SERVICES_PATH,
-} from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_PACKAGES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import { writeStorageServerSdk } from './helpers/write-storage-server-sdk';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
@@ -70,6 +63,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
     await this.app.createPackage(`${this.getName()}-client-sdk`, sdkPath);
+
+    await this.app.updateNameInPackageJSON(
+      sdkPath,
+      `${this.getName()}-server-sdk`
+    );
     await writeStorageClient(this.getName(), clientPackagePath);
 
     const serverPackagePath = join(
@@ -79,6 +77,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.createPackage(`${this.getName()}-server-sdk`, sdkPath);
 
     await writeStorageServerSdk(this.getName(), serverPackagePath);
+
+    await this.app.updateNameInPackageJSON(
+      serverPackagePath,
+      `${this.getName()}-server-sdk`
+    );
 
     // await this.writeSdkForStorageClient();
   }
