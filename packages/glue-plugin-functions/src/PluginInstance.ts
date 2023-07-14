@@ -114,6 +114,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.createPackage(`${this.getName()}-sdk`, sdkPath);
 
     await writeSDK(packagePath, this._sourcePath, []);
+    await this.app.updateNameInPackageJSON(
+      packagePath,
+      `${this.getName()}-sdk`
+    );
   }
 
   async build() {
