@@ -13,10 +13,7 @@ const installNPMDependencies = async (app: AppCLI) => {
     );
     await execute(
       'sh',
-      [
-        '-c',
-        `cd ${join(service, 'src')} && npm run install:all && npm run build`,
-      ],
+      ['-c', `cd ${join(service, 'src')} && npm run install:all`],
       { stdio: 'inherit' }
     );
   }

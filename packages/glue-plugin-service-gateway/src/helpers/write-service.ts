@@ -180,7 +180,7 @@ const writeService = async (
     privateMolecularEvents
   );
 
-  console.log('Updating API Gateway', installationPath, functionInstanceName);
+  // console.log('Updating API Gateway', installationPath, functionInstanceName);
 
   updateApiGateway(installationPath, functionInstanceName);
 };
@@ -296,36 +296,74 @@ function getEvents(filePathData: any) {
   return { events, importPaths: functionImportStatement };
 }
 
-function updateApiGateway(installationPath: string, instanceName: string) {
+function getWhitelist(apiGatewayPath: any) {
+  const data = fs.readFileSync(apiGatewayPath, {
+    encoding: 'utf-8',
+  });
+  const regex = /whitelist(.*)\n/gm;
+  const matches: any = data.match(regex);
+  // return;
+  if (!matches) {
+    let writeData = data.replace(
+      '// ***Update Whitlisted services here***',
+      `whitelist: [],`
+    );
+    fs.writeFileSync(apiGatewayPath, writeData);
+
+    // const data1 = fs.readFileSync(apiGatewayPath, {
+    //   encoding: 'utf-8',
+    // });
+    // const regex1 = /whitelist(.*)\n/gm;
+    // const matches1: any = data1.match(regex1);
+
+    return { whitelist: [], match: null, fileData: data };
+  } else {
+    const str = matches[0];
+    const vals = str.match(/\[(.*?)\]/)[1];
+    let whitelistArray = vals.split(',');
+
+    // Remove extra quotes and trim whitespace
+    whitelistArray = whitelistArray.map((item: any) =>
+      item.replace(/"/g, '').trim()
+    );
+    // vals.map((val: any) => whitelistArray.push(val));
+
+    return { whitelist: whitelistArray, match: matches[0], fileData: data };
+  }
+}
+
+export function updateApiGateway(
+  installationPath: string,
+  instanceName: string
+) {
   const apiGatewayPath = path.join(
     installationPath,
     'services',
     'api.service.js'
   );
-  const whitelistedArr = [`${instanceName}.**`];
-  const data = fs.readFileSync(apiGatewayPath, {
-    encoding: 'utf-8',
-  });
-  let writeData = ``;
-  let whitelist: any = {};
-  if (data.includes('// ***Update Whitlisted services here***')) {
-    writeData = data.replace(
-      '// ***Update Whitlisted services here***',
-      `whitelist: ${JSON.stringify(whitelistedArr)},`
+
+  // const whitelistedArr = [`${instanceName}.**`];
+
+  let { whitelist } = getWhitelist(apiGatewayPath);
+
+  if (!whitelist.includes(`${instanceName}.**`)) {
+    //   // FIX: Remove dbClient from whitelist
+    whitelist = [...whitelist, `${instanceName}.**`];
+    const data1 = fs.readFileSync(apiGatewayPath, {
+      encoding: 'utf-8',
+    });
+    const regex1 = /whitelist(.*)\n/gm;
+    const matches1: any = data1.match(regex1);
+    const writeData = data1.replace(
+      matches1[0],
+      `whitelist: ${JSON.stringify(whitelist)},`
     );
     fs.writeFileSync(apiGatewayPath, writeData);
-  } else {
-    const regex = /whitelist(.*)\n/gm;
-    const matches: any = data.match(regex);
-
-    eval(`whitelist = {${matches[0]}}`);
-    let whitelistArray = whitelist.whitelist;
-    if (!whitelistArray.includes(`${instanceName}.**`)) {
-      whitelistArray = [...whitelistArray, ...whitelistedArr];
-      writeData = data.replace(matches[0], JSON.stringify(whitelistArray));
-      fs.writeFileSync(apiGatewayPath, writeData);
-    }
   }
+
+  // console.log('hello here', whitelist);
+  // const writeData = fileData.replace(match, JSON.stringify(whitelist));
+  // fs.writeFileSync(apiGatewayPath, writeData);
 }
 
 async function createService(

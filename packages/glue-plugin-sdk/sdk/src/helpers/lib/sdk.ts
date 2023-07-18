@@ -81,6 +81,7 @@ export default class SDK {
 			} else {
 				provider = localProviders[key];
 			}
+			console.log(provider, 'provider');
 			// @ts-ignore
 			const providerInstance = new provider(this);
 			// set for alias

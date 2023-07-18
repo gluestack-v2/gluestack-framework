@@ -21,6 +21,7 @@ import {
   TrashIcon,
 } from '@/components';
 import { defaultTodos, getCompletedTasks, getDay } from '@/utils';
+import ClientSDK from '@project/client-sdk';
 
 // import { Box, Text } from "../components";
 
@@ -37,53 +38,135 @@ const Meta = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Todo = () => {
+  // console.log('herrreee');
+  async function test() {
+    console.log(
+      await ClientSDK.providers.get('dbClient').prisma.user.findMany()
+    );
+  }
+  // async function addUser() {
+  //   console.log(
+  //     await ClientSDK.providers.get('dbClient').prisma.user.create({
+  //       data: {
+  //         // name: 'Alice',
+  //         title: 'CEO',
+  //         votes: 3,
+  //         status: false,
+  //       },
+  //     })
+  //   );
+  // }
   const [item, setItem] = useState('');
-  const [todos, setTodos] = useState(defaultTodos);
+  const [todos, setTodos] = useState();
   const [swipedItemId, setSwipedItemId] = useState(null);
   const [lastItemSelected, setLastItemSelected] = useState(false);
-
-  const addTodo = () => {
-    const lastTodo = todos[todos.length - 1];
-
-    if (lastTodo.task !== '') {
-      setTodos([
-        ...todos,
-        {
-          id: shortid.generate(),
-          task: '',
-          completed: false,
-        },
-      ]);
-      setItem('');
-      setLastItemSelected(false);
+  useEffect(() => {
+    async function getTodos() {
+      try {
+        let todos = await ClientSDK.providers
+          .get('dbClient')
+          .prisma.todosList.findMany();
+        console.log(todos, 'Todooosss');
+        setTodos(todos);
+      } catch (err) {
+        console.log(err, 'error');
+      }
     }
+    getTodos();
+  }, []);
+
+  async function seedTodos() {
+    // console.log(defaultTodos, 'Saving dattta');
+    // await ClientSDK.providers.get('functionSDK').functions.add();
+    await ClientSDK.providers.get('dbClient').prisma.user.createMany({
+      data: [
+        {
+          // name: 'Alice',
+          title: 'nndndndndndnd',
+          votes: 81,
+          status: false,
+        },
+      ],
+    });
+    // console.log(
+    //   await ClientSDK.providers.get('functionSDK').functions.add(2, 3)
+    // );
+  }
+
+  async function getTodos() {
+    try {
+      let todos = await ClientSDK.providers
+        .get('dbClient')
+        .prisma.todosList.findMany();
+      console.log(todos, 'Todooosss');
+      setTodos(todos);
+    } catch (err) {
+      console.log(err, 'error');
+    }
+  }
+
+  const addTodo = async () => {
+    // const lastTodo = todos[todos.length - 1];
+
+    // if (lastTodo.task !== '') {
+    //   setTodos([
+    //     ...todos,
+    //     {
+    //       id: shortid.generate(),
+    //       task: '',
+    //       completed: false,
+    //     },
+    //   ]);
+    //   setItem('');
+    //   setLastItemSelected(false);
+    // }
+    await ClientSDK.providers.get('dbClient').prisma.todosList.create({
+      data: {
+        // name: 'Alice',
+        task: '',
+        completed: false,
+      },
+    });
   };
 
   return (
     <Box m="$10">
       <Box px="$6">
-        <Text color="$dark900" fontWeight="$bold" fontSize="$xl">
-          {getDay()}
-        </Text>
+        <HStack justifyContent="space-between">
+          <Text color="$dark900" fontWeight="$bold" fontSize="$xl">
+            {getDay()}
+          </Text>
+          <HStack space="md">
+            <Button onPress={seedTodos} variant="outline" action="secondary">
+              <Button.Text>seed todos</Button.Text>
+            </Button>
+            <Button onPress={getTodos} variant="outline" action="secondary">
+              <Button.Text>Add todo</Button.Text>
+            </Button>
+          </HStack>
+        </HStack>
         <ProgressBar
           completedTasks={getCompletedTasks(
             todos,
             item != '' && lastItemSelected
           )}
-          totalTasks={item !== '' ? todos.length + 1 : todos.length}
+          totalTasks={item !== '' && todos ? todos.length + 1 : 0}
         />
       </Box>
-
-      {todos.map((todo, index) => (
-        <SwipeableContainer
-          key={index}
-          todo={todo}
-          todos={todos}
-          setTodos={setTodos}
-          swipedItemId={swipedItemId}
-          setSwipedItemId={setSwipedItemId}
-        />
-      ))}
+      {todos ? (
+        todos?.map((todo, index) => (
+          <SwipeableContainer
+            key={index}
+            todo={todo}
+            todos={todos}
+            setTodos={setTodos}
+            swipedItemId={swipedItemId}
+            setSwipedItemId={setSwipedItemId}
+          />
+        ))
+      ) : (
+        <Text>No todos found</Text>
+      )}
 
       <Pressable
         mb="$32"

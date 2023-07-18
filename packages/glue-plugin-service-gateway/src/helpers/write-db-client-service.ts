@@ -10,6 +10,7 @@ import { readfile } from './readfile';
 // import replaceHandlerNames from "./replace-handler-names";
 // import getFileNameWithoutExtension from "./get-file-name-without-ext";
 import moleculerDbClientServiceTemplateFunc from './dbclient-service-template';
+import { updateApiGateway } from './write-service';
 // function filePathExtension(filePath: string) {
 //   return filePath.split(".").pop() ?? "";
 // }
@@ -64,5 +65,7 @@ const writeDbClientService = async (
   //   )
   // );
   // }
+  updateApiGateway(generatedServiceGatewayPath, instanceName);
+  updateApiGateway(generatedServiceGatewayPath, 'dbCLient1');
 };
 export default writeDbClientService;

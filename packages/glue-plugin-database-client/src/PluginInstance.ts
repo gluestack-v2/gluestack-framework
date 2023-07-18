@@ -248,17 +248,17 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           .on('close', () => {
             // eslint-disable-next-line no-console
             console.log('Prisma generated');
-            const sdkPlugin = this.app.getPluginByName(
-              '@gluestack-v2/glue-plugin-service-sdk'
-            );
-            const functionsPlugin = this.app.getPluginByName(
-              '@gluestack-v2/glue-plugin-functions'
-            );
-            const functionsInstance = functionsPlugin?.getInstances();
-            functionsInstance?.forEach((instance) => {
-              // @ts-ignore
-              sdkPlugin.generateClientSDK(instance._sourcePath, []);
-            });
+            // const sdkPlugin = this.app.getPluginByName(
+            //   '@gluestack-v2/glue-plugin-service-sdk'
+            // );
+            // const functionsPlugin = this.app.getPluginByName(
+            //   '@gluestack-v2/glue-plugin-functions'
+            // );
+            // const functionsInstance = functionsPlugin?.getInstances();
+            // functionsInstance?.forEach((instance) => {
+            //   // @ts-ignore
+            //   sdkPlugin.generateClientSDK(instance._sourcePath, []);
+            // });
           })
           .on('error', (err) => {
             // eslint-disable-next-line no-console
@@ -316,13 +316,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
     await this.app.createPackage(`${this.getName()}-client-sdk`, sdkPath);
-    const functionsPlugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-functions'
-    );
-    const functionsInstance = functionsPlugin?.getInstances();
-    functionsInstance?.forEach(async (instance) => {
-      await writeDbClientSdk(instance._sourcePath, clientPackagePath);
-    });
+    // const functionsPlugin = this.app.getPluginByName(
+    //   '@gluestack-v2/glue-plugin-functions'
+    // );
+    // const functionsInstance = functionsPlugin?.getInstances();
+    // functionsInstance?.forEach(async (instance) => {
+    await writeDbClientSdk(clientPackagePath);
+    // });
 
     const serverPackagePath = join(
       GLUE_GENERATED_PACKAGES_PATH,

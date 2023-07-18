@@ -5,14 +5,15 @@ const template = () =>
   */
  
  /** @type {ServiceSchema} */
-
+ 
  const { PrismaClient } = require('@prisma/client');
  const { default: ServerSDK } = require('@project/server-sdk');
- const { default: DbServerSDK } = require('@project/db-client-server-sdk');
-
+ const Context = require('../Context.ts');
+ const { default: DbServerSDK } = require('@project/dbclient-server-sdk');
+ 
  module.exports = {
-   name: "dbclient",
-
+   name: 'dbclient',
+ 
    /**
     * Settings
     */
@@ -27,6 +28,50 @@ const template = () =>
     * Actions
     */
    actions: {
+     db: {
+       rest: {
+         method: 'POST',
+         path: '/db',
+       },
+       handler: async (ctx) => {
+         const context = new Context(ctx);
+         const { query } = ctx.params;
+         let resolvedQuery = context.sdk.providers.get('dbClient').prisma;
+         return new Promise((resolve, reject) => {
+           let res;
+           query.forEach(async (q) => {
+             if (q.type === 'key') {
+               resolvedQuery = resolvedQuery?.[q.key];
+             }
+             if (q.type === 'function') {
+               arguments = q.args || {};
+               console.log('in function', arguments, q.key);
+               if (q.args) {
+                 try {
+                   console.log('in if');
+                   res = await resolvedQuery?.[q.key](arguments);
+                   console.log(
+                     res,
+                     arguments,
+                     resolvedQuery?.[q.key](arguments)
+                   );
+                   resolve(res);
+                 } catch (err) {
+                   reject(err);
+                 }
+               } else {
+                 try {
+                   res = await resolvedQuery?.[q.key]();
+                   resolve(res);
+                 } catch (err) {
+                   reject(err);
+                 }
+               }
+             }
+           });
+         });
+       },
+     },
    },
  
    /**
@@ -43,7 +88,7 @@ const template = () =>
     * Service created lifecycle event handler
     */
    created() {
-    ServerSDK.providers.get(DbServerSDK).setDbClient(new PrismaClient());
+     ServerSDK.providers.get(DbServerSDK).setDbClient(new PrismaClient());
    },
  
    /**

@@ -2,10 +2,7 @@ import path from 'path';
 import { writeFile } from '@gluestack/helpers';
 import fs from 'fs';
 
-export async function writeDbClientSdk(
-  functionSourcePath: any,
-  destinationPath: any
-) {
+export async function writeDbClientSdk(destinationPath: any) {
   const sdkPath = destinationPath;
 
   let sdkFileContent = fs
@@ -50,11 +47,15 @@ export async function writeDbClientSdk(
                 try {
                   const response = await axios({
                     method: "post",
-                    url: "http://localhost:3003/api/functions/functions/db",
+                    url: "http://localhost:3003/api/dbClient/db", 
                     data: { query: SDK.propChain },
                   });
+                  //TODO: review-rohit
+                  SDK.propChain = [];
                   resolve(response.data);
                 } catch (error: any) {
+                  //TODO: review-rohit
+                  SDK.propChain = [];
                   reject(error.message);
                 }
               });
@@ -87,24 +88,25 @@ export async function writeDbClientSdk(
   await writeFile(path.join(sdkPath, 'src', 'index.ts'), sdkFileContent);
 
   // create db.ts file in functions instance folder
-  const dbTs = `
-  module.exports = async function handler(ctx) {
-    const { query } = ctx.params;
-    const { prismaClient } = ctx.sdk;
-    let resolvedQuery = prismaClient;
-    query.forEach(async (q) => {
-      if (q.type === "key") {
-        resolvedQuery = resolvedQuery?.[q.key];
-      }
-      if (q.type === "function") {
-        arguments = q.args || {};
-        resolvedQuery = await resolvedQuery?.[q.key](arguments);
-      }
-    });
-    return resolvedQuery;
-  };
-  `;
+  // const dbTs = `
+  // module.exports = async function handler(ctx) {
+  //   const { query } = ctx.params;
+  //   // const { prismaClient } = ctx.sdk;
+  //   let resolvedQuery = ctx.sdk.providers.get('dbClient').prisma;
 
-  const dbTsPath = path.join(functionSourcePath, 'db.ts');
-  await writeFile(dbTsPath, dbTs);
+  //   query.forEach(async (q) => {
+  //     if (q.type === "key") {
+  //       resolvedQuery = resolvedQuery?.[q.key];
+  //     }
+  //     if (q.type === "function") {
+  //       arguments = q.args || {};
+  //       resolvedQuery = await resolvedQuery?.[q.key](arguments);
+  //     }
+  //   });
+  //   return resolvedQuery;
+  // };
+  // `;
+
+  // const dbTsPath = path.join(functionSourcePath, 'db.ts');
+  // await writeFile(dbTsPath, dbTs);
 }
