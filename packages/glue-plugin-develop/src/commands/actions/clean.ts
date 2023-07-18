@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync, rmSync } from 'fs';
+import { writeFileSync, existsSync, rmSync } from 'fs';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import { error } from '@gluestack-v2/framework-cli/build/helpers/print';
 import { fileExists } from '@gluestack/helpers';
@@ -79,10 +79,9 @@ export default async (app: AppCLI, instanceName: any): Promise<void> => {
   removeFolder(path.join(process.cwd(), '.glue', '__generated__'));
   removeFolder(path.join(process.cwd(), 'client'));
   removeFolder(path.join(process.cwd(), 'server'));
-  console.log(`Clean successful!`);
 };
 
-const removeFolder = (absolutePath) => {
+const removeFolder = (absolutePath: any) => {
   try {
     rmSync(absolutePath, {
       recursive: true,

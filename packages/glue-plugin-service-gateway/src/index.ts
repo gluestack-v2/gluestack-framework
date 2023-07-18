@@ -13,7 +13,7 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { readfile } from './helpers/readfile';
+import readfile from '@gluestack-v2/framework-cli/build/helpers/file/read-file';
 
 import { join } from 'path';
 import { fileExists, writeFile } from '@gluestack/helpers';
@@ -126,7 +126,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           instance._destinationPath,
           instancePath,
           instanceName,
-          ignoredPaths
+          // ignoredPaths
         );
       }
     }

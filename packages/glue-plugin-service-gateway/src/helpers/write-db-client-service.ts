@@ -3,12 +3,7 @@ import path from 'path';
 
 // const sdkIndexTemplate = require("./templates/sdkIndexTemplate")();
 
-import writeFile from './write-file';
-// import { readfile } from './readfile';
-// import getPathAfterString from "./get-path-after-string";
-// import writeSDKFunction from "./write-sdk-function";
-// import replaceHandlerNames from "./replace-handler-names";
-// import getFileNameWithoutExtension from "./get-file-name-without-ext";
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import moleculerDbClientServiceTemplateFunc from './dbclient-service-template';
 import { updateApiGateway } from './write-service';
 // function filePathExtension(filePath: string) {

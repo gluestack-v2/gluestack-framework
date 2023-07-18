@@ -1,5 +1,5 @@
 import path from 'path';
-import { writeFile } from '@gluestack/helpers';
+import { writeFile } from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import fs from 'fs';
 
 const minioMap = [
@@ -58,7 +58,7 @@ const minioMap = [
   'removeBucketReplication',
 ];
 
-const operationTemplate = (operationName: string, instanceName: string) => {
+const operationTemplate = (operationName: string, _instanceName: string) => {
   return `
   ${operationName} (params:any)  {
     return new Promise(async (resolve: any, reject: any) => {
@@ -112,12 +112,4 @@ export async function writeStorageClient(
       finalString
     )
   );
-
-  // await writeFile(
-  //   sdkSrcIndex,
-  //   sdKData.replace(
-  //     "// **---Functions will be added after this---**",
-  //     storageClientTemplate(storageClientInstanceName)
-  //   )
-  // );
 }

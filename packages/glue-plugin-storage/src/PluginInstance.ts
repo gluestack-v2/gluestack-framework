@@ -4,8 +4,8 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import { join } from 'path';
-import fileExists from './helpers/file-exists';
-import writeFile from './helpers/write-file';
+import fileExists from '@gluestack-v2/framework-cli/build/helpers/file/file-exists';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import { defaultConfig } from './commands/minioConfig';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
@@ -141,7 +141,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+    return join(process.cwd(), this.getPluginEnvironment(), this.getName());
   }
 
   getPluginEnvironment() {
@@ -151,7 +151,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   // TODO: Move to index.ts
   getInstallationPath(): string {
-    return `./server/${this.getName()}`;
+    return join('server', this.getName());
   }
 
   async editSealAndDockerFile(): Promise<void> {

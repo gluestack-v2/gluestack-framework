@@ -48,7 +48,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,

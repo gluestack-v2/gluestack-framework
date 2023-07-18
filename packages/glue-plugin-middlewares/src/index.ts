@@ -4,20 +4,8 @@ import packageJSON from '../package.json';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import { eventsTemplate } from './helpers/template';
-import { join } from 'path';
-import { spawnSync } from 'child_process';
-import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
 
-import rm from './helpers/rm';
-import writeFile from './helpers/write-file';
-import fileExists from './helpers/file-exists';
 import { PluginInstance } from './PluginInstance';
-import { reWriteFile } from './helpers/rewrite-file';
-import { rmdir } from 'fs/promises';
-import copyFolder from './helpers/copy-folder';
-import { readfile } from './helpers/readfile';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
 // Do not edit the name of this class

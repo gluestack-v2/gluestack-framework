@@ -2,12 +2,8 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import chokidar from 'chokidar';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import path1, { join } from 'path';
-import fs, { unlinkSync } from 'fs';
-import writeFile from './helpers/write-file';
-import fileExists from './helpers/file-exists';
+import { join } from 'path';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 

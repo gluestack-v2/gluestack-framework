@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 
 const createFoldersFromJson = async (
-  config: any, rootPath: string = '.'
+  config: any,
+  rootPath: string = '.'
 ): Promise<void> => {
   for (const [folderName, subfolders] of Object.entries(config)) {
     const folderPath = `${rootPath}/${folderName}`;

@@ -5,7 +5,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import { join } from 'path';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
