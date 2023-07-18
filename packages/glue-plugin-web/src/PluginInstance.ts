@@ -3,7 +3,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { reWriteFile } from './helpers/rewrite-file';
+import reWriteFile from '@gluestack-v2/framework-cli/build/helpers/file/rewrite-file';
 const yaml = require('js-yaml');
 const fs = require('fs');
 
