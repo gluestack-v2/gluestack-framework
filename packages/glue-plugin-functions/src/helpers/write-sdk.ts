@@ -2,7 +2,7 @@ import path, { join } from 'path';
 import fs, { readFileSync } from 'fs';
 import { writeFile } from '@gluestack/helpers';
 import writeSDKFunction from './write-sdk-function';
-import getFileNameWithoutExtension from './get-file-name-without-ext';
+import getFileNameWithoutExtension from '@gluestack-v2/framework-cli/build/helpers/file/get-file-name-without-ext';
 function filePathExtension(filePath: string) {
   return filePath.split('.').pop() ?? '';
 }
