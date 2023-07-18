@@ -22,9 +22,16 @@ export const parameters = {
         'Plugins',
         [
           'Development Plugins',
-          ['glue-plugin-develop'],
+          ['glue-plugin-cli', 'glue-plugin-develop'],
           'Feature Plugins',
-          ['glue-plugin-web'],
+          [
+            'glue-plugin-web',
+            'glue-sdk-plugin',
+            'glue-plugin-service-gateway',
+            'glue-plugin-functions',
+            'glue-plugin-database',
+            'glue-plugin-database-client',
+          ],
         ],
       ],
     },
