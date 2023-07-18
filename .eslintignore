@@ -14,5 +14,7 @@ packages/**/example
 ui/packages/ui/.ondevice
 babel.config.js
 
+example/**
 example/storybook
 example/expo-app
+example/gluestack-app/**

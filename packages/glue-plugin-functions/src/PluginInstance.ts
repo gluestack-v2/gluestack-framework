@@ -95,10 +95,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   generateFunctionsInServiceSdk(ignoredPaths: any) {
-    const plugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-service-sdk'
-    ) as IPlugin;
-
     // @ts-ignore
     plugin.generateSDK(this._sourcePath, this.getName(), ignoredPaths);
   }

@@ -82,6 +82,5 @@ npm run install:all
 npm run build:plugins
 node glue add @gluestack-v2/glue-plugin-develop develop
 node glue add @gluestack-v2/glue-plugin-web web
-node glue add @gluestack-v2/glue-plugin-service-sdk sdk
 node glue add @gluestack-v2/glue-plugin-service-gateway gateway
 node glue add @gluestack-v2/glue-plugin-functions functions

@@ -248,9 +248,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
           .on('close', () => {
             // eslint-disable-next-line no-console
             console.log('Prisma generated');
-            const sdkPlugin = this.app.getPluginByName(
-              '@gluestack-v2/glue-plugin-service-sdk'
-            );
+            // const sdkPlugin = this.app.getPluginByName(
+            //   '@gluestack-v2/glue-plugin-service-sdk'
+            // );
             const functionsPlugin = this.app.getPluginByName(
               '@gluestack-v2/glue-plugin-functions'
             );

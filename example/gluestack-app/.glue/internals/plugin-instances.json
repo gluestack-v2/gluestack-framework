@@ -19,40 +19,5 @@
       "directory": "sdk",
       "container_store": {}
     }
-  ],
-  "@gluestack-v2/glue-plugin-service-gateway": [
-    {
-      "instance": "gateway",
-      "directory": "gateway",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-service-sdk": [
-    {
-      "instance": "servicesdk",
-      "directory": "servicesdk",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-functions": [
-    {
-      "instance": "functions",
-      "directory": "server/functions",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-database": [
-    {
-      "instance": "postgres",
-      "directory": "server/postgres",
-      "container_store": {}
-    }
-  ],
-  "@gluestack-v2/glue-plugin-database-client": [
-    {
-      "instance": "dbclient",
-      "directory": "server/dbclient",
-      "container_store": {}
-    }
   ]
 }

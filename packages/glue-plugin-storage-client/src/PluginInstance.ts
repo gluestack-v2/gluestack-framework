@@ -100,15 +100,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async writeSdkForStorageClient() {
-    const plugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-service-sdk'
-    ) as IPlugin;
-
-    if (!plugin) {
-      return;
-    }
-    // @ts-ignore
-    plugin.generateStorageClient(this.getName());
+    return;
   }
 
   async writeStorageService() {
