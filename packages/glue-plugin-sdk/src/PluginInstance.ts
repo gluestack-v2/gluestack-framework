@@ -4,7 +4,11 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_PACKAGES_PATH } from './helpers/constants/gluestack.v2';
+
+import {
+  GLUE_GENERATED_PACKAGES_PATH,
+} from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+
 const dotEnvPath = join(process.cwd(), '.env');
 
 export class PluginInstance extends BaseGluestackPluginInstance {
