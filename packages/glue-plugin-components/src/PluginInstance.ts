@@ -1,14 +1,10 @@
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import BaseGluestackPluginInstance from "@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance";
-import chokidar from "chokidar";
-import path1, { join } from "path";
-import fs, { unlinkSync } from "fs";
-import writeFile from "./helpers/write-file";
-import fileExists from "./helpers/file-exists";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import path1, { join } from 'path';
+import fs from 'fs';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -73,9 +69,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   getDestinationPath(): string {
     return join(
       process.cwd(),
-      ".glue",
-      "__generated__",
-      "packages",
+      '.glue',
+      '__generated__',
+      'packages',
       this.getName()
     );
   }
@@ -97,7 +93,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     serviceInstances.forEach(async (serviceInstance) => {
       await this.app.watch(
         this._sourcePath,
-        join(serviceInstance._workspacePath, "packages", this.getName()),
+        join(serviceInstance._workspacePath, 'packages', this.getName()),
         (event, path) => {
           if (callback) {
             callback(event, path);
