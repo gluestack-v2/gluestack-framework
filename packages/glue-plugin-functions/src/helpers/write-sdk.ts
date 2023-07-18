@@ -72,10 +72,12 @@ const deepMerge = (obj1: any, obj2: any) => {
 const writeSDK = async (
   packagePath: string,
   installationPath: string,
+  sdkPath: string,
   ignoredPaths: string[]
 ) => {
+
   let obj = {};
-  const sdkSrcIndex = path.join(packagePath, 'index.ts');
+  const packageSdkSrcIndex = path.join(packagePath, 'src', 'index.ts');
   const files = getNestedFilePaths(installationPath);
 
   let finalString = ``;
@@ -134,11 +136,12 @@ const writeSDK = async (
   });
 
   const sdkFileContent = readFileSync(
-    path.join(__dirname, '..', '..', 'sdk', 'src', 'index.ts')
+    path.join(sdkPath, 'src', 'index.ts')
   ).toString();
+
   // Create SDK index file with all the functions
   await writeFile(
-    sdkSrcIndex,
+    packageSdkSrcIndex,
     sdkFileContent.replace(
       '// **---Functions will be added after this---**',
       finalString
