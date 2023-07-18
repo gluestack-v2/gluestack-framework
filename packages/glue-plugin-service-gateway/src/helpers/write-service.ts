@@ -97,8 +97,7 @@ const handlerTemplate = () => {
 const writeService = async (
   installationPath: string,
   functionPath: string,
-  functionInstanceName: string,
-  ignoredPaths: string[]
+  functionInstanceName: string
 ) => {
   const files = getNestedFilePaths(functionPath);
 
@@ -198,7 +197,7 @@ function getActions(
   let functionImportStatement = ``;
   if (fs.existsSync(filePath)) {
     let finalPathArr = getPaths(filePath, installationPath);
-    const finalPath = getFileNameWithoutExtension(finalPathArr.functionPath);
+    // const finalPath = getFileNameWithoutExtension(finalPathArr.functionPath);
     // Create actions object
     let action: any = {};
     action.rest = {
@@ -234,7 +233,7 @@ const getPrivateActions = (
   filePath: string
 ) => {
   let obj: any = {};
-  let privateEvents = ``;
+  // let privateEvents = ``;
   let functionImportStatement = ``;
 
   if (fs.existsSync(filePath)) {

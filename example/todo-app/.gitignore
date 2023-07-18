@@ -2,7 +2,7 @@
 # Ignoring glue directories & files except
 # plugin-instance and plugins json files
 #
-.glue/internals
+# .glue/internals
 .glue/__generated__
 !.glue/internals/plugin-instances.json
 !.glue/internals/plugin.json

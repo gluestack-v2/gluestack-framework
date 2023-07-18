@@ -1,10 +1,10 @@
 import path from 'path';
-import fs from 'fs';
+// import fs from 'fs';
 
 // const sdkIndexTemplate = require("./templates/sdkIndexTemplate")();
 
 import writeFile from './write-file';
-import { readfile } from './readfile';
+// import { readfile } from './readfile';
 // import getPathAfterString from "./get-path-after-string";
 // import writeSDKFunction from "./write-sdk-function";
 // import replaceHandlerNames from "./replace-handler-names";
@@ -15,22 +15,22 @@ import { updateApiGateway } from './write-service';
 //   return filePath.split(".").pop() ?? "";
 // }
 
-function getCamelCaseName(name: string) {
-  // clean up the name
-  if (name.split('/')[0] === '') {
-    let nameArr = name.split('/');
-    nameArr.splice(0, 1);
-    name = nameArr.join('/');
-  }
-  return name
-    .split('/')
-    .map(
-      (word, ind) =>
-        (ind !== 0 ? word[0]?.toUpperCase() : word[0]?.toLowerCase()) +
-        word.slice(1)
-    )
-    .join('');
-}
+// function getCamelCaseName(name: string) {
+//   // clean up the name
+//   if (name.split('/')[0] === '') {
+//     let nameArr = name.split('/');
+//     nameArr.splice(0, 1);
+//     name = nameArr.join('/');
+//   }
+//   return name
+//     .split('/')
+//     .map(
+//       (word, ind) =>
+//         (ind !== 0 ? word[0]?.toUpperCase() : word[0]?.toLowerCase()) +
+//         word.slice(1)
+//     )
+//     .join('');
+// }
 
 // Usage: Pass the directory path as an argument to the function
 

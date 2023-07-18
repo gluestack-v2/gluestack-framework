@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 module.exports = async function handler(ctx) {
-  const { a, b } = ctx.params;
+  // const { a, b } = ctx.params;
   console.log(
     await ctx.sdk.providers.get('dbClient').prisma.user.createMany({
       data: [
