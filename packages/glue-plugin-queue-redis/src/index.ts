@@ -1,30 +1,18 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-
-import path, { join } from "path";
-import fs from "fs";
-import { removeSpecialChars } from "@gluestack/helpers";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
-import { spawnSync } from "child_process";
-// @ts-ignore
-import prompts from "prompts";
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -33,7 +21,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app = app;
     this.instances = [];
     this.gluePluginStore = gluePluginStore;
-    this.runningPlatforms = ["docker"];
+    this.runningPlatforms = ['docker'];
   }
 
   init() {
@@ -56,7 +44,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/template`;
   }
 
-  async runPostInstall(instanceName: string, target: string) {
+  async runPostInstall(instanceName: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
@@ -117,10 +105,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     );
     this.instances.push(instance);
     return instance;
-  }
-
-  testFunction() {
-    console.log("test");
   }
 
   getInstances(): IInstance[] {

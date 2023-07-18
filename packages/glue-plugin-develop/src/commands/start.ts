@@ -3,9 +3,10 @@ import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interf
 
 import action from './actions/start';
 
-export default async (program: any, app: AppCLI): Promise<void> => {
+export default async (program: any, _app: AppCLI): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const command: ICommand = program
     .command('start')
     .description('start runs watch prepare and up')
-    .action((opts: any) => action(app, opts));
+    .action((_opts: any) => action());
 };

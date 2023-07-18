@@ -1,7 +1,7 @@
-import { writeFile } from './write-file';
-import createFolder from './create-folder';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
+import createFolder from '@gluestack-v2/framework-cli/build/helpers/file/create-folder';
 import { join } from 'path';
-import copyFile from './copy-file';
+import copyFile from '@gluestack-v2/framework-cli/build/helpers/file/copy-file';
 
 export const createConfigPackage = async (
   packageName: string,

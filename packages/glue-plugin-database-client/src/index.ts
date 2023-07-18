@@ -12,7 +12,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import migrateCommand from './commands/migrate';
 import generateCommand from './commands/generate';
 import dbCommand from './commands/db';
@@ -115,7 +115,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const { DATABASE_URL } = process.env;
 
-    let localEnvData = `DATABASE_URL=${DATABASE_URL}`;
+    const localEnvData = `DATABASE_URL=${DATABASE_URL}`;
     await writeFile(envPath, localEnvData);
   }
 

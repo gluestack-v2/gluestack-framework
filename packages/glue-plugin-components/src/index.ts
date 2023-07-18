@@ -1,30 +1,18 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
 
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-
-import path, { join } from "path";
-import fs from "fs";
-import copyFile from "./helpers/copy-file";
-import writeFile from "./helpers/write-file";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { removeSpecialChars, Workspaces } from "@gluestack/helpers";
-import fileExists from "./helpers/file-exists";
-import rm from "./helpers/rm";
-import copyFolder from "./helpers/copy-folder";
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   app: AppCLI;
   instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "stateless";
+  type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
@@ -107,7 +95,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
   testFunction() {
-    console.log("test");
+    // eslint-disable-next-line no-console
+    console.log('test');
   }
   getInstances(): IInstance[] {
     return this.instances;

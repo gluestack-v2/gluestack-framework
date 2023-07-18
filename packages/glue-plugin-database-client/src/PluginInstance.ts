@@ -5,14 +5,8 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import {
-  GLUE_GENERATED_PACKAGES_PATH,
-  GLUE_GENERATED_SEAL_SERVICES_PATH,
-} from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-
-import { writeDbClientSdk } from './helpers/write-db-client-sdk';
-import { writeDbServerSdk } from './helpers/write-db-server-sdk';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -289,18 +283,16 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async build(): Promise<void> {
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-    let gatewayPlugin = this.app.getPluginByName(
+    const gatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );
 
-    let gatewayInstance = gatewayPlugin?.getInstances()[0];
+    const gatewayInstance = gatewayPlugin?.getInstances()[0];
 
     if (!gatewayInstance) {
       throw new Error('Gateway instance not found');
     }
 
-    // console.log("gatewayPath", gatewayContext);
-    // writeFile(gatewayContextPath, gatewayContext);
     this.app.write(
       this._sourcePath,
       join(gatewayInstance._destinationPath, this.getName())
@@ -310,27 +302,16 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // @ts-ignore
     await gatewayPlugin.generateDbClientService(this.getName());
 
-    const clientPackagePath = join(
-      GLUE_GENERATED_PACKAGES_PATH,
-      `${this.getName()}-client-sdk`
-    );
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage(`${this.getName()}-client-sdk`, sdkPath);
-    // const functionsPlugin = this.app.getPluginByName(
-    //   '@gluestack-v2/glue-plugin-functions'
-    // );
-    // const functionsInstance = functionsPlugin?.getInstances();
-    // functionsInstance?.forEach(async (instance) => {
-    await writeDbClientSdk(clientPackagePath);
-    // });
-
-    const serverPackagePath = join(
-      GLUE_GENERATED_PACKAGES_PATH,
-      `${this.getName()}-server-sdk`
+    await this.app.createPackage(
+      `${this.getName()}-client-sdk`,
+      join(sdkPath, 'client')
     );
-    await this.app.createPackage(`${this.getName()}-server-sdk`, sdkPath);
 
-    await writeDbServerSdk(serverPackagePath);
+    await this.app.createPackage(
+      `${this.getName()}-server-sdk`,
+      join(sdkPath, 'server')
+    );
   }
 
   async watch(): Promise<void> {

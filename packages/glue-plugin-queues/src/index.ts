@@ -5,8 +5,6 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import { reWriteFile } from './helpers/rewrite-file';
-import { Workspaces } from '@gluestack/helpers';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 // import { readfile } from "./helpers/read-file";
 // import writeCronService from "./helpers/write-cron-service";
@@ -59,7 +57,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.pluginEnvironment;
   }
 
-  async runPostInstall(instanceName: string, target: string) {
+  async runPostInstall() {
     const plugin: IPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-queues'
     ) as IPlugin;

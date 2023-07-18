@@ -1,7 +1,0 @@
-FROM postgres:latest
-
-ENV POSTGRES_PASSWORD=mysecretpassword
-ENV POSTGRES_USER=myuser
-ENV POSTGRES_DB=mydb
-
-EXPOSE 5432
