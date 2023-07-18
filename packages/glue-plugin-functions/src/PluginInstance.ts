@@ -103,28 +103,25 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     plugin.generateSDK(this._sourcePath, this.getName(), ignoredPaths);
   }
 
-  async createSDKPackage() {
-    // await this.app.createPackage('functions_sdk');
+  async createClientSDKPackage() {
+    const clientSdkPackageName: string = `${this.getName()}-client-sdk`;
     const packagePath = join(
       GLUE_GENERATED_PACKAGES_PATH,
-      `${this.getName()}-sdk`
+      clientSdkPackageName
     );
 
-    const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage(`${this.getName()}-sdk`, sdkPath);
+    const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk', 'client');
+    await this.app.createPackage(clientSdkPackageName, sdkPath);
 
     await writeSDK(packagePath, this._sourcePath, []);
-    await this.app.updateNameInPackageJSON(
-      packagePath,
-      `${this.getName()}-sdk`
-    );
+    await this.app.updateNameInPackageJSON(packagePath, clientSdkPackageName);
   }
 
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     // @ts-ignore
     this.generateFunctionsInServiceGateway();
-    this.createSDKPackage();
+    this.createClientSDKPackage();
 
     // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
   }

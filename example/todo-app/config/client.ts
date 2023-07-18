@@ -1,4 +1,4 @@
-import functionSDK from '@project/functions-sdk';
+import functionSDK from '@project/functions-client-sdk';
 import dbClient from '@project/dbclient-client-sdk';
 
 export const config = {
