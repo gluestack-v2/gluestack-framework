@@ -10,5 +10,8 @@
   },
   "@gluestack-v2/glue-plugin-service-gateway": {
     "package": "@gluestack-v2/glue-plugin-service-gateway"
+  },
+  "@gluestack-v2/glue-plugin-functions": {
+    "package": "@gluestack-v2/glue-plugin-functions"
   }
 }

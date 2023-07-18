@@ -26,5 +26,12 @@
       "directory": "gateway",
       "container_store": {}
     }
+  ],
+  "@gluestack-v2/glue-plugin-functions": [
+    {
+      "instance": "functions",
+      "directory": "server/functions",
+      "container_store": {}
+    }
   ]
 }
