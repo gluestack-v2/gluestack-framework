@@ -1,6 +1,7 @@
-import path from "path";
-import writeFile from "./write-file";
-import moleculerCronServiceTemplateFunc from "./cron-service-template-js-support";
+import path from 'path';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
+
+import moleculerCronServiceTemplateFunc from './cron-service-template-js-support';
 
 // Usage: Pass the directory path as an argument to the function
 
@@ -13,7 +14,7 @@ const writeCronService = async (
     moleculerCronServiceTemplateFunc(instanceName);
   const moleculerCronServiceTemplatePath = path.join(
     generatedServiceGatewayPath,
-    "services",
+    'services',
     `${instanceName}.service.js`
   );
 

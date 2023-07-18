@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
-import writeFile from './write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import replaceHandlerNames from './replace-handler-names';
-import getFileNameWithoutExtension from './get-file-name-without-ext';
+
 import moleculerFunctionsServiceTemplateFunc from './functions-service-template';
 
 function filePathExtension(filePath: string) {
@@ -205,9 +205,8 @@ function getActions(
       path: removeExtension(finalPathArr.functionPath),
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${
-      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
-    }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
+      }(context);},`;
 
     serviceAction[removeExtension(finalPathArr.funcPath.join('.'))] = action;
 
@@ -246,9 +245,8 @@ const getPrivateActions = (
       path: finalPathArr.functionPath,
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${
-      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
-    }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
+      }(context);},`;
     if (!filePath.includes('/events/'))
       obj[removeExtension(finalPathArr.funcPath.join('.'))] = action;
     // if (filePath.includes("/events/")) {
@@ -397,8 +395,8 @@ async function createService(
   finalString = finalString.replace(
     '// **---Add Imports Here---**',
     outputString +
-      moleculerImportStatements.eventImportPath +
-      `const Context = require("../Context.ts");`
+    moleculerImportStatements.eventImportPath +
+    `const Context = require("../Context.ts");`
   );
   await writeFile(path, finalString);
 }
