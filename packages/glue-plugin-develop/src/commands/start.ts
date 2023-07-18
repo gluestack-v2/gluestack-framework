@@ -7,5 +7,5 @@ export default async (program: any, app: AppCLI): Promise<void> => {
   const command: ICommand = program
     .command('start')
     .description('start runs watch prepare and up')
-    .action((opts: any) => action(app, opts));
+    .action((opts: any) => action());
 };
