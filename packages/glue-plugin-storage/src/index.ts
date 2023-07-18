@@ -8,17 +8,8 @@ import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGlu
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-
-import path, { join } from 'path';
-import fs from 'fs';
-import { removeSpecialChars } from '@gluestack/helpers';
-import fileExists from './helpers/file-exists';
-import { spawnSync } from 'child_process';
-// @ts-ignore
-import prompts from 'prompts';
 import { writeInstance } from './commands/minioConfig';
-import { writeEnv } from './helpers/write-env';
+import { join } from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -70,7 +61,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./${this.pluginEnvironment}/${target}`;
+    return join(this.pluginEnvironment, target);
   }
 
   getPluginEnvironment(): 'server' | 'client' {
