@@ -4,7 +4,7 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import { join } from 'path';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   app: AppCLI;
@@ -60,7 +60,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async editSealAndDockerFile(): Promise<void> {
     try {
-      let runDockerfileTemplate = `
+      const runDockerfileTemplate = `
         # Use an official Redis runtime as the base image
 FROM redis:latest
 
@@ -74,7 +74,7 @@ EXPOSE 6379
 CMD ["redis-server"]
 `;
 
-      let sealServiceTemplate = `container_name: queueredis
+      const sealServiceTemplate = `container_name: queueredis
 stateless: true
 platforms:
   docker:
