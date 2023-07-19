@@ -9,7 +9,7 @@ export async function writeStorageServerSdk(
 
   await writeFile(
     path.join(sdkPath, 'src', 'index.ts'),
-    `import ServiceProvider from '@gluestack-v2/framework-cli/build/types/ServiceProvider';
+    `import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServiceProvider';
     import axios from 'axios';
     import type { Client } from '@types/minio';
     import Minio from 'minio';

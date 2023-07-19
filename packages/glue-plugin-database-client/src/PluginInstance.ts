@@ -4,18 +4,11 @@ import { spawn } from 'child_process';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -24,12 +17,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -38,14 +25,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   destroy() {
     //
-  }
-
-  getDockerfile(): string {
-    return join(this._sourcePath, 'Dockerfile');
-  }
-
-  getSealServicefile(): string {
-    return join(this._sourcePath, 'bolt.service.yaml');
   }
 
   getSourcePath(): string {

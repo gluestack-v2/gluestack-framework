@@ -3,7 +3,7 @@ import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
@@ -77,13 +77,5 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getInstances(): IInstance[] {
     return this.instances;
-  }
-
-  getDockerfile(): string {
-    return `${this.getInternalFolderPath()}/Dockerfile`;
-  }
-
-  getSealServicefile(): string {
-    return `${this.getInternalFolderPath()}/bolt.service.yaml`;
   }
 }
