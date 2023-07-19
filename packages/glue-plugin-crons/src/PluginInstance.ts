@@ -4,7 +4,7 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { join } from 'path';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
