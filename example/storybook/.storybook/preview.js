@@ -26,7 +26,7 @@ export const parameters = {
           'Feature Plugins',
           [
             'glue-plugin-web',
-            'glue-sdk-plugin',
+            'glue-plugin-sdk',
             'glue-plugin-service-gateway',
             'glue-plugin-functions',
             'glue-plugin-database',
