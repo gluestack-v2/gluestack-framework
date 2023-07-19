@@ -33,7 +33,7 @@ export default async (app: AppCLI): Promise<void> => {
       if (plugin.runningPlatforms.length <= 0) {
         continue;
       } else {
-        await downboltService(instance.getName());
+        await downboltService();
       }
     }
   }
