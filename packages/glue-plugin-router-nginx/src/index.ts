@@ -16,22 +16,17 @@ import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interf
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
-  gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = [];
   }
 
   init() {
-    this.app.addCommand((program: ICommand) => generateCommand(program, this.app));
+    this.app.addCommand((program: ICommand) =>
+      generateCommand(program, this.app)
+    );
     this.app.addCommand((program: ICommand) => listCommand(program, this.app));
   }
 
@@ -48,26 +43,27 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    const instance: IInstance =
-      await this.app.createPluginInstance(
-        this,
-        instanceName,
-        this.getTemplateFolderPath(),
-        target
-      );
+    const instance: IInstance = await this.app.createPluginInstance(
+      this,
+      instanceName,
+      this.getTemplateFolderPath(),
+      target
+    );
 
     if (!instance) {
       return;
     }
 
     const plugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-router-nginx",
+      '@gluestack-v2/glue-plugin-router-nginx'
     ) as IPlugin;
 
     // Validation
     if (plugin?.getInstances()?.[0]) {
       throw new Error(
-        `router-nginx instance already installed as ${plugin.getInstances()[0].getName()}`,
+        `router-nginx instance already installed as ${plugin
+          .getInstances()[0]
+          .getName()}`
       );
     }
   }

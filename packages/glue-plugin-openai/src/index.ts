@@ -17,23 +17,19 @@ import constructCommand from './commands/construct';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
-  gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
 
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = [];
   }
 
   init() {
     this.app.addCommand((program: ICommand) => runCommand(program, this.app));
-    this.app.addCommand((program: ICommand) => constructCommand(program, this.app));
+    this.app.addCommand((program: ICommand) =>
+      constructCommand(program, this.app)
+    );
   }
 
   destroy() {
@@ -49,20 +45,20 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    if (instanceName !== "openai") {
-      throw new Error(
-        'plugin instance should be always installed as "openai"',
-      );
+    if (instanceName !== 'openai') {
+      throw new Error('plugin instance should be always installed as "openai"');
     }
 
     const plugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-openai",
+      '@gluestack-v2/glue-plugin-openai'
     ) as IPlugin;
 
     // Validation
     if (plugin?.getInstances()?.[0]) {
       throw new Error(
-        `openai instance already installed as ${plugin.getInstances()[0].getName()}`,
+        `openai instance already installed as ${plugin
+          .getInstances()[0]
+          .getName()}`
       );
     }
 
@@ -78,8 +74,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     }
 
     await copyFile(
-      join(instance._sourcePath, ".env.example"),
-      join(instance._sourcePath, ".env")
+      join(instance._sourcePath, '.env.example'),
+      join(instance._sourcePath, '.env')
     );
   }
 
