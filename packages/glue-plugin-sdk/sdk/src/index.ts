@@ -2,7 +2,7 @@ import SDK from './helpers/lib/sdk';
 import { config } from '@project/UPDATECONFIGTYPE';
 // Add imports here
 
-let env = (str: string) => {
+const env = (str: string) => {
 	let env /*** UPDATE_ENV_BASED_ON_ENVIRONMENT ***/;
 	// @ts-ignore
 	return env[str];
