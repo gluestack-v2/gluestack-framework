@@ -1,4 +1,4 @@
-import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServiceProvider';
+import ServiceProvider from '@gluestack-v2/framework-cli/build/types/ServiceProvider';
 import axios from 'axios';
 import type { PrismaClient } from '@prisma/client';
 // **---Import will be added before this---**

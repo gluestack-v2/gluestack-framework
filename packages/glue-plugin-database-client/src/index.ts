@@ -3,7 +3,7 @@ import { join } from 'path';
 import prompts from 'prompts';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
