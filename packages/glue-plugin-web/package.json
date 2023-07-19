@@ -21,8 +21,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@gluestack-v2/framework-cli": "^0.0.x",
-    "@gluestack-v2/glue-plugin-develop": "^0.0.x",
+    "@gluestack-v2/framework-cli": "^0.1.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
     "@types/node": "^18.11.17",
     "js-yaml": "^4.1.0",
@@ -34,6 +34,6 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.1.x"
+    "@gluestack-v2/glue-plugin-storage": "^0.1.x"
   }
 }
