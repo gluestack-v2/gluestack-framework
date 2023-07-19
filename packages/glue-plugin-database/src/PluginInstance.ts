@@ -33,7 +33,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async build(): Promise<void> {
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+    // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
     this.boltInit();
     await this.generateEnvFiles();

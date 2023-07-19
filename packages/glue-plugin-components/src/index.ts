@@ -55,9 +55,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     // const rootPackage: string = `${process.cwd()}/package.json`;
     // await Workspaces.append(rootPackage, instance._sourcePath);
 
-    // // move seal.service.yaml into the new instance
+    // // move bolt.service.yaml into the new instance
     // await reWriteFile(
-    //   `${instance.getSealServicefile()}`,
+    //   `${instance.getboltServicefile()}`,
     //   instanceName,
     //   "INSTANCENAME"
     // );

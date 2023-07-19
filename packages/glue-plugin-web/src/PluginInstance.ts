@@ -4,8 +4,6 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import reWriteFile from '@gluestack-v2/framework-cli/build/helpers/file/rewrite-file';
-const yaml = require('js-yaml');
-const fs = require('fs');
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
@@ -15,6 +13,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     gluePluginStore: IGlueStorePlugin,
     installationPath: string
   ) {
+    // @ts-ignore
     super(app, callerPlugin, name, gluePluginStore, installationPath);
   }
 

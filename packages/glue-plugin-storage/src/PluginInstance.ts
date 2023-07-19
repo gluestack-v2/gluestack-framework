@@ -56,7 +56,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return (this.consolePortNumber = consolePortNumber || null);
   }
   async getEnv() {
-    let minio_credentials = defaultConfig;
+    const minio_credentials = defaultConfig;
 
     return {
       MINIO_ADMIN_END_POINT: minio_credentials.admin_end_point,
@@ -132,9 +132,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return join('server', this.getName());
   }
 
-  async editSealAndDockerFile(): Promise<void> {
+  async editboltAndDockerFile(): Promise<void> {
     try {
-      let runDockerfileTemplate = `
+      const runDockerfileTemplate = `
 FROM quay.io/minio/minio
 
 # Set the working directory
@@ -152,7 +152,7 @@ EXPOSE 9001
 CMD ["server", "/data", "--console-address", ":9001"]
 `;
 
-      let sealServiceTemplate = `container_name: storageserver
+      const boltServiceTemplate = `container_name: storageserver
 stateless: true
 platforms:
   local:
@@ -168,8 +168,8 @@ platforms:
 `;
 
       writeFile(
-        join(this._destinationPath, 'seal.service.yaml'),
-        sealServiceTemplate
+        join(this._destinationPath, 'bolt.service.yaml'),
+        boltServiceTemplate
       );
 
       writeFile(
@@ -188,13 +188,13 @@ platforms:
   }
 
   async build(): Promise<void> {
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+    // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
     // this.getEnv();
     // await this.getPortNumber();
     // await this.getConsolePortNumber();
     this.boltInit();
-    this.editSealAndDockerFile();
+    this.editboltAndDockerFile();
     // this.setStatus("up");
 
     // create buckets
@@ -213,7 +213,7 @@ platforms:
 
     //   return resolve(true);
     // });
-    // this.sealInit();
+    // this.boltInit();
   }
 
   async watch(): Promise<void> {

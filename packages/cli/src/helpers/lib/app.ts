@@ -28,7 +28,7 @@ import IGluePluginStoreFactory from '../../types/store/interface/IGluePluginStor
 import { extname, join } from 'path';
 import {
 	GLUE_GENERATED_PACKAGES_PATH,
-	GLUE_GENERATED_SEAL_SERVICES_PATH,
+	GLUE_GENERATED_BOLT_SERVICES_PATH,
 } from '../../constants/gluestack.v2';
 import IInstance from '../../types/plugin/interface/IInstance';
 
@@ -142,7 +142,7 @@ export default class AppCLI {
 	// @API: addEventListener
 	addEventListener(
 		eventName: string,
-		callback = (...args: any) => { }
+		callback = (...args: any) => {}
 	) {
 		this.eventEmitter.on(eventName, callback);
 	}
@@ -353,7 +353,7 @@ export default class AppCLI {
 	getAllServicePaths() {
 		const servicesPath = join(
 			process.cwd(),
-			GLUE_GENERATED_SEAL_SERVICES_PATH
+			GLUE_GENERATED_BOLT_SERVICES_PATH
 		);
 		if (!fs.existsSync(servicesPath)) {
 			return [];
@@ -377,7 +377,6 @@ export default class AppCLI {
 			.filter((dirent) => dirent.isDirectory())
 			.map((dirent) => join(packagesPath, dirent.name));
 	}
-
 
 	getAllServiceInstances() {
 		let plugins = this.getPlugins();

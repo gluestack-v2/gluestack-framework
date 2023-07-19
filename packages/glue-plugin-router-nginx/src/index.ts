@@ -85,7 +85,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async build(): Promise<void> {
-    // runs check for seal.yaml file and creates routing
+    // runs check for bolt.yaml file and creates routing
     await generateRoutes(this.app);
   }
 

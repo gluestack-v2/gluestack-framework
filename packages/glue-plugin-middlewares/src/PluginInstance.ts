@@ -5,7 +5,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { join } from 'path';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
@@ -64,7 +64,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     return join(
       process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      GLUE_GENERATED_BOLT_SERVICES_PATH,
       gatewayInstanceName,
       'src',
       gatewayInstanceName,
@@ -92,10 +92,9 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       '@gluestack-v2/glue-plugin-service-gateway'
     );
 
-    await this.app.watch(
-      this._sourcePath,
-      this._destinationPath,
-      (events, path) => {
+    await this.app.watch(this._sourcePath, this._destinationPath, () =>
+      // events, path
+      {
         if (plugin) {
           //@ts-ignore
           plugin.generateMiddlewares(this._sourcePath, this.getName());

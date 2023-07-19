@@ -5,7 +5,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 import {
   GLUE_GENERATED_PACKAGES_PATH,
-  GLUE_GENERATED_SEAL_SERVICES_PATH,
+  GLUE_GENERATED_BOLT_SERVICES_PATH,
 } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 import { join } from 'path';
@@ -141,7 +141,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     return join(
       process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      GLUE_GENERATED_BOLT_SERVICES_PATH,
       gatewayInstanceName,
       'src',
       gatewayInstanceName,

@@ -14,7 +14,10 @@ const printPlugins = (plugins: IArrTree) => {
 	const arr = [] as Array<Array<string>>;
 
 	plugins.forEach((plugin) => {
-		const pluginName = [plugin.key, plugin.plugin.getVersion()] as string[];
+		const pluginName = [
+			plugin.key,
+			plugin.plugin.getVersion(),
+		] as string[];
 
 		if (!arr.includes(pluginName)) {
 			arr.push(pluginName);
@@ -43,8 +46,14 @@ const printPluginInstances = (plugins: IArrTree) => {
 	plugins.forEach(({ key, plugin }, index) => {
 		if (plugin.getInstances) {
 			plugin.getInstances().forEach((pluginInstance: IInstance) => {
-				const installationPath = pluginInstance._destinationPath || '';
-				const pluginInstanceArr = [key, pluginInstance.getName(), relative('.', pluginInstance._sourcePath), plugin.getVersion()] as string[];
+				const installationPath =
+					pluginInstance._destinationPath || '';
+				const pluginInstanceArr = [
+					key,
+					pluginInstance.getName(),
+					relative('.', pluginInstance._sourcePath),
+					plugin.getVersion(),
+				] as string[];
 				arr.push(pluginInstanceArr);
 			});
 		}
@@ -72,7 +81,10 @@ const printInstalledPluginInstances = async (app: AppCLI) => {
 
 export default async (app: AppCLI) => {
 	if (!app.plugins.length) {
-		error('Nothing installed in your app.', 'Please install one plugin and try again.');
+		error(
+			'Nothing installed in your app.',
+			'Please install one plugin and try again.'
+		);
 		process.exit(-1);
 	}
 

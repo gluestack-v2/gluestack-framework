@@ -75,28 +75,28 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  // async sealInit(SEAL_SERVICES_PATH: string, name: string) {
-  //   // seal init and seal service add in the services folder
-  //   const sealInit = spawnSync("sh", [
+  // async boltInit(bolt_SERVICES_PATH: string, name: string) {
+  //   // bolt init and bolt service add in the services folder
+  //   const boltInit = spawnSync("sh", [
   //     "-c",
-  //     `cd ${SEAL_SERVICES_PATH} && seal init`,
+  //     `cd ${bolt_SERVICES_PATH} && bolt init`,
   //   ]);
 
-  //   if (sealInit.status !== 0) {
-  //     console.error(`Command failed with code ${sealInit.status}`);
+  //   if (boltInit.status !== 0) {
+  //     console.error(`Command failed with code ${boltInit.status}`);
   //   }
-  //   console.log(sealInit.stdout.toString());
-  //   console.error(sealInit.stderr.toString());
+  //   console.log(boltInit.stdout.toString());
+  //   console.error(boltInit.stderr.toString());
 
-  //   const sealAddService = spawnSync("sh", [
+  //   const boltAddService = spawnSync("sh", [
   //     "-c",
-  //     `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+  //     `cd ${bolt_SERVICES_PATH} && bolt service:add ${name} ./${name}/src`,
   //   ]);
 
-  //   if (sealAddService.status !== 0) {
-  //     console.error(`Command failed with code ${sealAddService.status}`);
+  //   if (boltAddService.status !== 0) {
+  //     console.error(`Command failed with code ${boltAddService.status}`);
   //   }
-  //   console.log(sealAddService.stdout.toString());
-  //   console.error(sealAddService.stderr.toString());
+  //   console.log(boltAddService.stdout.toString());
+  //   console.error(boltAddService.stderr.toString());
   // }
 }

@@ -5,7 +5,7 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { join } from 'path';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
@@ -37,7 +37,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   async runPostUninstall() {}
 
   async build(): Promise<void> {
-    let serviceGatewayPlugin = this.app.getPluginByName(
+    const serviceGatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );
 
@@ -102,7 +102,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     return join(
       process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      GLUE_GENERATED_BOLT_SERVICES_PATH,
       gatewayInstanceName,
       'src',
       gatewayInstanceName,

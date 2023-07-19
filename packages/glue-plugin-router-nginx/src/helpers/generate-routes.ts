@@ -7,12 +7,12 @@ import { Config, Ingress, Option } from '../types';
 
 export default async function generateRoutes(app: AppCLI): Promise<void> {
   const plugin: IPlugin = app.getPluginByName(
-    "@gluestack-v2/glue-plugin-router-nginx",
+    '@gluestack-v2/glue-plugin-router-nginx'
   ) as IPlugin;
 
   const path: string = plugin.getInstances()[0]._sourcePath;
 
-  const configYaml = await readFile('seal.yaml', 'utf8');
+  const configYaml = await readFile('bolt.yaml', 'utf8');
   let config: Config;
 
   try {
@@ -27,35 +27,42 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
     process.exit(-1);
   }
 
-  const serverBlocks = config.ingress.map((ingress: Ingress) => {
-    const domain = ingress.domain || undefined;
-    const port = ingress.port || undefined;
-    if (!domain || !port) {
-      console.log('> No domain or port found in config');
-      return;
-    }
-
-    const locationBlocks = ingress.options.map((option: Option) => {
-      const {
-        location, rewrite_key, rewrite_value, proxy_pass
-      } = option;
-
-      if (!location || !rewrite_key || !rewrite_value || !proxy_pass) {
-        console.log('> Missing required option in ingress config');
+  const serverBlocks = config.ingress
+    .map((ingress: Ingress) => {
+      const domain = ingress.domain || undefined;
+      const port = ingress.port || undefined;
+      if (!domain || !port) {
+        console.log('> No domain or port found in config');
         return;
       }
 
-      const client_max_body_size = option.client_max_body_size || 50;
-      const proxy_http_version = option.proxy_http_version || 1.1;
-      const proxy_cache_bypass = option.proxy_cache_bypass || '$http_upgrade';
-      const proxy_set_header_upgrade = option.proxy_set_header_upgrade || '$http_upgrade';
-      const proxy_set_header_host = option.proxy_set_header_host || '$host';
-      const proxy_set_header_connection = option.proxy_set_header_connection || '"upgrade"';
-      const proxy_set_header_x_real_ip = option.proxy_set_header_x_real_ip || '$remote_addr';
-      const proxy_set_header_x_forwarded_for = option.proxy_set_header_x_forwarded_for || '$proxy_add_x_forwarded_for';
-      const proxy_set_header_x_forwarded_proto = option.proxy_set_header_x_forwarded_proto || '$scheme';
+      const locationBlocks = ingress.options
+        .map((option: Option) => {
+          const { location, rewrite_key, rewrite_value, proxy_pass } = option;
 
-      return `
+          if (!location || !rewrite_key || !rewrite_value || !proxy_pass) {
+            console.log('> Missing required option in ingress config');
+            return;
+          }
+
+          const client_max_body_size = option.client_max_body_size || 50;
+          const proxy_http_version = option.proxy_http_version || 1.1;
+          const proxy_cache_bypass =
+            option.proxy_cache_bypass || '$http_upgrade';
+          const proxy_set_header_upgrade =
+            option.proxy_set_header_upgrade || '$http_upgrade';
+          const proxy_set_header_host = option.proxy_set_header_host || '$host';
+          const proxy_set_header_connection =
+            option.proxy_set_header_connection || '"upgrade"';
+          const proxy_set_header_x_real_ip =
+            option.proxy_set_header_x_real_ip || '$remote_addr';
+          const proxy_set_header_x_forwarded_for =
+            option.proxy_set_header_x_forwarded_for ||
+            '$proxy_add_x_forwarded_for';
+          const proxy_set_header_x_forwarded_proto =
+            option.proxy_set_header_x_forwarded_proto || '$scheme';
+
+          return `
     location ${location} {
       rewrite ${rewrite_key} ${rewrite_value};
 
@@ -72,15 +79,17 @@ export default async function generateRoutes(app: AppCLI): Promise<void> {
 
       proxy_pass ${proxy_pass};
     }`;
-    }).join('\n');
+        })
+        .join('\n');
 
-    return `
+      return `
   server {
     listen ${port};
     server_name ${domain};
     ${locationBlocks}
   }`;
-  }).join('\n');
+    })
+    .join('\n');
 
   const nginxConfig = `
 user nginx;
@@ -126,8 +135,5 @@ http {
 }
 `;
 
-  await writeFile(
-    join(path, 'nginx.conf'),
-    nginxConfig
-  );
-};
+  await writeFile(join(path, 'nginx.conf'), nginxConfig);
+}

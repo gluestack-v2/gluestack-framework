@@ -5,7 +5,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
@@ -58,7 +58,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     const gatewayInstanceName: string = this.getGatewayInstanceInfo();
     return join(
       process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      GLUE_GENERATED_BOLT_SERVICES_PATH,
       gatewayInstanceName,
       'src',
       gatewayInstanceName,
@@ -261,7 +261,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async build(): Promise<void> {
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+    // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
     const gatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );

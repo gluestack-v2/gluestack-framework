@@ -1,12 +1,11 @@
-/* eslint-disable prettier/prettier */
 import { join, relative } from 'path';
 
 import AppCLI from '../helpers/lib/app';
 import IPlugin from '../types/plugin/interface/IPlugin';
 import IInstance from '../types/plugin/interface/IInstance';
 import IGlueStorePlugin from '../types/store/interface/IGluePluginStore';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '../constants/gluestack.v2';
-import { SEAL_SERVICES_PATH } from '../constants/seal';
+import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '../constants/gluestack.v2';
+import { BOLT_SERVICES_PATH } from '../constants/gluestack.v2';
 
 import { Workspaces } from '@gluestack/helpers';
 import {
@@ -58,7 +57,7 @@ export default abstract class BaseGluestackPluginInstance
 	getDestinationPath(): string {
 		return join(
 			process.cwd(),
-			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			GLUE_GENERATED_BOLT_SERVICES_PATH,
 			this.getName(),
 			'src',
 			this.getName()
@@ -81,7 +80,7 @@ export default abstract class BaseGluestackPluginInstance
 	getWorkspacePath(): string {
 		return join(
 			process.cwd(),
-			GLUE_GENERATED_SEAL_SERVICES_PATH,
+			GLUE_GENERATED_BOLT_SERVICES_PATH,
 			this.getName(),
 			'src'
 		);
@@ -119,15 +118,17 @@ export default abstract class BaseGluestackPluginInstance
 		envPath: string,
 		pluginEnv: 'server' | 'client'
 	) {
-		let envData: string = await readEnvFile(envPath);
+		const envData: string = await readEnvFile(envPath);
 
-		let envDataArray = envData ? envData.split('\n') : [];
-		let envObjectsArray = envDataArray.map((envDataItem: string) => {
-			if (!envDataItem) return;
-			return envDataItem.split('=');
-		});
+		const envDataArray = envData ? envData.split('\n') : [];
+		const envObjectsArray = envDataArray.map(
+			(envDataItem: string) => {
+				if (!envDataItem) return;
+				return envDataItem.split('=');
+			}
+		);
 
-		let envDataFiltered: any = envObjectsArray.filter(
+		const envDataFiltered: any = envObjectsArray.filter(
 			(envDataItem: string[] | undefined) => {
 				if (envDataItem) {
 					if (pluginEnv === 'client') {
@@ -138,13 +139,13 @@ export default abstract class BaseGluestackPluginInstance
 				}
 			}
 		);
-		let filteredObject = Object.fromEntries(envDataFiltered);
+		const filteredObject = Object.fromEntries(envDataFiltered);
 		return filteredObject;
 	}
 
 	generateEnvDataFromObject(envObject: any) {
-		let envDataArray = Object.entries(envObject);
-		let envDataString = envDataArray
+		const envDataArray = Object.entries(envObject);
+		const envDataString = envDataArray
 			.map((envDataItem) => {
 				return `${envDataItem[0]}=${envDataItem[1]}`;
 			})
@@ -155,8 +156,8 @@ export default abstract class BaseGluestackPluginInstance
 	async generateEnvFiles() {
 		const rootEnvPath = join(process.cwd(), '.env');
 		//@ts-ignore
-		let pluginEnv = this.callerPlugin.pluginEnvironment;
-		let filteredEnv = await this.filterEnvData(
+		const pluginEnv = this.callerPlugin.pluginEnvironment;
+		const filteredEnv = await this.filterEnvData(
 			rootEnvPath,
 			pluginEnv
 		);
@@ -207,50 +208,50 @@ export default abstract class BaseGluestackPluginInstance
 	}
 
 	async boltInit() {
-		// seal init and seal service add in the services folder
-		if (!fileExistsSync(join(SEAL_SERVICES_PATH, 'bolt.yaml'))) {
-			const sealInit = spawnSync('sh', [
+		// bolt init and bolt service add in the services folder
+		if (!fileExistsSync(join(BOLT_SERVICES_PATH, 'bolt.yaml'))) {
+			const boltInit = spawnSync('sh', [
 				'-c',
-				`cd ${SEAL_SERVICES_PATH} && bolt init`,
+				`cd ${BOLT_SERVICES_PATH} && bolt init`,
 			]);
 
-			if (sealInit.status !== 0) {
-				console.error(`Command failed with code ${sealInit.status}`);
+			if (boltInit.status !== 0) {
+				console.error(`Command failed with code ${boltInit.status}`);
 			}
 			// eslint-disable-next-line no-console
-			console.log(sealInit.stdout.toString());
-			console.error(sealInit.stderr.toString());
+			console.log(boltInit.stdout.toString());
+			console.error(boltInit.stderr.toString());
 		}
 
-		const sealAddService = spawnSync('sh', [
+		const boltAddService = spawnSync('sh', [
 			'-c',
-			`cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
+			`cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
 		]);
 
-		if (sealAddService.status !== 0) {
+		if (boltAddService.status !== 0) {
 			console.error(
-				`Command failed with code ${sealAddService.status}`
+				`Command failed with code ${boltAddService.status}`
 			);
 		}
 
 		// eslint-disable-next-line no-console
-		console.log(sealAddService.stdout.toString());
-		console.error(sealAddService.stderr.toString());
+		console.log(boltAddService.stdout.toString());
+		console.error(boltAddService.stderr.toString());
 	}
 
 	async boltUp(servicePlatform: string) {
-		// seal init and seal service add in the services folder
-		const sealInit = spawnSync('sh', [
+		// bolt init and bolt service add in the services folder
+		const boltInit = spawnSync('sh', [
 			'-c',
-			`cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${this.getName()} --service-runner ${servicePlatform}`,
+			`cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${this.getName()} --service-runner ${servicePlatform}`,
 		]);
 
-		if (sealInit.status !== 0) {
-			console.error(`Command failed with code ${sealInit.status}`);
+		if (boltInit.status !== 0) {
+			console.error(`Command failed with code ${boltInit.status}`);
 		}
 		// eslint-disable-next-line no-console
-		console.log(sealInit.stdout.toString());
-		console.error(sealInit.stderr.toString());
+		console.log(boltInit.stdout.toString());
+		console.error(boltInit.stderr.toString());
 	}
 
 	async buildBeforeWatch() {

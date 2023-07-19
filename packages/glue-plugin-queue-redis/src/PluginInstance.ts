@@ -30,14 +30,14 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async build(): Promise<void> {
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+    // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
 
     this.boltInit();
-    this.editSealAndDockerFile();
+    this.editboltAndDockerFile();
   }
 
-  async editSealAndDockerFile(): Promise<void> {
+  async editboltAndDockerFile(): Promise<void> {
     try {
       const runDockerfileTemplate = `
         # Use an official Redis runtime as the base image
@@ -53,7 +53,7 @@ EXPOSE 6379
 CMD ["redis-server"]
 `;
 
-      const sealServiceTemplate = `container_name: queueredis
+      const boltServiceTemplate = `container_name: queueredis
 stateless: true
 platforms:
   docker:
@@ -64,8 +64,8 @@ platforms:
 `;
 
       writeFile(
-        join(this._destinationPath, 'seal.service.yaml'),
-        sealServiceTemplate
+        join(this._destinationPath, 'bolt.service.yaml'),
+        boltServiceTemplate
       );
 
       writeFile(

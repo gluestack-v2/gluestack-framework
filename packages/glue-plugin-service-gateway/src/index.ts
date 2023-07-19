@@ -64,7 +64,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   // getInstallationPath(target: string): string {
-  //   return `./.glue/__generated__/seal/services/${target}/src/${target}`;
+  //   return `./.glue/__generated__/bolt/services/${target}/src/${target}`;
   // }
 
   async runPostInstall(instanceName: string) {
@@ -145,7 +145,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         }
         // hard-coded the version here
         data.devDependencies['moleculer-bee-queue'] = '^0.1.10';
-        let stringData = JSON.stringify(data, null, 2);
+        const stringData = JSON.stringify(data, null, 2);
         fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
@@ -210,12 +210,15 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     `
       );
 
-      let middlewareFolderPath = join(instance._destinationPath, instanceName);
+      const middlewareFolderPath = join(
+        instance._destinationPath,
+        instanceName
+      );
 
       writeFile(join(middlewareFolderPath, 'index.js'), finalCode);
       // Add middlewares in moleculer.config.js
 
-      let moleculerConfigPath = join(
+      const moleculerConfigPath = join(
         instance._destinationPath,
         'moleculer.config.js'
       );
@@ -253,8 +256,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         data.devDependencies['moleculer-cron'] = 'latest';
-        data.devDependencies['axios'] = 'latest';
-        let stringData = JSON.stringify(data, null, 2);
+        data.devDependencies.axios = 'latest';
+        const stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added moleculer-cron to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
@@ -310,9 +313,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         if (!data.dependencies) {
           data.dependencies = {};
         }
-        data.dependencies['prisma'] = 'latest';
+        data.dependencies.prisma = 'latest';
         data.dependencies['@prisma/client'] = 'latest';
-        let stringData = JSON.stringify(data, null, 2);
+        const stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added prisma & @prisma/client to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"

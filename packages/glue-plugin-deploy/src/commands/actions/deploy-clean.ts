@@ -4,13 +4,13 @@ const fs = require('fs');
 
 export default async (): Promise<void> => {
   const homeDirectoryPath = os.homedir();
-  const sealFolderPath = path.join(homeDirectoryPath, '.seal');
+  const boltFolderPath = path.join(homeDirectoryPath, '.bolt');
 
-  fs.rm(sealFolderPath, { recursive: true }, (err: string) => {
+  fs.rm(boltFolderPath, { recursive: true }, (err: string) => {
     if (err) {
-      console.error(`Error deleting .seal folder: ${err}`);
+      console.error(`Error deleting .bolt folder: ${err}`);
     } else {
-      console.log(`.seal folder deleted successfully`);
+      console.error(`.bolt folder deleted successfully`);
     }
   });
 };

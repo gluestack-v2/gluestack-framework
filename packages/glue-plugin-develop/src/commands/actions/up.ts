@@ -1,7 +1,7 @@
 import { success } from '@gluestack-v2/framework-cli/build/helpers/print';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import {
   RunningPlatforms,
   RunningPlatform,
@@ -11,7 +11,7 @@ import { executeMultipleTerminals } from '../../helpers/execute-multiple-termina
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { execute } from '../../helpers/execute';
 
-const upSealService = async (
+const upboltService = async (
   app: AppCLI,
   instance: IInstance,
   runningPlatforms: RunningPlatforms,
@@ -28,12 +28,12 @@ const upSealService = async (
   }
 
   // build all packages
-  console.log(serviceName, servicePlatform);
+
   executeMultipleTerminals(
     'sh',
     [
       '-c',
-      `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+      `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
     ],
     { stdio: 'inherit' }
   );
@@ -44,7 +44,7 @@ const upSealService = async (
   //   'sh',
   //   [
   //     '-c',
-  //     `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+  //     `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
   //   ],
   //   { stdio: 'inherit' }
   // );
@@ -56,7 +56,7 @@ const upSealService = async (
     //   'sh',
     //   [
     //     '-c',
-    //     `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
+    //     `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
     //   ],
     //   { stdio: 'inherit' }
     // );
@@ -66,7 +66,7 @@ const upSealService = async (
       'sh',
       [
         '-c',
-        `cd ${GLUE_GENERATED_SEAL_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log && .logs/${serviceName}/out.log`,
+        `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log && .logs/${serviceName}/out.log`,
       ],
       { stdio: 'inherit' }
     );
@@ -77,7 +77,7 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
   for await (const plugin of app.plugins) {
     for (const instance of plugin.instances) {
       success(
-        `Seal service plugin instance found!`,
+        `bolt service plugin instance found!`,
         `${plugin.getName()}:: ${instance.getName()}`
       );
 
@@ -86,7 +86,7 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
       } else {
         if (plugin.getName() === '@gluestack-v2/glue-plugin-graphql') {
           setTimeout(async () => {
-            await upSealService(
+            await upboltService(
               app,
               instance,
               plugin.runningPlatforms,
@@ -95,7 +95,7 @@ export default async (app: AppCLI, opts: any): Promise<void> => {
             );
           }, 60 * 1000);
         } else {
-          await upSealService(
+          await upboltService(
             app,
             instance,
             plugin.runningPlatforms,
