@@ -4,7 +4,7 @@ import AppCLI from '../helpers/lib/app';
 import IPlugin from './plugin/interface/IPlugin';
 import IInstance from './plugin/interface/IInstance';
 import IGlueStorePlugin from './store/interface/IGluePluginStore';
-import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '../constants/gluestack.v2';
+import { GLUE_GENERATED_SERVICES_PATH } from '../constants/gluestack.v2';
 import { BOLT_SERVICES_PATH } from '../constants/gluestack.v2';
 
 import { Workspaces } from '@gluestack/helpers';
@@ -57,7 +57,7 @@ export default abstract class BaseGluestackPluginInstance
 	getDestinationPath(): string {
 		return join(
 			process.cwd(),
-			GLUE_GENERATED_BOLT_SERVICES_PATH,
+			GLUE_GENERATED_SERVICES_PATH,
 			this.getName(),
 			'src',
 			this.getName()
@@ -80,7 +80,7 @@ export default abstract class BaseGluestackPluginInstance
 	getWorkspacePath(): string {
 		return join(
 			process.cwd(),
-			GLUE_GENERATED_BOLT_SERVICES_PATH,
+			GLUE_GENERATED_SERVICES_PATH,
 			this.getName(),
 			'src'
 		);
@@ -225,7 +225,7 @@ export default abstract class BaseGluestackPluginInstance
 
 		const boltAddService = spawnSync('sh', [
 			'-c',
-			`cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
+			`cd ${GLUE_GENERATED_SERVICES_PATH} && bolt service:add  ${this.getName()} ./${this.getName()}/src/${this.getName()}`,
 		]);
 
 		if (boltAddService.status !== 0) {
@@ -243,7 +243,7 @@ export default abstract class BaseGluestackPluginInstance
 		// bolt init and bolt service add in the services folder
 		const boltInit = spawnSync('sh', [
 			'-c',
-			`cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${this.getName()} --service-runner ${servicePlatform}`,
+			`cd ${GLUE_GENERATED_SERVICES_PATH} && bolt service:up ${this.getName()} --service-runner ${servicePlatform}`,
 		]);
 
 		if (boltInit.status !== 0) {

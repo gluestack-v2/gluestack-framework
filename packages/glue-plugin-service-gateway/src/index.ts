@@ -102,8 +102,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateService(
     instancePath: string,
-    instanceName: string,
-    ignoredPaths: string[]
+    instanceName: string
+    // ignoredPaths: string[]
   ) {
     const instances = this.getInstances();
     if (this.instances.length === 0) {
@@ -307,9 +307,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         'package.json'
       );
       if (await fileExists(targetPkgJson)) {
-        let data: any = await readfile(targetPkgJson);
+        const data: any = await readfile(targetPkgJson);
 
-        data = JSON.parse(data);
+        // data = data;
         if (!data.dependencies) {
           data.dependencies = {};
         }

@@ -1,6 +1,6 @@
 import { success } from '@gluestack-v2/framework-cli/build/helpers/print';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 import { execute } from '../../helpers/execute';
 
@@ -9,7 +9,7 @@ const downboltService = async () =>
   {
     await execute(
       'sh',
-      ['-c', `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt down`],
+      ['-c', `cd ${GLUE_GENERATED_SERVICES_PATH} && bolt down`],
       {
         stdio: 'inherit',
       }

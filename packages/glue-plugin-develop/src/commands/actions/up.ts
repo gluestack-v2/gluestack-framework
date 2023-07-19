@@ -1,7 +1,7 @@
 import { success } from '@gluestack-v2/framework-cli/build/helpers/print';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
-import { GLUE_GENERATED_BOLT_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { GLUE_GENERATED_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import {
   RunningPlatforms,
   RunningPlatform,
@@ -33,7 +33,7 @@ const upboltService = async (
     'sh',
     [
       '-c',
-      `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+      `cd ${GLUE_GENERATED_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
     ],
     { stdio: 'inherit' }
   );
@@ -44,7 +44,7 @@ const upboltService = async (
   //   'sh',
   //   [
   //     '-c',
-  //     `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
+  //     `cd ${GLUE_GENERATED_SERVICES_PATH} && bolt service:up ${serviceName} --service-runner ${servicePlatform}`,
   //   ],
   //   { stdio: 'inherit' }
   // );
@@ -56,7 +56,7 @@ const upboltService = async (
     //   'sh',
     //   [
     //     '-c',
-    //     `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
+    //     `cd ${GLUE_GENERATED_SERVICES_PATH} && tail -f .logs/${serviceName}/out.log`,
     //   ],
     //   { stdio: 'inherit' }
     // );
@@ -66,7 +66,7 @@ const upboltService = async (
       'sh',
       [
         '-c',
-        `cd ${GLUE_GENERATED_BOLT_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log && .logs/${serviceName}/out.log`,
+        `cd ${GLUE_GENERATED_SERVICES_PATH} && tail -f .logs/${serviceName}/err.log && .logs/${serviceName}/out.log`,
       ],
       { stdio: 'inherit' }
     );
