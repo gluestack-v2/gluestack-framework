@@ -52,8 +52,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
 };
 
 const deepMerge = (obj1: any, obj2: any) => {
-  let output = { ...obj1 };
-  for (let key in obj2) {
+  const output = { ...obj1 };
+  for (const key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       if (
         typeof obj2[key] === 'object' &&
@@ -75,7 +75,6 @@ const writeSDK = async (
   sdkPath: string,
   ignoredPaths: string[]
 ) => {
-
   let obj = {};
   const packageSdkSrcIndex = path.join(packagePath, 'src', 'index.ts');
   const files = getNestedFilePaths(installationPath);

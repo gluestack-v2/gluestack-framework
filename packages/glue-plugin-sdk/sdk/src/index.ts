@@ -1,4 +1,4 @@
-import SDK from './helpers/lib/sdk';
+import SDK from './sdk';
 import { config } from '@project/UPDATECONFIGTYPE';
 // Add imports here
 
@@ -11,5 +11,8 @@ export default (() => {
 	const app = SDK.getInstance();
 	const configOutput = config();
 	app.initProviders(configOutput.providers);
-	return { ...app, config, env };
+	// return { ...app, config, env };
+	app.updateConfig(config);
+	app.updateEnv(env);
+	return app;
 })();

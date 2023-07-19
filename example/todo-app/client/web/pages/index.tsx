@@ -19,6 +19,7 @@ import {
   Input,
   CheckIcon,
   TrashIcon,
+  Link,
 } from '@/components';
 import { defaultTodos, getCompletedTasks, getDay } from '@/utils';
 import ClientSDK from '@project/client-sdk';
@@ -40,13 +41,11 @@ const Meta = () => {
 const Todo = () => {
   // console.log('herrreee');
   async function test() {
-    console.log(
-      await ClientSDK.providers.get('dbClient').prisma.user.findMany()
-    );
+    console.log(await ClientSDK.providers.get('db').prisma.user.findMany());
   }
   // async function addUser() {
   //   console.log(
-  //     await ClientSDK.providers.get('dbClient').prisma.user.create({
+  //     await ClientSDK.providers.get('db').prisma.user.create({
   //       data: {
   //         // name: 'Alice',
   //         title: 'CEO',
@@ -63,8 +62,8 @@ const Todo = () => {
   useEffect(() => {
     async function getTodos() {
       try {
-        let todos = await ClientSDK.providers
-          .get('dbClient')
+        const todos = await ClientSDK.providers
+          .get('db')
           .prisma.todosList.findMany();
         console.log(todos, 'Todooosss');
         setTodos(todos);
@@ -78,7 +77,7 @@ const Todo = () => {
   async function seedTodos() {
     // console.log(defaultTodos, 'Saving dattta');
     // await ClientSDK.providers.get('functionSDK').functions.add();
-    await ClientSDK.providers.get('dbClient').prisma.user.createMany({
+    await ClientSDK.providers.get('db').prisma.user.createMany({
       data: [
         {
           // name: 'Alice',
@@ -95,8 +94,8 @@ const Todo = () => {
 
   async function getTodos() {
     try {
-      let todos = await ClientSDK.providers
-        .get('dbClient')
+      const todos = await ClientSDK.providers
+        .get('db')
         .prisma.todosList.findMany();
       console.log(todos, 'Todooosss');
       setTodos(todos);
@@ -120,7 +119,7 @@ const Todo = () => {
     //   setItem('');
     //   setLastItemSelected(false);
     // }
-    await ClientSDK.providers.get('dbClient').prisma.todosList.create({
+    await ClientSDK.providers.get('db').prisma.todosList.create({
       data: {
         // name: 'Alice',
         task: '',
@@ -153,7 +152,7 @@ const Todo = () => {
           totalTasks={item !== '' && todos ? todos.length + 1 : 0}
         />
       </Box>
-      {todos ? (
+      {/* {todos ? (
         todos?.map((todo, index) => (
           <SwipeableContainer
             key={index}
@@ -166,7 +165,20 @@ const Todo = () => {
         ))
       ) : (
         <Text>No todos found</Text>
-      )}
+      )} */}
+      <Link
+        p="$2"
+        sx={{
+          ':hover': {
+            _text: {
+              color: '$primary500',
+            },
+          },
+          'color': '$black500',
+        }}
+      >
+        <Link.Text color="$white">testcfdgvhbj</Link.Text>
+      </Link>
 
       <Pressable
         mb="$32"

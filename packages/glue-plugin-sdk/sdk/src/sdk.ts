@@ -11,6 +11,8 @@ export default class SDK {
 		string | InstanceType<AnyClass>,
 		InstanceType<AnyClass>
 	>;
+	_config: any;
+	_env: any;
 
 	static #instance: SDK;
 
@@ -72,7 +74,7 @@ export default class SDK {
 		const providers: { [K in keyof T]: InstanceType<T[K]> } =
 			{} as any;
 
-		for (let key in localProviders) {
+		for (const key in localProviders) {
 			let provider;
 			// @ts-ignore
 			if (typeof localProviders[key].then === 'function') {
@@ -96,7 +98,7 @@ export default class SDK {
 	}
 
 	initProviders<T extends ClassMap>(localProviders: T) {
-		let { providers } = this.populateProviders(localProviders);
+		const { providers } = this.populateProviders(localProviders);
 
 		// for (const key in providers) {
 		// 	const provider = providers[key];
@@ -145,5 +147,29 @@ export default class SDK {
 		// initialise all providers
 		console.log('>> init');
 		await this.initProviders(localProviders);
+	}
+
+	updateConfig(config: any) {
+		this._config = config;
+	}
+
+	updateEnv(env: any) {
+		this._env = env;
+	}
+
+	get env() {
+		return this._env;
+	}
+
+	get config() {
+		return this._config;
+	}
+
+	get db() {
+		return this.providers.get('db');
+	}
+
+	get functions() {
+		return this.providers.get('functions');
 	}
 }

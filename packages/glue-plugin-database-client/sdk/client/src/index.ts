@@ -7,9 +7,11 @@ export default class SDK extends ServiceProvider {
   constructor() {
     // Initialization code goes here
     // @ts-ignore
-    super();
+    super(this);
+
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
+    return this.prisma;
     // **---Constructor will be added before this---**
   }
   //static functions
@@ -25,6 +27,7 @@ export default class SDK extends ServiceProvider {
   get prisma() {
     return this.helper();
   }
+
   helper = function () {
     const prismaFunctions = [
       'findUnique',
