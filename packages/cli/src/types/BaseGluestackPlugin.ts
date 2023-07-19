@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import AppCLI from '../helpers/lib/app';
 
 import IPlugin, {
