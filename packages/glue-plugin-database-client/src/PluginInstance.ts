@@ -262,14 +262,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async build(): Promise<void> {
     // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
-    // console.log('start build');
     const gatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );
-    // console.log('gatewayPlugin', gatewayPlugin?.getName());
 
     const gatewayInstance = gatewayPlugin?.getInstances()[0];
-    // console.log('gatewayPlugin', gatewayInstance?.getName());
 
     if (!gatewayInstance) {
       throw new Error('Gateway instance not found');
@@ -279,15 +276,12 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       this._sourcePath,
       join(gatewayInstance._destinationPath, this.getName())
     );
-    this.generateDbClientService(gatewayInstance._destinationPath);
-    // console.log('before call func');
 
+    this.generateDbClientService(gatewayInstance._destinationPath);
     // @ts-ignore
     await gatewayPlugin.generateDbClientService(this.getName());
-    // console.log('after call func');
 
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    // console.log('sdkPath', sdkPath);
     await this.app.createPackage(
       `${this.getName()}-client-sdk`,
       join(sdkPath, 'client')
@@ -297,7 +291,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       `${this.getName()}-server-sdk`,
       join(sdkPath, 'server')
     );
-    // console.log('package created');
   }
 
   async watch(): Promise<void> {

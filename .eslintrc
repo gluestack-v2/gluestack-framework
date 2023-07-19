@@ -13,7 +13,7 @@
     ],
     "no-bitwise": 0,
     "prefer-const": "warn",
-    "no-console": ["error", { "allow": ["warn", "error", "log"] }]
+    "no-console": ["error", { "allow": ["warn", "error"] }]
   },
   "parserOptions": {
     "parser": "@babel/eslint-parser",
