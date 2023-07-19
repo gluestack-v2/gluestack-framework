@@ -55,14 +55,6 @@ export default abstract class BaseGluestackPluginInstance
 		return this.callerPlugin;
 	}
 
-	getDockerfile(): string {
-		return `${this._workspacePath}/Dockerfile`;
-	}
-
-	getSealServicefile(): string {
-		return `${this._workspacePath}/seal.service.yaml`;
-	}
-
 	getDestinationPath(): string {
 		return join(
 			process.cwd(),

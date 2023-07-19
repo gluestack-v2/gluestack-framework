@@ -8,13 +8,6 @@ import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/b
 import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -23,12 +16,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -76,13 +63,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.generateEnvFiles();
   }
 
-  getDockerfile(): string {
-    return join(this._destinationPath, 'Dockerfile');
-  }
-
-  getSealServicefile(): string {
-    return join(this._destinationPath, 'bolt.service.yaml');
-  }
   //override updateWorkspacePackageJSON
   async updateWorkspacePackageJSON() {
     // // add package.json with workspaces

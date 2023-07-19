@@ -61,15 +61,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     //   instanceName,
     //   "INSTANCENAME"
     // );
-
-    // move dockerfile into the new instance
-    // if (instance.getDockerfile) {
-    //   await reWriteFile(
-    //     `${instance?.getDockerfile()}`,
-    //     instanceName,
-    //     "INSTANCENAME"
-    //   );
-    // }
   }
 
   createInstance(

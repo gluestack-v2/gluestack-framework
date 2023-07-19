@@ -78,12 +78,4 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   getInstances(): IInstance[] {
     return this.instances;
   }
-
-  getDockerfile(): string {
-    return `${this.getInternalFolderPath()}/Dockerfile`;
-  }
-
-  getSealServicefile(): string {
-    return `${this.getInternalFolderPath()}/bolt.service.yaml`;
-  }
 }

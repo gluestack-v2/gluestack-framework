@@ -8,13 +8,6 @@ import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -23,12 +16,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -37,14 +24,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   destroy() {
     //
-  }
-
-  getDockerfile(): string {
-    return `${this._destinationPath}/Dockerfile`;
-  }
-
-  getSealServicefile(): string {
-    return `${this._destinationPath}/seal.service.yaml`;
   }
 
   async build() {

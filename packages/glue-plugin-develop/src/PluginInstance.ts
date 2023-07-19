@@ -5,13 +5,6 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -20,12 +13,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -44,15 +31,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  getDockerfile(): string {
-    return `${this._sourcePath}/Dockerfile`;
-  }
-
   getDestinationPath(): string {
     return '';
-  }
-
-  getSealServicefile(): string {
-    return `${this._sourcePath}/seal.service.yaml`;
   }
 }

@@ -8,13 +8,6 @@ import { join } from 'path';
 import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -23,12 +16,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -37,69 +24,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   destroy() {
     //
-  }
-
-  // watch(): any {
-  // this.app.watch(process.cwd(), this.getInstances(), async (event, path) => {
-  //   const log = console.log.bind(console);
-  //   // Add event listeners.
-
-  //   if (event === "add") {
-  //     // log(`File ${path} has been added`);
-  //     const instanceName = `${path}`.split("/")[0];
-  //     let destPath = this.getInstanceInfo(instanceName).destPath;
-  //     let srcPath = path1.join(process.cwd(), path);
-  //     if (await fileExists(srcPath)) {
-  //       const data = fs.readFileSync(srcPath, {
-  //         encoding: "utf8",
-  //       });
-  //       writeFile(`${destPath}/${path}`, data);
-  //     }
-  //   }
-  //   if (event === "change") {
-  //     log(`File ${path} has been changed`);
-  //     // const srcPath=
-  //     const instanceName = `${path}`.split("/")[0];
-  //     let destPath = this.getInstanceInfo(instanceName).destPath;
-  //     // let srcPath = this.getInstanceInfo(instanceName).srcPath;
-  //     let srcPath = path1.join(process.cwd(), path);
-  //     if (await fileExists(srcPath)) {
-  //       const data = fs.readFileSync(srcPath, {
-  //         encoding: "utf8",
-  //       });
-  //       writeFile(`${destPath}/${path}`, data);
-  //     }
-  //   }
-  //   if (event === "unlink") {
-  //     log(`File ${path} has been removed`);
-  //     const instanceName = `${path}`.split("/")[0];
-  //     let destPath = this.getInstanceInfo(instanceName).destPath;
-  //     if (await fileExists(destPath)) {
-  //       unlinkSync(`${destPath}/${path}`);
-  //     }
-  //   }
-  // });
-  // return [];
-  // }
-
-  getDockerfile(): string {
-    return `${this._destinationPath}/Dockerfile`;
-  }
-
-  // getGeneratedPath(name: any) {
-  //   return path1.join(
-  //     process.cwd(),
-  //     ".glue",
-  //     "__generated__",
-  //     "seal",
-  //     "services",
-  //     name,
-  //     "src"
-  //   );
-  // }
-
-  getSealServicefile(): string {
-    return `${this._destinationPath}/seal.service.yaml`;
   }
 
   getGatewayInstanceInfo() {
