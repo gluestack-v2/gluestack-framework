@@ -43,12 +43,13 @@ const updateInternalsFile = async () => {
   }
 };
 
-export default async (app: AppCLI, instanceName: any): Promise<void> => {
+export default async (app: AppCLI, _instanceName: any): Promise<void> => {
   for await (const plugin of app.plugins) {
     let instances = plugin.getInstances();
     for await (let instance of instances) {
       if (instance) {
         const folderPath = plugin.getInstallationPath(instance.getName());
+        // eslint-disable-next-line no-console
         console.log(`Removing ${folderPath}`);
 
         if (existsSync(folderPath)) {
@@ -86,7 +87,9 @@ const removeFolder = (absolutePath: any) => {
     rmSync(absolutePath, {
       recursive: true,
     });
+    // eslint-disable-next-line no-catch-shadow
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(`${absolutePath} not found!`);
   }
 };

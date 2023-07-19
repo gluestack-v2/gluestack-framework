@@ -95,6 +95,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return instance;
   }
   testFunction() {
+    // eslint-disable-next-line no-console
     console.log('test');
   }
   getInstances(): IInstance[] {
