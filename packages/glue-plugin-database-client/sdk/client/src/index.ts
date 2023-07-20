@@ -23,7 +23,7 @@ export default class SDK extends ServiceProvider {
   }
   login() {}
 
-  static propChain: string[];
+  static propChain: any[];
   get prisma() {
     return this.helper();
   }
@@ -48,7 +48,7 @@ export default class SDK extends ServiceProvider {
     ];
     var obj: PrismaClient = {};
     obj = new Proxy(obj, {
-      get: function (target, prop) {
+      get: function (target, prop: any) {
         if (prismaFunctions.includes(prop)) {
           return (params: any) => {
             SDK.propChain.push({
