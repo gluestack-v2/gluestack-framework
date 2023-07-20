@@ -29,6 +29,7 @@ export const parameters = {
             'glue-plugin-sdk',
             'glue-plugin-service-gateway',
             'glue-plugin-functions',
+            'glue-plugin-middleware',
             'glue-plugin-database',
             'glue-plugin-database-client',
           ],
