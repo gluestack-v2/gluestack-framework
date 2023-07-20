@@ -4,9 +4,9 @@ export default abstract class ServiceProvider
 	implements IServiceProvider
 {
 	constructor() {}
-	getInstance() {
-		return this;
-	}
+	// getInstance() {
+	// 	return this;
+	// }
 
 	abstract init(): void;
 	abstract destroy(): void;

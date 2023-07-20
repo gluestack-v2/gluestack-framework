@@ -88,7 +88,7 @@ const Todo = () => {
     //   ],
     // });
     console.log(
-      await ClientSDK.db.user.user.createMany({
+      await ClientSDK.db.user.createMany({
         data: [
           {
             // name: 'Alice',

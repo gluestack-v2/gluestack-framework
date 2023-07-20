@@ -12,7 +12,7 @@ export default class SDK extends ServiceProvider {
     super();
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
-    // return this.prisma;
+    return this.prisma;
     // **---Constructor will be added before this---**
   }
   //static functions
@@ -27,9 +27,9 @@ export default class SDK extends ServiceProvider {
   get prisma() {
     return this.helper();
   }
-  getInstance(): any {
-    return this.helper();
-  }
+  // getInstance(): any {
+  //   return this.helper();
+  // }
 
   helper = function () {
     const prismaFunctions = [
@@ -52,10 +52,8 @@ export default class SDK extends ServiceProvider {
     var obj: PrismaClient = {};
     obj = new Proxy(obj, {
       get: (target, prop: any) => {
-        console.log('prop>>>>>.', prop);
         if (prismaFunctions.includes(prop)) {
           return (params: any) => {
-            console.log('pushinggg', this.propChain);
             this.propChain.push({
               type: 'function',
               key: prop,
@@ -63,7 +61,6 @@ export default class SDK extends ServiceProvider {
             });
             return new Promise(async (resolve: any, reject: any) => {
               // Your async function code here
-              console.log(this.propChain);
               try {
                 const response = await axios({
                   method: 'post',
