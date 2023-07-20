@@ -5,7 +5,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import { join } from 'path';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
 import addCommand from './commands/add';
 import listCommand from './commands/list';

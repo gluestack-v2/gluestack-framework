@@ -23,6 +23,7 @@ import {
 } from '@/components';
 import { defaultTodos, getCompletedTasks, getDay } from '@/utils';
 import ClientSDK from '@project/client-sdk';
+console.log(ClientSDK.providers.get('db').user);
 
 // import { Box, Text } from "../components";
 
@@ -37,7 +38,6 @@ const Meta = () => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Todo = () => {
   // console.log('herrreee');
   async function test() {
@@ -77,16 +77,29 @@ const Todo = () => {
   async function seedTodos() {
     // console.log(defaultTodos, 'Saving dattta');
     // await ClientSDK.providers.get('functionSDK').functions.add();
-    await ClientSDK.providers.get('db').prisma.user.createMany({
-      data: [
-        {
-          // name: 'Alice',
-          title: 'nndndndndndnd',
-          votes: 81,
-          status: false,
-        },
-      ],
-    });
+    // await ClientSDK.providers.get('db').prisma.user.createMany({
+    //   data: [
+    //     {
+    //       // name: 'Alice',
+    //       title: 'nndndndndndnd',
+    //       votes: 81,
+    //       status: false,
+    //     },
+    //   ],
+    // });
+    console.log(
+      await ClientSDK.db.user.user.createMany({
+        data: [
+          {
+            // name: 'Alice',
+            title: 'nndndndndndnd',
+            votes: 81,
+            status: false,
+          },
+        ],
+      }),
+      'hihihihihi'
+    );
     // console.log(
     //   await ClientSDK.providers.get('functionSDK').functions.add(2, 3)
     // );

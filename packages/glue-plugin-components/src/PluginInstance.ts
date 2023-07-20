@@ -2,9 +2,8 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import path1, { join } from 'path';
-import fs from 'fs';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+import { join } from 'path';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(

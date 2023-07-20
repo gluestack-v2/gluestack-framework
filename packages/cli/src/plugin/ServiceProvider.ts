@@ -1,15 +1,11 @@
-import { join, relative } from 'path';
-
-import AppCLI from '../helpers/lib/app';
 import IServiceProvider from '../types/plugin/interface/IServiceProvider';
 
 export default abstract class ServiceProvider
 	implements IServiceProvider
 {
-	app: AppCLI;
-
-	constructor(app: AppCLI) {
-		this.app = app;
+	constructor() {}
+	getInstance() {
+		return this;
 	}
 
 	abstract init(): void;

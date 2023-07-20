@@ -36,7 +36,8 @@ const template = () =>
        handler: async (ctx) => {
          const context = new Context(ctx);
          const { query } = ctx.params;
-         let resolvedQuery = context.sdk.providers.get('dbClient').prisma;
+        //  TODO: Remove hardcoded db
+         let resolvedQuery = context.sdk.providers.get('db').prisma;
          return new Promise((resolve, reject) => {
            let res;
            query.forEach(async (q) => {
@@ -45,16 +46,10 @@ const template = () =>
              }
              if (q.type === 'function') {
                arguments = q.args || {};
-               console.log('in function', arguments, q.key);
                if (q.args) {
                  try {
                    console.log('in if');
                    res = await resolvedQuery?.[q.key](arguments);
-                   console.log(
-                     res,
-                     arguments,
-                     resolvedQuery?.[q.key](arguments)
-                   );
                    resolve(res);
                  } catch (err) {
                    reject(err);
