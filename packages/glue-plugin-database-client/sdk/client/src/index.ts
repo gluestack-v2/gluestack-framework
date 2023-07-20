@@ -7,9 +7,7 @@ import type { PrismaClient } from '@prisma/client';
 export default class SDK extends ServiceProvider {
   constructor() {
     // Initialization code goes here
-    // @ts-ignore
     super();
-
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
     return this.prisma;

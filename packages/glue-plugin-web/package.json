@@ -34,6 +34,6 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-storage": "^0.1.x"
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x"
   }
 }

@@ -3,7 +3,7 @@ import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
@@ -17,7 +17,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   init() {
-    this.app.addEventListener('booting.web', (...args: any[]): void => {
+    this.app.addEventListener('booting.web', (..._args: any[]): void => {
       this.gluePluginStore.set('message', 'Hello from function plugin');
     });
   }
@@ -46,7 +46,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `${process.cwd()}/node_modules/${this.getName()}/internal`;
   }
 
-  async runPostInstall(instanceName: string, target: string) {
+  async runPostInstall(instanceName: string, _target: string) {
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
