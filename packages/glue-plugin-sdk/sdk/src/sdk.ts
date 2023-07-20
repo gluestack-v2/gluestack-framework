@@ -166,10 +166,10 @@ export default class SDK {
 	}
 
 	get db() {
-		return this.providers.get('db');
+		return this.providers.get('db').getInstance();
 	}
 
 	get functions() {
-		return this.providers.get('functions');
+		return this.providers.get('functions').getInstance();
 	}
 }

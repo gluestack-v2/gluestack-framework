@@ -6,6 +6,7 @@ import action from './actions/prepare';
 export default async (program: any, app: AppCLI): Promise<void> => {
   const command: ICommand = program
     .command('prepare')
+    .argument('[packageName]', 'Plugin name', '')
     .description('Prepare all services to run in docker')
-    .action(() => action(app));
+    .action((packageName: string) => action(app, packageName));
 };

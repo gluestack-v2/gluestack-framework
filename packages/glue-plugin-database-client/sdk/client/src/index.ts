@@ -5,12 +5,14 @@ import type { PrismaClient } from '@prisma/client';
 // **---Import will be added before this---**
 
 export default class SDK extends ServiceProvider {
+  propChain: any[] = [];
+
   constructor() {
     // Initialization code goes here
     super();
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
-    return this.prisma;
+    // return this.prisma;
     // **---Constructor will be added before this---**
   }
   //static functions
@@ -22,8 +24,10 @@ export default class SDK extends ServiceProvider {
   }
   login() {}
 
-  static propChain: any[];
   get prisma() {
+    return this.helper();
+  }
+  getInstance(): any {
     return this.helper();
   }
 
@@ -47,35 +51,38 @@ export default class SDK extends ServiceProvider {
     ];
     var obj: PrismaClient = {};
     obj = new Proxy(obj, {
-      get: function (target, prop: any) {
+      get: (target, prop: any) => {
+        console.log('prop>>>>>.', prop);
         if (prismaFunctions.includes(prop)) {
           return (params: any) => {
-            SDK.propChain.push({
+            console.log('pushinggg', this.propChain);
+            this.propChain.push({
               type: 'function',
               key: prop,
               args: params,
             });
             return new Promise(async (resolve: any, reject: any) => {
               // Your async function code here
+              console.log(this.propChain);
               try {
                 const response = await axios({
                   method: 'post',
                   url: 'http://localhost:3003/api/dbClient/db',
-                  data: { query: SDK.propChain },
+                  data: { query: this.propChain },
                 });
                 //TODO: review-rohit
-                SDK.propChain = [];
+                this.propChain = [];
                 resolve(response.data);
               } catch (error: any) {
                 //TODO: review-rohit
-                SDK.propChain = [];
+                this.propChain = [];
                 reject(error.message);
               }
             });
           };
         }
         if (typeof prop === 'string') {
-          SDK.propChain.push({ type: 'key', key: prop });
+          this.propChain.push({ type: 'key', key: prop });
         }
         return obj;
       },
