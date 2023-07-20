@@ -23,6 +23,7 @@ import {
 } from '@/components';
 import { defaultTodos, getCompletedTasks, getDay } from '@/utils';
 import ClientSDK from '@project/client-sdk';
+console.log(ClientSDK.providers.get('db').prisma.user);
 
 // import { Box, Text } from "../components";
 
@@ -37,7 +38,6 @@ const Meta = () => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Todo = () => {
   // console.log('herrreee');
   async function test() {
