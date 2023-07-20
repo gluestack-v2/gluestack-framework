@@ -18,7 +18,7 @@ export default class SDK {
 
 	constructor() {
 		// Initialization code goes here
-		console.log('ServerSDK instance initialized');
+		// console.log('ServerSDK instance initialized');
 		this.providers = new Map();
 	}
 
@@ -58,7 +58,7 @@ export default class SDK {
 		// }
 	}
 
-	getProviderInstance(providerClass: AnyClass) {
+	getProviderInstance() {
 		// console.log(this.providers, providerClass, 'in functionnn');
 		// for (let provider in this.providers) {
 		// 	if (this.providers[provider] instanceof providerClass) {
@@ -71,8 +71,8 @@ export default class SDK {
 	populateProviders<T extends ClassMap>(
 		localProviders: T
 	): { providers: any } {
-		const providers: { [K in keyof T]: InstanceType<T[K]> } =
-			{} as any;
+		// const providers: { [K in keyof T]: InstanceType<T[K]> } =
+		// 	{} as any;
 
 		for (const key in localProviders) {
 			let provider;
@@ -83,7 +83,7 @@ export default class SDK {
 			} else {
 				provider = localProviders[key];
 			}
-			console.log(provider, 'provider');
+			// console.log(provider, 'provider');
 			// @ts-ignore
 			const providerInstance = new provider(this);
 			// set for alias
@@ -116,7 +116,7 @@ export default class SDK {
 	}
 
 	// @API: getPluginByName
-	getProviderByName(providerName: string) {
+	getProviderByName() {
 		// return
 		// for (const provider of this.providers) {
 		// 	if (provider.getName() === providerName) {
@@ -145,7 +145,7 @@ export default class SDK {
 	// @API: init
 	async init(localProviders?: any) {
 		// initialise all providers
-		console.log('>> init');
+		// console.log('>> init');
 		await this.initProviders(localProviders);
 	}
 
