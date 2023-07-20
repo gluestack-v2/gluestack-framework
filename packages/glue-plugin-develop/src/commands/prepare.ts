@@ -4,6 +4,7 @@ import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interf
 import action from './actions/prepare';
 
 export default async (program: any, app: AppCLI): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const command: ICommand = program
     .command('prepare')
     .argument('[packageName]', 'Plugin name', '')

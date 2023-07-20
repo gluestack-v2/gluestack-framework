@@ -2,7 +2,7 @@ import {
   warning,
   success,
 } from '@gluestack-v2/framework-cli/build/helpers/print';
-import fs from 'fs';
+import fs, { readFileSync } from 'fs';
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
@@ -222,17 +222,23 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         instance._destinationPath,
         'moleculer.config.js'
       );
-      let moleculerConfig = await readfile(moleculerConfigPath);
-      moleculerConfig = moleculerConfig.replace(
-        '/* User Custom Middleware Imports */',
-        `const { ${instanceName}Middlewares } = require("./middlewares");`
-      );
+      let moleculerConfig = readFileSync(moleculerConfigPath, {
+        encoding: 'utf-8',
+      });
 
-      moleculerConfig = moleculerConfig.replace(
-        '/* User Custom Middleware */',
-        `${instanceName}Middlewares, /* User Custom Middleware */`
-      );
+      const importString = `const { ${instanceName}Middlewares } = require("./${instanceName}");`;
 
+      if (!moleculerConfig.includes(importString)) {
+        moleculerConfig = moleculerConfig.replace(
+          '/* User Custom Middleware Imports */',
+          `const { ${instanceName}Middlewares } = require("./${instanceName}");
+        /* User Custom Middleware Imports */`
+        );
+        moleculerConfig = moleculerConfig.replace(
+          '/* User Custom Middleware */',
+          `${instanceName}Middlewares, /* User Custom Middleware */`
+        );
+      }
       await writeFile(moleculerConfigPath, moleculerConfig);
     }
   }

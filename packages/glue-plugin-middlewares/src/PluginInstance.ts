@@ -50,7 +50,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+    return join(process.cwd(), this.getPluginEnvironment(), this.getName());
   }
 
   getPluginEnvironment() {
