@@ -5,6 +5,7 @@ import { execute } from '../../helpers/execute';
 import { join, relative } from 'path';
 
 const installNPMDependencies = async (app: AppCLI) => {
+  // FIX: Run npm install only if package.json exists
   const services: string[] = app.getAllServicePaths();
   for await (const service of services) {
     info(

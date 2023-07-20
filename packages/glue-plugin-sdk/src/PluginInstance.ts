@@ -84,7 +84,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     this.app.replaceTemplateValues(
       serverSDKPath,
       '// Add imports here',
-      `import dotenv from 'dotenv'; \nimport findWorkspaceRoot from 'find-yarn-workspace-root'; \nimport { join } from 'path'; \n// Add imports here\n\nconst workspaceRoot = findWorkspaceRoot(__dirname); \ndotenv.config({\tpath: join(workspaceRoot, '.env')\n\t});\n`
+      `import dotenv from 'dotenv'; \nimport findWorkspaceRoot from 'find-yarn-workspace-root'; \nimport { join } from 'path'; \n// Add imports here\n\nconst workspaceRoot: any = findWorkspaceRoot(__dirname); \ndotenv.config({\tpath: join(workspaceRoot, '.env')\n\t});\n`
     );
     this.app.replaceTemplateValues(
       serverSDKPath,
@@ -100,7 +100,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async watch(callback?: Function) {
     // NO NEED TO WATCH
-    let developPlugin = this.app.getPluginByName(
+    const developPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-develop'
     );
     await this.buildBeforeWatch();
