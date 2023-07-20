@@ -1,15 +1,21 @@
 module.exports = {
-  "functions.add": async (next, serverSDK) => {
+  'functions.add': async (next, serverSDK) => {
     //before operation
-    console.log("before operation");
+
+    // eslint-disable-next-line no-console
+    console.log('before operation');
     next(serverSDK)
       .then((res) => {
         //response operation
-        console.log("response operation");
+        // eslint-disable-next-line no-console
+        console.log('response operation');
+        return res;
       })
       .catch((err) => {
         //error operation
-        console.log("error returned => ", err);
+        // eslint-disable-next-line no-console
+        console.log('error returned => ', err);
+        throw err;
       });
   },
 };
