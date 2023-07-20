@@ -1,4 +1,5 @@
-import ServiceProvider from '@gluestack-v2/framework-cli/build/types/ServiceProvider';
+import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServiceProvider';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios from 'axios';
 
 export default class SDK extends ServiceProvider {

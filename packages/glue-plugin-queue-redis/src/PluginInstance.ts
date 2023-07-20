@@ -2,7 +2,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
 import { join } from 'path';
 import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 

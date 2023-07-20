@@ -1,4 +1,4 @@
-import ServiceProvider from '@gluestack-v2/framework-cli/build/types/ServiceProvider';
+import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServiceProvider';
 import axios from 'axios';
 import type { PrismaClient } from '@prisma/client';
 // **---Import will be added before this---**
@@ -6,9 +6,7 @@ import type { PrismaClient } from '@prisma/client';
 export default class SDK extends ServiceProvider {
   constructor() {
     // Initialization code goes here
-    // @ts-ignore
-    super(this);
-
+    super();
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
     return this.prisma;
