@@ -1,23 +1,22 @@
-import {
-  warning,
-  success,
-} from '@gluestack-v2/framework-cli/build/helpers/print';
-import fs, { readFileSync } from 'fs';
 // @ts-ignore
 import packageJSON from '../package.json';
+import fs, { readFileSync } from 'fs';
 import { PluginInstance } from './PluginInstance';
-
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
-import readfile from '@gluestack-v2/framework-cli/build/helpers/file/read-file';
-
+import {
+  AppCLI,
+  BaseGluestackPlugin,
+  readFile,
+  fileExists,
+  writeFile,
+  warning,
+  success,
+} from '@gluestack-v2/framework-cli';
+import type {
+  IPlugin,
+  IInstance,
+  IGlueStorePlugin,
+} from '@gluestack-v2/framework-cli';
 import { join } from 'path';
-import { fileExists, writeFile } from '@gluestack/helpers';
-
 import path from 'path';
 import writeService from './helpers/write-service';
 import writeQueuesService from './helpers/write-queues-service';
@@ -255,7 +254,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         'package.json'
       );
       if (await fileExists(targetPkgJson)) {
-        let data: any = await readfile(targetPkgJson);
+        let data: any = await readFile(targetPkgJson);
 
         data = JSON.parse(data);
         if (!data.devDependencies) {
@@ -313,7 +312,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         'package.json'
       );
       if (await fileExists(targetPkgJson)) {
-        const data: any = await readfile(targetPkgJson);
+        const data: any = await readFile(targetPkgJson);
 
         // data = data;
         if (!data.dependencies) {

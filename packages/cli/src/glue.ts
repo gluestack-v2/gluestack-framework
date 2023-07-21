@@ -14,15 +14,7 @@ const glue = async (localPlugins: Array<IPlugin> = []) => {
 
 module.exports = glue;
 
-export {
-	newline,
-	info,
-	success,
-	error,
-	json,
-	warning,
-	AppCLI,
-} from './helpers';
+export * from './helpers';
 
 export {
 	BaseGluestackPluginInstance,
