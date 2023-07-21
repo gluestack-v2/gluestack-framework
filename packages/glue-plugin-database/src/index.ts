@@ -80,7 +80,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 POSTGRES_USER=${answers.DATABASE_USER}
 POSTGRES_PASSWORD=${answers.DATABASE_PASSWORD}
 POSTGRES_DB=${answers.DATABASE_NAME}
-DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@localhost:5433/${answers.DATABASE_NAME}
+DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@localhost:5432/${answers.DATABASE_NAME}
 `;
 
     // Write the .env file at database root
