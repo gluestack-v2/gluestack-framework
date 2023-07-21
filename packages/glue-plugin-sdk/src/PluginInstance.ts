@@ -4,8 +4,7 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
-
-import { GLUE_GENERATED_PACKAGES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import fs from 'fs';
 
 const dotEnvPath = join(process.cwd(), '.env');
 
@@ -42,60 +41,147 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
   }
 
-  async build() {
-    await this.app.createPackage(
-      'client-sdk',
+  async createPackageByName(name: string, configName: string) {
+    const packagePath = await this.app.createPackage(
+      name,
       join(this.callerPlugin.getPackagePath(), 'sdk')
     );
 
-    await this.app.createPackage(
-      'server-sdk',
-      join(this.callerPlugin.getPackagePath(), 'sdk')
-    );
-
-    const clientSDKPath = join(
-      GLUE_GENERATED_PACKAGES_PATH,
-      'client-sdk',
-      'src',
-      'index.ts'
-    );
-    const serverSDKPath = join(
-      GLUE_GENERATED_PACKAGES_PATH,
-      'server-sdk',
-      'src',
-      'index.ts'
-    );
-
-    this.app.replaceTemplateValues(
-      clientSDKPath,
+    await this.app.replaceTemplateValues(
+      join(packagePath, 'src', 'index.ts'),
       'UPDATECONFIGTYPE',
+      configName
+    );
+    return packagePath;
+  }
+
+  async build() {
+    const clientSDKPath = await this.createPackageByName(
+      'client-sdk',
       'client-config'
     );
-    this.app.replaceTemplateValues(
-      serverSDKPath,
-      'UPDATECONFIGTYPE',
+
+    const serverSDKPath = await this.createPackageByName(
+      'server-sdk',
       'server-config'
     );
-    this.app.replaceTemplateValues(
-      clientSDKPath,
+
+    await this.app.replaceTemplateValues(
+      join(clientSDKPath, 'src', 'index.ts'),
       '/*** UPDATE_ENV_BASED_ON_ENVIRONMENT ***/',
       `= ${JSON.stringify(await this.filterEnvData(dotEnvPath, 'client'))}`
     );
-    this.app.replaceTemplateValues(
-      serverSDKPath,
+    await this.app.replaceTemplateValues(
+      join(serverSDKPath, 'src', 'index.ts'),
       '// Add imports here',
       `import dotenv from 'dotenv'; \nimport findWorkspaceRoot from 'find-yarn-workspace-root'; \nimport { join } from 'path'; \n// Add imports here\n\nconst workspaceRoot: any = findWorkspaceRoot(__dirname); \ndotenv.config({\tpath: join(workspaceRoot, '.env')\n\t});\n`
     );
-    this.app.replaceTemplateValues(
-      serverSDKPath,
+    await this.app.replaceTemplateValues(
+      join(serverSDKPath, 'src', 'index.ts'),
       '/*** UPDATE_ENV_BASED_ON_ENVIRONMENT ***/',
       `= process.env`
     );
-    this.app.replaceTemplateValues(
-      serverSDKPath,
+    await this.app.replaceTemplateValues(
+      join(serverSDKPath, 'src', 'index.ts'),
       'PROJECT_PATH_ENV',
       'server-config'
     );
+    this.generateConfigInServiceSdk(clientSDKPath, serverSDKPath);
+  }
+
+  generateConfigInServiceSdk(clientSDKPath: string, serverSDKPath: string) {
+    const developPlugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-develop'
+    );
+
+    if (developPlugin) {
+      // @ts-ignore
+      const configPath = developPlugin.getConfigPath();
+
+      const clientConfig = fs.readFileSync(
+        join(configPath, 'client.ts'),
+        'utf-8'
+      );
+      const serverConfig = fs.readFileSync(
+        join(configPath, 'server.ts'),
+        'utf-8'
+      );
+      const globalConfig = fs.readFileSync(
+        join(configPath, 'index.ts'),
+        'utf-8'
+      );
+      this.addConfigAlias(clientConfig, clientSDKPath);
+      this.addConfigAlias(serverConfig, serverSDKPath);
+      this.addConfigAlias(globalConfig, [clientSDKPath, serverSDKPath]);
+    }
+  }
+
+  addConfigAlias(config: string, path: string | Array<string>) {
+    const regex = /{[\s\S]*providers\s*:\s*{\s*([\s\S]+)\s*},[\s\S]*}/;
+    const match = config.match(regex);
+    if (match && match[0]) {
+      const configMap = JSON.parse(JSON.stringify(match[0]));
+      const configKeys = this.extractProviderKeys(configMap);
+      configKeys.map(async (provider: string) => {
+        if (!(provider === 'providers')) {
+          if (typeof path === 'string') {
+            await this.addProviderAliasInSdk(provider, path);
+          } else {
+            path.map(async (p: string) => {
+              await this.addProviderAliasInSdk(provider, p);
+            });
+          }
+        }
+      });
+    }
+  }
+
+  extractProviderKeys(providerString: string) {
+    const regex = /\s*([\w$]+)\s*:/g;
+    const keys = [];
+    let match;
+    while ((match = regex.exec(providerString))) {
+      keys.push(match[1]);
+    }
+    return keys;
+  }
+
+  addProviderAliasInSdk(providerName: string, packagePath: string) {
+    const getterTemplate = `	get ${providerName}() {
+		return this.providers.get('${providerName}');
+	  }`;
+    this.updateTemplate(
+      join(packagePath, 'src', 'sdk.ts'),
+      getterTemplate,
+      '// **** Add getter functions after this comment ****'
+    );
+  }
+
+  updateTemplate(
+    filePath: string,
+    replacementTemplate: string,
+    sdkTemplateString: string
+  ) {
+    const data = fs.readFileSync(filePath, 'utf8');
+
+    const commentIndex = data.indexOf(sdkTemplateString);
+    if (commentIndex === -1) {
+      console.error('Comment not found in the file.');
+      return;
+    }
+
+    if (data.includes(replacementTemplate)) {
+      return;
+    }
+    // Insert the string after the comment
+    const updatedContent =
+      data.slice(0, commentIndex + sdkTemplateString.length) +
+      '\n' +
+      '\n' +
+      replacementTemplate +
+      data.slice(commentIndex + sdkTemplateString.length);
+
+    fs.writeFileSync(filePath, updatedContent, 'utf8');
   }
 
   async watch(callback?: Function) {

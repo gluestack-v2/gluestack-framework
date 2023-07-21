@@ -165,11 +165,5 @@ export default class SDK {
 		return this._config;
 	}
 
-	get db() {
-		return this.providers.get('db');
-	}
-
-	get functions() {
-		return this.providers.get('functions');
-	}
+	// **** Add getter functions after this comment ****
 }

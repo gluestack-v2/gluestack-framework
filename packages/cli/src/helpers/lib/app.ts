@@ -444,6 +444,7 @@ export default class AppCLI {
 			await this.write(packageTemplatePath, packagePath);
 		}
 		await this.updateNameInPackageJSON(packagePath, packageName);
+		return packagePath;
 	}
 
 	// async generateSDK(
