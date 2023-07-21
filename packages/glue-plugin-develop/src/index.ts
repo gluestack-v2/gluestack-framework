@@ -1,15 +1,17 @@
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
-
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
+import {
+  AppCLI,
+  BaseGluestackPlugin,
+  GLUE_GENERATED_PACKAGES_PATH,
+} from '@gluestack-v2/framework-cli';
+import type {
+  IPlugin,
+  IInstance,
+  ICommand,
+  IGlueStorePlugin,
+} from '@gluestack-v2/framework-cli';
 import upCommand from './commands/up';
 import cleanCommand from './commands/clean';
 import restartCommand from './commands/restart';
@@ -21,7 +23,6 @@ import removeCommand from './commands/remove';
 import prepareCommand from './commands/prepare';
 import { createConfigPackage } from './helpers/create-config-package';
 import { join } from 'path';
-import { GLUE_GENERATED_PACKAGES_PATH } from './constants/glue-generated-packages';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {

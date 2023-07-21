@@ -21,9 +21,5 @@ export {
 	BaseGluestackPlugin,
 } from './plugin';
 export * from './constants';
-export type {
-	IInstance,
-	IGlueStorePlugin,
-	IGluePluginStoreFactory,
-} from './types';
+export type * from './types';
 export type { IPlugin };
