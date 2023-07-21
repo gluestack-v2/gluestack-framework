@@ -24,7 +24,10 @@ export {
 	AppCLI,
 } from './helpers';
 
-export { BaseGluestackPluginInstance } from './plugin';
+export {
+	BaseGluestackPluginInstance,
+	BaseGluestackPlugin,
+} from './plugin';
 export * from './constants';
 export type {
 	IInstance,
