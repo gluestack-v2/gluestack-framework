@@ -74,16 +74,13 @@ const Todo = () => {
   }, []);
 
   async function seedTodos() {
-    console.log(await ClientSDK.functions.multiply(2, 3), 'hihihihihi');
+    console.log(await ClientSDK.functions.multiply(), 'User added');
   }
 
   async function getTodos() {
     try {
-      const todos = await ClientSDK.providers
-        .get('db')
-        .prisma.todosList.findMany();
-      console.log(todos, 'Todooosss');
-      setTodos(todos);
+      console.log(await ClientSDK.functionsTest.add(2, 3));
+      console.log(await ClientSDK.functions.test.test(), 'User added');
     } catch (err) {
       console.error(err, 'error');
     }
@@ -122,10 +119,10 @@ const Todo = () => {
           </Text>
           <HStack space="md">
             <Button onPress={seedTodos} variant="outline" action="secondary">
-              <Button.Text>seed todos</Button.Text>
+              <Button.Text>seed user</Button.Text>
             </Button>
             <Button onPress={getTodos} variant="outline" action="secondary">
-              <Button.Text>Add todo</Button.Text>
+              <Button.Text>Add </Button.Text>
             </Button>
           </HStack>
         </HStack>

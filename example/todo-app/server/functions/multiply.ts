@@ -1,4 +1,10 @@
 module.exports = async function handler(ctx) {
-  const { a, b } = ctx.params;
-  return a + b;
+  const data = await ctx.db.user.create({
+    data: {
+      title: 'Ceo',
+      votes: 899,
+      status: false,
+    },
+  });
+  return data;
 };

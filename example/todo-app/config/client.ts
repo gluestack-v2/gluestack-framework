@@ -1,9 +1,10 @@
 import functionSDK from '@project/functions-client-sdk';
-import dbClient from '@project/dbclient-client-sdk';
+import dbClient from '@project/db-client-sdk';
 
 export const config = {
   providers: {
     functions: functionSDK,
-    db: dbClient,
+    functionsTest: functionSDK,
+    db1: dbClient,
   },
 };
