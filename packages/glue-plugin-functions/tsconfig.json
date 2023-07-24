@@ -9,11 +9,7 @@
     "esModuleInterop": true,
     "module": "UMD",
     "moduleResolution": "node",
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "@gluestack-v2/framework-cli": ["../cli/src/glue"]
-    }
+    "allowJs": true
   },
   "include": ["src/**/*.ts"]
 }

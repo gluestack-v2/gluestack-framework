@@ -1,8 +1,10 @@
 // @ts-ignore
 import packageJSON from '../package.json';
 
-import { AppCLI, BaseGluestackPlugin } from '@gluestack-v2/framework-cli';
-import type { IInstance, IGlueStorePlugin } from '@gluestack-v2/framework-cli';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import { PluginInstance } from './PluginInstance';
 
 // Do not edit the name of this class
