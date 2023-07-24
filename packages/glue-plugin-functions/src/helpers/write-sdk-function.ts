@@ -1,5 +1,5 @@
 export default function writeSDKFunction(
-  functionName: string,
+  instanceName: string,
   paramsArray: Array<string> | [],
   functionPath: string
 ) {
@@ -10,7 +10,7 @@ export default function writeSDKFunction(
       try {
         const response = await axios({
           method: "post",
-          url: "http://localhost:3003/api${functionPath}",
+          url: "http://localhost:3003/api/${instanceName}${functionPath}",
           data: {${paramsArray.join(',')}},
         });
 

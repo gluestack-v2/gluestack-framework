@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/react-in-jsx-scope */
 import Head from 'next/head';
 import type { NextPage } from 'next';
 import { useEffect, useRef, useState } from 'react';
-// @ts-ignore
-import shortid from 'shortid';
 import {
   Box,
   HStack,
@@ -21,7 +21,7 @@ import {
   TrashIcon,
   Link,
 } from '@/components';
-import { defaultTodos, getCompletedTasks, getDay } from '@/utils';
+import { getCompletedTasks, getDay } from '@/utils';
 import ClientSDK from '@project/client-sdk';
 console.log(ClientSDK.providers.get('db').user);
 
@@ -57,7 +57,7 @@ const Todo = () => {
   // }
   const [item, setItem] = useState('');
   const [todos, setTodos] = useState();
-  const [swipedItemId, setSwipedItemId] = useState(null);
+  // const [swipedItemId, setSwipedItemId] = useState(null);
   const [lastItemSelected, setLastItemSelected] = useState(false);
   useEffect(() => {
     async function getTodos() {
@@ -75,45 +75,15 @@ const Todo = () => {
   }, []);
 
   async function seedTodos() {
-    // console.log(defaultTodos, 'Saving dattta');
-    // await ClientSDK.providers.get('functionSDK').functions.add();
-    // await ClientSDK.providers.get('db').prisma.user.createMany({
-    //   data: [
-    //     {
-    //       // name: 'Alice',
-    //       title: 'nndndndndndnd',
-    //       votes: 81,
-    //       status: false,
-    //     },
-    //   ],
-    // });
-    console.log(
-      await ClientSDK.db.user.createMany({
-        data: [
-          {
-            // name: 'Alice',
-            title: 'nndndndndndnd',
-            votes: 81,
-            status: false,
-          },
-        ],
-      }),
-      'hihihihihi'
-    );
-    // console.log(
-    //   await ClientSDK.providers.get('functionSDK').functions.add(2, 3)
-    // );
+    console.log(await ClientSDK.functions.multiply(), 'User added');
   }
 
   async function getTodos() {
     try {
-      const todos = await ClientSDK.providers
-        .get('db')
-        .prisma.todosList.findMany();
-      console.log(todos, 'Todooosss');
-      setTodos(todos);
+      console.log(await ClientSDK.functionsTest.add(2, 3));
+      console.log(await ClientSDK.functions.test.test(), 'User added');
     } catch (err) {
-      console.log(err, 'error');
+      console.error(err, 'error');
     }
   }
 
@@ -150,10 +120,10 @@ const Todo = () => {
           </Text>
           <HStack space="md">
             <Button onPress={seedTodos} variant="outline" action="secondary">
-              <Button.Text>seed todos</Button.Text>
+              <Button.Text>seed user</Button.Text>
             </Button>
             <Button onPress={getTodos} variant="outline" action="secondary">
-              <Button.Text>Add todo</Button.Text>
+              <Button.Text>Add </Button.Text>
             </Button>
           </HStack>
         </HStack>

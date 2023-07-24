@@ -43,8 +43,8 @@
   ],
   "@gluestack-v2/glue-plugin-database-client": [
     {
-      "instance": "dbclient",
-      "directory": "server/dbclient",
+      "instance": "db",
+      "directory": "server/db",
       "container_store": {}
     }
   ]

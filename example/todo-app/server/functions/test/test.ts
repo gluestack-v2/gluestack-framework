@@ -1,4 +1,3 @@
 module.exports = async function handler(ctx) {
-  const { a, b } = ctx.params;
-  return a + b;
+  return await ctx.db.user.findMany();
 };
