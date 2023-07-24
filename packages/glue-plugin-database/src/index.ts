@@ -1,8 +1,10 @@
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-import { AppCLI, BaseGluestackPlugin } from '@gluestack-v2/framework-cli';
-import type { IInstance, IGlueStorePlugin } from '@gluestack-v2/framework-cli';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import { join } from 'path';
 import fs from 'fs';
 import prompts from 'prompts';

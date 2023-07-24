@@ -1,10 +1,9 @@
 import { join } from 'path';
-import {
-  AppCLI,
-  BaseGluestackPluginInstance,
-  rewriteFile,
-} from '@gluestack-v2/framework-cli';
-import type { IPlugin, IGlueStorePlugin } from '@gluestack-v2/framework-cli';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+import reWriteFile from '@gluestack-v2/framework-cli/build/helpers/file/rewrite-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
@@ -27,7 +26,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async updateNextConfig() {
-    await rewriteFile(
+    await reWriteFile(
       join(this._destinationPath, 'next.config.js'),
       this._sourcePath,
       'SOURCEPATH'
