@@ -282,9 +282,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await gatewayPlugin.generateDbClientService(this.getName());
 
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage(
+    const packagePath = await this.app.createPackage(
       `${this.getName()}-client-sdk`,
       join(sdkPath, 'client')
+    );
+
+    await this.app.replaceTemplateValues(
+      join(packagePath, 'src', 'index.ts'),
+      '// Add API URL here',
+      `http://localhost:3003/api/${this.getName()}/db`
     );
 
     await this.app.createPackage(

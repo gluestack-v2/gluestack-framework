@@ -110,7 +110,13 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const localEnvData = `DATABASE_URL=${DATABASE_URL}`;
     await writeFile(envPath, localEnvData);
+
+    // this.updateConfigFile(instanceName);
   }
+
+  // updateConfigFile(instanceName: string) {
+  //   // console.log(instanceName, 'Instance Name');
+  // }
 
   createInstance(
     key: string,

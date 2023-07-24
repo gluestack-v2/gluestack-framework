@@ -12,7 +12,7 @@ export default class SDK extends ServiceProvider {
     super();
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
-    return this.prisma;
+
     // **---Constructor will be added before this---**
   }
   //static functions
@@ -27,9 +27,9 @@ export default class SDK extends ServiceProvider {
   get prisma() {
     return this.helper();
   }
-  // getInstance(): any {
-  //   return this.helper();
-  // }
+  getProvider(): any {
+    return this.helper();
+  }
 
   helper = function () {
     const prismaFunctions = [
@@ -64,7 +64,7 @@ export default class SDK extends ServiceProvider {
               try {
                 const response = await axios({
                   method: 'post',
-                  url: 'http://localhost:3003/api/dbClient/db',
+                  url: '// Add API URL here',
                   data: { query: this.propChain },
                 });
                 //TODO: review-rohit

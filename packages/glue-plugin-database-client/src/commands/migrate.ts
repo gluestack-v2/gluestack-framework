@@ -6,7 +6,7 @@ import action from './actions/migrate';
 export default async (program: any, app: AppCLI): Promise<void> => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const command: ICommand = program
-    .command('dbclient:migrate <type>')
+    .command('db:migrate <type>')
     .allowUnknownOption()
     .option('type --options <opts>')
     .description(

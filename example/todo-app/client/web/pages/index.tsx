@@ -3,7 +3,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import Head from 'next/head';
 import type { NextPage } from 'next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   HStack,
@@ -12,17 +12,12 @@ import {
   Text,
   ProgressBar,
   AddIcon,
-  Hoverable,
-  Checkbox,
   Button,
-  Input,
-  CheckIcon,
-  TrashIcon,
   Link,
 } from '@/components';
 import { getCompletedTasks, getDay } from '@/utils';
 import ClientSDK from '@project/client-sdk';
-console.log(ClientSDK.providers.get('db').user);
+// console.log(ClientSDK.providers.get('db').user);
 
 // import { Box, Text } from "../components";
 
@@ -39,9 +34,7 @@ const Meta = () => {
 
 const Todo = () => {
   // console.log('herrreee');
-  async function test() {
-    console.log(await ClientSDK.providers.get('db').prisma.user.findMany());
-  }
+
   // async function addUser() {
   //   console.log(
   //     await ClientSDK.providers.get('db').prisma.user.create({
@@ -54,27 +47,41 @@ const Todo = () => {
   //     })
   //   );
   // }
-  const [item, setItem] = useState('');
-  const [todos, setTodos] = useState();
+  const [item] = useState('');
+  const [todos] = useState();
   // const [swipedItemId, setSwipedItemId] = useState(null);
-  const [lastItemSelected, setLastItemSelected] = useState(false);
+  const [lastItemSelected] = useState(false);
   useEffect(() => {
-    async function getTodos() {
-      try {
-        const todos = await ClientSDK.providers
-          .get('db')
-          .prisma.todosList.findMany();
-        console.log(todos, 'Todooosss');
-        setTodos(todos);
-      } catch (err) {
-        console.log(err, 'error');
-      }
-    }
-    getTodos();
+    // async function getTodos() {
+    //   try {
+    //     const todos = await ClientSDK.providers
+    //       .get('db')
+    //       .prisma.todosList.findMany();
+    //     console.log(todos, 'Todooosss');
+    //     setTodos(todos);
+    //   } catch (err) {
+    //     console.log(err, 'error');
+    //   }
+    // }
+    // getTodos();
   }, []);
 
+  // async function seedTodos() {
+  //   console.log(await ClientSDK.functions.multiply(), 'User added');
+  // }
   async function seedTodos() {
+    // console.log(ClientSDK.functions.m);
     console.log(await ClientSDK.functions.multiply(), 'User added');
+    // console.log(
+    //   await ClientSDK.db1.user.create({
+    //     data: {
+    //       title: 'Ceoininionion',
+    //       votes: 899,
+    //       status: false,
+    //     },
+    //   }),
+    //   'User added'
+    // );
   }
 
   async function getTodos() {
@@ -188,123 +195,123 @@ const Todo = () => {
   );
 };
 
-const SwipeableContainer = ({ todo, todos, setTodos, swipedItemId }: any) => {
-  const [isOpen] = useState(false);
-  const [lastTap, setLastTap] = useState(null);
-  const [editItem, setEditItem] = useState(todo.task);
-  const [editItemId, setEditItemId] = useState(null);
-  const swipeableRef: any = useRef(null);
-  const inputRef: any = useRef(null);
+// const SwipeableContainer = ({ todo, todos, setTodos, swipedItemId }: any) => {
+//   const [isOpen] = useState(false);
+//   const [lastTap, setLastTap] = useState(null);
+//   const [editItem, setEditItem] = useState(todo.task);
+//   const [editItemId, setEditItemId] = useState(null);
+//   const swipeableRef: any = useRef(null);
+//   const inputRef: any = useRef(null);
 
-  useEffect(() => {
-    if (swipedItemId !== null && swipedItemId !== todo.id) {
-      swipeableRef.current.close();
-    }
-  });
+//   useEffect(() => {
+//     if (swipedItemId !== null && swipedItemId !== todo.id) {
+//       swipeableRef.current.close();
+//     }
+//   });
 
-  const handleDelete = (id: any) => {
-    const updatedTodos = todos.filter((todo: any) => todo.id !== id);
-    setTodos(updatedTodos);
-  };
-  const toggleCheckbox = (id: any) => {
-    const updatedTodos = todos.map((todo: any) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-  };
-  const handleEdit = (id: any) => {
-    setEditItemId(null);
-    if (editItem !== '') {
-      const updatedTodos = todos.map((todo: any) =>
-        todo.id === id ? { ...todo, task: editItem } : todo
-      );
-      setTodos(updatedTodos);
-    } else {
-      setEditItem(todo.task);
-    }
-  };
-  const handleDoubleTap = () => {
-    const now = Date.now();
-    if (!lastTap) {
-      // @ts-ignore
-      setLastTap(now);
-    } else {
-      if (now - lastTap < 700) {
-        setEditItemId(todo.id);
-        setTimeout(() => {
-          inputRef.current.focus();
-        }, 100);
-      }
-      setLastTap(null);
-    }
-  };
+//   const handleDelete = (id: any) => {
+//     const updatedTodos = todos.filter((todo: any) => todo.id !== id);
+//     setTodos(updatedTodos);
+//   };
+//   const toggleCheckbox = (id: any) => {
+//     const updatedTodos = todos.map((todo: any) =>
+//       todo.id === id ? { ...todo, completed: !todo.completed } : todo
+//     );
+//     setTodos(updatedTodos);
+//   };
+//   const handleEdit = (id: any) => {
+//     setEditItemId(null);
+//     if (editItem !== '') {
+//       const updatedTodos = todos.map((todo: any) =>
+//         todo.id === id ? { ...todo, task: editItem } : todo
+//       );
+//       setTodos(updatedTodos);
+//     } else {
+//       setEditItem(todo.task);
+//     }
+//   };
+//   const handleDoubleTap = () => {
+//     const now = Date.now();
+//     if (!lastTap) {
+//       // @ts-ignore
+//       setLastTap(now);
+//     } else {
+//       if (now - lastTap < 700) {
+//         setEditItemId(todo.id);
+//         setTimeout(() => {
+//           inputRef.current.focus();
+//         }, 100);
+//       }
+//       setLastTap(null);
+//     }
+//   };
 
-  return (
-    <Hoverable
-      px="$6"
-      py="$2"
-      minHeight={38}
-      flexDirection="row"
-      bg={isOpen ? '$backgroundDark700' : '$backgroundDark900'}
-      key={todo.id}
-      alignItems="center"
-      focusable={false}
-      onPress={handleDoubleTap}
-    >
-      <Checkbox
-        aria-label={todo.id}
-        isChecked={todo.completed}
-        value={todo.task}
-        onChange={() => toggleCheckbox(todo.id)}
-        size="sm"
-        w="$full"
-        borderColor="transparent"
-      >
-        <Checkbox.Indicator>
-          <Checkbox.Icon color="$backgroundDark900" as={CheckIcon} />
-        </Checkbox.Indicator>
-        <Input
-          sx={{
-            ':focus': {
-              _web: {
-                boxShadow: 'none',
-              },
-            },
-          }}
-          borderWidth="$0"
-          w="$full"
-          h={22}
-        >
-          <Input.Input
-            pl="$2"
-            editable={!isOpen && editItemId === todo.id}
-            value={editItem}
-            color="$textDark50"
-            fontSize="$sm"
-            fontWeight="$normal"
-            textDecorationLine={todo.completed ? 'line-through' : 'none'}
-            onChangeText={(val) => setEditItem(val)}
-            onSubmitEditing={() => handleEdit(todo.id)}
-            onBlur={() => handleEdit(todo.id)}
-            autoComplete="off"
-            ref={inputRef}
-          />
-        </Input>
-      </Checkbox>
-      <Button
-        zIndex={9999}
-        h="$full"
-        p="$3"
-        bg="$error900"
-        borderRadius="$none"
-        onPress={() => handleDelete(todo.id)}
-        focusable={false}
-      >
-        <Icon as={TrashIcon} name="trash" size={18} />
-      </Button>
-    </Hoverable>
-  );
-};
+//   return (
+//     <Hoverable
+//       px="$6"
+//       py="$2"
+//       minHeight={38}
+//       flexDirection="row"
+//       bg={isOpen ? '$backgroundDark700' : '$backgroundDark900'}
+//       key={todo.id}
+//       alignItems="center"
+//       focusable={false}
+//       onPress={handleDoubleTap}
+//     >
+//       <Checkbox
+//         aria-label={todo.id}
+//         isChecked={todo.completed}
+//         value={todo.task}
+//         onChange={() => toggleCheckbox(todo.id)}
+//         size="sm"
+//         w="$full"
+//         borderColor="transparent"
+//       >
+//         <Checkbox.Indicator>
+//           <Checkbox.Icon color="$backgroundDark900" as={CheckIcon} />
+//         </Checkbox.Indicator>
+//         <Input
+//           sx={{
+//             ':focus': {
+//               _web: {
+//                 boxShadow: 'none',
+//               },
+//             },
+//           }}
+//           borderWidth="$0"
+//           w="$full"
+//           h={22}
+//         >
+//           <Input.Input
+//             pl="$2"
+//             editable={!isOpen && editItemId === todo.id}
+//             value={editItem}
+//             color="$textDark50"
+//             fontSize="$sm"
+//             fontWeight="$normal"
+//             textDecorationLine={todo.completed ? 'line-through' : 'none'}
+//             onChangeText={(val) => setEditItem(val)}
+//             onSubmitEditing={() => handleEdit(todo.id)}
+//             onBlur={() => handleEdit(todo.id)}
+//             autoComplete="off"
+//             ref={inputRef}
+//           />
+//         </Input>
+//       </Checkbox>
+//       <Button
+//         zIndex={9999}
+//         h="$full"
+//         p="$3"
+//         bg="$error900"
+//         borderRadius="$none"
+//         onPress={() => handleDelete(todo.id)}
+//         focusable={false}
+//       >
+//         <Icon as={TrashIcon} name="trash" size={18} />
+//       </Button>
+//     </Hoverable>
+//   );
+// };
 const Home: NextPage = () => {
   return (
     <div>

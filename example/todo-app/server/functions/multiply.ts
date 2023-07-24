@@ -1,5 +1,5 @@
 module.exports = async function handler(ctx) {
-  const data = await ctx.db.user.create({
+  const data = await ctx.sdk.db.user.create({
     data: {
       title: 'Ceo',
       votes: 899,

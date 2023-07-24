@@ -1,4 +1,4 @@
-const template = () =>
+const template = (instanceName: string) =>
   `/**
   * @typedef {import('moleculer').ServiceSchema} ServiceSchema Moleculer's Service Schema
   * @typedef {import('moleculer').Context} Context Moleculer's Context
@@ -9,10 +9,10 @@ const template = () =>
  const { PrismaClient } = require('@prisma/client');
  const { default: ServerSDK } = require('@project/server-sdk');
  const Context = require('../Context.ts');
- const { default: DbServerSDK } = require('@project/dbclient-server-sdk');
+ const { default: DbServerSDK } = require('@project/${instanceName}-server-sdk');
  
  module.exports = {
-   name: 'dbclient',
+   name: '${instanceName}',
  
    /**
     * Settings
@@ -37,7 +37,7 @@ const template = () =>
          const context = new Context(ctx);
          const { query } = ctx.params;
         //  TODO: Remove hardcoded db
-         let resolvedQuery = context.sdk.providers.get('db').prisma;
+         let resolvedQuery = context.sdk.providers.get(DbServerSDK).prisma;
          return new Promise((resolve, reject) => {
            let res;
            query.forEach(async (q) => {
@@ -83,6 +83,7 @@ const template = () =>
     * Service created lifecycle event handler
     */
    created() {
+    // TODO: Refactor to use the SDK
      ServerSDK.providers.get(DbServerSDK).setDbClient(new PrismaClient());
    },
  

@@ -112,7 +112,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       );
       this.addConfigAlias(clientConfig, clientSDKPath);
       this.addConfigAlias(serverConfig, serverSDKPath);
-      this.addConfigAlias(globalConfig, [clientSDKPath, serverSDKPath]);
+      this.addConfigAlias(globalConfig, clientSDKPath);
+      this.addConfigAlias(globalConfig, serverSDKPath);
     }
   }
 
@@ -148,7 +149,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   addProviderAliasInSdk(providerName: string, packagePath: string) {
     const getterTemplate = `	get ${providerName}() {
-		return this.providers.get('${providerName}');
+		return this.providers.get('${providerName}').getProvider();
 	  }`;
     this.updateTemplate(
       join(packagePath, 'src', 'sdk.ts'),
@@ -214,7 +215,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       if (callback) {
         callback(events, path);
       }
-      await this.app.updateServices();
+      // await this.app.updateServices();
     });
 
     this.app.watch(dotEnvPath, '', async (events, path) => {
@@ -224,7 +225,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       if (callback) {
         callback(events, path);
       }
-      await this.app.updateServices();
+      // await this.app.updateServices();
     });
 
     // COPY THIS SECTION of code for any other plugin instace watch

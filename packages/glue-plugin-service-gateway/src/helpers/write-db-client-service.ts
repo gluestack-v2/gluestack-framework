@@ -34,7 +34,7 @@ const writeDbClientService = async (
   instanceName: string
 ) => {
   const moleculerDbClientServiceTemplate =
-    moleculerDbClientServiceTemplateFunc();
+    moleculerDbClientServiceTemplateFunc(instanceName);
 
   // const moleculerFunctionsPath = path.join(installationPath, "functions");
   const moleculerDbClientServiceTemplatePath = path.join(
@@ -61,6 +61,5 @@ const writeDbClientService = async (
   // );
   // }
   updateApiGateway(generatedServiceGatewayPath, instanceName);
-  updateApiGateway(generatedServiceGatewayPath, 'dbCLient1');
 };
 export default writeDbClientService;

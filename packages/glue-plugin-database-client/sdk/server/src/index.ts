@@ -17,6 +17,10 @@ export default class SDK extends ServiceProvider {
     //
   }
 
+  getProvider() {
+    return this.prisma;
+  }
+
   setDbClient(prisma: PrismaClient) {
     this.prisma = prisma;
   }
