@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/react-in-jsx-scope */

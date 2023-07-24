@@ -1,5 +1,5 @@
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
+import { AppCLI } from '@gluestack-v2/framework-cli';
+import type { ICommand } from '@gluestack-v2/framework-cli';
 
 import action from './actions/migrate';
 

@@ -1,12 +1,9 @@
 // @ts-ignore
 import packageJSON from '../package.json';
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
+import { AppCLI, BaseGluestackPlugin } from '@gluestack-v2/framework-cli';
+import type { IInstance, IGlueStorePlugin } from '@gluestack-v2/framework-cli';
 import { PluginInstance } from './PluginInstance';
-import path from 'path';
+import { join } from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -44,7 +41,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   // }
 
   getInstallationPath(target: string): string {
-    return path.join(this.pluginEnvironment, target);
+    return join(this.pluginEnvironment, target);
   }
 
   getPluginEnvironment(): 'server' | 'client' {

@@ -1,12 +1,15 @@
 import { join, resolve } from 'path';
 import { spawn } from 'child_process';
-
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import {
+  AppCLI,
+  GLUE_GENERATED_SERVICES_PATH,
+  BaseGluestackPluginInstance,
+} from '@gluestack-v2/framework-cli';
+import type {
+  IPlugin,
+  IGlueStorePlugin,
+  IInstance,
+} from '@gluestack-v2/framework-cli';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(

@@ -2,17 +2,21 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 import prompts from 'prompts';
 
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
-import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import {
+  AppCLI,
+  BaseGluestackPlugin,
+  writeFile,
+} from '@gluestack-v2/framework-cli';
+import type {
+  IInstance,
+  ICommand,
+  IPlugin,
+  IGlueStorePlugin,
+} from '@gluestack-v2/framework-cli';
 
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import migrateCommand from './commands/migrate';
 import generateCommand from './commands/generate';
 import dbCommand from './commands/db';
