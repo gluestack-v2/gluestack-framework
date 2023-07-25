@@ -1,28 +1,19 @@
 // @ts-ignore
-import packageJSON from "../package.json";
-import { PluginInstance } from "./PluginInstance";
-import AppCLI from "@gluestack-v2/framework-cli/build/helpers/lib/app";
-import IPlugin from "@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin";
-import IInstance from "@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance";
-import IGlueStorePlugin from "@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore";
-import { reWriteFile } from "./helpers/rewrite-file";
-import { Workspaces } from "@gluestack/helpers";
-import BaseGluestackPlugin from "@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin";
+import packageJSON from '../package.json';
+import { PluginInstance } from './PluginInstance';
+import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
+import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
+import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 // import { readfile } from "./helpers/read-file";
 // import writeCronService from "./helpers/write-cron-service";
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
-  type: "stateless" | "stateful" | "devonly" = "devonly";
-  gluePluginStore: IGlueStorePlugin;
+  type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = [];
   }
 
@@ -47,7 +38,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return packageJSON.version;
   }
 
-  getType(): "stateless" | "stateful" | "devonly" {
+  getType(): 'stateless' | 'stateful' | 'devonly' {
     return this.type;
   }
 
@@ -60,9 +51,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return `./server/${target}`;
   }
 
-  async runPostInstall(instanceName: string, target: string) {
+  async runPostInstall(_instanceName: string, _target: string) {
     const plugin: IPlugin = this.app.getPluginByName(
-      "@gluestack-v2/glue-plugin-storage-client"
+      '@gluestack-v2/glue-plugin-storage-client'
     ) as IPlugin;
 
     // Validation

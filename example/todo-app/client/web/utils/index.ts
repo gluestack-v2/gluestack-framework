@@ -1,13 +1,17 @@
-const getCompletedTasks = (todos: any, lastItemSelected: any) => {
-  let complete = 0;
-  todos.forEach((item: any) => {
-    if (item.completed) {
-      complete++;
-    }
-  });
-  if (lastItemSelected) return complete + 1;
-  else return complete;
-};
+const getCompletedTasks = () =>
+  // todos: any, lastItemSelected: any
+  {
+    // let complete = 0;
+    // if (todos.length > 0) {
+    //   todos.forEach((item: any) => {
+    //     if (item.completed) {
+    //       complete++;
+    //     }
+    //   });
+    // }
+    // if (lastItemSelected) return complete + 1;
+    // else return complete;
+  };
 
 const getDay = () => {
   const currentDate = new Date();

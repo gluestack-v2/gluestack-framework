@@ -22,10 +22,6 @@ export default interface IInstance {
 	build(): Promise<void>;
 	watch(callback?: Function): Promise<void>;
 
-	// seal
-	getDockerfile?: () => string;
-	getSealServicefile(): string;
-
 	updateSourcePackageJSON(): Promise<void>;
 	updateDestinationPackageJSON(): Promise<void>;
 	updateRootPackageJSONWithSourcePath(): Promise<void>;

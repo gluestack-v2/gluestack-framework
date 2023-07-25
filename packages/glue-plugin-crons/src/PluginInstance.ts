@@ -2,25 +2,12 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 // import chokidar from "chokidar";
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import chokidar from 'chokidar';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
-import path1, { join } from 'path';
-import fs, { unlinkSync } from 'fs';
-import writeFile from './helpers/write-file';
-import fileExists from './helpers/file-exists';
-import copyFolder from './helpers/copy-folder';
-import { success, warning } from './helpers/print';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SEAL_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { join } from 'path';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+import { GLUE_GENERATED_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -29,12 +16,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -49,51 +30,14 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return this.name;
   }
 
-  getCallerPlugin(): IPlugin {
-    return this.callerPlugin;
-  }
-
   getInstallationPath(): string {
     return this.installationPath;
   }
 
-  async runPostUninstall() {
-    // let serviceGatewayPlugin = this.app.getPluginByName(
-    //   "@gluestack-v2/glue-plugin-service-gateway"
-    // );
-    // if (
-    //   !serviceGatewayPlugin ||
-    //   serviceGatewayPlugin.getInstances().length <= 0
-    // ) {
-    //   console.log("> No functions plugin found, skipping build");
-    //   return;
-    // }
-    // const serviceGatewayInstances: Array<IInstance> =
-    //   serviceGatewayPlugin.getInstances();
-    // for await (const serviceGatewayInstance of serviceGatewayInstances) {
-    //   const targetPkgJson: string = join(
-    //     process.cwd(),
-    //     serviceGatewayInstance.getInstallationPath(),
-    //     "package.json"
-    //   );
-    //   if (await fileExists(targetPkgJson)) {
-    //     const data = await require(targetPkgJson);
-    //     if (data.devDependencies?.["moleculer-cron"]) {
-    //       delete data.devDependencies["moleculer-cron"];
-    //     }
-    //     let stringData = JSON.stringify(data, null, 2);
-    //     await fs.writeFileSync(targetPkgJson, stringData);
-    //     success(`> Removed moleculer-cron from ${targetPkgJson}`);
-    //   } else {
-    //     warning(
-    //       `No package.json found in ${serviceGatewayInstance.getInstallationPath()}/package.json skipping cleaning package.json`
-    //     );
-    //   }
-    // }
-  }
+  async runPostUninstall() {}
 
   async build(): Promise<void> {
-    let serviceGatewayPlugin = this.app.getPluginByName(
+    const serviceGatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );
 
@@ -104,7 +48,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(callback?: Function): Promise<void> {
-    let serviceGatewayPlugin = this.app.getPluginByName(
+    const serviceGatewayPlugin = this.app.getPluginByName(
       '@gluestack-v2/glue-plugin-service-gateway'
     );
 
@@ -122,7 +66,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   getSourcePath(): string {
-    return `${process.cwd()}/${this.getPluginEnvironment()}/${this.getName()}`;
+    return join(process.cwd(), this.getPluginEnvironment(), this.getName());
   }
 
   getPluginEnvironment() {
@@ -158,7 +102,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     return join(
       process.cwd(),
-      GLUE_GENERATED_SEAL_SERVICES_PATH,
+      GLUE_GENERATED_SERVICES_PATH,
       gatewayInstanceName,
       'src',
       gatewayInstanceName,

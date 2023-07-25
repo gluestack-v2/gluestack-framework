@@ -1,41 +1,24 @@
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-import chokidar from 'chokidar';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import { success, warning } from './helpers/print';
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import { reWriteFile } from './helpers/rewrite-file';
-import { removeSpecialChars, Workspaces } from '@gluestack/helpers';
-import copyFolder from './helpers/copy-folder';
-import fileExists from './helpers/file-exists';
-import { readfile } from './helpers/read-file';
-import rm from './helpers/rm';
 import { join } from 'path';
-import fs from 'fs';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
 import addCommand from './commands/add';
 import listCommand from './commands/list';
 import removeCommand from './commands/remove';
 import prompts from 'prompts';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
-  gluePluginStore: IGlueStorePlugin;
   pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = [];
   }
 
@@ -64,13 +47,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./${this.pluginEnvironment}/${target}`;
+    return join(this.pluginEnvironment, target);
   }
-
-  // @ts-ignore
-  // getTemplateFolderPath(): string {
-  //   return `${process.cwd()}/node_modules/${this.getName()}/template`;
-  // }
 
   getPluginEnvironment(): 'server' | 'client' {
     return this.pluginEnvironment;
@@ -158,6 +136,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       instanceIntallationPath,
       'index.json'
     ));
+    // eslint-disable-next-line no-console
     console.log(cronJson);
   }
 }

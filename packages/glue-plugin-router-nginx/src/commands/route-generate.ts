@@ -4,10 +4,9 @@ import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interf
 import generateRoutes from '../helpers/generate-routes';
 
 export default async (program: any, app: AppCLI): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const command: ICommand = program
-		.command('route:generate')
-		.description(
-			'Generates nginx.conf file against the seal.yaml file'
-		)
-		.action(() => generateRoutes(app));
+    .command('route:generate')
+    .description('Generates nginx.conf file against the bolt.yaml file')
+    .action(() => generateRoutes(app));
 };

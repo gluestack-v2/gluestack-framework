@@ -3,37 +3,21 @@ import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
-
-import path, { join } from 'path';
-import fs from 'fs';
-import { removeSpecialChars } from '@gluestack/helpers';
-import fileExists from './helpers/file-exists';
-import { spawnSync } from 'child_process';
-// @ts-ignore
-import prompts from 'prompts';
 import { writeInstance } from './commands/minioConfig';
-import { writeEnv } from './helpers/write-env';
+import { join } from 'path';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
-  gluePluginStore: IGlueStorePlugin;
   pluginEnvironment: 'server' | 'client' = 'server';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = ['docker'];
   }
 
@@ -70,7 +54,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   getInstallationPath(target: string): string {
-    return `./${this.pluginEnvironment}/${target}`;
+    return join(this.pluginEnvironment, target);
   }
 
   getPluginEnvironment(): 'server' | 'client' {

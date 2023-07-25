@@ -1,8 +1,8 @@
-import path, { join } from 'path';
+import path from 'path';
 import fs, { readFileSync } from 'fs';
 import { writeFile } from '@gluestack/helpers';
 import writeSDKFunction from './write-sdk-function';
-import getFileNameWithoutExtension from './get-file-name-without-ext';
+import getFileNameWithoutExtension from '@gluestack-v2/framework-cli/build/helpers/file/get-file-name-without-ext';
 function filePathExtension(filePath: string) {
   return filePath.split('.').pop() ?? '';
 }
@@ -45,6 +45,7 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
+
   current[pathArr[pathArr.length - 1]] = '****' + path + '****';
   functionsMap['****' + path + '****'] = sdkFunction;
 
@@ -52,8 +53,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
 };
 
 const deepMerge = (obj1: any, obj2: any) => {
-  let output = { ...obj1 };
-  for (let key in obj2) {
+  const output = { ...obj1 };
+  for (const key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       if (
         typeof obj2[key] === 'object' &&
@@ -72,12 +73,13 @@ const deepMerge = (obj1: any, obj2: any) => {
 const writeSDK = async (
   packagePath: string,
   installationPath: string,
-  ignoredPaths: string[]
+  sdkPath: string,
+  ignoredPaths: string[],
+  instanceName: string
 ) => {
   let obj = {};
-  const sdkSrcIndex = path.join(packagePath, 'index.ts');
+  const packageSdkSrcIndex = path.join(packagePath, 'src', 'index.ts');
   const files = getNestedFilePaths(installationPath);
-
   let finalString = ``;
   files.forEach((functionFile: string, _index: number) => {
     const filePath = functionFile;
@@ -94,14 +96,20 @@ const writeSDK = async (
         return;
       }
     }
-
+    // console.log(filePath, 'filePath>>>>>>>');
     const functionName = getFileNameWithoutExtension(filePath);
     // HACK: This is a hack to get the function path
-    let functionPath = filePath.replace(join(process.cwd(), 'server'), '');
+    let functionPath = filePath.replace(installationPath, '');
     // let functionPath = filePath.replace(installationPath, '');
 
     functionPath = functionPath.split('.').slice(0, -1).join('.');
-
+    // console.log(functionPath, 'functionPath', functionName, 'functionName');
+    // console.log(
+    //   installationPath,
+    //   'installationPath>>>>>>.',
+    //   packagePath,
+    //   'packagePath>>>>>>.'
+    // );
     const functionCodeString = fs.readFileSync(filePath, 'utf8');
 
     const regex = /const\s*\{\s*([^}]+)\s*\}\s*=\s*ctx.params\s*;/;
@@ -116,29 +124,56 @@ const writeSDK = async (
       );
     }
     // console.log(ign);
-    let sdkFunction = writeSDKFunction(functionName, params, functionPath);
+
+    const sdkFunction = writeSDKFunction(instanceName, params, functionPath);
+    // console.log(createFunctionFromPath(functionPath, {}, sdkFunction));
 
     obj = {
       ...obj,
       ...deepMerge(obj, createFunctionFromPath(functionPath, {}, sdkFunction)),
     };
+    // console.log(obj, 'OBJJJJJ', Object.keys(obj));
 
-    finalString = JSON.stringify(obj).replace(':', '=');
-    finalString = finalString.substring(1, finalString.length - 1);
+    // finalString = JSON.stringify(obj);
+    // finalString = finalString.substring(1, finalString.length - 1);
+    // console.log(functionsMap, 'functionsMap');
+    // Object.keys(functionsMap).map((key: any) => {
+    //   finalString = finalString.replace(`"${key}"`, functionsMap[key]);
+    // });
+    // console.log(finalString, 'finalString');
 
-    Object.keys(functionsMap).map((key: any) => {
-      finalString = finalString.replace(`"${key}"`, functionsMap[key]);
-    });
+    // sdkFunction += sdkFunction + '\n';
+  });
+  Object.keys(obj).map((key: any) => {
+    // console.log(JSON.stringify(obj[key]), 'obj[key]');
+    const functionString = `${key}=`;
+    if (typeof obj[key] === 'string') {
+      if (!finalString.includes(functionString + obj[key])) {
+        finalString = finalString + functionString + obj[key];
+      }
+    } else {
+      if (!finalString.includes(functionString + JSON.stringify(obj[key]))) {
+        finalString = finalString + functionString + JSON.stringify(obj[key]);
+      }
+    }
 
-    sdkFunction += sdkFunction + '\n';
+    // finalString=finalString+
+  });
+  // console.log(functionsMap);
+
+  Object.keys(functionsMap).map((key: any) => {
+    finalString = finalString.replace(`"${key}"`, functionsMap[key]);
+    finalString = finalString.replace(`'${key}'`, functionsMap[key]);
+    finalString = finalString.replace(`${key}`, functionsMap[key]);
   });
 
   const sdkFileContent = readFileSync(
-    path.join(__dirname, '..', '..', 'sdk', 'src', 'index.ts')
+    path.join(sdkPath, 'src', 'index.ts')
   ).toString();
+  // console.log(finalString, 'SDK FILE CONTENTNNNNN');
   // Create SDK index file with all the functions
   await writeFile(
-    sdkSrcIndex,
+    packageSdkSrcIndex,
     sdkFileContent.replace(
       '// **---Functions will be added after this---**',
       finalString

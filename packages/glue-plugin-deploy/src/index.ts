@@ -3,7 +3,7 @@ import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
@@ -15,17 +15,9 @@ import deployCleanCommand from './commands/deploy-clean';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
-  gluePluginStore: IGlueStorePlugin;
-
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = [];
   }
 

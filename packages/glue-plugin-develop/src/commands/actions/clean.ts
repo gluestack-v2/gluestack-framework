@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync, rmSync } from 'fs';
+import { writeFileSync, existsSync, rmSync } from 'fs';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import { error } from '@gluestack-v2/framework-cli/build/helpers/print';
 import { fileExists } from '@gluestack/helpers';
@@ -43,12 +43,13 @@ const updateInternalsFile = async () => {
   }
 };
 
-export default async (app: AppCLI, instanceName: any): Promise<void> => {
+export default async (app: AppCLI, _instanceName: any): Promise<void> => {
   for await (const plugin of app.plugins) {
     let instances = plugin.getInstances();
     for await (let instance of instances) {
       if (instance) {
         const folderPath = plugin.getInstallationPath(instance.getName());
+        // eslint-disable-next-line no-console
         console.log(`Removing ${folderPath}`);
 
         if (existsSync(folderPath)) {
@@ -79,15 +80,16 @@ export default async (app: AppCLI, instanceName: any): Promise<void> => {
   removeFolder(path.join(process.cwd(), '.glue', '__generated__'));
   removeFolder(path.join(process.cwd(), 'client'));
   removeFolder(path.join(process.cwd(), 'server'));
-  console.log(`Clean successful!`);
 };
 
-const removeFolder = (absolutePath) => {
+const removeFolder = (absolutePath: any) => {
   try {
     rmSync(absolutePath, {
       recursive: true,
     });
+    // eslint-disable-next-line no-catch-shadow
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(`${absolutePath} not found!`);
   }
 };

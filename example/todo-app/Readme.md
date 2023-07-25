@@ -1,8 +1,7 @@
-
 > Important Notes:
 >
 > 1. You'll need node version >= 18 & < 19
-> 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**
+> 2. Please do not use **Yarn** or **PNPM**, we will only use **npm** as a package manager in **Gluestack's v2**.
 
 ## Install npm dependencies
 

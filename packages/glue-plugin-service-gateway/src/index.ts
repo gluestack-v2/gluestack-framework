@@ -2,18 +2,18 @@ import {
   warning,
   success,
 } from '@gluestack-v2/framework-cli/build/helpers/print';
-import fs from 'fs';
+import fs, { readFileSync } from 'fs';
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 
-import { readfile } from './helpers/readfile';
+import readfile from '@gluestack-v2/framework-cli/build/helpers/file/read-file';
 
 import { join } from 'path';
 import { fileExists, writeFile } from '@gluestack/helpers';
@@ -28,16 +28,10 @@ import { writeMinioStorageService } from './helpers/writeMinioStorageService';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
-  gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-    this.runningPlatforms = ['local', 'docker'];
-    this.app = app;
-    this.instances = [];
     this.gluePluginStore = gluePluginStore;
   }
 
@@ -70,7 +64,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   // getInstallationPath(target: string): string {
-  //   return `./.glue/__generated__/seal/services/${target}/src/${target}`;
+  //   return `./.glue/__generated__/bolt/services/${target}/src/${target}`;
   // }
 
   async runPostInstall(instanceName: string) {
@@ -108,8 +102,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   async generateService(
     instancePath: string,
-    instanceName: string,
-    ignoredPaths: string[]
+    instanceName: string
+    // ignoredPaths: string[]
   ) {
     const instances = this.getInstances();
     if (this.instances.length === 0) {
@@ -125,8 +119,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         writeService(
           instance._destinationPath,
           instancePath,
-          instanceName,
-          ignoredPaths
+          instanceName
+          // ignoredPaths
         );
       }
     }
@@ -151,7 +145,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         }
         // hard-coded the version here
         data.devDependencies['moleculer-bee-queue'] = '^0.1.10';
-        let stringData = JSON.stringify(data, null, 2);
+        const stringData = JSON.stringify(data, null, 2);
         fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added moleculer-bee-queue to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
@@ -216,26 +210,35 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     `
       );
 
-      let middlewareFolderPath = join(instance._destinationPath, instanceName);
+      const middlewareFolderPath = join(
+        instance._destinationPath,
+        instanceName
+      );
 
       writeFile(join(middlewareFolderPath, 'index.js'), finalCode);
       // Add middlewares in moleculer.config.js
 
-      let moleculerConfigPath = join(
+      const moleculerConfigPath = join(
         instance._destinationPath,
         'moleculer.config.js'
       );
-      let moleculerConfig = await readfile(moleculerConfigPath);
-      moleculerConfig = moleculerConfig.replace(
-        '/* User Custom Middleware Imports */',
-        `const { ${instanceName}Middlewares } = require("./middlewares");`
-      );
+      let moleculerConfig = readFileSync(moleculerConfigPath, {
+        encoding: 'utf-8',
+      });
 
-      moleculerConfig = moleculerConfig.replace(
-        '/* User Custom Middleware */',
-        `${instanceName}Middlewares, /* User Custom Middleware */`
-      );
+      const importString = `const { ${instanceName}Middlewares } = require("./${instanceName}");`;
 
+      if (!moleculerConfig.includes(importString)) {
+        moleculerConfig = moleculerConfig.replace(
+          '/* User Custom Middleware Imports */',
+          `const { ${instanceName}Middlewares } = require("./${instanceName}");
+        /* User Custom Middleware Imports */`
+        );
+        moleculerConfig = moleculerConfig.replace(
+          '/* User Custom Middleware */',
+          `${instanceName}Middlewares, /* User Custom Middleware */`
+        );
+      }
       await writeFile(moleculerConfigPath, moleculerConfig);
     }
   }
@@ -259,8 +262,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           data.devDependencies = {};
         }
         data.devDependencies['moleculer-cron'] = 'latest';
-        data.devDependencies['axios'] = 'latest';
-        let stringData = JSON.stringify(data, null, 2);
+        data.devDependencies.axios = 'latest';
+        const stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added moleculer-cron to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"
@@ -310,15 +313,15 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
         'package.json'
       );
       if (await fileExists(targetPkgJson)) {
-        let data: any = await readfile(targetPkgJson);
+        const data: any = await readfile(targetPkgJson);
 
-        data = JSON.parse(data);
+        // data = data;
         if (!data.dependencies) {
           data.dependencies = {};
         }
-        data.dependencies['prisma'] = 'latest';
+        data.dependencies.prisma = 'latest';
         data.dependencies['@prisma/client'] = 'latest';
-        let stringData = JSON.stringify(data, null, 2);
+        const stringData = JSON.stringify(data, null, 2);
         await fs.writeFileSync(targetPkgJson, stringData);
         success(
           "We have added prisma & @prisma/client to your service-gateway package.json\n Please run 'npm install' to install the package\n and restart your service-gateway instance \n"

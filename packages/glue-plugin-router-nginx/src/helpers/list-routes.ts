@@ -4,7 +4,7 @@ import { ConsoleTable, readFile } from '@gluestack/helpers';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 export default async function generateRoutes(_app: AppCLI): Promise<void> {
-  const configYaml = await readFile('seal.yaml', 'utf8');
+  const configYaml = await readFile('bolt.yaml', 'utf8');
   let config: Config;
 
   try {
@@ -27,24 +27,22 @@ export default async function generateRoutes(_app: AppCLI): Promise<void> {
     'Proxy Pass',
     'Rewrite Key',
     'Rewrite Value',
-    'Client MaxBody (in MB)'
+    'Client MaxBody (in MB)',
   ];
 
   config.ingress.forEach((ingress: Ingress) => {
     const domain = ingress.domain || undefined;
     const port = ingress.port || undefined;
     if (!domain || !port) {
-      console.log('> No domain or port found in config');
+      console.error('> No domain or port found in config');
       return;
     }
 
     ingress.options.forEach((option: Option) => {
-      const {
-        location, rewrite_key, rewrite_value, proxy_pass
-      } = option;
+      const { location, rewrite_key, rewrite_value, proxy_pass } = option;
 
       if (!location || !rewrite_key || !rewrite_value || !proxy_pass) {
-        console.log('> Missing required option in ingress config');
+        console.error('> Missing required option in ingress config');
         return;
       }
 
@@ -57,10 +55,10 @@ export default async function generateRoutes(_app: AppCLI): Promise<void> {
         proxy_pass,
         rewrite_key,
         rewrite_value,
-        `${client_max_body_size}`
+        `${client_max_body_size}`,
       ]);
     });
   });
 
   await ConsoleTable.print(head, rows);
-};
+}

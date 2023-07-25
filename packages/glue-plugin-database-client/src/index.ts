@@ -3,7 +3,7 @@ import { join } from 'path';
 import prompts from 'prompts';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interface/ICommandCallback';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
@@ -12,23 +12,16 @@ import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/inte
 // @ts-ignore
 import packageJSON from '../package.json';
 import { PluginInstance } from './PluginInstance';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import migrateCommand from './commands/migrate';
 import generateCommand from './commands/generate';
 import dbCommand from './commands/db';
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
-  gluePluginStore: IGlueStorePlugin;
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
-
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
     this.runningPlatforms = ['docker'];
   }
 
@@ -115,9 +108,15 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     const { DATABASE_URL } = process.env;
 
-    let localEnvData = `DATABASE_URL=${DATABASE_URL}`;
+    const localEnvData = `DATABASE_URL=${DATABASE_URL}`;
     await writeFile(envPath, localEnvData);
+
+    // this.updateConfigFile(instanceName);
   }
+
+  // updateConfigFile(instanceName: string) {
+  //   // console.log(instanceName, 'Instance Name');
+  // }
 
   createInstance(
     key: string,

@@ -1,6 +1,6 @@
 export interface IMinio {
-    publicBucketName: string
-    privateBucketName: string
-    getPublicBucketName(): string
-    getPrivateBucketName(): string
+  publicBucketName: string;
+  privateBucketName: string;
+  getPublicBucketName(): string;
+  getPrivateBucketName(): string;
 }

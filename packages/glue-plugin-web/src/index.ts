@@ -2,25 +2,19 @@
 import packageJSON from '../package.json';
 
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/types/BaseGluestackPlugin';
+import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import { PluginInstance } from './PluginInstance';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
-  app: AppCLI;
-  instances: IInstance[];
   type: 'stateless' | 'stateful' | 'devonly' = 'stateless';
-  gluePluginStore: IGlueStorePlugin;
   pluginEnvironment: 'server' | 'client' = 'client';
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
     this.runningPlatforms = ['local', 'docker'];
-    this.app = app;
-    this.instances = [];
-    this.gluePluginStore = gluePluginStore;
   }
 
   init() {
@@ -48,7 +42,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-
     const instance: IInstance = await this.app.createPluginInstance(
       this,
       instanceName,
@@ -82,28 +75,28 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     return this.instances;
   }
 
-  // async sealInit(SEAL_SERVICES_PATH: string, name: string) {
-  //   // seal init and seal service add in the services folder
-  //   const sealInit = spawnSync("sh", [
+  // async boltInit(bolt_SERVICES_PATH: string, name: string) {
+  //   // bolt init and bolt service add in the services folder
+  //   const boltInit = spawnSync("sh", [
   //     "-c",
-  //     `cd ${SEAL_SERVICES_PATH} && seal init`,
+  //     `cd ${bolt_SERVICES_PATH} && bolt init`,
   //   ]);
 
-  //   if (sealInit.status !== 0) {
-  //     console.error(`Command failed with code ${sealInit.status}`);
+  //   if (boltInit.status !== 0) {
+  //     console.error(`Command failed with code ${boltInit.status}`);
   //   }
-  //   console.log(sealInit.stdout.toString());
-  //   console.error(sealInit.stderr.toString());
+  //   console.log(boltInit.stdout.toString());
+  //   console.error(boltInit.stderr.toString());
 
-  //   const sealAddService = spawnSync("sh", [
+  //   const boltAddService = spawnSync("sh", [
   //     "-c",
-  //     `cd ${SEAL_SERVICES_PATH} && seal service:add ${name} ./${name}/src`,
+  //     `cd ${bolt_SERVICES_PATH} && bolt service:add ${name} ./${name}/src`,
   //   ]);
 
-  //   if (sealAddService.status !== 0) {
-  //     console.error(`Command failed with code ${sealAddService.status}`);
+  //   if (boltAddService.status !== 0) {
+  //     console.error(`Command failed with code ${boltAddService.status}`);
   //   }
-  //   console.log(sealAddService.stdout.toString());
-  //   console.error(sealAddService.stderr.toString());
+  //   console.log(boltAddService.stdout.toString());
+  //   console.error(boltAddService.stderr.toString());
   // }
 }

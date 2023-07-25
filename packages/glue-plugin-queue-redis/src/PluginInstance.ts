@@ -2,18 +2,11 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
 import { join } from 'path';
-import writeFile from './helpers/write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -22,12 +15,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     installationPath: string
   ) {
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -38,29 +25,21 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     //
   }
 
-  getDockerfile(): string {
-    return `${this._sourcePath}/Dockerfile`;
-  }
-
   getSourcePath(): string {
     return `${process.cwd()}/node_modules/${this.callerPlugin.getName()}/template`;
   }
 
-  getSealServicefile(): string {
-    return `${this._sourcePath}/seal.service.yaml`;
-  }
-
   async build(): Promise<void> {
-    // moves the instance into .glue/seal/services/<instance-name>/src/<instance-name>
+    // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
     await this.app.write(this._sourcePath, this._destinationPath);
 
     this.boltInit();
-    this.editSealAndDockerFile();
+    this.editboltAndDockerFile();
   }
 
-  async editSealAndDockerFile(): Promise<void> {
+  async editboltAndDockerFile(): Promise<void> {
     try {
-      let runDockerfileTemplate = `
+      const runDockerfileTemplate = `
         # Use an official Redis runtime as the base image
 FROM redis:latest
 
@@ -74,7 +53,7 @@ EXPOSE 6379
 CMD ["redis-server"]
 `;
 
-      let sealServiceTemplate = `container_name: queueredis
+      const boltServiceTemplate = `container_name: queueredis
 stateless: true
 platforms:
   docker:
@@ -85,8 +64,8 @@ platforms:
 `;
 
       writeFile(
-        join(this._destinationPath, 'seal.service.yaml'),
-        sealServiceTemplate
+        join(this._destinationPath, 'bolt.service.yaml'),
+        boltServiceTemplate
       );
 
       writeFile(

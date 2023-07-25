@@ -1,3 +1,6 @@
 export const config = {
-  providers: {},
+  providers: {
+    test: () => {},
+    IndexTest: () => {},
+  },
 };

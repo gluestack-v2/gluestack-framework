@@ -1,7 +1,7 @@
 import path from 'path';
 import minioTemplate from './minioTemplate';
 import dotenv from 'dotenv';
-import writeFile from './write-file';
+import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 
 export const writeMinioStorageService = (

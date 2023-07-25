@@ -1,8 +1,8 @@
 export const FOLDER_STRUCTURE = {
-  ".glue": {
+  '.glue': {
     __generated__: {
       packages: [],
-      seal: {},
+      services: {},
     },
   },
 } as const;

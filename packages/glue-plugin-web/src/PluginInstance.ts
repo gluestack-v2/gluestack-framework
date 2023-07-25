@@ -2,19 +2,10 @@ import { join } from 'path';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/types/BaseGluestackPluginInstance';
-import { reWriteFile } from './helpers/rewrite-file';
-const yaml = require('js-yaml');
-const fs = require('fs');
+import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+import reWriteFile from '@gluestack-v2/framework-cli/build/helpers/file/rewrite-file';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
-  app: AppCLI;
-  name: string;
-  callerPlugin: IPlugin;
-  isOfTypeInstance: boolean = false;
-  gluePluginStore: IGlueStorePlugin;
-  installationPath: string;
-
   constructor(
     app: AppCLI,
     callerPlugin: IPlugin,
@@ -22,13 +13,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     gluePluginStore: IGlueStorePlugin,
     installationPath: string
   ) {
+    // @ts-ignore
     super(app, callerPlugin, name, gluePluginStore, installationPath);
-
-    this.app = app;
-    this.name = name;
-    this.callerPlugin = callerPlugin;
-    this.gluePluginStore = gluePluginStore;
-    this.installationPath = installationPath;
   }
 
   init() {
@@ -37,19 +23,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   destroy() {
     //
-  }
-
-  updateContextInSealService() {
-    const sealService = this.getSealServicefile();
-
-    const yamlFile = fs.readFileSync(sealService, 'utf8');
-    const data = yaml.load(yamlFile);
-
-    // update content
-    data.platforms.local.context = this._sourcePath;
-    const updatedYaml = yaml.dump(data);
-
-    fs.writeFileSync(sealService, updatedYaml);
   }
 
   async updateNextConfig() {
@@ -63,13 +36,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.write(this._sourcePath, this._destinationPath);
     await this.updateWorkspacePackageJSON();
     await this.boltInit();
-    await this.app.updateServices();
+    // await this.app.updateServices();
     await this.generateEnvFiles();
 
     // // update next.config.js context for error mapping
     // await this.updateNextConfig();
-
-    // await this.updateContextInSealService();
   }
 
   async watch(callback: any) {

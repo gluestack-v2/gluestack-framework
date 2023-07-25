@@ -7,5 +7,5 @@ export default async (program: any, app: AppCLI): Promise<void> => {
   const command: ICommand = program
     .command('restart')
     .description('Restarts all the plugins to the docker')
-    .action((opts: any) => action(app, opts));
+    .action((opts: any) => action());
 };
