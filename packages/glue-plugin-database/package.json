@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-database",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Gluestack V2 Database Plugin",
   "main": "build/index.js",
   "repository": {
