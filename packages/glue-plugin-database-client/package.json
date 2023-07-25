@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-database-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gluestack V2 Database Client Plugin",
   "main": "build/index.js",
   "repository": {
@@ -25,11 +25,11 @@
     "@gluestack-v2/framework-cli": "^0.1.x",
     "@gluestack-v2/glue-plugin-develop": "^0.1.x",
     "@gluestack/helpers": "^0.0.x",
+    "@prisma/client": "4.14.0",
     "@types/node": "^18.11.17",
     "dotenv": "^16.0.3",
-    "prompts": "^2.4.2",
     "prisma": "^4.14.0",
-    "@prisma/client": "4.14.0",
+    "prompts": "^2.4.2",
     "typescript": "^4.9.5"
   },
   "scripts": {
