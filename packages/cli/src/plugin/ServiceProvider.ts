@@ -4,7 +4,7 @@ export default abstract class ServiceProvider
 	implements IServiceProvider
 {
 	constructor() {}
-	getProvider() {
+	getProvider(): any {
 		return this;
 	}
 
