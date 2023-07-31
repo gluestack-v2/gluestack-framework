@@ -1,0 +1,55 @@
+{
+  "name": "@gluestack-v2/glue-plugin-dashboard",
+  "version": "0.1.1",
+  "description": "glue-plugin-dashboard is the process manager for the gluestack project. This plugin helps you in managing all the installed **plugin instances** which you have created in your **Gluestack App**, and in order to do that it comes with various commands detailed in the **CLI Reference** section.",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gluestack-v2/framework-cli",
+    "directory": "packages/glue-plugin-dashboard"
+  },
+  "keywords": [
+    "gluestack",
+    "v2",
+    "fullstack",
+    "framework",
+    "develop",
+    "cli",
+    "mobile",
+    "web",
+    "storybook",
+    "shared-components"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@gluestack-v2/framework-cli": "^0.1.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x",
+    "@types/express": "^4.17.17",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "immer": "^10.0.2",
+    "node-pty": "^1.0.0",
+    "socket.io": "^4.7.1",
+    "strip-ansi": "^7.1.0",
+    "ts-node": "^10.9.1",
+    "yaml": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.18.54",
+    "nodemon": "^3.0.1",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "server": "nodemon console-app/server/server.ts"
+  },
+  "peerDependencies": {
+    "@gluestack-v2/framework-cli": "^0.1.x",
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "utf-8-validate": "^6.0.3"
+  }
+}
