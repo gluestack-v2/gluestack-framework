@@ -8,6 +8,7 @@ import { ICommand } from '@gluestack-v2/framework-cli/build/types/helpers/interf
 import action from './actions/watch';
 
 export default async (program: ICommand, app: AppCLI) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const command: ICommand = program
     .command('watch')
     .argument('[pluginName]', 'Plugin name', '')

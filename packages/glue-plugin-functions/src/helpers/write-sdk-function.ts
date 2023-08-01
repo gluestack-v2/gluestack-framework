@@ -21,5 +21,6 @@ export default function writeSDKFunction(
     });
   }
   `;
+
   return functionString;
 }

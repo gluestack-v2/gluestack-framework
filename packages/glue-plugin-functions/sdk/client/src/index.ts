@@ -11,5 +11,9 @@ export default class SDK extends ServiceProvider {
     //
   }
   login() {}
+
+  getProvider(): SDK {
+    return this;
+  }
   // **---Functions will be added after this---**
 }

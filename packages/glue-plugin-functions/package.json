@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-functions",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Gluestack V2 Functions Plugin",
   "main": "build/index.js",
   "repository": {

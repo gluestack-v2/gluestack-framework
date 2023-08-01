@@ -76,7 +76,7 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 				await instance.watch((event: string, path: string) => {
 					// use this for debuggin
 					if (callback) {
-						callback(event, path);
+						callback(event, path, this.pluginEnvironment);
 					}
 				});
 			}

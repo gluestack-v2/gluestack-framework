@@ -75,10 +75,10 @@ let moleculerImportPaths = ``;
 let privateMoleculerActions: any = {};
 let privateMoleculerImportStatements = ``;
 
-let molecularEvents = ``;
+const molecularEvents = ``;
 let privateMolecularEvents = ``;
 
-let eventsImportPaths = ``;
+const eventsImportPaths = ``;
 
 const handlerTemplate = () => {
   return ` (ctx) => {
@@ -126,7 +126,7 @@ const writeService = async (
         getPrivateActions(installationPath, functionInstanceName, filePath)
           .importPaths;
       if (filePath.includes('/private/events/')) {
-        let privateMolecularData = getEvents(
+        const privateMolecularData = getEvents(
           getPrivatePath(filePath, installationPath)
         );
         privateMolecularEvents = privateMolecularData.events;
@@ -193,20 +193,21 @@ function getActions(
   instanceName: string,
   filePath: string
 ) {
-  let serviceAction: any = {};
+  const serviceAction: any = {};
   let functionImportStatement = ``;
   if (fs.existsSync(filePath)) {
-    let finalPathArr = getPaths(filePath, installationPath);
+    const finalPathArr = getPaths(filePath, installationPath);
     // const finalPath = getFileNameWithoutExtension(finalPathArr.functionPath);
     // Create actions object
-    let action: any = {};
+    const action: any = {};
     action.rest = {
       method: 'POST',
       path: removeExtension(finalPathArr.functionPath),
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
-      }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
+    }(context);},`;
 
     serviceAction[removeExtension(finalPathArr.funcPath.join('.'))] = action;
 
@@ -231,22 +232,23 @@ const getPrivateActions = (
   instanceName: string,
   filePath: string
 ) => {
-  let obj: any = {};
+  const obj: any = {};
   // let privateEvents = ``;
   let functionImportStatement = ``;
 
   if (fs.existsSync(filePath)) {
-    let finalPathArr = getPrivatePath(filePath, installationPath);
+    const finalPathArr = getPrivatePath(filePath, installationPath);
 
     // Create actions object
-    let action: any = {};
+    const action: any = {};
     action.rest = {
       method: 'POST',
       path: finalPathArr.functionPath,
     };
 
-    action.handler = `(ctx) => {const context = new Context(ctx); return ${removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
-      }(context);},`;
+    action.handler = `(ctx) => {const context = new Context(ctx); return ${
+      removeExtension(camelCaseArray(finalPathArr.funcPath)) + 'Handler'
+    }(context);},`;
     if (!filePath.includes('/events/'))
       obj[removeExtension(finalPathArr.funcPath.join('.'))] = action;
     // if (filePath.includes("/events/")) {
@@ -301,7 +303,7 @@ function getWhitelist(apiGatewayPath: any) {
   const matches: any = data.match(regex);
   // return;
   if (!matches) {
-    let writeData = data.replace(
+    const writeData = data.replace(
       '// ***Update Whitlisted services here***',
       `whitelist: [],`
     );
@@ -395,14 +397,14 @@ async function createService(
   finalString = finalString.replace(
     '// **---Add Imports Here---**',
     outputString +
-    moleculerImportStatements.eventImportPath +
-    `const Context = require("../Context.ts");`
+      moleculerImportStatements.eventImportPath +
+      `const Context = require("../Context.ts");`
   );
   await writeFile(path, finalString);
 }
 
 function getPrivatePath(filePath: string, installationPath: string) {
-  let functionPath = filePath.replace(installationPath, '');
+  const functionPath = filePath.replace(installationPath, '');
   // functionPath = functionPath.split(".").slice(0, -1).join(".");
   let funcPath = functionPath.split('/');
   funcPath.splice(0, 2);
@@ -412,7 +414,7 @@ function getPrivatePath(filePath: string, installationPath: string) {
 
 function getPaths(filePath: string, installationPath: string) {
   // Dynamic route of a given action
-  let functionPath = filePath.replace(installationPath, '');
+  const functionPath = filePath.replace(installationPath, '');
   // functionPath = functionPath.split(".").slice(0, -1).join(".");
   // An Array of actions name for nested routes
   const funcPath = functionPath.split('/');

@@ -8,5 +8,5 @@ export default async (program: any, app: AppCLI): Promise<void> => {
   const command: ICommand = program
     .command('db:generate')
     .description('Runs prisma generate')
-    .action((opts: any) => action(app, opts));
+    .action(() => action(app));
 };

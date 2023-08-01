@@ -96,7 +96,7 @@ const checkForDependencies = async (
 	app: AppCLI,
 	packageName: string
 ) => {
-	let missing = [];
+	const missing = [];
 	const dependencies = await getDependencies(app, packageName);
 	for (const plugin of dependencies) {
 		if (plugin.getInstances().length === 0) {
@@ -106,11 +106,14 @@ const checkForDependencies = async (
 
 	if (missing.length) {
 		error(`${packageName} installed failed: Missing dependencies`);
+		// eslint-disable-next-line no-console
 		console.log('\x1b[36m');
 		for await (const plugin of missing) {
-			let arr = plugin.getName().split('-');
+			const arr = plugin.getName().split('-');
+			// eslint-disable-next-line no-console
 			console.log(
-				`Install dependency: \`node glue add ${plugin.getName()} ${arr[arr.length - 1]
+				`Install dependency: \`node glue add ${plugin.getName()} ${
+					arr[arr.length - 1]
 				}\``
 			);
 
@@ -118,6 +121,7 @@ const checkForDependencies = async (
 		}
 
 		await undoDownload(packageName);
+		// eslint-disable-next-line no-console
 		console.log('\x1b[37m');
 		process.exit(0);
 	}
@@ -153,16 +157,14 @@ export default async (
 		process.exit(0);
 	}
 
-
 	await checkForDependencies(app, packageName);
 
 	try {
-
 		await plugin.runPostInstall(folderName, folderPath);
-
 	} catch (e: any) {
 		error(
-			`${pluginName} installed failed: ${e.message || 'Something went wrong'
+			`${pluginName} installed failed: ${
+				e.message || 'Something went wrong'
 			}`
 		);
 		newline();
