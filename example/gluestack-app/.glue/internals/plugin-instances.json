@@ -6,13 +6,6 @@
       "container_store": {}
     }
   ],
-  "@gluestack-v2/glue-plugin-sdk": [
-    {
-      "instance": "sdk",
-      "directory": "sdk",
-      "container_store": {}
-    }
-  ],
   "@gluestack-v2/glue-plugin-web": [
     {
       "instance": "web",

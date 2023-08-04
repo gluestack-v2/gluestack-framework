@@ -3,21 +3,28 @@ const app = express();
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-import { setInterval, setTimeout } from 'timers';
-import DataStore from './DataStore';
+import DataStore from './src/store/DataStore';
+import { getAllServices } from './src/helpers/getAllServices';
+import { runCommand } from './src/helpers/runCommand';
 
 app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
   },
 });
 
-const dataStore = new DataStore();
+// require('./src/scripts/initialInstance');
+
+const dataStore = DataStore.getInstance();
 
 //Initial Handshake
 io.on('connection', (socket: any) => {
+  socket.on('run.command', (patches: any) => {
+    runCommand(patches);
+  });
   console.log('a user connected on server');
   io.to(socket.id).emit('handshake', dataStore.getPatches());
 });
@@ -31,38 +38,21 @@ dataStore.on('patches.pushed', (patches: any) => {
   io.emit('patches.pushed', patches);
 });
 
-dataStore.produce((draft: any) => {
-  draft.runners = [];
-  draft.movies = [];
+const data = getAllServices();
 
-  draft.runners.push({
-    name: 'runner-1',
-    commands: ['start', 'build', 'up', 'down'],
-    output: '',
-    status: 'up',
-  });
-
-  draft.runners.push({
-    name: 'runner-2',
-    commands: ['start', 'build', 'up', 'down'],
-    output: '',
-    status: 'up',
+data.then((res) => {
+  dataStore.produce((draft: any) => {
+    draft.services = res;
+    draft.runners = {
+      main: {
+        name: 'main',
+        commands: ['build', 'prepare', 'up', 'down'],
+        output: '',
+      },
+    };
   });
 });
 
 server.listen(3001, () => {
   console.log('listening on *:3001');
-});
-
-setInterval(() => {
-  dataStore.produce((draft: any) => {
-    //draft.runners.output = `${draft.runners.output} ${Math.random()}`;
-    //draft.arr.push(Math.random());
-    draft.runners[0].output = `${draft.runners[0].output} ${Math.random()}`;
-  });
-}, 5000);
-// Testing for sending patch This will be Event
-app.get('/patches.pushed', (req: any, res: any) => {
-  // dataStore.push({ op: 'add', path: '/foo', value: `bar-${Math.random()}` });
-  res.send('Hello World!');
 });

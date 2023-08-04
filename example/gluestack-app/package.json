@@ -39,12 +39,11 @@
   },
   "workspaces": [
     "../../packages/*",
-    ".glue/__generated__/packages/**",
-    "client/web"
+    "client/web",
+    ".glue/__generated__/packages/**"
   ],
   "dependencies": {
     "@gluestack-v2/glue-plugin-develop": "^0.0.*",
-    "@gluestack-v2/glue-plugin-sdk": "^0.1.3",
     "@gluestack-v2/glue-plugin-web": "^0.1.3"
   }
 }
