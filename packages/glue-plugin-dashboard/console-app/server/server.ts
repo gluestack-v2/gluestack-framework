@@ -6,7 +6,18 @@ const cors = require('cors');
 import DataStore from './src/store/DataStore';
 import { getAllServices } from './src/helpers/getAllServices';
 import { runCommand } from './src/helpers/runCommand';
+import path from 'path';
+import { createDetachLog } from './src/helpers/createDetachlog';
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+const servicePath = path.join(
+  '/Users/virajajayjoshi/WorkSpace/gluestack-framework/example/gluestack-app',
+  '.glue',
+  '__generated__',
+  'services'
+);
 app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -41,6 +52,21 @@ dataStore.on('patches.pushed', (patches: any) => {
 const data = getAllServices();
 
 data.then((res) => {
+  let runnerDrafts = {};
+  Object.keys(res.services).map((service) => {
+    console.log(res.services[service], 'service >>>>>>');
+
+    runnerDrafts = {
+      ...runnerDrafts,
+      [service]: {
+        name: service,
+        commands: ['up', 'down'],
+        output: '',
+        status: res.services[service].status,
+      },
+    };
+  });
+
   dataStore.produce((draft: any) => {
     draft.services = res;
     draft.runners = {
@@ -49,7 +75,11 @@ data.then((res) => {
         commands: ['build', 'prepare', 'up', 'down'],
         output: '',
       },
+      ...runnerDrafts,
     };
+  });
+  Object.keys(res.services).map((service) => {
+    createDetachLog(servicePath, service);
   });
 });
 

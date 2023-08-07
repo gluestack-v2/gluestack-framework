@@ -4,6 +4,7 @@ const dataStore = DataStore.getInstance();
 export const executeDetached = async (
   command: string,
   servicePath: string,
+  service: string,
   options?: any
 ) => {
   const runner = 'sh';
@@ -35,6 +36,8 @@ export const executeDetached = async (
   function sendData(data: any) {
     dataStore.produce((draft: any) => {
       draft.runners.main.output = draft.runners.main.output + data.toString();
+      draft.runners[service].output =
+        draft.runners?.[service].output + data.toString();
     });
   }
   return spawnedProcess.pid;

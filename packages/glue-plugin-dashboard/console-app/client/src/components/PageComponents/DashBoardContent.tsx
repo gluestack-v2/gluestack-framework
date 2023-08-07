@@ -19,7 +19,6 @@ export const DashBoardContent = () => {
         },
       }}
       flex={1}
-      bg="$backgroundDark800"
       overflow="hidden"
     >
       <VStack flex={1}>

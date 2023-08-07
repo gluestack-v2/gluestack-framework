@@ -22,6 +22,7 @@ export const runCommand = (patches: { service: string; command: string }) => {
     executeDetached(
       boltCommand,
       service === 'main' ? appPath : servicePath,
+      service,
       {}
     );
   } else {

@@ -2,7 +2,7 @@ import React from 'react';
 import { GlobalContext } from '../../utils/context/globalContext';
 import { Sidebar } from './Sidebar';
 import { MainContent } from './MainContent';
-import { HStack } from '@components';
+import { HStack, VStack } from '@components';
 type runnerObject = {
   status: string;
   output: string;
@@ -17,17 +17,16 @@ export const DashBoard = () => {
   const { state, currentRunner } = React.useContext(GlobalContext);
 
   return (
-    <HStack
-      sx={{
-        pt: '$10',
-        _web: {
-          gap: 50,
-        },
-        height: '100vh',
-      }}
-    >
-      <Sidebar state={state} />
-      <MainContent runner={state?.runners?.[`${currentRunner}`]} />
-    </HStack>
+    <VStack h="100vh">
+      <HStack
+        h={58}
+        borderColor="$borderLight800"
+        borderBottomWidth={1}
+      ></HStack>
+      <HStack flex={1}>
+        <Sidebar state={state} />
+        <MainContent runner={state?.runners?.[`${currentRunner}`]} />
+      </HStack>
+    </VStack>
   );
 };

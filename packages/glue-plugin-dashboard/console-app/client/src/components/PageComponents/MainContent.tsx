@@ -1,4 +1,4 @@
-import { HStack, VStack, Button, Text, Box } from '@components';
+import { HStack, VStack, Button, Text, Box, Pressable } from '@components';
 import { state } from './DashBoard';
 import { use, useContext } from 'react';
 import { GlobalContext } from '@/utils/context/globalContext';
@@ -22,7 +22,7 @@ export const MainContent = React.memo(
     }
     return (
       <VStack flex={1}>
-        {/* <Commands commands={runner?.commands} service={runner?.name} /> */}
+        <Commands commands={runner?.commands} service={runner?.name} />
         <OutPut output={runner?.output} />
       </VStack>
     );
@@ -34,8 +34,14 @@ export const Commands = React.memo(
     const handleClear = () => {};
 
     return (
-      <>
+      <HStack justifyContent="center" alignItems="center" mt={40}>
         <HStack
+          px={20}
+          py={10}
+          justifyContent="center"
+          alignItems="center"
+          rounded="$lg"
+          bg="$primary100_alpha_30"
           sx={{
             _web: {
               gap: 10,
@@ -48,25 +54,11 @@ export const Commands = React.memo(
             );
           })}
         </HStack>
-        <HStack justifyContent="flex-end" bg="$backgroundDark900">
-          <Button action="secondary" onPress={handleClear}>
-            <Button.Text>Clear</Button.Text>
-          </Button>
-        </HStack>
-      </>
+      </HStack>
     );
   }
 );
 
-const getAction = (command: string) => {
-  if (['start', 'up', 'prepare'].includes(command)) {
-    return 'positive';
-  } else if (['down'].includes(command)) {
-    return 'negative';
-  } else {
-    return 'secondary';
-  }
-};
 const Command = React.memo(
   ({ command, service }: { command: string; service: string }) => {
     const { socket } = useContext(GlobalContext);
@@ -75,12 +67,29 @@ const Command = React.memo(
     };
     return (
       <>
-        <Button
-          action={getAction(command)}
+        <Pressable
+          sx={{
+            'bg': '$primary600_alpha_50',
+            ':hover': {
+              bg: '$primary600_alpha_30',
+            },
+          }}
           onPress={() => handlePress(command)}
+          rounded="$full"
+          width={96}
+          height={30}
+          justifyContent="center"
+          alignItems="center"
         >
-          <Button.Text>{command}</Button.Text>
-        </Button>
+          <Text
+            size="sm"
+            textAlign="center"
+            color="$textLight100"
+            textTransform="capitalize"
+          >
+            {command}
+          </Text>
+        </Pressable>
       </>
     );
   }
@@ -100,13 +109,14 @@ export const OutPut = ({ output }: { output: string }) => {
     const colorMap = {
       '[30m': '<span style="color:black">',
       '[31m': '<span style="color:red">',
-      '[32m': '<span style="color:green">',
+      '[32m': '<span style="color:lime">',
       '[33m': '<span style="color:yellow">',
       '[34m': '<span style="color:blue">',
       '[35m': '<span style="color:magenta">',
       '[36m': '<span style="color:cyan">',
       '[37m': '<span style="color:white">',
       '[39m': '</span>',
+      '[90m': '<span style="color:gray">',
     };
 
     const linkPattern = /https?:\/\/[^\s/$.?#].[^\s]*/g;
@@ -117,7 +127,7 @@ export const OutPut = ({ output }: { output: string }) => {
         return colorMap[match];
       } else if (linkPattern.test(match)) {
         console.log(match, 'match');
-        return `<a href="${match}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+        return `<a href="${match}" style="color:magenta" target="_blank" rel="noopener noreferrer">${match}</a>`;
       }
       return match;
     });
@@ -129,7 +139,7 @@ export const OutPut = ({ output }: { output: string }) => {
   return (
     <VStack
       p="$10"
-      bg="#f1a031"
+      // bg="#f1a031"
       // borderWidth={2}
       borderColor="$trueGray600"
       flex={1}

@@ -6,17 +6,21 @@ export const Sidebar = ({ state: newState }: { state: state }) => {
   const { setCurrentRunner, state, currentRunner } = useContext(GlobalContext);
   return (
     <VStack
-      w="$56"
+      pt={56}
+      w={250}
       h="$full"
       px="$4"
       justifyContent="flex-start"
+      alignItems="center"
       sx={{
         _web: {
           gap: 10,
         },
       }}
+      borderColor="$borderLight800"
+      borderRightWidth={1}
     >
-      <Heading size="sm" color="$primary500">
+      <Heading size="md" color="$white" w="100%">
         List of Running services
       </Heading>
       {state?.runners &&
@@ -48,26 +52,29 @@ const Runner = ({
     output: string;
   };
 }) => {
+  const isActive = currentRunner === runner;
   return (
     <Pressable
+      w="100%"
       flexDirection="row"
-      justifyContent="space-around"
-      rounded="$full"
+      rounded="$lg"
+      px="$4"
+      py="$4"
       alignItems="center"
-      bg={currentRunner !== runner ? '$black' : '$purple500'}
-      h="$10"
       sx={{
+        'bg': isActive ? '$primary600_alpha_50' : undefined,
         ':hover': {
-          bg: '$purple600',
+          bg: '$primary600_alpha_30',
         },
       }}
+      h="$10"
       onPress={() => {
         setCurrentRunner && setCurrentRunner(runner);
       }}
       key={runner}
     >
-      <Button.Text textAlign="center">{runner}</Button.Text>
-      <Button.Text textAlign="center">{runnerObject?.status}</Button.Text>
+      <Button.Text>{runner}</Button.Text>
+      <Button.Text>{runnerObject?.status}</Button.Text>
     </Pressable>
   );
 };
