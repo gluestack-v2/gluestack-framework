@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -18,6 +19,9 @@ const servicePath = path.join(
   '__generated__',
   'services'
 );
+
+require('./src/scripts/initialInstance');
+
 app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
