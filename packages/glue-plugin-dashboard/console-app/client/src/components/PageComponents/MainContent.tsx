@@ -5,7 +5,14 @@ import { GlobalContext } from '@/utils/context/globalContext';
 import { DashBoardContent } from './DashBoardContent';
 import { TerminalContextProvider, ReactTerminal } from 'react-terminal';
 import React from 'react';
-
+import {
+  Wrench,
+  ArrowUp,
+  ArrowDown,
+  Rocket,
+  Settings,
+  EyeIcon,
+} from 'lucide-react';
 export const MainContent = React.memo(
   ({
     runner,
@@ -34,14 +41,10 @@ export const Commands = React.memo(
     const handleClear = () => {};
 
     return (
-      <HStack justifyContent="center" alignItems="center" mt={40}>
+      <HStack justifyContent="flex-start" alignItems="center" ml={20} h={100}>
         <HStack
-          px={20}
-          py={10}
-          justifyContent="center"
+          justifyContent="flex-start"
           alignItems="center"
-          rounded="$lg"
-          bg="$primary100_alpha_30"
           sx={{
             _web: {
               gap: 10,
@@ -59,6 +62,21 @@ export const Commands = React.memo(
   }
 );
 
+const getIcon = (command: string) => {
+  if (command === 'build') {
+    return Wrench;
+  } else if (command === 'up') {
+    return ArrowUp;
+  } else if (command === 'down') {
+    return ArrowDown;
+  } else if (command === 'start') {
+    return Rocket;
+  } else if (command === 'prepare') {
+    return Settings;
+  } else if (command === 'watch') {
+    return EyeIcon;
+  }
+};
 const Command = React.memo(
   ({ command, service }: { command: string; service: string }) => {
     const { socket } = useContext(GlobalContext);
@@ -67,29 +85,23 @@ const Command = React.memo(
     };
     return (
       <>
-        <Pressable
+        <Button
+          action="secondary"
+          variant="outline"
+          onPress={() => handlePress(command)}
+          h="$8"
           sx={{
-            'bg': '$primary600_alpha_50',
-            ':hover': {
-              bg: '$primary600_alpha_30',
+            _web: {
+              gap: 8,
             },
           }}
-          onPress={() => handlePress(command)}
-          rounded="$full"
-          width={96}
-          height={30}
-          justifyContent="center"
-          alignItems="center"
+          px="$2"
         >
-          <Text
-            size="sm"
-            textAlign="center"
-            color="$textLight100"
-            textTransform="capitalize"
-          >
+          <Button.Icon size="sm" as={getIcon(command)} />
+          <Button.Text fontSize="$sm" textTransform="capitalize">
             {command}
-          </Text>
-        </Pressable>
+          </Button.Text>
+        </Button>
       </>
     );
   }
@@ -117,6 +129,7 @@ export const OutPut = ({ output }: { output: string }) => {
       '[37m': '<span style="color:white">',
       '[39m': '</span>',
       '[90m': '<span style="color:gray">',
+      '[91m': '<span style="color:orangered">',
     };
 
     const linkPattern = /https?:\/\/[^\s/$.?#].[^\s]*/g;
@@ -137,14 +150,8 @@ export const OutPut = ({ output }: { output: string }) => {
 
   const coloredHTML = convertColorCodesToHTML(output ?? '');
   return (
-    <VStack
-      p="$10"
-      // bg="#f1a031"
-      // borderWidth={2}
-      borderColor="$trueGray600"
-      flex={1}
-    >
-      <HStack
+    <VStack borderColor="$trueGray600" flex={1}>
+      {/* <HStack
         borderTopLeftRadius="$lg"
         borderTopRightRadius="$lg"
         py="$3"
@@ -159,10 +166,9 @@ export const OutPut = ({ output }: { output: string }) => {
         <Box bg="#fc5b57" w="$3" h="$3" rounded="$full" />
         <Box bg="#e5bf3c" w="$3" h="$3" rounded="$full" />
         <Box bg="#57c038" w="$3" h="$3" rounded="$full" />
-      </HStack>
+      </HStack> */}
       <Box
         bg="#022833"
-        p="$4"
         sx={{
           _web: {
             overflow: 'auto',
@@ -170,8 +176,8 @@ export const OutPut = ({ output }: { output: string }) => {
           },
         }}
         pt={10}
-        borderBottomLeftRadius="$lg"
-        borderBottomRightRadius="$lg"
+        // borderBottomLeftRadius="$lg"
+        // borderBottomRightRadius="$lg"
         nativeID="outputContainer"
       >
         <pre

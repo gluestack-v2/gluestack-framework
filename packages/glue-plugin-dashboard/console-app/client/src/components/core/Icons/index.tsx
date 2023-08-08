@@ -50,5 +50,6 @@ const StyledIcon: any = styled(
 export const Icon = createIcon({
   Root: StyledIcon,
 });
+export { createIcon, StyledIcon as RootIcon };
 
 export * from './Icons';

@@ -6,6 +6,13 @@
       "container_store": {}
     }
   ],
+  "@gluestack-v2/glue-plugin-dashboard": [
+    {
+      "instance": "dashboard",
+      "directory": "dashboard",
+      "container_store": {}
+    }
+  ],
   "@gluestack-v2/glue-plugin-web": [
     {
       "instance": "web",

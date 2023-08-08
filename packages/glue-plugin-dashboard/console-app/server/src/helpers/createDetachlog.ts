@@ -1,18 +1,11 @@
 import DataStore from '../store/DataStore';
 import { spawn } from 'child_process';
 const dataStore = DataStore.getInstance();
+import { getAllServices } from './getAllServices';
 export const createDetachLog = async (
   servicePath: string,
   serviceName: string
 ) => {
-  dataStore.produce((draft: any) => {
-    draft.runners[serviceName] = {
-      name: serviceName,
-      commands: ['up', 'down'],
-      output: '',
-    };
-  });
-
   const command = 'sh';
 
   const args = ['-c', `cd ${servicePath} && bolt log -f ${serviceName}`];
@@ -40,9 +33,12 @@ export const createDetachLog = async (
   });
 
   function sendData(data: any) {
-    dataStore.produce((draft: any) => {
-      draft.runners[serviceName].output =
-        draft.runners[serviceName].output + data.toString();
+    getAllServices().then((res) => {
+      dataStore.produce((draft: any) => {
+        draft.runners[serviceName].output =
+          draft.runners[serviceName].output + data.toString();
+        draft.runners[serviceName].status = res.services[serviceName].status;
+      });
     });
   }
 

@@ -1,15 +1,13 @@
-import React, { use, useEffect, createContext } from 'react';
+import React, { useEffect, createContext } from 'react';
 import io from 'socket.io-client';
 import { DataStore } from '../../utils/DataStore';
 import { DashBoard } from './DashBoard';
 import { GlobalContext } from '../../utils/context/globalContext';
-import { Button } from '@components';
+
 // Socket Connection and DataStore Initialization
 const socket = io('http://localhost:3001', {
   autoConnect: false,
 });
-
-// Context
 
 // DataStore Initialization
 const dataStore = DataStore.getInstance();

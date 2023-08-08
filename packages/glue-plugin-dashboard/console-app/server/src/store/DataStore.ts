@@ -15,6 +15,7 @@ export default class DataStore extends EventEmitter {
 
   produce(draft: (draft: any) => void) {
     const originalObject = this.getValue();
+
     const [_nextObject, patches, _inversePatches] = produceWithPatches(
       originalObject,
       draft

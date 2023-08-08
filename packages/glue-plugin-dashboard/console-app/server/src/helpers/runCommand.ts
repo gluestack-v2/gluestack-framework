@@ -6,22 +6,21 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 const servicePath = path.join(
-  '/Users/virajajayjoshi/WorkSpace/gluestack-framework/example/gluestack-app',
+  process.env.PROJECT_PATH || process.cwd(),
   '.glue',
   '__generated__',
   'services'
 );
 
-const appPath = path.join(
-  '/Users/virajajayjoshi/WorkSpace/gluestack-framework/example/gluestack-app'
-);
 export const runCommand = (patches: { service: string; command: string }) => {
   const { service, command } = patches;
   if (globalServiceMap.has(service) || service === 'main') {
     const boltCommand = convertCommandToBolt(service, command);
     executeDetached(
       boltCommand,
-      service === 'main' ? appPath : servicePath,
+      service === 'main'
+        ? process.env.PROJECT_PATH || process.cwd()
+        : servicePath,
       service,
       {}
     );

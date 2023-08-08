@@ -3,7 +3,6 @@ import { readfile } from './file-reader';
 
 export const parseYAML = async (filepath: string): Promise<any> => {
   const content: string = await readfile(filepath);
-
   try {
     const parsed: any = parse(content);
     return parsed;

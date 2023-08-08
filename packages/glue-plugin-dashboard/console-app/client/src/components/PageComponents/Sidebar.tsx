@@ -2,8 +2,11 @@ import { VStack, Button, Text, Pressable, Heading } from '@components';
 import type { state } from './DashBoard';
 import { GlobalContext } from '@/utils/context/globalContext';
 import { useContext } from 'react';
+import { Play, Square, StopCircle } from 'lucide-react';
+
 export const Sidebar = ({ state: newState }: { state: state }) => {
   const { setCurrentRunner, state, currentRunner } = useContext(GlobalContext);
+
   return (
     <VStack
       pt={56}
@@ -21,7 +24,7 @@ export const Sidebar = ({ state: newState }: { state: state }) => {
       borderRightWidth={1}
     >
       <Heading size="md" color="$white" w="100%">
-        List of Running services
+        Services
       </Heading>
       {state?.runners &&
         Object.keys(state?.runners).map((runner) => {
@@ -52,7 +55,12 @@ const Runner = ({
     output: string;
   };
 }) => {
+  console.log('🚀 ~ runnerObject:', runnerObject);
   const isActive = currentRunner === runner;
+  const { socket } = useContext(GlobalContext);
+  const handlePress = (command: string) => {
+    socket.emit('run.command', { command: command, service: runner });
+  };
   return (
     <Pressable
       w="100%"
@@ -65,6 +73,17 @@ const Runner = ({
         'bg': isActive ? '$primary600_alpha_50' : undefined,
         ':hover': {
           bg: '$primary600_alpha_30',
+          _icon: {
+            color: '$backgroundDark200',
+          },
+        },
+        '_icon': {
+          color: '$backgroundDark100',
+        },
+        ':active': {
+          _icon: {
+            color: '$backgroundDark300',
+          },
         },
       }}
       h="$10"
@@ -72,9 +91,34 @@ const Runner = ({
         setCurrentRunner && setCurrentRunner(runner);
       }}
       key={runner}
+      justifyContent="space-between"
     >
       <Button.Text>{runner}</Button.Text>
-      <Button.Text>{runnerObject?.status}</Button.Text>
+      {runner === 'main' ? null : (
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            handlePress(runnerObject?.status === 'up' ? 'down' : 'up');
+          }}
+        >
+          {({ hovered, pressed }) => {
+            console.log('🚀 ~ hovered, isHovered', hovered, pressed);
+            const color = pressed
+              ? '$backgroundDark400'
+              : hovered
+              ? '$backgroundDark400'
+              : '$backgroundDark100';
+            return (
+              <Button.Icon
+                color={color}
+                size={16}
+                fill="currentColor"
+                as={runnerObject?.status === 'up' ? Square : Play}
+              />
+            );
+          }}
+        </Pressable>
+      )}
     </Pressable>
   );
 };

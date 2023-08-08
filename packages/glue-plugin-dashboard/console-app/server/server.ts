@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 const servicePath = path.join(
-  '/Users/virajajayjoshi/WorkSpace/gluestack-framework/example/gluestack-app',
+  process.env.PROJECT_PATH || process.cwd(),
   '.glue',
   '__generated__',
   'services'
@@ -43,9 +43,7 @@ io.on('connection', (socket: any) => {
 //Receive Patch
 
 dataStore.on('patches.pushed', (patches: any) => {
-  console.log('patches.pushed');
   //Emit Patch to the client
-  console.log(dataStore.getValue());
   io.emit('patches.pushed', patches);
 });
 
@@ -54,8 +52,6 @@ const data = getAllServices();
 data.then((res) => {
   let runnerDrafts = {};
   Object.keys(res.services).map((service) => {
-    console.log(res.services[service], 'service >>>>>>');
-
     runnerDrafts = {
       ...runnerDrafts,
       [service]: {

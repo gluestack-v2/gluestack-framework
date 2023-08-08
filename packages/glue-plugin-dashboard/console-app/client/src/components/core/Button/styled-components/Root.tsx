@@ -137,7 +137,7 @@ export default styled(
         },
         secondary: {
           'bg': '$secondary500',
-          'borderColor': '$secondary300',
+          'borderColor': '$secondary800',
 
           ':hover': {
             bg: '$secondary600',

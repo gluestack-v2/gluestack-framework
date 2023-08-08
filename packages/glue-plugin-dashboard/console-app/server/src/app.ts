@@ -3,12 +3,10 @@ import express from 'express';
 import { globalServiceMap } from './constant/globalServiceMap';
 const app = express();
 const path = require('path');
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+require('dotenv').config();
 
 const servicePath = path.join(
-  process.env.PROJECT_PATH,
+  process.env.PROJECT_PATH || process.cwd(),
   '.glue',
   '__generated__',
   'services'

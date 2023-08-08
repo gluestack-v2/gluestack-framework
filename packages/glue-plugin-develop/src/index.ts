@@ -19,7 +19,6 @@ import buildCommand from './commands/build';
 import watchCommand from './commands/watch';
 import removeCommand from './commands/remove';
 import prepareCommand from './commands/prepare';
-import consoleCommand from './commands/console';
 import { createConfigPackage } from './helpers/create-config-package';
 import { join } from 'path';
 import { GLUE_GENERATED_PACKAGES_PATH } from './constants/glue-generated-packages';
@@ -50,9 +49,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       restartCommand(program, this.app)
     );
     this.app.addCommand((program: ICommand) => startCommand(program, this.app));
-    this.app.addCommand((program: ICommand) =>
-      consoleCommand(program, this.app)
-    );
   }
 
   destroy() {

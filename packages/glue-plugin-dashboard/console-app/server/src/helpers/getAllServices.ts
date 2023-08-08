@@ -2,9 +2,9 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 import { parseYAML } from './parse-yaml';
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+
+require('dotenv').config();
+
 const servicePath = path.join(
   process.env.PROJECT_PATH,
   '.glue',
