@@ -8,7 +8,6 @@ import { join } from 'path';
 import { writeStorageClient } from './helpers/write-storage-client';
 import { GLUE_GENERATED_PACKAGES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import { writeStorageServerSdk } from './helpers/write-storage-server-sdk';
-import { join } from 'path';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
