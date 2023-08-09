@@ -314,7 +314,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
       );
       if (await fileExists(targetPkgJson)) {
         const data: any = await readfile(targetPkgJson);
-
         // data = data;
         if (!data.dependencies) {
           data.dependencies = {};

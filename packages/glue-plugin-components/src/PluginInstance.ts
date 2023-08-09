@@ -26,7 +26,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
   async build(): Promise<void> {
     this.app.write(this._sourcePath, this._destinationPath);
-    this.app.updateServices();
+    // this.app.updateServices();
   }
 
   getDestinationPath(): string {
@@ -51,7 +51,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
         }
       }
     );
-    let serviceInstances = this.app.getAllServiceInstances();
+    const serviceInstances = this.app.getAllServiceInstances();
 
     serviceInstances.forEach(async (serviceInstance) => {
       await this.app.watch(

@@ -4,6 +4,7 @@ import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IP
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+import { join } from 'path';
 import { writeStorageClient } from './helpers/write-storage-client';
 import { GLUE_GENERATED_PACKAGES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import { writeStorageServerSdk } from './helpers/write-storage-server-sdk';
@@ -40,6 +41,11 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     );
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
     await this.app.createPackage(`${this.getName()}-client-sdk`, sdkPath);
+
+    await this.app.updateNameInPackageJSON(
+      sdkPath,
+      `${this.getName()}-server-sdk`
+    );
     await writeStorageClient(this.getName(), clientPackagePath);
 
     const serverPackagePath = join(
@@ -49,6 +55,8 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.createPackage(`${this.getName()}-server-sdk`, sdkPath);
 
     await writeStorageServerSdk(this.getName(), serverPackagePath);
+
+    // await this.writeSdkForStorageClient();
   }
 
   async watch(callback?: any) {

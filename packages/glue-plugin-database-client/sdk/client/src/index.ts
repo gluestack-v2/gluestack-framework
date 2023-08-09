@@ -12,7 +12,7 @@ export default class SDK extends ServiceProvider {
     super();
     // eslint-disable-next-line no-console
     console.log('ServerSDK instance initialized');
-    return this.prisma;
+
     // **---Constructor will be added before this---**
   }
   //static functions
@@ -27,11 +27,11 @@ export default class SDK extends ServiceProvider {
   get prisma() {
     return this.helper();
   }
-  // getInstance(): any {
-  //   return this.helper();
-  // }
+  getProvider(): PrismaClient | undefined {
+    return this.helper();
+  }
 
-  helper = function () {
+  helper = () => {
     const prismaFunctions = [
       'findUnique',
       'findUniqueOrThrow',
@@ -49,7 +49,7 @@ export default class SDK extends ServiceProvider {
       'count',
       'groupBy',
     ];
-    var obj: PrismaClient = {};
+    var obj: PrismaClient = {} as PrismaClient;
     obj = new Proxy(obj, {
       get: (target, prop: any) => {
         if (prismaFunctions.includes(prop)) {
@@ -64,7 +64,7 @@ export default class SDK extends ServiceProvider {
               try {
                 const response = await axios({
                   method: 'post',
-                  url: 'http://localhost:3003/api/dbClient/db',
+                  url: '// Add API URL here',
                   data: { query: this.propChain },
                 });
                 //TODO: review-rohit

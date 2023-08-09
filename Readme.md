@@ -13,6 +13,14 @@
 $ npm run install:all;
 ```
 
+## Create plugin builds (in development mode)
+
+```bash
+# Run this command from your project's root directory
+# It will watch all the changes done in plugin
+$ npm run watch:all;
+```
+
 ## Create plugin builds (in production mode)
 
 ```bash

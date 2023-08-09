@@ -5,10 +5,11 @@
   "main": "index",
   "scripts": {
     "install:all": "npm install --workspaces --if-present",
-    "add:sdk": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-service-sdk service-sdk && node glue add @gluestack-v2/glue-plugin-functions functions",
-    "add:db": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-service-sdk service-sdk && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-database-client db-client",
-    "add:necessary": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-sdk sdk1 && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-graphql graphql && node glue add @gluestack-v2/glue-plugin-database-client db-client",
-    "add:functions": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway  && node glue add @gluestack-v2/glue-plugin-functions functions"
+    "add:sdk": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions",
+    "add:db": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-database-client db-client",
+    "add:necessary": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-functions functions && node glue add @gluestack-v2/glue-plugin-middlewares middlewares && node glue add @gluestack-v2/glue-plugin-crons crons && node glue add @gluestack-v2/glue-plugin-events events && node glue add @gluestack-v2/glue-plugin-sdk sdk1 && node glue add @gluestack-v2/glue-plugin-database postgres && node glue add @gluestack-v2/glue-plugin-graphql graphql && node glue add @gluestack-v2/glue-plugin-database-client db-client",
+    "add:functions": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway  && node glue add @gluestack-v2/glue-plugin-functions functions",
+    "install:db-client": "node glue clean && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway && node glue add @gluestack-v2/glue-plugin-database database && node glue add @gluestack-v2/glue-plugin-database-client db "
   },
   "repository": {
     "type": "git",
@@ -38,9 +39,19 @@
     "source-map": "^0.7.4"
   },
   "workspaces": [
-    "../../packages/*"
+    "../../packages/*",
+    "client/web",
+    "server/functions",
+    ".glue/__generated__/packages/**",
+    ".glue/__generated__/services/gateway/src"
   ],
   "dependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.0.*"
+    "@gluestack-v2/glue-plugin-database": "^0.1.3",
+    "@gluestack-v2/glue-plugin-database-client": "^0.1.2",
+    "@gluestack-v2/glue-plugin-develop": "^0.0.*",
+    "@gluestack-v2/glue-plugin-functions": "^0.1.3",
+    "@gluestack-v2/glue-plugin-sdk": "^0.1.4",
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.1.1",
+    "@gluestack-v2/glue-plugin-web": "^0.1.4"
   }
 }

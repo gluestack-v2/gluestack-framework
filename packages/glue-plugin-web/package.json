@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-web",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Gluestack V2 Web Plugin",
   "main": "build/index.js",
   "repository": {

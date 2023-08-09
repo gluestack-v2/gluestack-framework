@@ -2,7 +2,7 @@ import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServicePro
 import type { PrismaClient } from '@prisma/client';
 
 export default class SDK extends ServiceProvider {
-  prisma: any;
+  prisma: PrismaClient | undefined;
   constructor() {
     super();
 
@@ -15,6 +15,10 @@ export default class SDK extends ServiceProvider {
   }
   destroy(): void {
     //
+  }
+
+  getProvider(): PrismaClient | undefined {
+    return this.prisma;
   }
 
   setDbClient(prisma: PrismaClient) {
