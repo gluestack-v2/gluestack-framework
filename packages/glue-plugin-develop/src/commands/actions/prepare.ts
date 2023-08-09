@@ -1,7 +1,7 @@
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import { info } from '@gluestack-v2/framework-cli/build/helpers/print';
 
-import { execute } from '../../helpers/execute';
+import { execute, executeSync } from '../../helpers/execute';
 import { join, relative } from 'path';
 
 const installNPMDependencies = async (app: AppCLI, pathName: any) => {
@@ -38,6 +38,11 @@ const installNPMDependencies = async (app: AppCLI, pathName: any) => {
       stdio: 'inherit',
     });
   }
+
+  info('Running npm install', process.cwd());
+  executeSync('sh', ['-c', `npm install --legacy-peer-deps`], {
+    stdio: 'inherit',
+  });
 };
 
 export default async (app: AppCLI, packageName: any): Promise<void> => {
