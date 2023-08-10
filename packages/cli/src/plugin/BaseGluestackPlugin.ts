@@ -6,7 +6,6 @@ import IPlugin, {
 import IInstance from '../types/plugin/interface/IInstance';
 import IGluePluginStore from '../types/store/interface/IGluePluginStore';
 import path, { join } from 'path';
-
 export default abstract class BaseGluestackPlugin implements IPlugin {
 	app: AppCLI;
 	instances: IInstance[];
@@ -37,6 +36,12 @@ export default abstract class BaseGluestackPlugin implements IPlugin {
 		return this.type;
 	}
 
+	async prepare(): Promise<void> {
+		const instances: Array<IInstance> = this.getInstances();
+		for await (const instance of instances) {
+			await instance.prepare();
+		}
+	}
 	getTemplateFolderPath(): string {
 		return join(this.getPackagePath(), 'template');
 	}

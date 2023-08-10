@@ -15,6 +15,7 @@ import {
 } from '../helpers/file';
 import { spawn, spawnSync } from 'child_process';
 import { error, info } from '../helpers/print';
+import { execute } from '../helpers/execute';
 
 export default abstract class BaseGluestackPluginInstance
 	implements IInstance
@@ -43,8 +44,31 @@ export default abstract class BaseGluestackPluginInstance
 	abstract init(): void;
 	abstract destroy(): void;
 
-	async build(): Promise<void> {
-		//
+	async build(): Promise<void> {}
+	async prepare(): Promise<void> {
+		if (this._instanceType === 'service') {
+			await execute(
+				'sh',
+				[
+					'-c',
+					`cd ${join(
+						this._destinationPath,
+						'..'
+					)} && npm run install:all`,
+				],
+				{ stdio: 'inherit' }
+			);
+		}
+
+		if (this._instanceType === 'package') {
+			await execute(
+				'sh',
+				['-c', `cd ${this._destinationPath} && npm run build`],
+				{
+					stdio: 'inherit',
+				}
+			);
+		}
 	}
 
 	getName(): string {

@@ -20,9 +20,6 @@ import buildCommand from './commands/build';
 import watchCommand from './commands/watch';
 import removeCommand from './commands/remove';
 import prepareCommand from './commands/prepare';
-import { createConfigPackage } from './helpers/create-config-package';
-import { join } from 'path';
-import { GLUE_GENERATED_PACKAGES_PATH } from './constants/glue-generated-packages';
 
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
@@ -42,9 +39,7 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
     this.app.addCommand((program: ICommand) => upCommand(program, this.app));
     this.app.addCommand((program: ICommand) => downCommand(program, this.app));
     this.app.addCommand((program: ICommand) => cleanCommand(program, this.app));
-    this.app.addCommand((program: ICommand) =>
-      prepareCommand(program, this.app)
-    );
+    this.app.addCommand((program: ICommand) => prepareCommand(program, this));
 
     this.app.addCommand((program: ICommand) =>
       restartCommand(program, this.app)
@@ -63,18 +58,6 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getVersion(): string {
     return packageJSON.version;
-  }
-
-  getConfigPath = () => join(process.cwd(), 'config');
-  getGeneratedConfigPath = (packageName: string) =>
-    join(process.cwd(), GLUE_GENERATED_PACKAGES_PATH, `${packageName}-config`);
-
-  async createConfigPackage(packageName: string) {
-    await createConfigPackage(
-      packageName,
-      this.getConfigPath(),
-      this.getGeneratedConfigPath(packageName)
-    );
   }
 
   async runPostInstall(_instanceName: string, _target: string) {

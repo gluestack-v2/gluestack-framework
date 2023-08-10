@@ -6,14 +6,18 @@ import {
 import path from 'path';
 import { warning, error } from './print';
 class Watcher implements IWatcher {
+	private instanceWatcherFlag;
 	constructor() {
-		const WatcherPath = path.join(
+		this.instanceWatcherFlag = false;
+	}
+	instanceWatcher() {
+		const watcherPath = path.join(
 			process.cwd(),
 			'.glue',
 			'internals',
 			'plugin-instances.json'
 		);
-		const InstanceWatcher = chokidar.watch(WatcherPath, {
+		const instanceWatcher = chokidar.watch(watcherPath, {
 			persistent: true,
 			cwd: process.cwd(),
 			ignored: [
@@ -24,7 +28,7 @@ class Watcher implements IWatcher {
 			],
 		});
 
-		InstanceWatcher.on(
+		instanceWatcher.on(
 			'change',
 			async (_event: string, _path: string) => {
 				warning('New plugin instance detected, restart your app!');
@@ -53,6 +57,10 @@ class Watcher implements IWatcher {
 			watcher.on('all', async (event: string, path: string) => {
 				if (callback) callback(event, path);
 			});
+			if (!this.instanceWatcherFlag) {
+				this.instanceWatcher();
+				this.instanceWatcherFlag = true;
+			}
 		} catch (err: any) {
 			error('> watcher error:', err);
 		}

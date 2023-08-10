@@ -33,6 +33,7 @@ import {
 } from '../../constants/gluestack.v2';
 import IInstance from '../../types/plugin/interface/IInstance';
 import { error, success } from '../print';
+import { executeSync } from '../execute';
 
 const sourceMap = require('source-map');
 
@@ -134,6 +135,16 @@ export default class AppCLI {
 	// @API: doctor
 	async doctor() {
 		//
+	}
+
+	async prepare() {
+		executeSync(
+			'sh',
+			['-c', `cd ${process.cwd()} && npm install --legacy-peer-deps`],
+			{
+				stdio: 'inherit',
+			}
+		);
 	}
 
 	// @API: dispatchEvent

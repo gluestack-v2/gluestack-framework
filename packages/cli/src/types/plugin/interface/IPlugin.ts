@@ -32,4 +32,5 @@ export default interface IPlugin {
 	// app-cli apis
 	build(): Promise<void>;
 	watch(callback?: Function): Promise<void>;
+	prepare(): Promise<void>;
 }

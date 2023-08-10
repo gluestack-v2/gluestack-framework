@@ -4,7 +4,9 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
+
 import fs, { copyFileSync } from 'fs';
+import { spawnSync } from 'child_process';
 
 const dotEnvPath = join(process.cwd(), '.env');
 
@@ -52,10 +54,33 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       'UPDATECONFIGTYPE',
       configName
     );
+
+    //@ts-ignore
+    this.callerPlugin.setGeneratedSDKPaths(packagePath);
     return packagePath;
   }
 
   async build() {
+    // @ts-ignore
+    this.callerPlugin.resetGeneratedSDKPaths();
+    // @ts-ignore
+    await this.callerPlugin.createConfigPackage(
+      'server',
+      // @ts-ignore
+      this.callerPlugin.getConfigPath(),
+      // @ts-ignore
+      this.callerPlugin.getGeneratedConfigPath('server'),
+      this
+    );
+    // @ts-ignore
+    await this.callerPlugin.createConfigPackage(
+      'client',
+      // @ts-ignore
+      this.callerPlugin.getConfigPath(),
+      // @ts-ignore
+      this.callerPlugin.getGeneratedConfigPath('client')
+    );
+
     const clientSDKPath = await this.createPackageByName(
       'client-sdk',
       'client-config'
@@ -86,8 +111,22 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       'PROJECT_PATH_ENV',
       'server-config'
     );
-    await this.getConfigInServiceSdk(clientSDKPath, 'client');
+    this.getConfigInServiceSdk(clientSDKPath, 'client');
     this.generateConfigInServiceSdk(clientSDKPath, serverSDKPath);
+    // Run prepare
+    // await this.prepare();
+    // await this.app.prepare();
+    await this.prepare();
+  }
+
+  async prepare(): Promise<void> {
+    //@ts-ignore
+    const packagePaths = this.callerPlugin.getGeneratedSDKPaths();
+    packagePaths.map(async (packagePath: string) => {
+      spawnSync('sh', ['-c', `cd ${packagePath} && npm run build`], {
+        stdio: 'inherit',
+      });
+    });
   }
 
   getConfigInServiceSdk(clientSDKPath: string, configType: string) {
@@ -102,7 +141,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     if (developPlugin) {
       // @ts-ignore
-      const configPath = developPlugin.getConfigPath();
+      const configPath = this.callerPlugin.getConfigPath();
 
       const clientConfig = fs.readFileSync(
         join(configPath, 'client.ts'),
@@ -273,55 +312,23 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   }
 
   async watch(callback?: Function) {
-    // NO NEED TO WATCH
-    const developPlugin = this.app.getPluginByName(
-      '@gluestack-v2/glue-plugin-develop'
-    );
     await this.buildBeforeWatch();
 
     // @ts-ignore
-    this.app.watch(developPlugin.getConfigPath(), '', async (events, path) => {
-      this.build();
-      if (developPlugin) {
-        // Watching for changes in config
-        // @ts-ignore
-        await developPlugin.createConfigPackage(
-          'server',
-          // @ts-ignore
-          developPlugin.getConfigPath(),
-          // @ts-ignore
-          developPlugin.getGeneratedConfigPath('server')
-        );
-        // @ts-ignore
-        await developPlugin.createConfigPackage(
-          'client',
-          // @ts-ignore
-          developPlugin.getConfigPath(),
-          // @ts-ignore
-          developPlugin.getGeneratedConfigPath('client')
-        );
+    this.app.watch(
+      // @ts-ignore
+      this.callerPlugin.getConfigPath(),
+      '',
+      async (events, path) => {
         if (events === 'change') {
-          await this.buildPackage(
-            // @ts-ignore
-            developPlugin.getGeneratedConfigPath('client')
-          );
-          await this.buildPackage(
-            // @ts-ignore
-            developPlugin.getGeneratedConfigPath('server')
-          );
-          await this.buildPackage(
-            this.app.getGeneratedPackagePath('client-sdk')
-          );
-          await this.buildPackage(
-            this.app.getGeneratedPackagePath('server-sdk')
-          );
+          this.build();
+        }
+
+        if (callback) {
+          callback(events, path);
         }
       }
-      if (callback) {
-        callback(events, path);
-      }
-      // await this.app.updateServices();
-    });
+    );
 
     this.app.watch(dotEnvPath, '', async (events, path) => {
       if (this) {
@@ -330,18 +337,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       if (callback) {
         callback(events, path);
       }
-      // await this.app.updateServices();
     });
-
-    // COPY THIS SECTION of code for any other plugin instace watch
-
-    // this.app.watch(
-    //   this._sourcePath,
-    //   this._destinationPath,
-    //   async (event, path) => {
-    //     // TODO: OPTIMIZE UPDATES
-    //     // this.app.updateServices();
-    //   }
-    // );
   }
 }
