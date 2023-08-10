@@ -3,8 +3,6 @@ import { GlobalContext } from '../../utils/context/globalContext';
 import { Sidebar } from './Sidebar';
 import { MainContent } from './MainContent';
 import { HStack, VStack, Heading, Button } from '@components';
-import { createIcon, RootIcon, Icon } from '@components';
-import { G, Path, Rect } from 'react-native-svg';
 import NextImage from 'next/image';
 
 import Link from 'next/link';
@@ -87,7 +85,7 @@ export const DashBoard = () => {
         </HStack>
       </HStack>
       <HStack flex={1}>
-        <Sidebar state={state} />
+        <Sidebar />
         <MainContent runner={state?.runners?.[`${currentRunner}`]} />
       </HStack>
     </VStack>

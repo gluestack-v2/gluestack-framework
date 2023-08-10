@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
-import { DataStore } from '@/utils/DataStore';
-import { Button, HStack, VStack } from '@components';
+import { VStack } from '@components';
 import { GlobalContext } from '@/utils/context/globalContext';
 import { Commands, OutPut } from './MainContent';
 
 export const DashBoardContent = () => {
   const { socket, state } = useContext(GlobalContext);
 
-  console.log(state?.runners?.main?.outpu, 'state');
+  console.log(state?.runners?.main?.output, 'state');
   const handlePress = (service: string) => {
     socket.emit('run.command', { service: service, command: 'down' });
   };

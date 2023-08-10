@@ -17,12 +17,14 @@ export const MainContent = React.memo(
   ({
     runner,
   }: {
-    runner: {
-      name: string;
-      status: string;
-      output: string;
-      commands: Array<string>;
-    };
+    runner:
+      | {
+          name: string;
+          commands: string[];
+          output: string;
+          status?: 'up' | 'down' | undefined;
+        }
+      | undefined;
   }) => {
     if (runner?.name === 'main') {
       return <DashBoardContent />;
@@ -37,7 +39,13 @@ export const MainContent = React.memo(
 );
 
 export const Commands = React.memo(
-  ({ commands, service }: { commands: Array<string>; service: string }) => {
+  ({
+    commands,
+    service,
+  }: {
+    commands: Array<string> | undefined;
+    service: string | undefined;
+  }) => {
     const handleClear = () => {};
 
     return (
@@ -62,7 +70,7 @@ export const Commands = React.memo(
   }
 );
 
-const getIcon = (command: string) => {
+const getIcon = (command: string | undefined) => {
   if (command === 'build') {
     return Wrench;
   } else if (command === 'up') {
@@ -78,9 +86,15 @@ const getIcon = (command: string) => {
   }
 };
 const Command = React.memo(
-  ({ command, service }: { command: string; service: string }) => {
+  ({
+    command,
+    service,
+  }: {
+    command: string | undefined;
+    service: string | undefined;
+  }) => {
     const { socket } = useContext(GlobalContext);
-    const handlePress = (command: string) => {
+    const handlePress = (command: string | undefined) => {
       socket.emit('run.command', { command: command, service: service });
     };
     return (
@@ -107,10 +121,11 @@ const Command = React.memo(
   }
 );
 
-export const OutPut = ({ output }: { output: string }) => {
+export const OutPut = ({ output }: { output: string | undefined }) => {
   const bottomEl = React.useRef(null);
   React.useEffect(() => {
     console.log('scrolling');
+    // @ts-ignore
     bottomEl?.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
@@ -118,7 +133,7 @@ export const OutPut = ({ output }: { output: string }) => {
   }, [output]);
 
   const convertColorCodesToHTML = (text: string) => {
-    const colorMap = {
+    const colorMap: any = {
       '[30m': '<span style="color:black">',
       '[31m': '<span style="color:red">',
       '[32m': '<span style="color:lime">',
