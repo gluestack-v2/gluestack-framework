@@ -12,6 +12,7 @@ import {
   Rocket,
   Settings,
   EyeIcon,
+  Square,
 } from 'lucide-react';
 export const MainContent = React.memo(
   ({
@@ -46,8 +47,15 @@ export const Commands = React.memo(
     commands: Array<string> | undefined;
     service: string | undefined;
   }) => {
-    const handleClear = () => {};
-
+    const [disableCommands, setDisableCommands] = React.useState<{
+      [key: string]: boolean;
+    }>({
+      build: true,
+      up: true,
+      down: true,
+      stop: false,
+      start: false,
+    });
     return (
       <HStack justifyContent="flex-start" alignItems="center" ml={20} h={100}>
         <HStack
@@ -61,7 +69,12 @@ export const Commands = React.memo(
         >
           {commands?.map((command) => {
             return (
-              <Command command={command} key={command} service={service} />
+              <Command
+                command={command}
+                key={command}
+                service={service}
+                isDisabled={disableCommands[command] || false}
+              />
             );
           })}
         </HStack>
@@ -83,15 +96,19 @@ const getIcon = (command: string | undefined) => {
     return Settings;
   } else if (command === 'watch') {
     return EyeIcon;
+  } else if (command === 'stop') {
+    return Square;
   }
 };
 const Command = React.memo(
   ({
     command,
     service,
+    isDisabled,
   }: {
     command: string | undefined;
     service: string | undefined;
+    isDisabled: boolean | undefined;
   }) => {
     const { socket } = useContext(GlobalContext);
     const handlePress = (command: string | undefined) => {
@@ -110,8 +127,9 @@ const Command = React.memo(
             },
           }}
           px="$2"
+          isDisabled={isDisabled}
         >
-          <Button.Icon size="sm" as={getIcon(command)} />
+          <Button.Icon size="sm" as={getIcon(command)} fill="currentColor" />
           <Button.Text fontSize="$sm" textTransform="capitalize">
             {command}
           </Button.Text>
@@ -138,7 +156,7 @@ export const OutPut = ({ output }: { output: string | undefined }) => {
       '[31m': '<span style="color:red">',
       '[32m': '<span style="color:lime">',
       '[33m': '<span style="color:yellow">',
-      '[34m': '<span style="color:blue">',
+      '[34m': '<span style="color:deepskyblue">',
       '[35m': '<span style="color:magenta">',
       '[36m': '<span style="color:cyan">',
       '[37m': '<span style="color:white">',

@@ -4,12 +4,8 @@ import { GlobalContext } from '@/utils/context/globalContext';
 import { Commands, OutPut } from './MainContent';
 
 export const DashBoardContent = () => {
-  const { socket, state } = useContext(GlobalContext);
+  const { state } = useContext(GlobalContext);
 
-  console.log(state?.runners?.main?.output, 'state');
-  const handlePress = (service: string) => {
-    socket.emit('run.command', { service: service, command: 'down' });
-  };
   return (
     <VStack
       sx={{

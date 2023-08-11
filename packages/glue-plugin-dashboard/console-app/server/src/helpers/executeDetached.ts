@@ -6,8 +6,7 @@ import { getAllServices } from './getAllServices';
 export const executeDetached = async (
   command: string,
   servicePath: string,
-  service: string,
-  options?: any
+  service: string
 ) => {
   const runner = 'sh';
 

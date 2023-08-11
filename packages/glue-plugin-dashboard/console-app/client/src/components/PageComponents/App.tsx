@@ -5,7 +5,7 @@ import { DashBoard } from './DashBoard';
 import { GlobalContext } from '../../utils/context/globalContext';
 
 // Socket Connection and DataStore Initialization
-const socket = io('http://localhost:3001', {
+const socket = io('http://localhost:8080', {
   autoConnect: false,
 });
 
