@@ -1,9 +1,9 @@
 ---
-title: glue-web-plugin | gluestack-framework
+title: glue-plugin-web | gluestack-framework
 
 description: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
 
-pageTitle: glue-web-plugin
+pageTitle: glue-plugin-web
 
 pageDescription: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
 
@@ -12,7 +12,7 @@ showHeader: true
 
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
 
-<Meta title="Plugins/Feature Plugins/glue-web-plugin" />
+<Meta title="Plugins/Feature Plugins/glue-plugin-web" />
 
 ## Getting Started
 
@@ -33,13 +33,13 @@ These templates provide a solid foundation for building your application's **fro
 To add frontend into your gluestack project, you can run the following command in project's root directory:
 
 ```sh
-$  node glue add @gluestack-v2/glue-plugin-web <instance-name>
+$  node glue add glue-plugin-web <instance-name>
 ```
 
 For instance, let's install an instance named **frontend** in our gluestack project:
 
 ```sh
-$ node glue add @gluestack-v2/glue-plugin-web frontend
+$ node glue add glue-plugin-web frontend
 ```
 
 After a successful installation, you should see a new directory named after the **frontend** template that will be a basic nextJs project.
@@ -59,5 +59,11 @@ This will create a new directory names **client** inside which it will keep the 
 - Commands
 
 ```bash
-  node glue add @gluestack-v2/glue-plugin-web <instance-name>
+  node glue add glue-plugin-web <instance-name>
 ```
+
+## Plugin Dependencies
+
+Below is the list of all the plugins the `glue-plugin-develop` relies on. This information will help you ensure that your project has all the necessary dependencies installed to use the plugin.
+
+- `glue-plugin-develop`
