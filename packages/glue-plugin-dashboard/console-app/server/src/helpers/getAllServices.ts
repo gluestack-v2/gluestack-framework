@@ -6,7 +6,7 @@ import { parseYAML } from './parse-yaml';
 require('dotenv').config();
 
 const servicePath = path.join(
-  process.env.PROJECT_PATH,
+  process.env.PROJECT_PATH || process.cwd(),
   '.glue',
   '__generated__',
   'services',

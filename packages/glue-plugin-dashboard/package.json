@@ -41,7 +41,7 @@
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc",
-    "server": "nodemon console-app/server/server.ts",
+    "server": "ts-node console-app/server/server.ts",
     "client": "cd console-app/client && npm run dev",
     "console": "concurrently \"npm run client\" \"npm run server\""
   },
