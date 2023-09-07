@@ -1,6 +1,7 @@
 import events from 'events';
 import writer from '../writer';
 import watcher from '../watcher';
+import prettier from 'prettier';
 import {
 	copyFolder,
 	fileExists,
@@ -31,6 +32,8 @@ import {
 	GLUE_GENERATED_SERVICES_PATH,
 } from '../../constants/gluestack.v2';
 import IInstance from '../../types/plugin/interface/IInstance';
+import { error, success } from '../print';
+import { executeSync } from '../execute';
 
 const sourceMap = require('source-map');
 
@@ -132,6 +135,16 @@ export default class AppCLI {
 	// @API: doctor
 	async doctor() {
 		//
+	}
+
+	async prepare() {
+		executeSync(
+			'sh',
+			['-c', `cd ${process.cwd()} && npm install --legacy-peer-deps`],
+			{
+				stdio: 'inherit',
+			}
+		);
 	}
 
 	// @API: dispatchEvent
@@ -244,6 +257,168 @@ export default class AppCLI {
 
 	removeSourceMap(destinationPath: string): void {
 		fs.rmSync(destinationPath + '.map');
+	}
+
+	extractImports(jsString: string) {
+		const importRegex =
+			/import\s+([\w{},\s*]+)\s+from\s+['"](.+?)['"]/g;
+
+		// Array to store the matched imports
+		const imports = [];
+
+		let match;
+		while ((match = importRegex.exec(jsString)) !== null) {
+			const importedNames = match[1]
+				.split(',')
+				.map((name) => name.trim());
+			const fromModule = match[2];
+			imports.push({ importedNames, fromModule });
+		}
+		return imports;
+	}
+
+	updateConfigFile(
+		instanceName: string,
+		configType: string = 'index'
+	) {
+		const configPath = join(
+			process.cwd(),
+			'config',
+			`${configType}.ts`
+		);
+		const importName = `${instanceName}${
+			configType.charAt(0).toUpperCase() + configType.slice(1)
+		}`;
+		const data = fs.readFileSync(configPath, 'utf-8');
+		const newImport = `import ${importName} from '@project/${instanceName}-${configType}-sdk';\n`;
+		const newProviderEntry = `	${instanceName}: ${importName},`;
+		const providers = this.getProvidersFromConfig(data);
+		const existingImports = this.extractImports(data);
+
+		let finalImports = ``;
+		existingImports.map((val: any) => {
+			if (
+				!finalImports.includes(
+					`import ${val.importedNames} from '${val.fromModule}';`
+				)
+			)
+				finalImports += `import ${val.importedNames} from '${val.fromModule}';\n`;
+		});
+		if (!finalImports.includes(newImport)) {
+			finalImports += newImport;
+		}
+
+		// const modifiedContent = data.replace(
+		// 	'export const config = {',
+		// 	`${newImport}\n$&`
+		// );
+		// this.addProviderEntry(
+		// 	modifiedContent,
+		// 	newProviderEntry,
+		// 	configPath
+		// );
+		// ${providers?.map((provider) => {
+		// 	return `${provider}\n`;
+		// })},
+		// ${newProviderEntry}
+		// console.log(data);
+		if (!data.includes(newProviderEntry)) {
+			let content = `
+			${finalImports}
+			export const config =
+			{
+				providers:{${providers?.map((provider) => {
+					return `${provider}\n`;
+				})}
+					${newProviderEntry}}
+			};`;
+			fs.writeFileSync(
+				configPath,
+				prettier.format(content, {
+					parser: 'babel-ts',
+				}),
+				'utf8'
+			);
+		}
+
+		// Step 3: Write the modified content back to the file
+		// fs.writeFileSync(
+		// 	configPath,
+		// 	prettier.format(content, {
+		// 		parser: 'babel-ts',
+		// 	}),
+		// 	'utf8'
+		// );
+		// if (!data.includes(newProviderEntry)) {
+		// 	this.addProviderEntry(data, newProviderEntry, configPath);
+		// } else {
+		// 	console.error('Provider entry already exists');
+		// }
+		// if (!data.includes(newImport)) {
+		// 	const modifiedContent = data.replace(
+		// 		'export const config = {',
+		// 		`${newImport}\n$&`
+		// 	);
+		// 	this.addProviderEntry(
+		// 		modifiedContent,
+		// 		newProviderEntry,
+		// 		configPath
+		// 	);
+		// } else {
+		// 	console.error('Import already exists');
+		// }
+	}
+
+	getProvidersFromConfig(config: string) {
+		// Regular expression to match the providers object content
+		const providersRegex = /providers:\s*{([\s\S]*?)},/;
+
+		// Find the providers content using regex
+		const match = config.match(providersRegex);
+
+		if (match) {
+			const providersContent = match[1];
+
+			// Function to parse providersContent into a JavaScript object
+			const parseProvidersObject = (str: any) => {
+				const keyValuePairsRegex = /\s*([\w$]+)\s*:\s*([\w$]+)\s*,?/g;
+				const providersObject: any = {};
+				let kvMatch;
+				let providersArr = [];
+				while ((kvMatch = keyValuePairsRegex.exec(str))) {
+					providersArr.push(kvMatch[0]);
+					const key = kvMatch[1];
+					const value = kvMatch[2];
+
+					// Check if the line is commented
+					const commentRegex = new RegExp(`\\s*//.*${key}\\s*:`);
+					if (commentRegex.test(str.substring(0, kvMatch.index))) {
+						continue; // Ignore commented lines
+					}
+
+					providersObject[key] = value;
+				}
+				console.log(providersArr);
+				return providersArr;
+			};
+
+			// Convert providersContent into a JavaScript object
+			const providersObject = parseProvidersObject(providersContent);
+
+			return providersObject;
+		} else {
+			console.error(
+				'Providers object not found in the given string.'
+			);
+		}
+	}
+
+	getGeneratedPackagePath(packageName: string) {
+		return join(
+			process.cwd(),
+			GLUE_GENERATED_PACKAGES_PATH,
+			packageName
+		);
 	}
 
 	watch(
@@ -432,6 +607,7 @@ export default class AppCLI {
 		if (packageSourcePath) {
 			await this.write(packageSourcePath, packagePath);
 		} else {
+			// FIX: Remove this path
 			const packageTemplatePath = join(
 				process.cwd(),
 				'node_modules',

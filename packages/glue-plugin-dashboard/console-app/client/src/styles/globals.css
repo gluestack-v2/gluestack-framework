@@ -1,0 +1,12 @@
+html,
+body {
+  background-color: black;
+}
+
+#outputContainer::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#outputContainer {
+  scrollbar-width: none; /* Firefox */
+}

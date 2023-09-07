@@ -28,9 +28,13 @@ function getNestedFilePaths(dirPath: any, fileList: any = []) {
   return fileList;
 }
 
-const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
-  const pathArr = path.split('/');
-  // console.log(sdkFunction);
+const createFunctionFromPath = (
+  filePath: string,
+  value: any,
+  sdkFunction: any
+) => {
+  const pathArr = filePath.split('/');
+  const data = sdkFunction;
   const obj = {};
   let current: any = obj;
   for (let i = 0; i < pathArr.length - 1; i++) {
@@ -45,9 +49,8 @@ const createFunctionFromPath = (path: string, value: any, sdkFunction: any) => {
       current = current[pathArr[i]];
     }
   }
-
-  current[pathArr[pathArr.length - 1]] = '****' + path + '****';
-  functionsMap['****' + path + '****'] = sdkFunction;
+  current[pathArr[pathArr.length - 1]] = '****' + filePath + '****';
+  functionsMap['****' + filePath + '****'] = data;
 
   return obj;
 };
@@ -77,7 +80,7 @@ const writeSDK = async (
   ignoredPaths: string[],
   instanceName: string
 ) => {
-  let obj = {};
+  let obj: any = {};
   const packageSdkSrcIndex = path.join(packagePath, 'src', 'index.ts');
   const files = getNestedFilePaths(installationPath);
   let finalString = ``;
@@ -124,6 +127,16 @@ const writeSDK = async (
       );
     }
     // console.log(ign);
+    if (functionPath.includes(' ')) {
+      functionPath = functionPath
+        .split(' ')
+        .map((str, index) =>
+          index === 0
+            ? str.toLowerCase()
+            : str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+        )
+        .join('');
+    }
 
     const sdkFunction = writeSDKFunction(instanceName, params, functionPath);
     // console.log(createFunctionFromPath(functionPath, {}, sdkFunction));

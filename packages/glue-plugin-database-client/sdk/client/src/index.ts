@@ -27,11 +27,11 @@ export default class SDK extends ServiceProvider {
   get prisma() {
     return this.helper();
   }
-  getProvider(): any {
+  getProvider(): PrismaClient | undefined {
     return this.helper();
   }
 
-  helper = function () {
+  helper = () => {
     const prismaFunctions = [
       'findUnique',
       'findUniqueOrThrow',
@@ -49,7 +49,7 @@ export default class SDK extends ServiceProvider {
       'count',
       'groupBy',
     ];
-    var obj: PrismaClient = {};
+    var obj: PrismaClient = {} as PrismaClient;
     obj = new Proxy(obj, {
       get: (target, prop: any) => {
         if (prismaFunctions.includes(prop)) {

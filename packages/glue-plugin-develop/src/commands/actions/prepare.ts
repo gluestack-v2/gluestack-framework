@@ -1,45 +1,179 @@
-import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
-import { info } from '@gluestack-v2/framework-cli/build/helpers/print';
+import {
+  error,
+  success,
+  warning,
+  info,
+} from '@gluestack-v2/framework-cli/build/helpers/print';
 
-import { execute } from '../../helpers/execute';
-import { join, relative } from 'path';
+import { GlueStackPlugin } from '../..';
 
-const installNPMDependencies = async (app: AppCLI, pathName: any) => {
-  // FIX: Run npm install only if package.json exists
-  const services: string[] = app.getAllServicePaths();
-  for await (const service of services) {
-    if (pathName !== '' && !service.includes(pathName)) {
+export default async (
+  callerPlugin: GlueStackPlugin,
+  pluginName: string = ''
+): Promise<void> => {
+  // creates folders from FOLDER_STRUCTURE constant
+
+  // add __generated__/packages into workspaces
+
+  // builds plugins
+
+  for await (const plugin of callerPlugin.app.plugins) {
+    if (pluginName !== '' && plugin.getName() !== pluginName) {
       continue;
     }
 
-    info(
-      'Running npm install and npm build',
-      relative('.', join(service, 'src'))
-    );
-    await execute(
-      'sh',
-      ['-c', `cd ${join(service, 'src')} && npm run install:all`],
-      { stdio: 'inherit' }
-    );
-  }
+    success('Found plugin', plugin.getName());
 
-  const packages: string[] = app.getAllPackagePaths();
-  for await (const gluePackage of packages) {
-    if (pathName !== '' && !gluePackage.includes(pathName)) {
+    if (!plugin.build) {
+      warning(`${plugin.getName()}`, 'contains no build method, skipping...');
       continue;
     }
 
-    info(
-      'Running npm install and npm build',
-      relative('.', join(gluePackage, 'src'))
-    );
-
-    await execute('sh', ['-c', `cd ${gluePackage} && npm run build`], {
-      stdio: 'inherit',
-    });
+    warning(plugin.getName(), 'building...');
+    try {
+      await plugin.prepare();
+    } catch (e) {
+      console.error('>>>>', e);
+      error(plugin.getName(), 'build failed');
+    }
   }
+  info('Preparing app');
+  await callerPlugin.app.prepare();
 };
 
-export default async (app: AppCLI, packageName: any): Promise<void> => {
-  await installNPMDependencies(app, packageName);
-};
+// const createPackage = async (packageName: string) => {
+//   const configPath = join(process.cwd(), 'config');
+//   const generatedConfigPath = join(
+//     process.cwd(),
+//     GLUE_GENERATED_PACKAGES_PATH,
+//     `${packageName}-config`
+//   );
+
+//   await createFolder(join(generatedConfigPath, `src`));
+//   copyFile(
+//     join(configPath, 'index.ts'),
+//     join(join(generatedConfigPath, `src`), 'index.ts')
+//   );
+//   copyFile(
+//     join(configPath, `${packageName}.ts`),
+//     join(join(generatedConfigPath, `src`), `${packageName}.ts`)
+//   );
+
+//   writeFile(
+//     join(generatedConfigPath, 'package.json'),
+//     packageJsonTemplate(packageName)
+//   );
+//   writeFile(join(generatedConfigPath, 'index.ts'), indexTemplate(packageName));
+//   writeFile(join(generatedConfigPath, 'tsconfig.json'), tsConfigTemplate);
+// };
+
+// const tsConfigTemplate = `
+// {
+// 	"compilerOptions": {
+// 		"target": "es6",
+// 		"lib": ["es6", "es2015", "dom"],
+// 		"declaration": true,
+// 		"outDir": "build",
+// 		"strict": true,
+// 		"types": ["node"],
+// 		"esModuleInterop": true,
+// 		"module": "CommonJS",
+// 		"moduleResolution": "node",
+// 		"allowJs": true
+// 	}
+// }
+// `;
+// const indexTemplate = (packageName: string) => {
+//   return `
+// import { config as ${packageName}Config } from './${packageName}-config/${packageName}';
+// import { config as GlobalConfig } from './${packageName}-config/index';
+
+// function deepMerge<T extends object, U extends object>(
+//   target: T,
+//   source: U
+// ): T & U {
+//   const merged = { ...target };
+
+//   for (const key in source) {
+//     if (source.hasOwnProperty(key)) {
+//       const sourceValue = source[key];
+//       // @ts-ignore
+//       const targetValue = merged[key as keyof (T & U)];
+
+//       if (sourceValue instanceof Object && targetValue instanceof Object) {
+//         // @ts-ignore
+//         merged[key as keyof (T & U)] = deepMerge(targetValue, sourceValue);
+//       } else {
+//         // @ts-ignore
+//         merged[key as keyof (T & U)] = sourceValue;
+//       }
+//     }
+//   }
+
+//   return merged as T & U;
+// }
+
+// type configValueType = {
+//   [key in keyof (typeof ${packageName}Config &
+//     typeof GlobalConfig)]: (typeof ${packageName}Config)[key] &
+//     (typeof GlobalConfig)[key];
+// };
+
+// function config(): typeof ${packageName}Config & typeof GlobalConfig;
+// function config(
+//   key: keyof (typeof ${packageName}Config & typeof GlobalConfig)
+// ): configValueType;
+// function config(key?: keyof (typeof ${packageName}Config & typeof GlobalConfig)) {
+//   const mergedConfig = deepMerge(${packageName}Config, GlobalConfig);
+//   if (typeof key !== 'undefined') {
+//     return mergedConfig[key];
+//   }
+//   return mergedConfig;
+// }
+// export { config };
+// `;
+// };
+
+// const packageJsonTemplate = (packageName: string) => {
+//   return `{
+// 	"name": "@project/${packageName}-config",
+// 	"version": "0.0.10",
+// 	"description": "Gluestack V2 SDK",
+// 	"main": "build/index.js",
+// 	"scripts": {
+// 		"build": "tsc",
+// 		"watch": "tsc --watch",
+// 		"lint": "prettier --write ."
+// 	},
+// 	"keywords": [
+// 		"gluestack",
+// 		"v2",
+// 		"fullstack",
+// 		"framework",
+// 		"cli",
+// 		"mobile",
+// 		"web",
+// 		"storybook",
+// 		"shared-components"
+// 	],
+// 	"license": "MIT",
+// 	"dependencies": {
+// 		"colors": "^1.4.0",
+// 		"commander": "^10.0.0",
+// 		"lodash": "^4.17.21",
+// 		"typescript": "^5.0.2",
+// 		"source-map": "^0.7.4"
+// 	},
+// 	"devDependencies": {
+// 		"@types/lodash": "^4.14.192",
+// 		"@types/node": "^18.15.5",
+// 		"prettier": "^2.8.6"
+// 	},
+// 	"repository": {
+// 		"type": "git",
+// 		"url": "https://github.com/gluestack-v2/framework-cli",
+// 		"directory": "packages/cli"
+// 	}
+// }
+// `;
+// };

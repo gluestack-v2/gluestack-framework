@@ -1,6 +1,5 @@
 import { join, resolve } from 'path';
 import { spawn } from 'child_process';
-
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
@@ -277,7 +276,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       join(gatewayInstance._destinationPath, this.getName())
     );
 
-    this.generateDbClientService(gatewayInstance._destinationPath);
+    // this.generateDbClientService(gatewayInstance._destinationPath);
     // @ts-ignore
     await gatewayPlugin.generateDbClientService(this.getName());
 
@@ -302,8 +301,22 @@ export class PluginInstance extends BaseGluestackPluginInstance {
   async watch(): Promise<void> {
     await this.buildBeforeWatch();
 
-    this.app.watch(this._sourcePath, this._destinationPath, () => {
-      //
+    this.app.watch(this._sourcePath, this._destinationPath, (events, path) => {
+      // moves the instance into .glue/bolt/services/<instance-name>/src/<instance-name>
+      // FIX: Hack to reduce the number of times run command works
+      if (path === 'schema.prisma') {
+        const gatewayPlugin = this.app.getPluginByName(
+          '@gluestack-v2/glue-plugin-service-gateway'
+        );
+        const gatewayInstance = gatewayPlugin?.getInstances()[0];
+
+        if (!gatewayInstance) {
+          throw new Error('Gateway instance not found');
+        }
+
+        // Generating Prisma Client for typings
+        this.generateDbClientService(gatewayInstance._destinationPath);
+      }
     });
   }
 }

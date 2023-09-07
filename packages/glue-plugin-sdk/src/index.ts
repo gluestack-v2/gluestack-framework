@@ -6,14 +6,30 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import BaseGluestackPlugin from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPlugin';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
-
+import { GLUE_GENERATED_PACKAGES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import { createConfigPackageHelper } from './helpers/create-config-package';
+import { join } from 'path';
 // Do not edit the name of this class
 export class GlueStackPlugin extends BaseGluestackPlugin {
   type: 'stateless' | 'stateful' | 'devonly' = 'devonly';
+  private generatedSDKPaths: Array<string>;
+
+  getGeneratedSDKPaths() {
+    return this.generatedSDKPaths;
+  }
+  setGeneratedSDKPaths(paths: string) {
+    this.generatedSDKPaths.push(paths);
+  }
+  resetGeneratedSDKPaths() {
+    if (Array.isArray(this.generatedSDKPaths)) {
+      this.generatedSDKPaths.splice(0, this.generatedSDKPaths.length);
+    }
+  }
 
   constructor(app: AppCLI, gluePluginStore: IGlueStorePlugin) {
     super(app, gluePluginStore);
     this.runningPlatforms = [];
+    this.generatedSDKPaths = [];
   }
 
   init() {
@@ -77,5 +93,26 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
   getInstances(): IInstance[] {
     return this.instances;
+  }
+
+  getConfigPath() {
+    return join(process.cwd(), 'config');
+  }
+
+  getGeneratedConfigPath(packageName: string) {
+    return join(
+      process.cwd(),
+      GLUE_GENERATED_PACKAGES_PATH,
+      `${packageName}-config`
+    );
+  }
+
+  async createConfigPackage(packageName: string) {
+    await createConfigPackageHelper(
+      packageName,
+      this.getConfigPath(),
+      this.getGeneratedConfigPath(packageName),
+      this
+    );
   }
 }

@@ -11,6 +11,7 @@
     "watch:develop": "npm run watch --workspace @gluestack-v2/glue-plugin-develop",
     "watch:web": "npm run watch --workspace @gluestack-v2/glue-plugin-web",
     "watch:sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-sdk",
+    "watch:dashboard": "npm run watch --workspace @gluestack-v2/glue-plugin-dashboard",
     "watch:service-sdk": "npm run watch --workspace @gluestack-v2/glue-plugin-service-sdk",
     "watch:gateway": "npm run watch --workspace @gluestack-v2/glue-plugin-service-gateway",
     "watch:functions": "npm run watch --workspace @gluestack-v2/glue-plugin-functions",
@@ -27,7 +28,7 @@
     "watch:storage": "npm run watch --workspace @gluestack-v2/glue-plugin-storage",
     "watch:storage-client": "npm run watch --workspace @gluestack-v2/glue-plugin-storage-client",
     "watch:deploy": "npm run watch --workspace @gluestack-v2/glue-plugin-deploy",
-    "watch:all": "npm run watch:cli & npm run watch:database & npm run watch:db-client & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:components & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares & npm run watch:queues & npm run watch:deploy & npm run watch:storage & npm run watch:storage-client & npm run watch:sdk",
+    "watch:all": "npm run watch:cli & npm run watch:database & npm run watch:db-client & npm run watch:develop & npm run watch:gateway & npm run watch:crons & npm run watch:sdk & npm run watch:functions & npm run watch:components & npm run watch:web & npm run watch:events & npm run watch:queues & npm run watch:middlewares & npm run watch:queues & npm run watch:deploy & npm run watch:storage & npm run watch:storage-client & npm run watch:sdk & npm run watch:dashboard",
     "prepare": "husky install",
     "lint": "eslint packages/**/**/src --ext .ts,.tsx --config .eslintrc"
   },

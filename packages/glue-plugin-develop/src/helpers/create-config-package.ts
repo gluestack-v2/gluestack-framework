@@ -1,6 +1,8 @@
 import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import createFolder from '@gluestack-v2/framework-cli/build/helpers/file/create-folder';
 import { join } from 'path';
+import fs from 'fs';
+import prettier from 'prettier';
 import copyFile from '@gluestack-v2/framework-cli/build/helpers/file/copy-file';
 
 export const createConfigPackage = async (
@@ -13,6 +15,9 @@ export const createConfigPackage = async (
     join(configPath, 'index.ts'),
     join(join(generatedConfigPath, `${packageName}-config`), 'index.ts')
   );
+  // const data = fs.readFileSync(join(configPath, `${packageName}.ts`), 'utf8');
+  // const dependencies = extractImportedPackages(data);
+
   copyFile(
     join(configPath, `${packageName}.ts`),
     join(
@@ -23,11 +28,36 @@ export const createConfigPackage = async (
 
   writeFile(
     join(generatedConfigPath, 'package.json'),
-    packageJsonTemplate(packageName)
+    prettier.format(packageJsonTemplate(packageName), {
+      parser: 'json',
+    })
   );
-  writeFile(join(generatedConfigPath, 'index.ts'), indexTemplate(packageName));
+  writeFile(
+    join(generatedConfigPath, 'index.ts'),
+    prettier.format(indexTemplate(packageName), { parser: 'babel-ts' })
+  );
   writeFile(join(generatedConfigPath, 'tsconfig.json'), tsConfigTemplate);
 };
+
+// function extractImportedPackages(sourceCode: string) {
+//   const regex = /from\s+['"](@[\w\-\/]+)['"]/g;
+//   const matches = [];
+//   let match;
+
+//   while ((match = regex.exec(sourceCode))) {
+//     matches.push(match[1]);
+//   }
+
+//   // Remove duplicates from the array and transform into the desired format
+//   const uniquePackages = [...new Set(matches)].map(
+//     (packageName: string) => `"${packageName}":"latest"`
+//   );
+
+//   // Merge the array into a single string
+//   const mergedString = uniquePackages.join(',\n');
+
+//   return mergedString;
+// }
 
 const tsConfigTemplate = `
 {
@@ -124,7 +154,7 @@ const packageJsonTemplate = (packageName: string) => {
 		"commander": "^10.0.0",
 		"lodash": "^4.17.21",
 		"typescript": "^5.0.2",
-		"source-map": "^0.7.4"
+		"source-map": "^0.7.4",
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.192",

@@ -76,6 +76,10 @@ const upboltService = async (
 export default async (app: AppCLI, opts: any): Promise<void> => {
   for await (const plugin of app.plugins) {
     for (const instance of plugin.instances) {
+      if (opts.s !== 'all' && opts.s !== instance.getName()) {
+        continue;
+      }
+
       success(
         `bolt service plugin instance found!`,
         `${plugin.getName()}:: ${instance.getName()}`

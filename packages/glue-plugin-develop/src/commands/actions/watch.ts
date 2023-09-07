@@ -1,4 +1,3 @@
-import chokidar from 'chokidar';
 import { Workspaces } from '@gluestack/helpers';
 import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import {
@@ -9,7 +8,7 @@ import {
 import { FOLDER_STRUCTURE } from '../../constants/folder-structure';
 import createFoldersFromJson from '../../helpers/create-folders-from-json';
 import { GLUE_GENERATED_PACKAGES_PATH } from '../../constants/glue-generated-packages';
-import path, { join } from 'path';
+import path from 'path';
 
 export default async (app: AppCLI, pluginName: string = ''): Promise<void> => {
   // creates folders from FOLDER_STRUCTURE constant
@@ -43,6 +42,6 @@ const watchInstances = async (
 
     warning(plugin.getName(), 'running watch method...');
 
-    await plugin.watch();
+    await plugin.watch(() => {});
   }
 };

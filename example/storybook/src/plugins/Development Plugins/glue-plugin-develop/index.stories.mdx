@@ -27,6 +27,26 @@ npx create-gluestack-v2-app@latest
 
 ## CLI
 
+### node glue start
+
+This command runs all the installed **plugin instances**. You can use
+the below command to run your gluestack project:
+
+```sh
+$ node glue start
+```
+
+### node glue stop
+
+This command stops all the installed **plugin instances** . You
+can use the below command to stop your gluestack project:
+
+```sh
+$ node glue stop
+```
+
+## Advance
+
 ### node glue up
 
 This command runs all the installed **plugin instances** in **Docker**. You can use
@@ -101,3 +121,9 @@ To build one plugin instance, you can run the following command:
 ```sh
 $ node glue build <instance-name>
 ```
+
+## Plugin Dependencies
+
+Below is the list of all the plugins the `glue-plugin-develop` relies on. This information will help you ensure that your project has all the necessary dependencies installed to use the plugin.
+
+- `framework-cli`

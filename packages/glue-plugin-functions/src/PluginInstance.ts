@@ -50,8 +50,10 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       this._destinationPath,
       async (event, path) => {
         // TODO: OPTIMIZE UPDATES
-
+        console.log(event, path);
         this.generateFunctionsInServiceGateway();
+        const packagePath = await this.createClientSDKPackage();
+        this.buildPackage(packagePath);
         // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
 
         if (callback) {
@@ -102,6 +104,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
 
     await writeSDK(packagePath, this._sourcePath, sdkPath, [], this.getName());
     await this.app.updateNameInPackageJSON(packagePath, clientSdkPackageName);
+    return packagePath;
   }
 
   async build() {
@@ -109,6 +112,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // @ts-ignore
     this.generateFunctionsInServiceGateway();
     this.createClientSDKPackage();
+    // this.createServerSDKPackage();
 
     // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
   }

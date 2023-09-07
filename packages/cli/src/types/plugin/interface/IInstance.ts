@@ -20,6 +20,8 @@ export default interface IInstance {
 	getCallerPlugin(): IPlugin;
 
 	build(): Promise<void>;
+	prepare(): Promise<void>;
+
 	watch(callback?: Function): Promise<void>;
 
 	updateSourcePackageJSON(): Promise<void>;

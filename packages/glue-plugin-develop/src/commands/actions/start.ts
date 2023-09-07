@@ -13,6 +13,10 @@ export default async (): Promise<void> => {
     stdio: 'inherit',
   });
 
+  executeSync('sh', ['-c', `npm i`], {
+    stdio: 'inherit',
+  });
+
   execute('sh', ['-c', `node glue up --verbose`], {
     stdio: 'inherit',
   });

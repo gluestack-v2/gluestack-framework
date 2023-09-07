@@ -48,7 +48,6 @@ const template = (instanceName: string) =>
                arguments = q.args || {};
                if (q.args) {
                  try {
-                   console.log('in if');
                    res = await resolvedQuery?.[q.key](arguments);
                    resolve(res);
                  } catch (err) {

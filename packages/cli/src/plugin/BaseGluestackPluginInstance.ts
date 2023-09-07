@@ -13,7 +13,9 @@ import {
 	fileExistsSync,
 	readEnvFile,
 } from '../helpers/file';
-import { spawnSync } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
+import { error, info } from '../helpers/print';
+import { execute } from '../helpers/execute';
 
 export default abstract class BaseGluestackPluginInstance
 	implements IInstance
@@ -42,8 +44,31 @@ export default abstract class BaseGluestackPluginInstance
 	abstract init(): void;
 	abstract destroy(): void;
 
-	async build(): Promise<void> {
-		//
+	async build(): Promise<void> {}
+	async prepare(): Promise<void> {
+		if (this._instanceType === 'service') {
+			await execute(
+				'sh',
+				[
+					'-c',
+					`cd ${join(
+						this._destinationPath,
+						'..'
+					)} && npm run install:all`,
+				],
+				{ stdio: 'inherit' }
+			);
+		}
+
+		if (this._instanceType === 'package') {
+			await execute(
+				'sh',
+				['-c', `cd ${this._destinationPath} && npm run build`],
+				{
+					stdio: 'inherit',
+				}
+			);
+		}
 	}
 
 	getName(): string {
@@ -183,6 +208,29 @@ export default abstract class BaseGluestackPluginInstance
 			relative(process.cwd(), this._destinationPath)
 		);
 	}
+	async addServiceToWorkspaces(workspacePath: string) {
+		const rootPackage: string = `${process.cwd()}/package.json`;
+		await Workspaces.append(
+			rootPackage,
+			relative(process.cwd(), workspacePath)
+		);
+	}
+
+	async buildPackage(packagePath: string) {
+		const child = spawn(
+			'sh',
+			['-c', `cd ${packagePath} && npm run build`],
+			{
+				stdio: 'inherit',
+			}
+		);
+
+		child.on('exit', () => info('done'));
+
+		child.on('close', (code) =>
+			code === 0 ? info('done') : error('failed')
+		);
+	}
 
 	async updateWorkspacePackageJSON() {
 		// // add package.json with workspaces
@@ -265,6 +313,7 @@ export default abstract class BaseGluestackPluginInstance
 			}
 		}
 	}
+
 	async watch(callback?: Function): Promise<void> {
 		await this.buildBeforeWatch();
 		this.app.watch(

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-shadow */
+
 /* eslint-disable react/react-in-jsx-scope */
 import Head from 'next/head';
 import type { NextPage } from 'next';
@@ -71,17 +71,17 @@ const Todo = () => {
   // }
   async function seedTodos() {
     // console.log(ClientSDK.functions.m);
-    console.log(await ClientSDK.functions.multiply(), 'User added');
-    // console.log(
-    //   await ClientSDK.db1.user.create({
-    //     data: {
-    //       title: 'Ceoininionion',
-    //       votes: 899,
-    //       status: false,
-    //     },
-    //   }),
-    //   'User added'
-    // );
+    // console.log(await ClientSDK.functions.multiply(), 'User added');
+    console.log(
+      await ClientSDK.db1.user.create({
+        data: {
+          title: 'Ceoininionion',
+          votes: 899,
+          status: false,
+        },
+      }),
+      'User added'
+    );
   }
 
   async function getTodos() {

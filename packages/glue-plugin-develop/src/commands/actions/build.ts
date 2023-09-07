@@ -23,20 +23,6 @@ export default async (
     GLUE_GENERATED_PACKAGES_PATH + '/**'
   );
 
-  await callerPlugin.createConfigPackage(
-    'server',
-    // @ts-ignore
-    callerPlugin.getConfigPath(),
-    callerPlugin.getGeneratedConfigPath('server')
-  );
-
-  await callerPlugin.createConfigPackage(
-    'client',
-    // @ts-ignore
-    callerPlugin.getConfigPath(),
-    callerPlugin.getGeneratedConfigPath('client')
-  );
-
   // builds plugins
   for await (const plugin of callerPlugin.app.plugins) {
     if (pluginName !== '' && plugin.getName() !== pluginName) {

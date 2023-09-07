@@ -1,0 +1,93 @@
+---
+title: glue-plugin-functions | gluestack-framework
+
+description: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+
+pageTitle: glue-plugin-functions
+
+pageDescription: To get started with gluestack-framework, check out this quick installation guide. It provides simple steps to help you install and use the library in your projects.
+
+showHeader: true
+---
+
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Plugins/Feature Plugins/glue-plugin-functions" />
+
+## Getting Started
+
+##
+
+<br />
+
+This plugin provides a comprehensive **server functions** solution for your application using **molecular**.
+
+These templates provide a solid foundation for building your application's **server functions**, with pre-configured settings and libraries to help you get started quickly.
+
+## Installation
+
+To add gateway into your gluestack project, you can run the following command in project's root directory:
+
+```bash
+  node glue add glue-plugin-functions <instance-name>
+```
+
+For instance, let's install an instance named **functions** in our gluestack project:
+
+```bash
+  node glue add glue-plugin-functions functions
+```
+
+After a successful installation, you should see a new directory named after the **server/functions** template that add function.
+
+This will create a new directory names **server** inside which it will keep the **functions** directory of your project and will contain all the necessary files and folders for your application's **function**.
+
+## CLI
+
+- Commands
+
+```bash
+  node glue add glue-plugin-functions <instance-name>
+```
+
+## Example
+
+Let's create a multiply function which take two numbers as arguments and return multiple of those two number.
+
+- Create a `multiply.ts` file inside **server/functions** folder.
+- Let's write our logic inside `multiply.ts`
+  ```
+  module.exports = async function handler(ctx) {
+    const { a, b } = ctx.params;
+    return a * b;
+  };
+  ```
+- you can access your params from ctx.params, ctx where is a context.
+- let's add our function sdk to client and server sdk so we can access it.
+  In order to do that we have to add following code to `server.ts` and `client.ts` inside **config** folder.
+
+  ```
+  import functionSdk from '@project/functions-sdk';
+  export const config = {
+    providers: {
+      ... // other sdk
+      functionSDK: functionSdk,
+    },
+  };
+  ```
+
+- Now run `node glue build`.
+- When we run our application this will run a gateway (molecular app) which will have your functions as service action inside `functions.services.js`.
+- That's it!!! you will be able use multiply function from SDK now.
+- Let's see how we can use it inside `next app`.
+
+```
+
+```
+
+## Plugin Dependencies
+
+Below is the list of all the plugins the `glue-plugin-functions` relies on. This information will help you ensure that your project has all the necessary dependencies installed to use the plugin.
+
+- `glue-plugin-develop`
+- `glue-plugin-sdk`
