@@ -77,6 +77,8 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
 
     // Create the .env file content
     const envContent = `
+ASSIGNED_HOST=localhost
+ASSIGNED_PORT=5432
 POSTGRES_USER=${answers.DATABASE_USER}
 POSTGRES_PASSWORD=${answers.DATABASE_PASSWORD}
 POSTGRES_DB=${answers.DATABASE_NAME}
@@ -85,6 +87,7 @@ DATABASE_URL=postgres://${answers.DATABASE_USER}:${answers.DATABASE_PASSWORD}@lo
 
     // Write the .env file at database root
     fs.writeFileSync(join(instance._sourcePath, '.env'), envContent);
+    fs.writeFileSync(join(instance._sourcePath, '.env.tpl'), envContent);
   }
 
   getInstallationPath(target: string): string {

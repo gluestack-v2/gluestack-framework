@@ -116,14 +116,15 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // Run prepare
     // await this.prepare();
     // await this.app.prepare();
-    await this.prepare();
+    // FIX: Do we need to prepare while building?
+    // await this.prepare();
   }
 
   async prepare(): Promise<void> {
     //@ts-ignore
     const packagePaths = this.callerPlugin.getGeneratedSDKPaths();
     packagePaths.map(async (packagePath: string) => {
-      spawnSync('sh', ['-c', `cd ${packagePath} && npm run build`], {
+      spawnSync('sh', ['-c', `cd ${packagePath} && npm i && npm run build`], {
         stdio: 'inherit',
       });
     });

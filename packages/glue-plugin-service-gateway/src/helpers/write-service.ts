@@ -202,7 +202,7 @@ function getActions(
     const action: any = {};
     action.rest = {
       method: 'POST',
-      path: removeExtension(finalPathArr.functionPath),
+      path: '/' + removeExtension(finalPathArr.funcPath.join('.')),
     };
 
     action.handler = `(ctx) => {const context = new Context(ctx); return ${

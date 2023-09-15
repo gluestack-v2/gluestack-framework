@@ -10,6 +10,7 @@ import {
 
 import { join } from 'path';
 import writeSDK from './helpers/write-sdk';
+import { spawnSync } from 'child_process';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
   constructor(
@@ -107,13 +108,28 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     return packagePath;
   }
 
+  async prepare(): Promise<void> {
+    //@ts-ignore
+    const clientSdkPackageName: string = `${this.getName()}-client-sdk`;
+    const packagePath = join(
+      GLUE_GENERATED_PACKAGES_PATH,
+      clientSdkPackageName
+    );
+    this.buildPackage(packagePath);
+    const plugin = this.app.getPluginByName(
+      '@gluestack-v2/glue-plugin-sdk'
+    ) as IPlugin;
+    await plugin.build();
+  }
+
   async build() {
     await this.app.write(this._sourcePath, this._destinationPath);
     // @ts-ignore
     this.generateFunctionsInServiceGateway();
-    this.createClientSDKPackage();
+    await this.createClientSDKPackage();
     // this.createServerSDKPackage();
-
+    // FIX: Do we need to prepare while building?
+    await this.prepare();
     // this.generateFunctionsInServiceSdk(this.getIgnoredPaths());
   }
 
