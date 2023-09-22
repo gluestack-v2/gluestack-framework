@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-service-gateway",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Gluestack V2 service Gateway Plugin",
   "main": "build/index.js",
   "repository": {
