@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-sdk",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Gluestack V2 Service SDK Plugin",
   "main": "build/index.js",
   "repository": {
