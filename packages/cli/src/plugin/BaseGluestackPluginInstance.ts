@@ -46,7 +46,6 @@ export default abstract class BaseGluestackPluginInstance
 
 	async build(): Promise<void> {}
 	async prepare(): Promise<void> {
-		console.log(this._instanceType, 'hihihiiihi');
 		if (this._instanceType === 'service') {
 			await execute(
 				'sh',
@@ -64,7 +63,10 @@ export default abstract class BaseGluestackPluginInstance
 		if (this._instanceType === 'package') {
 			await execute(
 				'sh',
-				['-c', `cd ${this._destinationPath} && npm run build`],
+				[
+					'-c',
+					`cd ${this._destinationPath} && npm i && npm run build`,
+				],
 				{
 					stdio: 'inherit',
 				}

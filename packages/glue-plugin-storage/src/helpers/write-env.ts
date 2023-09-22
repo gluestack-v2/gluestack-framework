@@ -16,4 +16,5 @@ export async function writeEnv(minioInstance: IInstance) {
 
   // Write the .env file at database root
   fs.writeFileSync(join(minioInstance._sourcePath, '.env'), env);
+  fs.writeFileSync(join(minioInstance._sourcePath, '.env.tpl'), env);
 }

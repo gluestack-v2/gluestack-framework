@@ -99,12 +99,11 @@ export async function writeStorageClient(
   const sdkPath = destinationPath;
   const finalString = createObjectFromMap(storageClientInstanceName);
 
-  // console.log(finalString, map);
-
   const sdkFileContent = fs
-    .readFileSync(path.join(__dirname, '..', '..', 'sdk', 'src', 'index.ts'))
+    .readFileSync(
+      path.join(__dirname, '..', '..', 'sdk', 'client', 'src', 'index.ts')
+    )
     .toString();
-
   await writeFile(
     path.join(sdkPath, 'src', 'index.ts'),
     sdkFileContent.replace(

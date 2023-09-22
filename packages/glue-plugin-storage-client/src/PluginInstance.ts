@@ -39,11 +39,14 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       `${this.getName()}-client-sdk`
     );
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    await this.app.createPackage(`${this.getName()}-client-sdk`, sdkPath);
+    await this.app.createPackage(
+      `${this.getName()}-client-sdk`,
+      join(sdkPath, 'client')
+    );
 
     await this.app.updateNameInPackageJSON(
-      sdkPath,
-      `${this.getName()}-server-sdk`
+      join(sdkPath, 'client'),
+      `${this.getName()}-client-sdk`
     );
     await writeStorageClient(this.getName(), clientPackagePath);
 
@@ -51,11 +54,32 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       GLUE_GENERATED_PACKAGES_PATH,
       `${this.getName()}-server-sdk`
     );
-    await this.app.createPackage(`${this.getName()}-server-sdk`, sdkPath);
+    await this.app.createPackage(
+      `${this.getName()}-server-sdk`,
+      join(sdkPath, 'server')
+    );
+    await this.app.updateNameInPackageJSON(
+      join(sdkPath, 'server'),
+      `${this.getName()}-server-sdk`
+    );
 
     await writeStorageServerSdk(this.getName(), serverPackagePath);
 
     // await this.writeSdkForStorageClient();
+  }
+
+  async prepare(): Promise<void> {
+    //@ts-ignore
+    const clientSdkPackageName: string = `${this.getName()}-client-sdk`;
+    const serverSdkPackageName: string = `${this.getName()}-server-sdk`;
+
+    await this.buildPackage(
+      join(GLUE_GENERATED_PACKAGES_PATH, clientSdkPackageName)
+    );
+
+    await this.buildPackage(
+      join(GLUE_GENERATED_PACKAGES_PATH, serverSdkPackageName)
+    );
   }
 
   async watch(callback?: any) {

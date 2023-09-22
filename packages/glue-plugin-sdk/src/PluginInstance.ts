@@ -117,7 +117,7 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     // await this.prepare();
     // await this.app.prepare();
     // FIX: Do we need to prepare while building?
-    // await this.prepare();
+    await this.prepare();
   }
 
   async prepare(): Promise<void> {

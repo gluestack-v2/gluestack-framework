@@ -4,7 +4,10 @@ import AppCLI from '@gluestack-v2/framework-cli/build/helpers/lib/app';
 import IPlugin from '@gluestack-v2/framework-cli/build/types/plugin/interface/IPlugin';
 import IGlueStorePlugin from '@gluestack-v2/framework-cli/build/types/store/interface/IGluePluginStore';
 import BaseGluestackPluginInstance from '@gluestack-v2/framework-cli/build/plugin/BaseGluestackPluginInstance';
-import { GLUE_GENERATED_SERVICES_PATH } from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
+import {
+  GLUE_GENERATED_PACKAGES_PATH,
+  GLUE_GENERATED_SERVICES_PATH,
+} from '@gluestack-v2/framework-cli/build/constants/gluestack.v2';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
 
 export class PluginInstance extends BaseGluestackPluginInstance {
@@ -281,13 +284,13 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await gatewayPlugin.generateDbClientService(this.getName());
 
     const sdkPath = join(this.callerPlugin.getPackagePath(), 'sdk');
-    const packagePath = await this.app.createPackage(
+    const clinetSdkPackagePath = await this.app.createPackage(
       `${this.getName()}-client-sdk`,
       join(sdkPath, 'client')
     );
 
     await this.app.replaceTemplateValues(
-      join(packagePath, 'src', 'index.ts'),
+      join(clinetSdkPackagePath, 'src', 'index.ts'),
       '// Add API URL here',
       `http://localhost:3003/api/${this.getName()}/db`
     );
@@ -295,6 +298,20 @@ export class PluginInstance extends BaseGluestackPluginInstance {
     await this.app.createPackage(
       `${this.getName()}-server-sdk`,
       join(sdkPath, 'server')
+    );
+  }
+
+  async prepare(): Promise<void> {
+    //@ts-ignore
+    const clientSdkPackageName: string = `${this.getName()}-client-sdk`;
+    const serverSdkPackageName: string = `${this.getName()}-server-sdk`;
+
+    await this.buildPackage(
+      join(GLUE_GENERATED_PACKAGES_PATH, clientSdkPackageName)
+    );
+
+    await this.buildPackage(
+      join(GLUE_GENERATED_PACKAGES_PATH, serverSdkPackageName)
     );
   }
 

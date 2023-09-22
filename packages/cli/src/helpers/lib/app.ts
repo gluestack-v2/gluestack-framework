@@ -292,7 +292,7 @@ export default class AppCLI {
 		const data = fs.readFileSync(configPath, 'utf-8');
 		const newImport = `import ${importName} from '@project/${instanceName}-${configType}-sdk';\n`;
 		const newProviderEntry = `	${instanceName}: ${importName},`;
-		const providers = this.getProvidersFromConfig(data);
+		const providers: any = this.getProvidersFromConfig(data);
 		const existingImports = this.extractImports(data);
 
 		let finalImports = ``;
@@ -327,11 +327,12 @@ export default class AppCLI {
 			${finalImports}
 			export const config =
 			{
-				providers:{${providers?.map((provider) => {
+				providers:{${providers?.map((provider: any) => {
 					return `${provider}\n`;
 				})}
-					${newProviderEntry}}
+					${providers.length > 0 ? ',' : ''}${newProviderEntry}}
 			};`;
+
 			fs.writeFileSync(
 				configPath,
 				prettier.format(content, {
@@ -398,8 +399,17 @@ export default class AppCLI {
 
 					providersObject[key] = value;
 				}
-				console.log(providersArr);
-				return providersArr;
+				let finalArr: any = [];
+				providersArr.map((val: any) => {
+					if (
+						typeof val === 'string' &&
+						val.length > 0 &&
+						val.includes(',')
+					) {
+						finalArr.push(val.replace(',', ''));
+					}
+				});
+				return finalArr;
 			};
 
 			// Convert providersContent into a JavaScript object

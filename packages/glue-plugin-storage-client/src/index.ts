@@ -64,6 +64,9 @@ export class GlueStackPlugin extends BaseGluestackPlugin {
           .getName()}`
       );
     }
+
+    await this.app.updateConfigFile(_instanceName, 'client');
+    await this.app.updateConfigFile(_instanceName, 'server');
   }
 
   createInstance(

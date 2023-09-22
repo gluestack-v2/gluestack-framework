@@ -152,9 +152,14 @@ EXPOSE 9001
 CMD ["server", "/data", "--console-address", ":9001"]
 `;
 
-      const boltServiceTemplate = `container_name: storageserver
+      const boltServiceTemplate = `container_name: ${this.getName()}
 stateless: true
-platforms:
+default_service_runner: docker
+service_discovery_offset:
+  - 9160
+supported_service_runners:
+  - docker
+service_runners:
   local:
     envfile: .env
     build: npm run install --workspaces --if-present && npm run dev

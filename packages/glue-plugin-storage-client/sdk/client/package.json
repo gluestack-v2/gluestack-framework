@@ -1,5 +1,5 @@
 {
-  "name": "@project/minio-server-sdk",
+  "name": "@project/storageclient-client-sdk",
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
