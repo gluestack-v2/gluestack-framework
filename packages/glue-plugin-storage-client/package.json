@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-storage-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gluestack V2 storage client Plugin",
   "main": "build/index.js",
   "repository": {
@@ -34,7 +34,7 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-storage": "^0.1.x",
-    "@gluestack-v2/glue-plugin-service-gateway": "^0.1.x"
+    "@gluestack-v2/glue-plugin-service-gateway": "^0.1.x",
+    "@gluestack-v2/glue-plugin-storage": "^0.1.x"
   }
 }
