@@ -328,7 +328,9 @@ export default class AppCLI {
 			export const config =
 			{
 				providers:{${providers?.map((provider: any) => {
-					return `${provider}\n`;
+					if (!provider.includes(newProviderEntry)) {
+						return `${provider}\n`;
+					}
 				})}
 					${providers.length > 0 ? ',' : ''}${newProviderEntry}}
 			};`;
