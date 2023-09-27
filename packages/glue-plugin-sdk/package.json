@@ -1,6 +1,6 @@
 {
   "name": "@gluestack-v2/glue-plugin-sdk",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Gluestack V2 Service SDK Plugin",
   "main": "build/index.js",
   "repository": {
@@ -33,6 +33,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.1.*"
+    "@gluestack-v2/glue-plugin-develop": "^0.1.6"
   }
 }
