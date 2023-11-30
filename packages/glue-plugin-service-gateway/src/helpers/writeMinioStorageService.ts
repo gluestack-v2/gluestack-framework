@@ -3,8 +3,9 @@ import minioTemplate from './minioTemplate';
 import dotenv from 'dotenv';
 import writeFile from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
 import IInstance from '@gluestack-v2/framework-cli/build/types/plugin/interface/IInstance';
+import { updateApiGateway } from './write-service';
 
-export const writeMinioStorageService = (
+export const writeMinioStorageService = async (
   generatedServiceGatewayPath: any,
   instanceName: any,
   storageInstance: IInstance
@@ -26,7 +27,8 @@ export const writeMinioStorageService = (
   };
 
   const moleculerStorageServiceTemplate = minioTemplate(
-    JSON.stringify(envData)
+    JSON.stringify(envData),
+    '`uploads/${file.originalFilename}`'
   );
 
   const moleculerStorageClientServiceTemplatePath = path.join(
@@ -34,8 +36,9 @@ export const writeMinioStorageService = (
     'services',
     `${instanceName}.service.js`
   );
-  writeFile(
+  await writeFile(
     moleculerStorageClientServiceTemplatePath,
     moleculerStorageServiceTemplate
   );
+  await updateApiGateway(generatedServiceGatewayPath, 'storage');
 };

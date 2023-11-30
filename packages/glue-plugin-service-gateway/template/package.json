@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "fs": "^0.0.1-security",
     "minio": "^7.1.0",
+    "multiparty": "^4.2.3",
     "moleculer": "0.14.29",
     "moleculer-web": "0.10.5",
     "nats": "^2.7.1"

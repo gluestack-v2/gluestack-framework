@@ -1,0 +1,38 @@
+{
+  "name": "plugins-demo",
+  "version": "0.1.0",
+  "description": "Gluestack V2 App",
+  "main": "glue",
+  "scripts": {
+    "install:all": "npm install --workspaces --if-present",
+    "add:functions": "node glue add @gluestack-v2/glue-plugin-develop develop && node glue add @gluestack-v2/glue-plugin-web web && node glue add @gluestack-v2/glue-plugin-sdk sdk && node glue add @gluestack-v2/glue-plugin-service-gateway gateway  && node glue add @gluestack-v2/glue-plugin-functions functions"
+  },
+  "keywords": [
+    "gluestack",
+    "v2",
+    "fullstack",
+    "framework",
+    "cli",
+    "mobile",
+    "web",
+    "storybook",
+    "shared-components"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.15.5"
+  },
+  "workspaces": [
+    "client/web",
+    ".glue/__generated__/packages/**",
+    "../../packages/*",
+    "server/functions",
+    ".glue/__generated__/services/gateway/src/gateway",
+    "client/client"
+  ],
+  "dependencies": {
+    "@gluestack-v2/framework-cli": "latest",
+    "@gluestack-v2/glue-plugin-develop": "latest",
+    "@gluestack-v2/glue-plugin-web": "^0.1.8"
+  }
+}

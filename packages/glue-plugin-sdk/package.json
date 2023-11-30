@@ -33,6 +33,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "@gluestack-v2/glue-plugin-develop": "^0.1.6"
+    "@gluestack-v2/glue-plugin-develop": "^0.1.x"
   }
 }

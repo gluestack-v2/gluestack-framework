@@ -62,7 +62,6 @@ export class PluginInstance extends BaseGluestackPluginInstance {
       join(sdkPath, 'server'),
       `${this.getName()}-server-sdk`
     );
-
     await writeStorageServerSdk(this.getName(), serverPackagePath);
 
     // await this.writeSdkForStorageClient();

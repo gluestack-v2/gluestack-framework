@@ -1,10 +1,10 @@
-export default (envData: string) => {
+export default (envData: string, pathName: string) => {
   return `const Minio = require('minio');
 	const { MinioPingError, MinioInitializationError } = require('./errors');
 	const Context = require('../Context.ts');
 	const { default: ServerSDK } = require('@project/server-sdk');
 	const { default: StorageSDK } = require('@project/storageClient-server-sdk');
-	
+	const fs = require("fs");
 	/**
 	 *
 	 * Service mixin for managing files in a Minio S3 backend
@@ -70,10 +70,36 @@ export default (envData: string) => {
 				rest: {
 					method: 'POST',
 				},
-				handler: (ctx) => {
+				handler: async (ctx) => {
 					const sdk = ServerSDK.providers.get(StorageSDK);
 					const operation = ctx.params.operation;
-					return await sdk.minioClient[operation](...ctx.params.params.params);
+					return await sdk.minioClient[operation](...ctx.params.params);
+				},
+			},
+			uploadFile: {
+				rest: {
+					method: "POST",
+				},
+				handler: async function uploadFile(ctx) {
+					let file = ctx.params.file;
+					const sdk = ServerSDK.providers.get(StorageSDK);
+					// return response(200, "Hello");
+					const buffer = fs.readFileSync(file.path);
+					const key = ${pathName};
+					try {
+						const res = await sdk.minioClient.putObject(
+							"mybucket",
+							key,
+							buffer,
+							{
+								"Content-Type": "image/jpeg",
+								size: file.size,
+							}
+						);
+						return JSON.stringify(res);
+					} catch (err) {
+						return JSON.stringify(err);
+					}
 				},
 			},
 		},

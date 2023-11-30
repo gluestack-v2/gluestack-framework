@@ -1,12 +1,14 @@
 import { writeFile } from '@gluestack-v2/framework-cli/build/helpers/file/write-file';
+import { join } from 'path';
 
 export async function writeStorageServerSdk(
   _storageClientInstanceName: any,
   _destinationPath: any
 ) {
-  // const sdkPath = destinationPath;
+  const sdkPath = join(_destinationPath, 'src', 'index.ts');
 
   await writeFile(
+    sdkPath,
     `import ServiceProvider from '@gluestack-v2/framework-cli/build/plugin/ServiceProvider';
     import axios from 'axios';
     import type { Client } from '@types/minio';
